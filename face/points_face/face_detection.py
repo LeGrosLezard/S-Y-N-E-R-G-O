@@ -23,17 +23,49 @@ def pointsPredictor(gray, face, file):
 
 
 def points(face, predictor):
+    #Nous sert pour les yeux aussi
     for pts in face:
         landmarks = predictor(gray, pts)
         return landmarks
 
+#-------------------------------------- zone
 
 def intra_face(landmarks):
-    for n in range(0, 68):
-        x = landmarks.part(n).x
-        y = landmarks.part(n).y
-        circle(img, (x, y), 1, (255, 0, 0), -1)
+
+    #points of face
+    points = [(landmarks.part(n).x, landmarks.part(n).y)
+                         for pts in faces for n in range(0, 68)]
+
+    #Convex points (contour of face)
+    convexhull = convexHull(np.array(points))
+
+    #Find triangles into rectangles points (face)
+    subdiv = cv2.Subdiv2D(cv2.boundingRect(convexhull))
+
+    #Put points for extract the list
+    subdiv.insert(points)
+
+    #Get triangles list
+    triangles = np.array(subdiv.getTriangleList(), dtype=np.int32)
+
+    #Recup points
+    t_points = [[(t[0], t[1]), (t[2], t[3]), (t[4], t[5])] for t in triangles ]
 
 
 def exterior_face():
     pass
+
+
+
+#-------------------------------------- yeux
+
+
+#-------------------------------------- inclinaison
+
+
+
+
+
+
+
+
