@@ -1,6 +1,6 @@
 from cv2 import VideoCapture, resize, waitKey, destroyAllWindows, imshow, cvtColor, COLOR_BGR2GRAY, imwrite
 from basics_operations import start_timmer, timmer
-from points_face.face_detection import findHead, headDetector
+from points_face.face_detection import headDetector, pointsPredictor, intra_face, points_landmarks
 
 
 def video_lecture(video_name, face_points):
@@ -9,7 +9,7 @@ def video_lecture(video_name, face_points):
 
     #Detect head
     detector = headDetector()
-    predictor = pointsPredictor(gray, head, face_points)
+    predictor = pointsPredictor(face_points)
 
 
     while True:
@@ -20,8 +20,14 @@ def video_lecture(video_name, face_points):
         frame = resize(video.read()[1], (500, 400))
         gray = cvtColor(frame, COLOR_BGR2GRAY)
 
-        #Repear head points
-        head = findHead(detector, gray, frame, "no_displaying")
+        faces = detector(gray)
+
+        #68 points of face
+        landmarks = points_landmarks(faces, gray, predictor)
+
+        #Triangle of face points
+        head_points, head = intra_face(landmarks, faces, frame)
+
 
         imshow('frame', frame)
 
