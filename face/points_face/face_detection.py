@@ -11,11 +11,13 @@ def pointsPredictor(file):
     predictor = shape_predictor(file)
     return predictor
 
-def points_landmarks(face, gray, predictor):
-    #SERT POUR LES YEUX
+def points_landmarks(gray, predictor, detector):
+    """ 68 points"""
+
+    face = detector(gray)
     for pts in face:
         landmarks = predictor(gray, pts)
-        return landmarks
+        return landmarks, face
 
 #-------------------------------------- zone
 
