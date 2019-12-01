@@ -20,13 +20,11 @@ def video_lecture(video_name, face_points):
         frame = resize(video.read()[1], (500, 400))
         gray = cvtColor(frame, COLOR_BGR2GRAY)
 
-        faces = detector(gray)
-
-        #68 points of face
-        landmarks = points_landmarks(faces, gray, predictor)
+        #68 points of face + face
+        landmarks, face = points_landmarks(gray, predictor, detector)
 
         #Triangle of face points
-        head_points, head = intra_face(landmarks, faces, frame)
+        head_points, head = intra_face(landmarks, face, frame)
 
 
         imshow('frame', frame)
