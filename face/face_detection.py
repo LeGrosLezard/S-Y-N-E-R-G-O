@@ -15,3 +15,25 @@ def findHead(detector, gray_frame, out_frame, displaying):
         rectangle(out_frame, (x, y), (w, h), (0, 0, 255), 3)
 
     return x, y, w, h
+
+
+def pointsPredictor(gray, face, file):
+    predictor = dlib.shape_predictor(file)
+    return predictor
+
+
+def points(face, predictor):
+    for pts in face:
+        landmarks = predictor(gray, pts)
+        return landmarks
+
+
+def intra_face(landmarks):
+    for n in range(0, 68):
+        x = landmarks.part(n).x
+        y = landmarks.part(n).y
+        circle(img, (x, y), 1, (255, 0, 0), -1)
+
+
+def exterior_face():
+    pass
