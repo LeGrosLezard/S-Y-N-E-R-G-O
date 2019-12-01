@@ -4,4 +4,6 @@
 
 
 
-- le plus important ca va etre le langage, ojd faire tout la partie tete gogogogoogogogogogogogogo
+- voir les modeles dispo
+
+- réflechir au fichiers
