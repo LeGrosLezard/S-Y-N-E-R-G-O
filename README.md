@@ -1,5 +1,6 @@
 # S-Y-N-E-R-G-O
 
+trouver un truk pour que fermeture oeil marche avec tout...
 
 verifier que tete marche sur tout mais jcrois que oui
 
