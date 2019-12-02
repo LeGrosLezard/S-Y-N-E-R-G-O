@@ -1,6 +1,7 @@
-from cv2 import rectangle, convexHull, Subdiv2D, boundingRect, circle
+from cv2 import rectangle, convexHull, Subdiv2D, boundingRect, circle, drawContours, contourArea
 from numpy import array, int32
-import math
+from math import pow, sqrt, sin, acos, hypot
+from threading import Thread
 
 def points_landmarks(gray, predictor, detector):
     """ 68 points"""
@@ -35,6 +36,11 @@ def intra_face(landmarks, faces, img):
     #Recup points
     t_points = [[(t[0], t[1]), (t[2], t[3]), (t[4], t[5])] for t in triangles ]
 
+##    for pts in triangles:
+##        circle(img, (pts[0], pts[1]), 1, (0, 0, 255), 2)
+
+
+
     return t_points, head, convexhull
 
 
@@ -50,50 +56,67 @@ def exterior_face(face, img):
 
 #-------------------------------------- yeux
 
+#close
+def closing_eyes(landmarks, faces, img):
+
+
+    eyes = (convexHull(array([(landmarks.part(n).x, landmarks.part(n).y)
+                    for pts in faces for n in range(36, 42)])),
+            convexHull(array([(landmarks.part(n).x, landmarks.part(n).y)
+                    for pts in faces for n in range(42, 47)])))
+
+    if contourArea(eyes[0]) <= 20 and contourArea(eyes[1]) <= 20:
+        print("closed")
+
+    drawContours(img, [eyes[0]], -1, (0, 255, 0), 1)
+    drawContours(img, [eyes[1]], -1, (0, 255, 0), 1)
+
+
+    #tracking
+
+
 
 #-------------------------------------- inclinaison
 
 def inclinaison(landmarks, img):
+
     a = landmarks.part(36).x, landmarks.part(36).y
     b = landmarks.part(45).x, landmarks.part(45).y
     c = landmarks.part(30).x, landmarks.part(30).y
-    
-    circle(img, (a[0], a[1]), 2, (0, 0, 255), 2)
-    circle(img, (b[0], b[1]), 2, (0, 0, 255), 2)
-    circle(img, (c[0], c[1]), 2, (0, 0, 255), 2)
 
+    d_eyes = sqrt(pow(a[0] - b[0], 2) + pow(a[1] - b[1], 2))
+    d1 = sqrt(pow(a[0] - c[0], 2) + pow(a[1] - c[1], 2))
+    d2 = sqrt(pow(b[0] - c[0], 2) + pow(b[1] - c[1], 2))
+    coeff = d1 + d2
 
+    cosb = min((pow(d2, 2) - pow(d1, 2) + pow(d_eyes, 2)) / (2*d2*d_eyes), 1)
 
-    d_eyes=math.sqrt(math.pow(a[0]-b[0], 2)+math.pow(a[1]-b[1], 2))
+    head = ""
 
+    if int(250*(d1-d2)/coeff) < -40:
+        head += "a droite "
 
-    d1=math.sqrt(math.pow(a[0]-c[0], 2)+math.pow(a[1]-c[1], 2))
-    d2=math.sqrt(math.pow(b[0]-c[0], 2)+math.pow(b[1]-c[1], 2))
-    coeff=d1+d2
+    if int(250*(d1-d2)/coeff) > 40:
+        head += "a gauche "
 
-    a1=int(250*(landmarks.part(36).y-landmarks.part(45).y)/coeff)
-    a2=int(250*(d1-d2)/coeff)
-    cosb=min((math.pow(d2, 2)-math.pow(d1, 2)+math.pow(d_eyes, 2))/(2*d2*d_eyes), 1)
-    a3=int(250*(d2*math.sin(math.acos(cosb))-coeff/4)/coeff)
-    txt = ""
+    if int(250*(d2*sin(acos(cosb))-coeff/4)/coeff) < 30:
+        head += "en haut "
 
+    if int(250*(d2*sin(acos(cosb))-coeff/4)/coeff) < 0:
+        head += "tresh haut "
 
-    if a2<-40:
-        txt+="a droite "
+    if int(250*(d2*sin(acos(cosb))-coeff/4)/coeff) > 30:
+        head += "en bas "
 
-    if a2>40:
-        txt+="a gauche "
+    if int(250*(d2*sin(acos(cosb))-coeff/4)/coeff) > 40:
+        head += "tres bas "
 
-    if a3<-10:
-        txt+="en haut "
+    if int(250*(a[1]-b[1])/coeff) < - 20:
+        head += "et incline la tete a gauche "
 
-    if a3>30:
-        txt+="en bas "
+    if int(250*(a[1]-b[1])/coeff) > 20:
+        head += "et incline la tete a droite "
 
-    if a1<-40:
-        txt+="et incline la tete a gauche "
-    if a1>20:
-        txt+="et incline la tete a droite "
+    #print(head)
+    return head
 
-
-    print(txt)
