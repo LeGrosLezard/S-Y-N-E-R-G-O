@@ -1,7 +1,9 @@
 # S-Y-N-E-R-G-O
 
 
-y arrive pas, mais on a un début et par exemple le mec racconte une blague, y penche la tete a gauche -> jme met a sa place, ferme les yeux pendant pleins de frame peut etre ca va pas le faire rire, puis a droite racconte un fait tout en pointant c main vers lui (jlai appris pendant annotation genre pouce ou main vers pec ou aisselle) donc ca c passé pour moi, puis monte legerement la tete -> jtai fais rire tout en montrant c quanine du haut souviens toi de moi, puis pointe la tete a droite genre statut bingo + un pouce mais je le ferai sur mes vidéo oc pour les demo si ca marche
+mais j'ai le son aussi du coup ca doit se coller a ca, puis a la fin on met tout ces trucks dans un exel et on en fait une ia, on couple ca a jojo calme toi gros
+
+continuer de copier coller les codes
 
 - blink eye
 
