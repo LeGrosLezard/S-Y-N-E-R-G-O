@@ -4,13 +4,9 @@
 
 - récupérer inclianison de la tete d'un tuto
  
-  par contre mtn faut que ce soit vrai pour toute les video
+  on peut faire une initialisation, puis une soustraction ^^ chacun son taff ^^ 
   
-  faut que ca dise si le mec revient a initial
-  
-  faut pas que ce soit des nombres
-  
-  et ca ca va prendre du temps
+  pcque des fois les points sautent, une initialisation ca va lag
 
 
 
