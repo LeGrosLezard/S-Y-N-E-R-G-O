@@ -2,7 +2,11 @@
 
 
 
-- faire exterieur de la face
+- récupérer inclianison de la tete
+
+- blink eye
+
+- et eyes tracking bah y'a pas
 
 - puis les detections
 
