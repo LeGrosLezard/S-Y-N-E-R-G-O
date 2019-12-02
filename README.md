@@ -10,7 +10,7 @@
 
 - on pourra aussi avoir la chevelure, raise figure, thresh ect
 
-- puis les detections
+- puis les detections mais ca chai pas ca descend a 18
 
 - voir les modeles dispo
 
