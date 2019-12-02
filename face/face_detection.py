@@ -1,5 +1,5 @@
-from cv2 import rectangle, convexHull, Subdiv2D, boundingRect, circle, drawContours, contourArea
-from numpy import array, int32
+from cv2 import rectangle, convexHull, Subdiv2D, bitwise_and, boundingRect, circle, drawContours, polylines, fillPoly, contourArea, imshow, resize, cvtColor, COLOR_BGR2GRAY, threshold, THRESH_BINARY
+from numpy import array, int32, hstack, zeros, uint8, min, max
 from math import pow, sqrt, sin, acos, hypot
 from threading import Thread
 
@@ -57,27 +57,48 @@ def exterior_face(face, img):
 #-------------------------------------- yeux
 
 #close
-def closing_eyes(landmarks, faces, img):
+def tracking_eyes(landmarks, faces, img, gray):
 
-
+    statut = ""
     eyes = (convexHull(array([(landmarks.part(n).x, landmarks.part(n).y)
                     for pts in faces for n in range(36, 42)])),
             convexHull(array([(landmarks.part(n).x, landmarks.part(n).y)
                     for pts in faces for n in range(42, 47)])))
 
     if contourArea(eyes[0]) <= 20 and contourArea(eyes[1]) <= 20:
-        print("closed")
+        statut = "closed"
+
     elif contourArea(eyes[0]) <= 20:
-        print("droit avant ou clien doeil")
+        statut = "droit"
+
     elif contourArea(eyes[1]) <= 20:
-        print("gauche avant ou clein do'eil")
+        statut = "gauche"
 
-    drawContours(img, [eyes[0]], -1, (0, 255, 0), 1)
-    drawContours(img, [eyes[1]], -1, (0, 255, 0), 1)
+    else:
+
+        def make_mask(img, eye, gray):
+            mask = zeros((img.shape[0], img.shape[1]), uint8)
+            polylines(mask, [eye], True, 255, 2)
+            fillPoly(mask, [eye], 255)
+            mask = bitwise_and(gray, gray, mask=mask)
+
+            return mask
+
+        leftEye = make_mask(img, eyes[0], gray)
+        rightEye = make_mask(img, eyes[1], gray)
+        
+        displaying = hstack((leftEye, rightEye))
+        imshow("Eye", displaying)
+
+        statut = "ouvert"
 
 
-    #tracking
+    #print(statut)
+    #drawContours(img, [eyes[0]], -1, (0, 255, 0), 1)
+    #drawContours(img, [eyes[1]], -1, (0, 255, 0), 1)
 
+
+    
 
 
 #-------------------------------------- inclinaison
