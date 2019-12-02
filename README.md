@@ -6,6 +6,7 @@ verifier que tete marche sur tout mais jcrois que oui
 
 - eye tracking
 
+- region figure // région du mec en bleu
 
 - on pourra aussi avoir la chevelure, raise figure, thresh ect
 
