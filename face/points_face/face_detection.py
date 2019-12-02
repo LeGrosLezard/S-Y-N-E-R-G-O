@@ -48,7 +48,12 @@ def intra_face(landmarks, faces, img):
 
 
 def exterior_face(face, img):
+
+    #front + un peu plus
     rectangle(img, (face[0], face[1] - 50), (face[0] + face[2] , face[1] + face[3]), 3)
+
+
+    rectangle(img, (face[0] - 50, face[1] - 100), (face[0] + face[2] + 50, face[1] + face[3]), 3)
 
 
 
