@@ -1,16 +1,7 @@
 # S-Y-N-E-R-G-O
 
 
-
-- récupérer inclianison de la tete d'un tuto
- 
-  on peut faire une initialisation, puis une soustraction ^^ chacun son taff ^^ 
-  
-  pcque des fois les points sautent, une initialisation ca va lag
-
-  ca fait loss 4/5 d'une fenetre j'ai trop peur que ca fasse les carrés sur une fenetre noir mtn... bon pause
-
-<br><br><br><br><br>
+y arrive pas, mais on a un début et par exemple le mec racconte une blague, y penche la tete a gauche -> jme met a sa place, ferme les yeux pendant pleins de frame peut etre ca va pas le faire rire, puis a droite racconte un fait tout en pointant c main vers lui (jlai appris pendant annotation genre pouce ou main vers pec ou aisselle) donc ca c passé pour moi, puis monte legerement la tete -> jtai fais rire tout en montrant c quanine du haut souviens toi de moi, puis pointe la tete a droite genre statut bingo + un pouce mais je le ferai sur mes vidéo oc pour les demo si ca marche
 
 - blink eye
 
