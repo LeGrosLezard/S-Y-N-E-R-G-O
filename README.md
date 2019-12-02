@@ -2,9 +2,9 @@
 
 
 
-- en gros faut récupérer les zones et les faire sur le mec bleu mais pas précis display c juste pour aguicher
+- faire exterieur de la face
 
-vos/mes boutons n'ont pas de secret
+- puis les detections
 
 - voir les modeles dispo
 
