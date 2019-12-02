@@ -1,5 +1,5 @@
 from dlib import get_frontal_face_detector, shape_predictor
-from cv2 import rectangle, convexHull, Subdiv2D, boundingRect, line
+from cv2 import rectangle, convexHull, Subdiv2D, boundingRect, line, waitKey, imshow
 from numpy import array, int32
 
 
@@ -19,9 +19,9 @@ def points_landmarks(gray, predictor, detector):
         landmarks = predictor(gray, pts)
         return landmarks, face
 
-#-------------------------------------- zone
 
 def intra_face(landmarks, faces, img):
+    """Intra face"""
 
     #points of face
     points = [(landmarks.part(n).x, landmarks.part(n).y)
@@ -44,10 +44,11 @@ def intra_face(landmarks, faces, img):
     #Recup points
     t_points = [[(t[0], t[1]), (t[2], t[3]), (t[4], t[5])] for t in triangles ]
 
-    return t_points, head
+    return t_points, head, convexhull
 
-def exterior_face():
-    pass
+
+def exterior_face(face, img):
+    rectangle(img, (face[0], face[1] - 50), (face[0] + face[2] , face[1] + face[3]), 3)
 
 
 
