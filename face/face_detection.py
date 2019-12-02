@@ -67,6 +67,10 @@ def closing_eyes(landmarks, faces, img):
 
     if contourArea(eyes[0]) <= 20 and contourArea(eyes[1]) <= 20:
         print("closed")
+    elif contourArea(eyes[0]) <= 20:
+        print("droit avant ou clien doeil")
+    elif contourArea(eyes[1]) <= 20:
+        print("gauche avant ou clein do'eil")
 
     drawContours(img, [eyes[0]], -1, (0, 255, 0), 1)
     drawContours(img, [eyes[1]], -1, (0, 255, 0), 1)
