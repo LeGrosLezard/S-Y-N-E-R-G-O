@@ -1,6 +1,6 @@
 # S-Y-N-E-R-G-O
 
-essayer en important toute la librarie
+
 
 - récupérer inclianison de la tete
 
