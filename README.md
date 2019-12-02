@@ -8,7 +8,7 @@
   
   pcque des fois les points sautent, une initialisation ca va lag
 
-
+  ca fait 4/5 d'une fenetre j'ai trop peur que ca fasse les carrés sur une fenetre noir mtn... bon pause
 
 <br><br><br><br><br>
 
