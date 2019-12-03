@@ -1,7 +1,9 @@
-from cv2 import rectangle, convexHull, Subdiv2D, bitwise_and, boundingRect, circle, drawContours, polylines, fillPoly, contourArea, imshow, resize, cvtColor, COLOR_BGR2GRAY, threshold, THRESH_BINARY
-from numpy import array, int32, hstack, zeros, uint8, min, max
+from cv2 import rectangle, convexHull, Subdiv2D, bitwise_and, boundingRect, bitwise_not, circle, drawContours, polylines, fillPoly, moments, contourArea, imshow, resize, cvtColor, COLOR_BGR2GRAY, threshold, THRESH_BINARY, bilateralFilter, erode, countNonZero, findContours, RETR_TREE, CHAIN_APPROX_NONE, waitKey
+from numpy import array, int32, hstack, zeros, uint8, min, max, full, ones
 from math import pow, sqrt, sin, acos, hypot
 from threading import Thread
+from scipy.spatial import distance as dist
+
 
 def points_landmarks(gray, predictor, detector):
     """ 68 points"""
@@ -56,115 +58,121 @@ def exterior_face(face, img):
 
 #-------------------------------------- yeux
 
+def closing_eyes(eye):
+
+    A = dist.euclidean(eye[1], eye[5])
+    B = dist.euclidean(eye[2], eye[4])
+    C = dist.euclidean(eye[0], eye[3])
+
+    ear = (A + B) / (2.0 * C)
+
+    return ear
+
+
+def make_mask(img, eye, gray):
+    """Recuperate eye mask"""
+
+    height, width = gray.shape[:2]
+    black_frame = zeros((height, width), uint8)
+    mask = full((height, width), 255, uint8)
+    fillPoly(mask, [eye], (0, 0, 0))
+    mask = bitwise_not(black_frame, gray.copy(), mask=mask)
+
+    """Recuperate the eye area"""
+    x, y, w, h = boundingRect(eye)
+    cropMask = mask[y-5:y+h+5, x-5:x+w+5]
+    cropImg = img[y-5:y+h+5, x-5:x+w+5]
+
+    return cropMask, cropImg
+
+
+def define_threshold(crop):
+    """Recuperate the minimum contour by an automatic threshold"""
+
+    minimum = 0
+    for thresh in range(5, 100, 5):
+
+        kernel = ones((3, 3), uint8)
+        mask = bilateralFilter(crop, 10, 15, 15)
+        mask = erode(mask, kernel, iterations=3)
+        mask = threshold(mask, thresh, 255, THRESH_BINARY)[1]
+
+        height, width = crop.shape[:2]
+        nb_pixels = height * width
+        blacks_pixels = nb_pixels - countNonZero(mask) / nb_pixels
+        if blacks_pixels < minimum:
+            minimum = blacks_pixels
+
+    return minimum
+
+
+def get_eyes(crop, thresh, cropPicture):
+    """Recuperate center of contour"""
+
+    out = ""
+
+    area_eye = threshold(crop, thresh, 255, THRESH_BINARY)[1]
+    contours, _ = findContours(area_eye, RETR_TREE, CHAIN_APPROX_NONE)
+
+    try:
+        moment = moments(contours[0])
+        x = int(moment['m10'] / moment['m00'])
+        y = int(moment['m01'] / moment['m00'])
+
+        circle(cropPicture, (x, y), 3, (0, 0, 255), 1)
+
+        out = x, y
+
+    except (IndexError, ZeroDivisionError):
+        pass
+
+    return out
+
+
 #close
 def tracking_eyes(landmarks, faces, img, gray):
 
-    statut = ""
+    state = ""; min_ear = 0.3; max_ear = 0.5; left_ear = 0.4; right_ear = 0.4
     eyes = (convexHull(array([(landmarks.part(n).x, landmarks.part(n).y)
                     for pts in faces for n in range(36, 42)])),
             convexHull(array([(landmarks.part(n).x, landmarks.part(n).y)
-                    for pts in faces for n in range(42, 47)])))
+                    for pts in faces for n in range(42, 48)])))
 
-    if contourArea(eyes[0]) <= 20 and contourArea(eyes[1]) <= 20:
-        statut = "closed"
+    try:
+        left_ear = closing_eyes(eyes[0])
+        right_ear = closing_eyes(eyes[1])
+    except (IndexError):
+        pass
 
-    elif contourArea(eyes[0]) <= 20:
-        statut = "droit"
+    if left_ear <= min_ear and right_ear <= min_ear:
+        state = "closed"
 
-    elif contourArea(eyes[1]) <= 20:
-        statut = "gauche"
+    elif left_ear <= min_ear:
+        state = "gauche"
 
+    elif right_ear <= min_ear:
+        state = "droite"
+
+    elif left_ear >= max_ear and right_ear >= max_ear:
+        state= "very open eyes"
     else:
 
+        #Recuperate a mask with only the contour of eye
+        cropMaskLeft, cropImgLeft = make_mask(img, eyes[0], gray)
+        cropMaskRight, cropImgRight = make_mask(img, eyes[1], gray)
 
+        #Make an automatic threshold
+        threshold_left = define_threshold(cropMaskLeft)
+        threshold_right = define_threshold(cropMaskRight)
 
-        import numpy as np
-        import cv2
+        #Recuperate center of the contour (pupil).
+        x_left, y_left = get_eyes(cropMaskLeft, threshold_left, cropImgLeft)
+        x_right, y_right = get_eyes(cropMaskRight, threshold_right, cropImgRight)
 
-
-        def make_mask(img, eye, gray):
-
-            height, width = gray.shape[:2]
-            black_frame = np.zeros((height, width), np.uint8)
-            mask = np.full((height, width), 255, np.uint8)
-            cv2.fillPoly(mask, [eye], (0, 0, 0))
-            eye = cv2.bitwise_not(black_frame, gray.copy(), mask=mask)
-
-            return eye
-
-        ok = make_mask(img, eyes[0], gray)
-
-        x, y, w, h = cv2.boundingRect(eyes[0])
-        crop = ok[y-5:y+h+5, x-5:x+w+5]
-        cropoki = img[y-5:y+h+5, x-5:x+w+5]
-
-
-        mini = 0
-        for threshold in range(5, 100, 5):
-            kernel = np.ones((3, 3), np.uint8)
-            new_frame = cv2.bilateralFilter(crop, 10, 15, 15)
-            new_frame = cv2.erode(new_frame, kernel, iterations=3)
-            new_frame = cv2.threshold(new_frame, threshold, 255, cv2.THRESH_BINARY)[1]
-
-            height, width = crop.shape[:2]
-            nb_pixels = height * width
-            nb_blacks = nb_pixels - cv2.countNonZero(new_frame)
-
-            a = nb_blacks / nb_pixels
-            if a < mini:
-                mini = a
+    if state != "": print(state)
 
 
 
-        new_frame = cv2.threshold(crop, mini, 255, cv2.THRESH_BINARY)[1]
-        contours, _ = cv2.findContours(new_frame, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
-
-        try:
-            moments = cv2.moments(contours[0])
-            x = int(moments['m10'] / moments['m00'])
-            y = int(moments['m01'] / moments['m00'])
-
-            cv2.circle(cropoki, (x, y), 3, (0, 0, 255), 1)
-
-        except (IndexError, ZeroDivisionError):
-            pass
-
-
-
-
-
-        imshow('cxwoki', img)
-        cv2.waitKey(0)
-
-                
-
-
-
-
-        
-
-
-
-
-
-
-
-
-
-
-##        rightEye = make_mask(img, eyes[1], gray)
-##        _, rightEye = threshold(rightEye, 100, 255, THRESH_BINARY)
-##
-##        displaying = hstack((leftEye, rightEye))
-##        imshow("Eye", displaying)
-
-##
-##        statut = "ouvert"
-
-
-    #print(statut)
-    #drawContours(img, [eyes[0]], -1, (0, 255, 0), 1)
-    #drawContours(img, [eyes[1]], -1, (0, 255, 0), 1)
 
 
     
@@ -183,34 +191,36 @@ def inclinaison(landmarks, img):
     d2 = sqrt(pow(b[0] - c[0], 2) + pow(b[1] - c[1], 2))
     coeff = d1 + d2
 
-    cosb = min((pow(d2, 2) - pow(d1, 2) + pow(d_eyes, 2)) / (2*d2*d_eyes), 1)
-
+    cosb = min( (pow(d2, 2) - pow(d1, 2) + pow(d_eyes, 2) ) / (2*d2*d_eyes) )
+    a1 = int(250*(d1-d2)/coeff)
+    a2 = int(250*(d2*sin(acos(cosb))-coeff/4)/coeff)
+    a3 = int(250*(a[1]-b[1])/coeff)
     head = ""
 
-    if int(250*(d1-d2)/coeff) < -40:
+    if a1 < - 25:
         head += "a droite "
 
-    if int(250*(d1-d2)/coeff) > 40:
+    if a1 > 25:
         head += "a gauche "
 
-    if int(250*(d2*sin(acos(cosb))-coeff/4)/coeff) < 30:
+    if a2 < 15:
         head += "en haut "
 
-    if int(250*(d2*sin(acos(cosb))-coeff/4)/coeff) < 0:
-        head += "tresh haut "
+    if a2 < 0:
+        head += "tres haut "
 
-    if int(250*(d2*sin(acos(cosb))-coeff/4)/coeff) > 30:
+    if a2 > 30:
         head += "en bas "
 
-    if int(250*(d2*sin(acos(cosb))-coeff/4)/coeff) > 40:
+    if a2 > 40:
         head += "tres bas "
 
-    if int(250*(a[1]-b[1])/coeff) < - 20:
+    if a3 < - 20:
         head += "et incline la tete a gauche "
 
-    if int(250*(a[1]-b[1])/coeff) > 20:
+    if a3 > 20:
         head += "et incline la tete a droite "
 
-    #print(head)
+    print(head)
     return head
 
