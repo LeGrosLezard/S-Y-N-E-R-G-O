@@ -1,8 +1,12 @@
 # S-Y-N-E-R-G-O
 
-trouver un truk pour que fermeture oeil marche avec tout...
+bon ok distance uclidienne c des vecteurs ok mais apprendre en profondeur
 
-verifier que tete marche sur tout mais jcrois que oui
+comprendre le code du mec pour eye tracking
+
+mais ca dit qu'il regarde a gauche et c pas le premier code....
+
+on est au niveau au dessus mtn et chui pas tres super fort ^^
 
 - eye tracking
 
