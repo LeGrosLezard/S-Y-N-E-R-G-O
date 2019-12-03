@@ -200,25 +200,25 @@ def inclinaison(landmarks, img):
     if a1 < - 25:
         head += "a droite "
 
-    if a1 > 25:
+    elif a1 > 25:
         head += "a gauche "
 
     if a2 < 15:
         head += "en haut "
 
-    if a2 < 0:
+    elif a2 < 0:
         head += "tres haut "
 
     if a2 > 30:
         head += "en bas "
 
-    if a2 > 40:
+    elif a2 > 40:
         head += "tres bas "
 
     if a3 < - 20:
         head += "et incline la tete a gauche "
 
-    if a3 > 20:
+    elif a3 > 20:
         head += "et incline la tete a droite "
 
     print(head)
