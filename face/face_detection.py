@@ -89,33 +89,51 @@ def tracking_eyes(landmarks, faces, img, gray):
             mask = np.full((height, width), 255, np.uint8)
             cv2.fillPoly(mask, [eye], (0, 0, 0))
             eye = cv2.bitwise_not(black_frame, gray.copy(), mask=mask)
-            cv2.imshow('vvvvvvvvvvvvv', eye)
-            cv2.waitKey(0)
+
             return eye
 
+        ok = make_mask(img, eyes[0], gray)
+
+        x, y, w, h = cv2.boundingRect(eyes[0])
+        crop = ok[y-5:y+h+5, x-5:x+w+5]
+        cropoki = img[y-5:y+h+5, x-5:x+w+5]
 
 
-        R = cv2.RETR_TREE
-        P = cv2.CHAIN_APPROX_NONE
+        mini = 0
+        for threshold in range(5, 100, 5):
+            kernel = np.ones((3, 3), np.uint8)
+            new_frame = cv2.bilateralFilter(crop, 10, 15, 15)
+            new_frame = cv2.erode(new_frame, kernel, iterations=3)
+            new_frame = cv2.threshold(new_frame, threshold, 255, cv2.THRESH_BINARY)[1]
 
-        region = np.array([(landmarks.part(point).x, landmarks.part(point).y) for point in [36, 37, 38, 39, 40, 41]])
-        ok = make_mask(img, region, gray)
+            height, width = crop.shape[:2]
+            nb_pixels = height * width
+            nb_blacks = nb_pixels - cv2.countNonZero(new_frame)
 
-        imshow('okok', ok)
-        cv2.waitKey(0)
-
-
-        contours, _ = cv2.findContours(ok, R, P)
-
-        for cnt in contours:
-            x, y, w, h = cv2.boundingRect(cnt)
-            crop = ok[y:y+h, x:x+w]
-
-
-    
+            a = nb_blacks / nb_pixels
+            if a < mini:
+                mini = a
 
 
-        imshow('cxw1oki', crop)
+
+        new_frame = cv2.threshold(crop, mini, 255, cv2.THRESH_BINARY)[1]
+        contours, _ = cv2.findContours(new_frame, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+
+        try:
+            moments = cv2.moments(contours[0])
+            x = int(moments['m10'] / moments['m00'])
+            y = int(moments['m01'] / moments['m00'])
+
+            cv2.circle(cropoki, (x, y), 3, (0, 0, 255), 1)
+
+        except (IndexError, ZeroDivisionError):
+            pass
+
+
+
+
+
+        imshow('cxwoki', img)
         cv2.waitKey(0)
 
                 
