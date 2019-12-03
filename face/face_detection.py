@@ -38,11 +38,6 @@ def intra_face(landmarks, faces, img):
     #Recup points
     t_points = [[(t[0], t[1]), (t[2], t[3]), (t[4], t[5])] for t in triangles ]
 
-##    for pts in triangles:
-##        circle(img, (pts[0], pts[1]), 1, (0, 0, 255), 2)
-
-
-
     return t_points, head, convexhull
 
 
@@ -59,14 +54,7 @@ def exterior_face(face, img):
 #-------------------------------------- yeux
 
 def closing_eyes(eye):
-
-    A = dist.euclidean(eye[1], eye[5])
-    B = dist.euclidean(eye[2], eye[4])
-    C = dist.euclidean(eye[0], eye[3])
-
-    ear = (A + B) / (2.0 * C)
-
-    return ear
+    return (dist.euclidean(eye[1], eye[5]) + dist.euclidean(eye[2], eye[4])) / (2.0 * dist.euclidean(eye[0], eye[3]))
 
 
 def make_mask(img, eye, gray):
@@ -144,17 +132,10 @@ def tracking_eyes(landmarks, faces, img, gray):
     except (IndexError):
         pass
 
-    if left_ear <= min_ear and right_ear <= min_ear:
-        state = "closed"
-
-    elif left_ear <= min_ear:
-        state = "gauche"
-
-    elif right_ear <= min_ear:
-        state = "droite"
-
-    elif left_ear >= max_ear and right_ear >= max_ear:
-        state= "very open eyes"
+    if left_ear <= min_ear and right_ear <= min_ear: state = "closed"
+    elif left_ear <= min_ear: state = "gauche"
+    elif right_ear <= min_ear: state = "droite"
+    elif left_ear >= max_ear and right_ear >= max_ear: state= "very open eyes"
     else:
 
         #Recuperate a mask with only the contour of eye
@@ -197,30 +178,17 @@ def inclinaison(landmarks, img):
     a3 = int(250*(a[1]-b[1])/coeff)
     head = ""
 
-    if a1 < - 25:
-        head += "a droite "
+    if a1 < - 25: head += "a droite "
+    elif a1 > 25: head += "a gauche "
 
-    elif a1 > 25:
-        head += "a gauche "
+    if a2 < 15: head += "en haut "
+    elif a2 < 0: head += "tres haut "
+    elif a2 > 30: head += "en bas "
+    elif a2 > 40: head += "tres bas "
 
-    if a2 < 15:
-        head += "en haut "
+    if a3 < - 20: head += "et incline la tete a gauche "
+    elif a3 > 20: head += "et incline la tete a droite "
 
-    elif a2 < 0:
-        head += "tres haut "
-
-    if a2 > 30:
-        head += "en bas "
-
-    elif a2 > 40:
-        head += "tres bas "
-
-    if a3 < - 20:
-        head += "et incline la tete a gauche "
-
-    elif a3 > 20:
-        head += "et incline la tete a droite "
-
-    print(head)
+    #print(head)
     return head
 
