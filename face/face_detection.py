@@ -76,6 +76,11 @@ def tracking_eyes(landmarks, faces, img, gray):
 
     else:
 
+
+
+        import numpy as np
+        import cv2
+
         def make_mask(img, eye, gray):
             mask = zeros((img.shape[0], img.shape[1]), uint8)
             polylines(mask, [eye], True, 255, 2)
@@ -84,13 +89,42 @@ def tracking_eyes(landmarks, faces, img, gray):
 
             return mask
 
-        leftEye = make_mask(img, eyes[0], gray)
-        rightEye = make_mask(img, eyes[1], gray)
-        
-        displaying = hstack((leftEye, rightEye))
-        imshow("Eye", displaying)
 
-        statut = "ouvert"
+
+        x, y, w, h = cv2.boundingRect(eyes[0])
+        leftEye = img[y-5:y+h, x:x+w]
+        leftEye = cv2.resize(leftEye, (100, 50))
+
+        min_YCrCb = np.array([0,150,85],np.uint8)
+        max_YCrCb = np.array([235,173,127],np.uint8)
+
+
+        imageYCrCb = cv2.cvtColor(leftEye,cv2.COLOR_BGR2YCR_CB)
+        skinRegionYCrCb = cv2.inRange(imageYCrCb,min_YCrCb,max_YCrCb)
+
+        skinYCrCb = cv2.bitwise_and(leftEye, leftEye, mask = cv2.bitwise_not(skinRegionYCrCb))
+
+
+
+
+
+
+        imshow("Eye", skinYCrCb)
+
+
+
+
+
+
+
+##        rightEye = make_mask(img, eyes[1], gray)
+##        _, rightEye = threshold(rightEye, 100, 255, THRESH_BINARY)
+##
+##        displaying = hstack((leftEye, rightEye))
+##        imshow("Eye", displaying)
+
+##
+##        statut = "ouvert"
 
 
     #print(statut)
