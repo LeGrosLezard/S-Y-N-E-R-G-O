@@ -1,12 +1,14 @@
 # S-Y-N-E-R-G-O
 
-bon ok distance uclidienne c des vecteurs (peut etre c'esr ce qui y'a ecrit) ok mais apprendre en profondeur
-
-comprendre le code du mec pour eye tracking
+bon ok distance uclidienne
 
 mais ca dit qu'il regarde a gauche et c pas le premier code....
 
-on est au niveau au dessus mtn et chui pas tres super fort ^^
+apprendre a faire des ratio
+
+maitrsier les masks
+
+citer mec cv2, mec automatic et mec dlib, mettre leur tuto quoi
 
 - eye tracking
 
