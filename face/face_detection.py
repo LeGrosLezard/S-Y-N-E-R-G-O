@@ -89,8 +89,6 @@ def tracking_eyes(landmarks, faces, img, gray):
 
             return mask
 
-
-
         x, y, w, h = cv2.boundingRect(eyes[0])
         leftEye = img[y-5:y+h, x:x+w]
         leftEye = cv2.resize(leftEye, (100, 50))
@@ -103,14 +101,7 @@ def tracking_eyes(landmarks, faces, img, gray):
         skinRegionYCrCb = cv2.inRange(imageYCrCb,min_YCrCb,max_YCrCb)
 
         skinYCrCb = cv2.bitwise_and(leftEye, leftEye, mask = cv2.bitwise_not(skinRegionYCrCb))
-
-
-
-
-
-
-        imshow("Eye", skinYCrCb)
-
+        gray = cvtColor(skinYCrCb, COLOR_BGR2GRAY)
 
 
 
