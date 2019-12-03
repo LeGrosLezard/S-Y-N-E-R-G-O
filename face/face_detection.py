@@ -81,27 +81,53 @@ def tracking_eyes(landmarks, faces, img, gray):
         import numpy as np
         import cv2
 
+
         def make_mask(img, eye, gray):
-            mask = zeros((img.shape[0], img.shape[1]), uint8)
-            polylines(mask, [eye], True, 255, 2)
-            fillPoly(mask, [eye], 255)
-            mask = bitwise_and(gray, gray, mask=mask)
 
-            return mask
-
-        x, y, w, h = cv2.boundingRect(eyes[0])
-        leftEye = img[y-5:y+h, x:x+w]
-        leftEye = cv2.resize(leftEye, (100, 50))
-
-        min_YCrCb = np.array([0,150,85],np.uint8)
-        max_YCrCb = np.array([235,173,127],np.uint8)
+            height, width = gray.shape[:2]
+            black_frame = np.zeros((height, width), np.uint8)
+            mask = np.full((height, width), 255, np.uint8)
+            cv2.fillPoly(mask, [eye], (0, 0, 0))
+            eye = cv2.bitwise_not(black_frame, gray.copy(), mask=mask)
+            cv2.imshow('vvvvvvvvvvvvv', eye)
+            cv2.waitKey(0)
+            return eye
 
 
-        imageYCrCb = cv2.cvtColor(leftEye,cv2.COLOR_BGR2YCR_CB)
-        skinRegionYCrCb = cv2.inRange(imageYCrCb,min_YCrCb,max_YCrCb)
 
-        skinYCrCb = cv2.bitwise_and(leftEye, leftEye, mask = cv2.bitwise_not(skinRegionYCrCb))
-        gray = cvtColor(skinYCrCb, COLOR_BGR2GRAY)
+        R = cv2.RETR_TREE
+        P = cv2.CHAIN_APPROX_NONE
+
+        region = np.array([(landmarks.part(point).x, landmarks.part(point).y) for point in [36, 37, 38, 39, 40, 41]])
+        ok = make_mask(img, region, gray)
+
+        imshow('okok', ok)
+        cv2.waitKey(0)
+
+
+        contours, _ = cv2.findContours(ok, R, P)
+
+        for cnt in contours:
+            x, y, w, h = cv2.boundingRect(cnt)
+            crop = ok[y:y+h, x:x+w]
+
+
+    
+
+
+        imshow('cxw1oki', crop)
+        cv2.waitKey(0)
+
+                
+
+
+
+
+        
+
+
+
+
 
 
 
