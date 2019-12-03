@@ -1,7 +1,5 @@
 # S-Y-N-E-R-G-O
 
-apprendre distance uclidienne
-
 apprendre a faire des ratio
 
 maitrsier les masks
