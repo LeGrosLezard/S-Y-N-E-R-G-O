@@ -56,7 +56,6 @@ def exterior_face(face, img):
 def closing_eyes(eye):
     return (dist.euclidean(eye[1], eye[5]) + dist.euclidean(eye[2], eye[4])) / (2.0 * dist.euclidean(eye[0], eye[3]))
 
-
 def make_mask(img, eye, gray):
     """Recuperate eye mask"""
 
@@ -70,7 +69,7 @@ def make_mask(img, eye, gray):
     x, y, w, h = boundingRect(eye)
     cropMask = mask[y-5:y+h+5, x-5:x+w+5]
     cropImg = img[y-5:y+h+5, x-5:x+w+5]
-
+    
     return cropMask, cropImg
 
 
@@ -91,7 +90,7 @@ def define_threshold(crop):
         if blacks_pixels < minimum:
             minimum = blacks_pixels
 
-    return minimum
+    return threshold(mask, minimum, 255, THRESH_BINARY)[1]
 
 
 def get_eyes(crop, thresh, cropPicture):
@@ -99,11 +98,10 @@ def get_eyes(crop, thresh, cropPicture):
 
     out = ""
 
-    area_eye = threshold(crop, thresh, 255, THRESH_BINARY)[1]
-    contours, _ = findContours(area_eye, RETR_TREE, CHAIN_APPROX_NONE)
-
+    contours = findContours(thresh, RETR_TREE, CHAIN_APPROX_NONE)[0][-2:]
+    contours = sorted(contours, key=contourArea)
     try:
-        moment = moments(contours[0])
+        moment = moments(contours[-2])
         x = int(moment['m10'] / moment['m00'])
         y = int(moment['m01'] / moment['m00'])
 
@@ -137,7 +135,7 @@ def tracking_eyes(landmarks, faces, img, gray):
     elif right_ear <= min_ear: state = "droite"
     elif left_ear >= max_ear and right_ear >= max_ear: state= "very open eyes"
     else:
-
+        import cv2
         #Recuperate a mask with only the contour of eye
         cropMaskLeft, cropImgLeft = make_mask(img, eyes[0], gray)
         cropMaskRight, cropImgRight = make_mask(img, eyes[1], gray)
@@ -145,10 +143,16 @@ def tracking_eyes(landmarks, faces, img, gray):
         #Make an automatic threshold
         threshold_left = define_threshold(cropMaskLeft)
         threshold_right = define_threshold(cropMaskRight)
-
+ 
         #Recuperate center of the contour (pupil).
         x_left, y_left = get_eyes(cropMaskLeft, threshold_left, cropImgLeft)
         x_right, y_right = get_eyes(cropMaskRight, threshold_right, cropImgRight)
+
+        print(x_left, y_left, x_right, y_right)
+
+        cv2.imshow("1",cropImgLeft)
+        cv2.imshow("1daz",cropImgRight)
+        cv2.waitKey(0)
 
     if state != "": print(state)
 
