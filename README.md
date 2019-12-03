@@ -1,8 +1,6 @@
 # S-Y-N-E-R-G-O
 
-bon ok distance uclidienne
-
-mais ca dit qu'il regarde a gauche et c pas le premier code....
+apprendre distance uclidienne
 
 apprendre a faire des ratio
 
