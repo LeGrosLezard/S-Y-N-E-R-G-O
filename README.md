@@ -6,7 +6,7 @@ apprendre a faire des ratio
 
 maitrsier les masks
 
-citer mec cv2, mec automatic et mec dlib, et mec cv2-1 mettre leur tuto quoi
+
 
 - eye tracking
 
@@ -27,3 +27,4 @@ citer mec cv2, mec automatic et mec dlib, et mec cv2-1 mettre leur tuto quoi
 
 
 
+citer mec cv2, mec automatic et mec dlib, et mec cv2-1 mettre leur tuto quoi
