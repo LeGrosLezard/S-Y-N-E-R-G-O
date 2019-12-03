@@ -1,6 +1,6 @@
 # S-Y-N-E-R-G-O
 
-bon ok distance uclidienne c des vecteurs ok mais apprendre en profondeur
+bon ok distance uclidienne c des vecteurs (peut etre c'esr ce qui y'a ecrit) ok mais apprendre en profondeur
 
 comprendre le code du mec pour eye tracking
 
