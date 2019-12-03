@@ -1,8 +1,8 @@
 # S-Y-N-E-R-G-O
 
-apprendre a faire des ratio
 
-maitrsier les masks
+ faut voir si ca marche avec d'autre vidéo d'autre plan
+
 
 
 
