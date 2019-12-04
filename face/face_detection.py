@@ -102,7 +102,7 @@ def get_eyes(crop, thresh, cropPicture, landmarks, num):
 
     contours = findContours(thresh, RETR_TREE, CHAIN_APPROX_NONE)[0][-2:]
     contours = sorted(contours, key=contourArea)
-    
+
     try:
         moment = moments(contours[-2])
         x = int(moment['m10'] / moment['m00'])
@@ -153,34 +153,32 @@ def tracking_eyes(landmarks, faces, img, gray, last_position):
 
 
 
+        imshow('imgimg', img)
+        waitKey(0)
 
-        
         import cv2
 
-        a = landmarks.part(27).x
-        b = landmarks.part(27).y
-        try:
-            line(img, (x + x_left, y + y_left), (a, b), (0, 255, 0), 2)
-            line(img, (x1 + x_right, y1 + y_right), (a, b), (0, 255, 0), 2)
+##        a = landmarks.part(27).x
+##        b = landmarks.part(27).y
+##
+##        try:
+##            line(img, (x + x_left, y + y_left), (a, b), (0, 255, 0), 2)
+##            line(img, (x1 + x_right, y1 + y_right), (a, b), (0, 255, 0), 2)
+##
+##            circle(img, (x + x_left, y + y_left), 3, (0, 0, 255), 1)
+##            circle(img, (x1 + x_right, y1 + y_right), 3, (0, 0, 255), 1)
+##            circle(img, (a, b), 3, (0, 0, 255), 1)
+##
+##        except TypeError:
+##            pass
 
-            circle(img, (x + x_left, y + y_left), 3, (0, 0, 255), 1)
-            circle(img, (x1 + x_right, y1 + y_right), 3, (0, 0, 255), 1)
-            circle(img, (a, b), 3, (0, 0, 255), 1)
-        except TypeError:
-            pass
 
 
 
-##
-##
-##        print(last_position)
-##        eyes_position = [x_left, y_left, x_right, y_right]
-##
-##
-##        for i in eyes[0]:
-##            print(i)
-##
-##        print("left :", x_left, y_left, "right",  x_right, y_right)
+        eyes_position = [x_left, y_left, x_right, y_right]
+        print("left :", cropMaskLeft.shape[0] / 2, cropMaskLeft.shape[1] / 2,
+              "right", cropMaskRight.shape[0] / 2, cropMaskRight.shape[1] / 2)
+        print("left :", x_left, y_left, "right",  x_right, y_right)
 ##        print("")
 
 
