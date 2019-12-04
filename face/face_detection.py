@@ -163,6 +163,10 @@ def tracking_eyes(landmarks, faces, img, gray, a1, a2):
             import cv2
             import numpy as np
 
+
+            ha,wa = cropImgLeft.shape[:2]
+  
+
             cropMaskLeft = cv2.resize(cropMaskLeft, (400, 200))
             cropMaskLeft = cvtColor(cropMaskLeft, COLOR_BGR2GRAY)
 
@@ -200,8 +204,6 @@ def tracking_eyes(landmarks, faces, img, gray, a1, a2):
 
 
                 #print(x_left, y_left, x_right, y_right, a1, a2)
-
-
                 #circle(cropImgLeft, (x, y), 10, (255, 0, 0), 1)
             except:
                 pass
@@ -209,42 +211,44 @@ def tracking_eyes(landmarks, faces, img, gray, a1, a2):
             mask = np.zeros(cropImgLeft.shape[:2],np.uint8)
             bgdModel = np.zeros((1,65),np.float64)
             fgdModel = np.zeros((1,65),np.float64)
-            rect = (x - 50,y - 50, x - 100 , y + 40)
+            rect = (x - 50,y - 50, 100 , 100)
 
-            print(rect)
+
             cv2.grabCut(cropImgLeft,mask,rect,bgdModel,fgdModel,5,cv2.GC_INIT_WITH_RECT)
             mask2 = np.where((mask==2)|(mask==0),0,1).astype('uint8')
             daz = cropImgLeft*mask2[:,:,np.newaxis]
 
             gray = cv2.cvtColor(daz, cv2.COLOR_BGR2GRAY)
             thresholdthreshold = threshold(gray, 0, 255, THRESH_BINARY)[1]
-            cv2.imshow("thresholdthreshold", thresholdthreshold)
-            cv2.waitKey(0)
+
 
             contours = findContours(thresholdthreshold, RETR_TREE, CHAIN_APPROX_NONE)[0][-2:]
             contours = sorted(contours, key=contourArea)
-            print(len(contours))
+
 
 
             try:
                 moment = moments(contours[-1])
                 x = int(moment['m10'] / moment['m00'])
                 y = int(moment['m01'] / moment['m00'])
-                cv2.circle(cropImgLeft, (x, y), 50, (0, 255, 0) , 1)
+                cv2.circle(cropImgLeft, (x, y), 50, (0, 0, 255) , 1)
             except:
                 pass
 
-            
-            
 
-
+            cropImgLeftaa = cv2.resize(cropImgLeft, (wa,ha))
             cv2.imshow("cropImgLeft", cropImgLeft)
             cv2.waitKey(0)
 
+            g = int(x/16)
+            p = int(y/12)
+            print("ici", g,p)
+            
 
+            return g, p
 
-        position(cropImgLeft, cropImgLeft, x_left, y_left, x_right, y_right, a1, a2)
-
+        g, p = position(cropImgLeft, cropImgLeft, x_left, y_left, x_right, y_right, a1, a2)
+        circle(cropImgLeft, (g, p), 3, (0, 0, 255) , 1)
         
         
 
