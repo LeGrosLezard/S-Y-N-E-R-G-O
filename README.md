@@ -3,19 +3,19 @@
 
  faut voir si ca marche avec d'autre vidéo d'autre plan
 
-- thread en incli et trakcing eye
+thread en incli et trakcing eye
 
-- sinon faire inclinaison avant
+sinon faire inclinaison avant
 
-- ex: tete va droite, donc oeil gauche (pour l'instant) va a gauche ou droite
+ex: tete va droite, donc oeil gauche (pour l'instant) va a gauche ou droite
 
-- voir si oeil droite fait la meme chose
+voir si oeil droite fait la meme chose
 
-- sinon dire non
+ sinon dire non
 
-- ivnersement
+ivnersement
 
-- la c'est clair mais en gros, il faut se positionner sur l'oeil ou le mec se tourne pour etre sur
+la c'est clair mais en gros, il faut se positionner sur l'oeil ou le mec se tourne pour etre sur
 
 
 
