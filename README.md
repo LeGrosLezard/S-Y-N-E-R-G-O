@@ -1,5 +1,6 @@
 # S-Y-N-E-R-G-O
 
+en ajoutant un coeff de 5 pcque je viens de comprendre ce quétais qu'un coeff hihihi
 
 faire truck avec tete // oeil
 
