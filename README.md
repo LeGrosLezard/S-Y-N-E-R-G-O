@@ -1,23 +1,15 @@
 # S-Y-N-E-R-G-O
 
 
- faut voir si ca marche avec d'autre vidéo d'autre plan
+faire truck avec tete // oeil
 
-thread en incli et trakcing eye
+en gros, dlib fait bouger les pts, 
 
-sinon faire inclinaison avant
+en gros il faut: que tout l'ensemble bouge en meme temps
 
-ex: tete va droite, donc oeil gauche (pour l'instant) va a gauche ou droite
+en gros on récup 1 pts en haut et un en bas
 
-voir si oeil droite fait la meme chose
-
- sinon dire non
-
-ivnersement
-
-la c'est clair mais en gros, il faut se positionner sur l'oeil ou le mec se tourne pour etre sur
-
-et faut verifier via les coordonées et ou est l'oeil mais c pas précis précis donc bon
+si les 2 pts bougent et que le carré bouge alors ok en gros faut un truk en suspension sinon refaire les pts manuellement et les faire bouger selon le truk !!!!!
 
 
 <br><br><br><br>
