@@ -7,10 +7,7 @@ faire truck avec tete // oeil
 
 si on a tous les pts on bouge le cercle via les millieux
 
-en gros, si on a tous les pts ok sinon via le mouvement de la tete (récupérer les pts) les placer
-
-ensuite on peut dire si le cercle est plus vers un points via le mileu un truk du genre son déplacement, sa force, son vecteur, sa vélocité, sa trajectoire
-
+test le model qui stagnait a 2/4 sur 51 000 chai pas si c'est bon mais ca stagnait depuis hier donc bon
 
 <br><br><br><br>
 
