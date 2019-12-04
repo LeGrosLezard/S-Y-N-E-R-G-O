@@ -69,7 +69,10 @@ def make_mask(img, eye, gray):
     x, y, w, h = boundingRect(eye)
     cropMask = mask[y-5:y+h+5, x-5:x+w+5]
     cropImg = img[y-5:y+h+5, x-5:x+w+5]
-    
+
+
+
+
     return cropMask, cropImg
 
 
@@ -90,7 +93,6 @@ def define_threshold(crop):
         if blacks_pixels < minimum:
             minimum = thresh
 
-
     return threshold(mask, minimum, 255, THRESH_BINARY)[1]
 
 
@@ -110,7 +112,7 @@ def get_eyes(crop, thresh, cropPicture):
         circle(cropPicture, (x, y), 3, (0, 0, 255), 1)
 
         out = x, y
-
+        print(crop.shape)
     except (IndexError, ZeroDivisionError):
         pass
 
@@ -151,28 +153,47 @@ def tracking_eyes(landmarks, faces, img, gray):
         x_right, y_right = get_eyes(cropMaskRight, threshold_right, cropImgRight)
 
 
-        def position(mask, x, y):
+        def position(x, y, pts):
 
-            height, width = mask.shape
-            a = int(width/3); b = int(height/3)
-            rectangle(mask, (0, 0), (a, b), (58, 128, 58), 1)
-            rectangle(mask, (0, b*2), (a, b), (100, 238, 229), 1)
-            rectangle(mask, (0, b*3), (a, b*2), (44, 44, 210), 1)
+            blank_image = zeros((100,200,3), uint8)
+            blank_image[0:, 0:] = 255, 255, 255
 
-            rectangle(mask, (a*2, 0), (a*3, b), (58, 128, 58), 1)
-            rectangle(mask, (a*2, b*2), (a*3, b), (100, 238, 229), 1)
-            rectangle(mask, (a*2, b*3), (a*3, b*2), (44, 44, 210), 1)
+            pts = pts.tolist()
+            a = 80
+            b = 50
+
+            for i in pts[1:]:
+                circle(blank_image, (a, b), 1, (0, 255, 0), 1)
+                circle(blank_image, (a + (pts[0][0][0] - i[0][0]), b + (pts[0][0][1] - i[0][1])), 1, (0, 255, 0), 1)
+
+
+            #rectangle(blank_image, (100 - aa, 50 - 8), (100 + aa,50 + 8), (0, 0, 255), 1)
 
 
 
-            imshow(",po;po", mask)
+            imshow("blank_image", blank_image)
             waitKey(0)
 
+        position(x_left, y_left, eyes[0])
 
 
 
-        if x_left != "" or y_left != "": 
-            position(threshold_left, x_left, y_left)
+
+
+##        print(x_left, y_left)
+##        for i in eyes[0]:
+##            print(i)
+##
+##        ok = resize(cropMaskLeft, (100, 50))
+##        okaaa = resize(threshold_left, (100, 50))
+##
+##
+##
+##
+##        imshow("dza", ok)
+##        imshow("okaaa", okaaa)
+##        waitKey(0)
+
 
 
 
@@ -222,6 +243,6 @@ def inclinaison(landmarks, img):
     if a3 < - 20: head += "et incline la tete a gauche "
     elif a3 > 20: head += "et incline la tete a droite "
 
-    print(head)
+    #print(head)
     return head
 
