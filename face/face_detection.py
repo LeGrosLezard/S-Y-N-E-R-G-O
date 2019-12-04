@@ -96,10 +96,11 @@ def define_threshold(crop):
 def get_eyes(crop, thresh, cropPicture):
     """Recuperate center of contour"""
 
-    out = ""
+    out = "", ""
 
     contours = findContours(thresh, RETR_TREE, CHAIN_APPROX_NONE)[0][-2:]
     contours = sorted(contours, key=contourArea)
+
     try:
         moment = moments(contours[-2])
         x = int(moment['m10'] / moment['m00'])
@@ -135,7 +136,7 @@ def tracking_eyes(landmarks, faces, img, gray):
     elif right_ear <= min_ear: state = "droite"
     elif left_ear >= max_ear and right_ear >= max_ear: state= "very open eyes"
     else:
-        import cv2
+
         #Recuperate a mask with only the contour of eye
         cropMaskLeft, cropImgLeft = make_mask(img, eyes[0], gray)
         cropMaskRight, cropImgRight = make_mask(img, eyes[1], gray)
@@ -148,11 +149,41 @@ def tracking_eyes(landmarks, faces, img, gray):
         x_left, y_left = get_eyes(cropMaskLeft, threshold_left, cropImgLeft)
         x_right, y_right = get_eyes(cropMaskRight, threshold_right, cropImgRight)
 
-        print(x_left, y_left, x_right, y_right)
 
-        cv2.imshow("1",cropImgLeft)
-        cv2.imshow("1daz",cropImgRight)
-        cv2.waitKey(0)
+        def position(mask, x, y):
+
+
+            imshow("mask", mask)
+            waitKey(0)
+
+            height, width = mask.shape
+            blank_image = zeros((height, width, 3), uint8)
+            blank_image[:, :] = 255, 255, 255
+            a = int(width/3); b = int(height/3)
+            rectangle(blank_image, (0, 0), (a, b), (58, 128, 58), 1)
+            rectangle(blank_image, (0, b*2), (a, b), (100, 238, 229), 1)
+            rectangle(blank_image, (0, b*3), (a, b*2), (44, 44, 210), 1)
+
+            rectangle(blank_image, (a*2, 0), (a*3, b), (58, 128, 58), 1)
+            rectangle(blank_image, (a*2, b*2), (a*3, b), (100, 238, 229), 1)
+            rectangle(blank_image, (a*2, b*3), (a*3, b*2), (44, 44, 210), 1)
+
+            circle(blank_image, (x, y), 3, (0, 0, 0), 1)
+
+            imshow("dazdsq", blank_image)
+            waitKey(0)
+
+        if x_left != "" or y_left != "": 
+            position(cropMaskLeft, x_left, y_left)
+
+
+
+
+        print(x_left, y_left, x_right, y_right)
+        
+
+
+
 
     if state != "": print(state)
 
@@ -182,8 +213,8 @@ def inclinaison(landmarks, img):
     a3 = int(250*(a[1]-b[1])/coeff)
     head = ""
 
-    if a1 < - 25: head += "a droite "
-    elif a1 > 25: head += "a gauche "
+    if a1 < - 20: head += "a droite "
+    elif a1 > 20: head += "a gauche "
 
     if a2 < 15: head += "en haut "
     elif a2 < 0: head += "tres haut "
@@ -193,6 +224,6 @@ def inclinaison(landmarks, img):
     if a3 < - 20: head += "et incline la tete a gauche "
     elif a3 > 20: head += "et incline la tete a droite "
 
-    #print(head)
+    print(head)
     return head
 
