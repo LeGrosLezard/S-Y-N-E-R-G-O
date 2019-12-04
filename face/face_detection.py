@@ -56,7 +56,7 @@ def exterior_face(face, img):
 def closing_eyes(eye):
     return (dist.euclidean(eye[1], eye[5]) + dist.euclidean(eye[2], eye[4])) / (2.0 * dist.euclidean(eye[0], eye[3]))
 
-def make_mask(img, eye, gray):
+def make_mask(img, eye, gray, a1, a2):
     """Recuperate eye mask"""
 
     height, width = gray.shape[:2]
@@ -67,8 +67,8 @@ def make_mask(img, eye, gray):
 
     """Recuperate the eye area"""
     x, y, w, h = boundingRect(eye)
-    cropMask = mask[y-5:y+h+5, x-5:x+w+5]
-    cropImg = img[y-5:y+h+5, x-5:x+w+5]
+    cropMask = mask[(y-5) + a2 :(y+h+5) + a2, (x-5) + a1 : (x+w+5) + a1]
+    cropImg = img[(y-5) + a2 :(y+h+5) + a2, (x-5) + a1 : (x+w+5) + a1]
 
     return cropMask, cropImg
 
@@ -119,7 +119,7 @@ def get_eyes(crop, thresh, cropPicture):
 
 
 #close
-def tracking_eyes(landmarks, faces, img, gray):
+def tracking_eyes(landmarks, faces, img, gray, a1, a2):
 
     state = ""; min_ear = 0.3; max_ear = 0.5; left_ear = 0.4; right_ear = 0.4
     eyes = (convexHull(array([(landmarks.part(n).x, landmarks.part(n).y)
@@ -145,8 +145,8 @@ def tracking_eyes(landmarks, faces, img, gray):
     else:
 
         #Recuperate a mask with only the contour of eye
-        cropMaskLeft, cropImgLeft = make_mask(img, eyes[0], gray)
-        cropMaskRight, cropImgRight = make_mask(img, eyes[1], gray)
+        cropMaskLeft, cropImgLeft = make_mask(img, eyes[0], gray, a1, a2)
+        cropMaskRight, cropImgRight = make_mask(img, eyes[1], gray, a1, a2)
 
         #Make an automatic threshold
         threshold_left = define_threshold(cropMaskLeft)
@@ -158,15 +158,17 @@ def tracking_eyes(landmarks, faces, img, gray):
 
 
 
-        def position(cropMaskLeft, cropImgLeft, x_left, y_left, x_right, y_right):
+        def position(cropMaskLeft, cropImgLeft, x_left, y_left, x_right, y_right, a1, a2):
 
             import cv2
             import numpy as np
 
-            cropMaskLeft = cv2.resize(cropMaskLeft, (200, 100))
+            cropMaskLeft = cv2.resize(cropMaskLeft, (400, 200))
             cropMaskLeft = cvtColor(cropMaskLeft, COLOR_BGR2GRAY)
 
-            cropImgLeft = cv2.resize(cropImgLeft, (200, 100))
+
+
+            cropImgLeft = cv2.resize(cropImgLeft, (400, 200))
             
             minimum = 1000000
             th = 0
@@ -193,20 +195,33 @@ def tracking_eyes(landmarks, faces, img, gray):
                 moment = moments(contours[-2])
                 x = int(moment['m10'] / moment['m00'])
                 y = int(moment['m01'] / moment['m00'])
-                
-                circle(cropImgLeft, (x, y), 5, (255, 0, 0), 1)
+
+
+
+
+                #print(x_left, y_left, x_right, y_right, a1, a2)
+
+
+
+
+
+
+
+
+
+
+                circle(cropImgLeft, (x, y), 10, (255, 0, 0), 1)
             except:
                 pass
 
 
 
-            cv2.imshow("cropMaskLeft", cropMaskLeft)
             cv2.imshow("cropImgLeft", cropImgLeft)
             cv2.waitKey(0)
 
 
 
-        position(cropImgLeft, cropImgLeft, x_left, y_left, x_right, y_right)
+        position(cropImgLeft, cropImgLeft, x_left, y_left, x_right, y_right, a1, a2)
 
         
         
@@ -242,7 +257,7 @@ def inclinaison(landmarks, img):
     a3 = int(250*(a[1]-b[1])/coeff)
     head = ""
     
-    print(a1, a2)
+
 
     if a1 < - 20: head += "a droite "
     elif a1 > 20: head += "a gauche "
@@ -256,5 +271,5 @@ def inclinaison(landmarks, img):
     elif a3 > 20: head += "et incline la tete a droite "
 
     #print(head)
-    return head
+    return head, a1, a2
 
