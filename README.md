@@ -7,7 +7,7 @@ faire truck avec tete // oeil
 
 si on a tous les pts on bouge le cercle via les millieux
 
-test le model qui stagnait a 2/4 sur 51 000 chai pas si c'est bon mais ca stagnait depuis hier donc bon
+test le model qui stagnait a 2/4 sur 51 000 chai pas si c'est bon mais ca stagnait depuis hier donc bon et y'avait la blinde de perspective...
 
 <br><br><br><br>
 
