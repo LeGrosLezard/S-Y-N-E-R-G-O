@@ -159,14 +159,33 @@ def tracking_eyes(landmarks, faces, img, gray):
             blank_image[0:, 0:] = 255, 255, 255
 
             pts = pts.tolist()
-            a = 80
-            b = 50
+            a = 50
+            b = 40
+            coeff = 10
 
-            for i in pts[1:]:
-                circle(blank_image, (a, b), 1, (0, 255, 0), 1)
-                circle(blank_image, (a + (pts[0][0][0] - i[0][0]), b + (pts[0][0][1] - i[0][1])), 1, (0, 255, 0), 1)
+            oki = []
+            for i in pts:
+                circle(blank_image, (a + (pts[0][0][0] - i[0][0]) * 5, b + (pts[0][0][1] - i[0][1]) * 5), 1, (0, 255, 0), 1)
+                oki.append((a + (pts[0][0][0] - i[0][0]) * 5, b + (pts[0][0][1] - i[0][1]) * 5))
+
+            try:
+                A= int((oki[2][0]+oki[1][0])/2), int((oki[2][1]+oki[1][1])/2)
+                B= int((oki[4][0]+oki[5][0])/2), int((oki[4][1]+oki[5][1])/2)
+
+                AA = int((A[0] + B[0]) / 2), int((A[1] + B[1]) / 2)
+
+                C = int((a + oki[3][0]) /2), int((b + oki[3][1]) /2)
+                CC = int(C[0]), int(C[1])
 
 
+                circle(blank_image, (A[0], A[1]), 1, (255, 0, 0), 1)
+                circle(blank_image, (B[0], B[1]), 1, (255, 0, 0), 1)
+
+                circle(blank_image, (AA[0], AA[1]), 1, (0, 0, 255), 1)
+                circle(blank_image, (CC[0], CC[1]), 1, (0, 0, 255), 1)
+
+            except:
+                pass
             #rectangle(blank_image, (100 - aa, 50 - 8), (100 + aa,50 + 8), (0, 0, 255), 1)
 
 
