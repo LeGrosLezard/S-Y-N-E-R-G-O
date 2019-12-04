@@ -70,9 +70,6 @@ def make_mask(img, eye, gray):
     cropMask = mask[y-5:y+h+5, x-5:x+w+5]
     cropImg = img[y-5:y+h+5, x-5:x+w+5]
 
-
-
-
     return cropMask, cropImg
 
 
@@ -80,6 +77,7 @@ def define_threshold(crop):
     """Recuperate the minimum contour by an automatic threshold"""
 
     minimum = 1000
+    th = 0
     for thresh in range(5, 100, 5):
 
         kernel = ones((3, 3), uint8)
@@ -91,9 +89,10 @@ def define_threshold(crop):
         nb_pixels = height * width
         blacks_pixels = nb_pixels - countNonZero(mask) / nb_pixels
         if blacks_pixels < minimum:
-            minimum = thresh
+            th = thresh
+            minimum = blacks_pixels
 
-    return threshold(mask, minimum, 255, THRESH_BINARY)[1]
+    return threshold(mask, th, 255, THRESH_BINARY)[1]
 
 
 def get_eyes(crop, thresh, cropPicture):
@@ -109,10 +108,10 @@ def get_eyes(crop, thresh, cropPicture):
         x = int(moment['m10'] / moment['m00'])
         y = int(moment['m01'] / moment['m00'])
 
-        circle(cropPicture, (x, y), 3, (0, 0, 255), 1)
+        #circle(cropPicture, (x, y), 3, (0, 0, 255), 1)
 
         out = x, y
-        print(crop.shape)
+
     except (IndexError, ZeroDivisionError):
         pass
 
@@ -127,6 +126,11 @@ def tracking_eyes(landmarks, faces, img, gray):
                     for pts in faces for n in range(36, 42)])),
             convexHull(array([(landmarks.part(n).x, landmarks.part(n).y)
                     for pts in faces for n in range(42, 48)])))
+
+##
+##    for i in eyes[0]:
+##        print(i)
+##        circle(img, (i[0][0], i[0][1]), 1, (255, 0, 0), 1)
 
     try:
         left_ear = closing_eyes(eyes[0])
@@ -153,78 +157,65 @@ def tracking_eyes(landmarks, faces, img, gray):
         x_right, y_right = get_eyes(cropMaskRight, threshold_right, cropImgRight)
 
 
-        def position(x, y, pts):
 
-            blank_image = zeros((100,200,3), uint8)
-            blank_image[0:, 0:] = 255, 255, 255
+        def position(cropMaskLeft, cropImgLeft, x_left, y_left, x_right, y_right):
 
-            pts = pts.tolist()
-            a = 50
-            b = 40
-            coeff = 10
+            import cv2
+            import numpy as np
 
-            oki = []
-            for i in pts:
-                circle(blank_image, (a + (pts[0][0][0] - i[0][0]) * 5, b + (pts[0][0][1] - i[0][1]) * 5), 1, (0, 255, 0), 1)
-                oki.append((a + (pts[0][0][0] - i[0][0]) * 5, b + (pts[0][0][1] - i[0][1]) * 5))
+            cropMaskLeft = cv2.resize(cropMaskLeft, (200, 100))
+            cropMaskLeft = cvtColor(cropMaskLeft, COLOR_BGR2GRAY)
+
+            cropImgLeft = cv2.resize(cropImgLeft, (200, 100))
+            
+            minimum = 1000000
+            th = 0
+            for thresh in range(5, 100, 5):
+
+                kernel = ones((3, 3), uint8)
+                mask = bilateralFilter(cropMaskLeft, 10, 15, 15)
+                mask = erode(mask, kernel, iterations=3)
+                mask = threshold(mask, thresh, 255, THRESH_BINARY)[1]
+
+
+                height, width = cropMaskLeft.shape[:2]
+                nb_pixels = height * width
+                blacks_pixels = nb_pixels - countNonZero(mask) / nb_pixels
+                if blacks_pixels < minimum:
+                    th = thresh
+                    minimum = blacks_pixels
+
+
+            contours = findContours(mask, RETR_TREE, CHAIN_APPROX_NONE)[0][-2:]
+            contours = sorted(contours, key=contourArea)
 
             try:
-                A= int((oki[2][0]+oki[1][0])/2), int((oki[2][1]+oki[1][1])/2)
-                B= int((oki[4][0]+oki[5][0])/2), int((oki[4][1]+oki[5][1])/2)
-
-                AA = int((A[0] + B[0]) / 2), int((A[1] + B[1]) / 2)
-
-                C = int((a + oki[3][0]) /2), int((b + oki[3][1]) /2)
-                CC = int(C[0]), int(C[1])
-
-
-                circle(blank_image, (A[0], A[1]), 1, (255, 0, 0), 1)
-                circle(blank_image, (B[0], B[1]), 1, (255, 0, 0), 1)
-
-                circle(blank_image, (AA[0], AA[1]), 1, (0, 0, 255), 1)
-                circle(blank_image, (CC[0], CC[1]), 1, (0, 0, 255), 1)
-
+                moment = moments(contours[-2])
+                x = int(moment['m10'] / moment['m00'])
+                y = int(moment['m01'] / moment['m00'])
+                
+                circle(cropImgLeft, (x, y), 5, (255, 0, 0), 1)
             except:
                 pass
-            #rectangle(blank_image, (100 - aa, 50 - 8), (100 + aa,50 + 8), (0, 0, 255), 1)
 
 
 
-            imshow("blank_image", blank_image)
-            waitKey(0)
-
-        position(x_left, y_left, eyes[0])
-
+            cv2.imshow("cropMaskLeft", cropMaskLeft)
+            cv2.imshow("cropImgLeft", cropImgLeft)
+            cv2.waitKey(0)
 
 
 
+        position(cropImgLeft, cropImgLeft, x_left, y_left, x_right, y_right)
 
-##        print(x_left, y_left)
-##        for i in eyes[0]:
-##            print(i)
-##
-##        ok = resize(cropMaskLeft, (100, 50))
-##        okaaa = resize(threshold_left, (100, 50))
-##
-##
-##
-##
-##        imshow("dza", ok)
-##        imshow("okaaa", okaaa)
-##        waitKey(0)
-
-
-
-
-
-        print(x_left, y_left, x_right, y_right)
+        
         
 
 
 
 
     if state != "": print(state)
-
+    
 
 
 
@@ -250,6 +241,8 @@ def inclinaison(landmarks, img):
     a2 = int(250*(d2*sin(acos(cosb))-coeff/4)/coeff)
     a3 = int(250*(a[1]-b[1])/coeff)
     head = ""
+    
+    print(a1, a2)
 
     if a1 < - 20: head += "a droite "
     elif a1 > 20: head += "a gauche "
