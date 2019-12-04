@@ -67,8 +67,8 @@ def make_mask(img, eye, gray, a1, a2):
 
     """Recuperate the eye area"""
     x, y, w, h = boundingRect(eye)
-    cropMask = mask[(y-5) + a2 :(y+h+5) + a2, (x-5) + a1 : (x+w+5) + a1]
-    cropImg = img[(y-5) + a2 :(y+h+5) + a2, (x-5) + a1 : (x+w+5) + a1]
+    cropMask = mask[y-5:y+h+5, x-5:x+w+5]
+    cropImg = img[y-5:y+h+5, x-5:x+w+5]
 
     return cropMask, cropImg
 
@@ -202,18 +202,40 @@ def tracking_eyes(landmarks, faces, img, gray, a1, a2):
                 #print(x_left, y_left, x_right, y_right, a1, a2)
 
 
-
-
-
-
-
-
-
-
-                circle(cropImgLeft, (x, y), 10, (255, 0, 0), 1)
+                #circle(cropImgLeft, (x, y), 10, (255, 0, 0), 1)
             except:
                 pass
 
+            mask = np.zeros(cropImgLeft.shape[:2],np.uint8)
+            bgdModel = np.zeros((1,65),np.float64)
+            fgdModel = np.zeros((1,65),np.float64)
+            rect = (x - 50,y - 50, x - 100 , y + 40)
+
+            print(rect)
+            cv2.grabCut(cropImgLeft,mask,rect,bgdModel,fgdModel,5,cv2.GC_INIT_WITH_RECT)
+            mask2 = np.where((mask==2)|(mask==0),0,1).astype('uint8')
+            daz = cropImgLeft*mask2[:,:,np.newaxis]
+
+            gray = cv2.cvtColor(daz, cv2.COLOR_BGR2GRAY)
+            thresholdthreshold = threshold(gray, 0, 255, THRESH_BINARY)[1]
+            cv2.imshow("thresholdthreshold", thresholdthreshold)
+            cv2.waitKey(0)
+
+            contours = findContours(thresholdthreshold, RETR_TREE, CHAIN_APPROX_NONE)[0][-2:]
+            contours = sorted(contours, key=contourArea)
+            print(len(contours))
+
+
+            try:
+                moment = moments(contours[-1])
+                x = int(moment['m10'] / moment['m00'])
+                y = int(moment['m01'] / moment['m00'])
+                cv2.circle(cropImgLeft, (x, y), 50, (0, 255, 0) , 1)
+            except:
+                pass
+
+            
+            
 
 
             cv2.imshow("cropImgLeft", cropImgLeft)
