@@ -76,7 +76,7 @@ def make_mask(img, eye, gray):
 def define_threshold(crop):
     """Recuperate the minimum contour by an automatic threshold"""
 
-    minimum = 0
+    minimum = 1000
     for thresh in range(5, 100, 5):
 
         kernel = ones((3, 3), uint8)
@@ -88,7 +88,8 @@ def define_threshold(crop):
         nb_pixels = height * width
         blacks_pixels = nb_pixels - countNonZero(mask) / nb_pixels
         if blacks_pixels < minimum:
-            minimum = blacks_pixels
+            minimum = thresh
+
 
     return threshold(mask, minimum, 255, THRESH_BINARY)[1]
 
@@ -152,29 +153,26 @@ def tracking_eyes(landmarks, faces, img, gray):
 
         def position(mask, x, y):
 
-
-            imshow("mask", mask)
-            waitKey(0)
-
             height, width = mask.shape
-            blank_image = zeros((height, width, 3), uint8)
-            blank_image[:, :] = 255, 255, 255
             a = int(width/3); b = int(height/3)
-            rectangle(blank_image, (0, 0), (a, b), (58, 128, 58), 1)
-            rectangle(blank_image, (0, b*2), (a, b), (100, 238, 229), 1)
-            rectangle(blank_image, (0, b*3), (a, b*2), (44, 44, 210), 1)
+            rectangle(mask, (0, 0), (a, b), (58, 128, 58), 1)
+            rectangle(mask, (0, b*2), (a, b), (100, 238, 229), 1)
+            rectangle(mask, (0, b*3), (a, b*2), (44, 44, 210), 1)
 
-            rectangle(blank_image, (a*2, 0), (a*3, b), (58, 128, 58), 1)
-            rectangle(blank_image, (a*2, b*2), (a*3, b), (100, 238, 229), 1)
-            rectangle(blank_image, (a*2, b*3), (a*3, b*2), (44, 44, 210), 1)
+            rectangle(mask, (a*2, 0), (a*3, b), (58, 128, 58), 1)
+            rectangle(mask, (a*2, b*2), (a*3, b), (100, 238, 229), 1)
+            rectangle(mask, (a*2, b*3), (a*3, b*2), (44, 44, 210), 1)
 
-            circle(blank_image, (x, y), 3, (0, 0, 0), 1)
 
-            imshow("dazdsq", blank_image)
+
+            imshow(",po;po", mask)
             waitKey(0)
+
+
+
 
         if x_left != "" or y_left != "": 
-            position(cropMaskLeft, x_left, y_left)
+            position(threshold_left, x_left, y_left)
 
 
 
