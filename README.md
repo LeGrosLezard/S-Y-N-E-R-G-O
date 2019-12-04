@@ -17,6 +17,10 @@ ivnersement
 
 la c'est clair mais en gros, il faut se positionner sur l'oeil ou le mec se tourne pour etre sur
 
+et faut verifier via les coordonées et ou est l'oeil mais c pas précis précis donc bon
+
+
+<br><br><br><br>
 
 
 - region figure // région du mec en bleu
