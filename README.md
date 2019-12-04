@@ -1,6 +1,6 @@
 # S-Y-N-E-R-G-O
 
-
+ la grosseur de la tete
 
 faire truck avec tete // oeil
 
