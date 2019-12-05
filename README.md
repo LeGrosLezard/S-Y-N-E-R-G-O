@@ -1,11 +1,6 @@
 # S-Y-N-E-R-G-O
 
 
-
-- verifier que imbriquer imbriquer gange du temps sinon désinmbriquer 
-
-- y'a un soucis avec le haut
-
 - sourcile
 
 - nez
