@@ -5,8 +5,6 @@ bon faire le truk face
 
 mon modele = 1 semaine et 4 jours et 3 nuits pour rien
 
-celui de vittoria marche du tonnerre sur non webcam .... essayer dlib landmark hand quand meme
-
 faire truck avec tete // oeil
 
 
@@ -39,4 +37,4 @@ refaire eyes tracking, apprendre les generators et pk en normal c'est ok mais pa
 
 
 
-citer mec cv2, mec automatic et mec dlib, et mec cv2-1 mettre leur tuto quoi
+citer mec cv2, mec automatic et mec dlib, et mec cv2-1 vittoria et tuto yolo quand meme mettre leur tuto quoi
