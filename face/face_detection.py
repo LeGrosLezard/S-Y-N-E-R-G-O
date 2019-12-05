@@ -147,12 +147,11 @@ def pos(crop, x, y, pos_eye):
 
 
 def ana(dico):
-    out = list({k for k, v in dico.items() if v >= 3})
-    return out
+    return list({k for k, v in dico.items() if v >= 3})
 
 
 def analyse(left_eye, right_eye):
-    no = set()
+    no = []
 
     left_gaze = ana(left_eye)
     right_gaze = ana(right_eye)
@@ -214,9 +213,10 @@ def inclinaison(landmarks, img):
     b = landmarks.part(45).x, landmarks.part(45).y
     c = landmarks.part(30).x, landmarks.part(30).y
 
-    d_eyes = sqrt(pow(a[0] - b[0], 2) + pow(a[1] - b[1], 2))
-    d1 = sqrt(pow(a[0] - c[0], 2) + pow(a[1] - c[1], 2))
-    d2 = sqrt(pow(b[0] - c[0], 2) + pow(b[1] - c[1], 2))
+    d_eyes = dist.euclidean(a, b) 
+    d1 = dist.euclidean(a, c) 
+    d2 = dist.euclidean(b, c) 
+
     coeff = d1 + d2
 
     cosb = np_min( (pow(d2, 2) - pow(d1, 2) + pow(d_eyes, 2) ) / (2*d2*d_eyes) )
@@ -224,6 +224,7 @@ def inclinaison(landmarks, img):
     a2 = int(250*(d2*sin(acos(cosb))-coeff/4)/coeff)
     a3 = int(250*(a[1]-b[1])/coeff)
     head = ""
+
 
     #print(a1, a2, a3)
     #print("")
