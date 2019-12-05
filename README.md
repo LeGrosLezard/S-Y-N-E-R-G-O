@@ -2,7 +2,7 @@
 
 
 
-- faire les commentaires + explications avant de faire sourciles ect mais pause
+- verifier que imbriquer imbriquer gange du temps sinon désinmbriquer 
 
 
 
