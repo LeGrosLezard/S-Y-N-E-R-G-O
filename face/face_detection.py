@@ -76,8 +76,8 @@ def make_mask(img, eye, gray):
 def define_threshold(crop):
     """Recuperate the minimum contour by an automatic threshold"""
 
-    minimum = 1000
-    th = 0
+    minimum_thresh = [10000, 0]
+
     for thresh in range(5, 100, 5):
 
         kernel = ones((3, 3), uint8)
@@ -88,17 +88,17 @@ def define_threshold(crop):
         height, width = crop.shape[:2]
         nb_pixels = height * width
         blacks_pixels = nb_pixels - countNonZero(mask) / nb_pixels
-        if blacks_pixels < minimum:
-            th = thresh
-            minimum = blacks_pixels
+        if blacks_pixels < minimum_thresh[0]:
+            minimum_thresh[0] = blacks_pixels
+            minimum_thresh[1] = thresh
 
-    return threshold(mask, th, 255, THRESH_BINARY)[1]
+    return threshold(mask, minimum_thresh[1], 255, THRESH_BINARY)[1]
 
 
 def get_eyes(crop, thresh, cropPicture, landmarks, num):
     """Recuperate center of contour"""
 
-    out = "", ""
+    out = None, None
 
     contours = findContours(thresh, RETR_TREE, CHAIN_APPROX_NONE)[0][-2:]
     contours = sorted(contours, key=contourArea)
@@ -108,7 +108,7 @@ def get_eyes(crop, thresh, cropPicture, landmarks, num):
         x = int(moment['m10'] / moment['m00'])
         y = int(moment['m01'] / moment['m00'])
 
-        #circle(cropPicture, (x, y), 3, (0, 0, 255), 1)
+        circle(cropPicture, (x, y), 2, (0, 0, 255), 2)
 
         out = x, y
 
@@ -119,7 +119,7 @@ def get_eyes(crop, thresh, cropPicture, landmarks, num):
 
 
 #close
-def tracking_eyes(landmarks, faces, img, gray, last_position):
+def tracking_eyes(landmarks, faces, img, gray):
 
     state = ""; min_ear = 0.3; max_ear = 0.5; left_ear = 0.4; right_ear = 0.4
     eyes = (convexHull(array([(landmarks.part(n).x, landmarks.part(n).y)
@@ -153,50 +153,31 @@ def tracking_eyes(landmarks, faces, img, gray, last_position):
 
 
 
-        imshow('imgimg', img)
-        waitKey(0)
+        def pos(crop, x, y):
 
-        import cv2
+            try:
 
-##        a = landmarks.part(27).x
-##        b = landmarks.part(27).y
-##
-##        try:
-##            line(img, (x + x_left, y + y_left), (a, b), (0, 255, 0), 2)
-##            line(img, (x1 + x_right, y1 + y_right), (a, b), (0, 255, 0), 2)
-##
-##            circle(img, (x + x_left, y + y_left), 3, (0, 0, 255), 1)
-##            circle(img, (x1 + x_right, y1 + y_right), 3, (0, 0, 255), 1)
-##            circle(img, (a, b), 3, (0, 0, 255), 1)
-##
-##        except TypeError:
-##            pass
+                horrizontal  = [["droite", "centre", "gauche"],
+                                [abs(x), abs(crop.shape[0] / 2 - x), abs(crop.shape[0] - x)]]
+                vertical = [["haut", "centre", "bas"],
+                            [abs(y), abs(crop.shape[0] / 2 - y), abs(crop.shape[0] - y)]]
+
+                a = horrizontal[0][horrizontal[1].index(min(horrizontal[1]))]
+                b = vertical[0][vertical[1].index(min(vertical[1]))]
+
+                print(a, b)
+   
+            except TypeError:pass
 
 
-
-
-        eyes_position = [x_left, y_left, x_right, y_right]
-        print("left :", cropMaskLeft.shape[0] / 2, cropMaskLeft.shape[1] / 2,
-              "right", cropMaskRight.shape[0] / 2, cropMaskRight.shape[1] / 2)
-        print("left :", x_left, y_left, "right",  x_right, y_right)
-##        print("")
-
-
-
-
-
+        pos(cropMaskLeft, x_left, y_left)
 
 
     if state != "": print(state)
     
-    try:
-        return eyes_position
-    except:
-        return ""
+
 
     
-
-
 #-------------------------------------- inclinaison
 
 def inclinaison(landmarks, img):
