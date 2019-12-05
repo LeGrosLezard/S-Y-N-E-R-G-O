@@ -1,13 +1,9 @@
 # S-Y-N-E-R-G-O
 
- la grosseur de la tete
 
 faire truck avec tete // oeil
 
-
-si on a tous les pts on bouge le cercle via les millieux
-
-test le model qui stagnait a 2/4 sur 51 000 chai pas si c'est bon mais ca stagnait depuis hier donc bon et y'avait la blinde de perspective...
+refaire eyes tracking, générators....... ca stock pas en mémoire ca veut dire quoi ca franchement quelqu'un pige ca ?
 
 <br><br><br><br>
 
