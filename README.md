@@ -3,6 +3,8 @@
 
 faire truck avec tete // oeil
 
+essayer le modele des mains sinon y'a des modeles hand dlib
+
 refaire eyes tracking, apprendre les generators et pk en normal c'est ok mais pas la
 
 <br><br><br><br>
