@@ -119,7 +119,7 @@ def get_eyes(crop, thresh, cropPicture, landmarks, num):
 
 
 #close
-def tracking_eyes(landmarks, faces, img, gray):
+def tracking_eyes(landmarks, faces, img, gray, left_eye, right_eye):
 
     state = ""; min_ear = 0.3; max_ear = 0.5; left_ear = 0.4; right_ear = 0.4
     eyes = (convexHull(array([(landmarks.part(n).x, landmarks.part(n).y)
@@ -153,24 +153,76 @@ def tracking_eyes(landmarks, faces, img, gray):
 
 
 
-        def pos(crop, x, y):
+
+        def pos(crop, x, y, endroit, pos_eye):
 
             try:
+                horrizontal  = [["centre", "droite", "gauche"],
+                                [abs(crop.shape[0] / 2 - x), abs(x), abs(crop.shape[0] - x)]]
+                vertical = [["centre", "haut", "centre", "bas"],
+                            [abs(crop.shape[0] / 2 - y), abs(y), abs(crop.shape[0] - y)]]
 
-                horrizontal  = [["droite", "centre", "gauche"],
-                                [abs(x), abs(crop.shape[0] / 2 - x), abs(crop.shape[0] - x)]]
-                vertical = [["haut", "centre", "bas"],
-                            [abs(y), abs(crop.shape[0] / 2 - y), abs(crop.shape[0] - y)]]
+                #print(pos_eye)
 
-                a = horrizontal[0][horrizontal[1].index(min(horrizontal[1]))]
-                b = vertical[0][vertical[1].index(min(vertical[1]))]
 
-                print(a, b)
-   
+                verti = horrizontal[0][horrizontal[1].index(min(horrizontal[1]))]
+                horri = vertical[0][vertical[1].index(min(vertical[1]))]
+
+                def add_movement(movement, pos_eye, liste):
+                    if movement != "centre": pos_eye[movement] += 1
+                    elif movement == "centre":
+                        for i in liste[1:]:
+                            pos_eye[i] = 0
+
+                add_movement(verti, pos_eye, horrizontal[0])
+                add_movement(horri, pos_eye, vertical[0])
+
             except TypeError:pass
 
+        pos(cropMaskLeft, x_left, y_left, "gauche", left_eye)
+        pos(cropMaskRight, x_right, y_right, "droite", right_eye)
 
-        pos(cropMaskLeft, x_left, y_left)
+
+        def analyse(left_eye, right_eye):
+            no = None
+            def ana(dico):
+                out = None
+                for k, v in dico.items():
+                    if v >= 3: out = k
+                return out
+            left_gaze = ana(left_eye)
+            right_gaze = ana(right_eye)
+            if left_gaze != no and right_gaze != no and\
+               left_gaze == right_gaze:
+                print("regard vers", right_gaze)
+            
+        analyse(left_eye, right_eye)
+
+
+
+
+                
+
+
+
+
+
+
+                
+
+
+            
+
+            
+
+
+
+
+
+        print("")
+
+
+
 
 
     if state != "": print(state)
@@ -197,8 +249,8 @@ def inclinaison(landmarks, img):
     a3 = int(250*(a[1]-b[1])/coeff)
     head = ""
     
-    print(a1, a2, a3)
-    print("")
+    #print(a1, a2, a3)
+    #print("")
 
     if a1 < - 20: head += "a droite "
     elif a1 > 20: head += "a gauche "
