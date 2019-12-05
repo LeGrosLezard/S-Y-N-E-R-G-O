@@ -1,5 +1,6 @@
 from cv2 import rectangle, convexHull, Subdiv2D, line, bitwise_and, boundingRect, bitwise_not, circle, drawContours, polylines, fillPoly, moments, contourArea, imshow, resize, cvtColor, COLOR_BGR2GRAY, threshold, THRESH_BINARY, bilateralFilter, erode, countNonZero, findContours, RETR_TREE, CHAIN_APPROX_NONE, waitKey
-from numpy import array, int32, hstack, zeros, uint8, min, max, full, ones
+from numpy import array, int32, hstack, zeros, uint8, full, ones
+from numpy import min as np_min
 from math import pow, sqrt, sin, acos, hypot
 from threading import Thread
 from scipy.spatial import distance as dist
@@ -89,8 +90,7 @@ def define_threshold(crop):
         nb_pixels = height * width
         blacks_pixels = nb_pixels - countNonZero(mask) / nb_pixels
         if blacks_pixels < minimum_thresh[0]:
-            minimum_thresh[0] = blacks_pixels
-            minimum_thresh[1] = thresh
+            minimum_thresh[0], minimum_thresh[1] = blacks_pixels, thresh
 
     return threshold(mask, minimum_thresh[1], 255, THRESH_BINARY)[1]
 
@@ -108,7 +108,7 @@ def get_eyes(crop, thresh, cropPicture, landmarks, num):
         x = int(moment['m10'] / moment['m00'])
         y = int(moment['m01'] / moment['m00'])
 
-        circle(cropPicture, (x, y), 2, (0, 0, 255), 2)
+        #circle(cropPicture, (x, y), 2, (0, 0, 255), 2)
 
         out = x, y
 
@@ -116,6 +116,46 @@ def get_eyes(crop, thresh, cropPicture, landmarks, num):
         pass
 
     return out
+
+
+def pos(crop, x, y, pos_eye):
+
+    try:
+
+        horrizontal = {"centre": abs(crop.shape[0] / 2 - x), "droite":abs(x), "gauche":abs(crop.shape[0] - x)}
+        vertical = {"centre":abs(crop.shape[1] / 2 - y), "haut":abs(y), "bas":abs(crop.shape[1] - y)}
+
+        #print(pos_eye)
+
+        verti = min(horrizontal, key=horrizontal.get)
+        horri = min(vertical, key=vertical.get)
+
+        def add_movement(movement, pos_eye, axis_eye):
+            if movement != "centre": pos_eye[movement] += 1
+            elif movement == "centre":
+                for k,v in axis_eye.items():
+                    pos_eye[k] = 0
+
+        add_movement(verti, pos_eye, horrizontal)
+        add_movement(horri, pos_eye, vertical)
+
+    except TypeError:pass
+
+
+def analyse(left_eye, right_eye):
+    no = set()
+
+    def ana(dico):
+        out = list({k for k, v in dico.items() if v >= 3})
+        return out
+
+    left_gaze = ana(left_eye)
+    right_gaze = ana(right_eye)
+
+    if left_gaze != no and right_gaze != no:
+        gaze = [i for i in left_gaze for j in right_gaze if i == j]
+        if gaze != []: print("regarde vers", gaze)
+
 
 
 #close
@@ -134,8 +174,8 @@ def tracking_eyes(landmarks, faces, img, gray, left_eye, right_eye):
         pass
 
     if left_ear <= min_ear and right_ear <= min_ear: state = "closed"
-    elif left_ear <= min_ear: state = "gauche"
-    elif right_ear <= min_ear: state = "droite"
+    elif left_ear <= min_ear: state = "blinking gauche"
+    elif right_ear <= min_ear: state = "blinking droite"
     elif left_ear >= max_ear and right_ear >= max_ear: state= "very open eyes"
     else:
 
@@ -151,58 +191,10 @@ def tracking_eyes(landmarks, faces, img, gray, left_eye, right_eye):
         x_left, y_left = get_eyes(cropMaskLeft, threshold_left, cropImgLeft, landmarks, 0)
         x_right, y_right = get_eyes(cropMaskRight, threshold_right, cropImgRight, landmarks, 1)
 
+        pos(cropMaskLeft, x_left, y_left, left_eye)
+        pos(cropMaskRight, x_right, y_right, right_eye)
 
-
-
-        def pos(crop, x, y, endroit, pos_eye):
-
-            try:
-                horrizontal  = [["centre", "droite", "gauche"],
-                                [abs(crop.shape[0] / 2 - x), abs(x), abs(crop.shape[0] - x)]]
-                vertical = [["centre", "haut", "centre", "bas"],
-                            [abs(crop.shape[0] / 2 - y), abs(y), abs(crop.shape[0] - y)]]
-
-                #print(pos_eye)
-
-
-                verti = horrizontal[0][horrizontal[1].index(min(horrizontal[1]))]
-                horri = vertical[0][vertical[1].index(min(vertical[1]))]
-
-                def add_movement(movement, pos_eye, liste):
-                    if movement != "centre": pos_eye[movement] += 1
-                    elif movement == "centre":
-                        for i in liste[1:]:
-                            pos_eye[i] = 0
-
-                add_movement(verti, pos_eye, horrizontal[0])
-                add_movement(horri, pos_eye, vertical[0])
-
-            except TypeError:pass
-
-        pos(cropMaskLeft, x_left, y_left, "gauche", left_eye)
-        pos(cropMaskRight, x_right, y_right, "droite", right_eye)
-
-        aaa = {"a":5, "b":6}
-        b = min(aaa.keys())
-        print(min(b))
-
-        def analyse(left_eye, right_eye):
-            no = None
-            def ana(dico):
-                out = None
-                for k, v in dico.items():
-                    if v >= 3: out = k
-
-                return out
-
-            left_gaze = ana(left_eye)
-            right_gaze = ana(right_eye)
-            if left_gaze != no and right_gaze != no and\
-               left_gaze == right_gaze:
-                print("regard vers", right_gaze)
-            
         analyse(left_eye, right_eye)
-
 
     if state != "": print(state)
     
@@ -222,12 +214,12 @@ def inclinaison(landmarks, img):
     d2 = sqrt(pow(b[0] - c[0], 2) + pow(b[1] - c[1], 2))
     coeff = d1 + d2
 
-    cosb = min( (pow(d2, 2) - pow(d1, 2) + pow(d_eyes, 2) ) / (2*d2*d_eyes) )
+    cosb = np_min( (pow(d2, 2) - pow(d1, 2) + pow(d_eyes, 2) ) / (2*d2*d_eyes) )
     a1 = int(250*(d1-d2)/coeff)
     a2 = int(250*(d2*sin(acos(cosb))-coeff/4)/coeff)
     a3 = int(250*(a[1]-b[1])/coeff)
     head = ""
-    
+
     #print(a1, a2, a3)
     #print("")
 
