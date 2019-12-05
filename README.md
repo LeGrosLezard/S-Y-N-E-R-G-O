@@ -3,7 +3,7 @@
 
 faire truck avec tete // oeil
 
-refaire eyes tracking, générators....... ca stock pas en mémoire ca veut dire quoi ca franchement quelqu'un pige ca ?
+refaire eyes tracking, apprendre les generators et pk en normal c'est ok mais pas la
 
 <br><br><br><br>
 
