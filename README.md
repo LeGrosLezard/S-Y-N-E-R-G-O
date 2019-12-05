@@ -1,32 +1,30 @@
 # S-Y-N-E-R-G-O
 
+- ne plus jamais télécharger un truk sans comprendre (ca a supprimer hdf5 ou chai pas quoi horrible)
 
-bon faire le truk face
+- refactoriser eyes tracking
 
-mon modele = 1 semaine et 4 jours et 3 nuits pour rien
+- vérifier que ca fait top + gauche
 
-faire truck avec tete // oeil
-
-
-
-refaire eyes tracking, apprendre les generators et pk en normal c'est ok mais pas la
-
-<br><br><br><br>
-
+- comprendre pk les dictionnaires compréhensions font des générators.
 
 - sourcile
 
 - nez
 
-- bouche pcque les modeles reconnaissent les 6 émotions mais pas les autres trucks jcrois
+- bouche 
 
-- region figure // région du mec en bleu
+
+
+<br><br><br><br>
+
+- récupérer un modele émotion
+
+- commencer : region figure // région du mec en bleu
 
 - on pourra aussi avoir la chevelure, raise figure, thresh ect
 
-- puis les detections mais ca chai pas ca descend a 4/3...
 
-- voir les modeles dispo
 
 
 
