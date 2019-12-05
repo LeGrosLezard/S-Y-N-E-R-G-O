@@ -1,12 +1,10 @@
 # S-Y-N-E-R-G-O
 
-- ne plus jamais télécharger un truk sans comprendre (ca a supprimer hdf5 ou chai pas quoi horrible)
+
 
 - refactoriser eyes tracking
 
 - vérifier que ca fait top + gauche
-
-- comprendre pk les dictionnaires compréhensions font des générators.
 
 - sourcile
 
