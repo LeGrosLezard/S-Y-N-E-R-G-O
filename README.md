@@ -10,6 +10,12 @@ refaire eyes tracking, apprendre les generators et pk en normal c'est ok mais pa
 <br><br><br><br>
 
 
+- sourcile
+
+- nez
+
+- bouche pcque les modeles reconnaissent les 6 émotions mais pas les autres trucks jcrois
+
 - region figure // région du mec en bleu
 
 - on pourra aussi avoir la chevelure, raise figure, thresh ect
