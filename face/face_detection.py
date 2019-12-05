@@ -182,6 +182,9 @@ def tracking_eyes(landmarks, faces, img, gray, left_eye, right_eye):
         pos(cropMaskLeft, x_left, y_left, "gauche", left_eye)
         pos(cropMaskRight, x_right, y_right, "droite", right_eye)
 
+        aaa = {"a":5, "b":6}
+        b = min(aaa.keys())
+        print(min(b))
 
         def analyse(left_eye, right_eye):
             no = None
@@ -189,7 +192,9 @@ def tracking_eyes(landmarks, faces, img, gray, left_eye, right_eye):
                 out = None
                 for k, v in dico.items():
                     if v >= 3: out = k
+
                 return out
+
             left_gaze = ana(left_eye)
             right_gaze = ana(right_eye)
             if left_gaze != no and right_gaze != no and\
@@ -197,32 +202,6 @@ def tracking_eyes(landmarks, faces, img, gray, left_eye, right_eye):
                 print("regard vers", right_gaze)
             
         analyse(left_eye, right_eye)
-
-
-
-
-                
-
-
-
-
-
-
-                
-
-
-            
-
-            
-
-
-
-
-
-        print("")
-
-
-
 
 
     if state != "": print(state)
