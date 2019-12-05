@@ -118,6 +118,16 @@ def get_eyes(crop, thresh, cropPicture, landmarks, num):
     return out
 
 
+
+
+def add_movement(movement, pos_eye, axis_eye):
+    if movement != "centre": pos_eye[movement] += 1
+    elif movement == "centre":
+        for k,v in axis_eye.items():
+            pos_eye[k] = 0
+
+
+
 def pos(crop, x, y, pos_eye):
 
     try:
@@ -130,24 +140,19 @@ def pos(crop, x, y, pos_eye):
         verti = min(horrizontal, key=horrizontal.get)
         horri = min(vertical, key=vertical.get)
 
-        def add_movement(movement, pos_eye, axis_eye):
-            if movement != "centre": pos_eye[movement] += 1
-            elif movement == "centre":
-                for k,v in axis_eye.items():
-                    pos_eye[k] = 0
-
         add_movement(verti, pos_eye, horrizontal)
         add_movement(horri, pos_eye, vertical)
 
     except TypeError:pass
 
 
+def ana(dico):
+    out = list({k for k, v in dico.items() if v >= 3})
+    return out
+
+
 def analyse(left_eye, right_eye):
     no = set()
-
-    def ana(dico):
-        out = list({k for k, v in dico.items() if v >= 3})
-        return out
 
     left_gaze = ana(left_eye)
     right_gaze = ana(right_eye)
