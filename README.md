@@ -1,6 +1,8 @@
 # S-Y-N-E-R-G-O
 
 
+- faire un display eyes
+
 - sourcile
 
 - nez
