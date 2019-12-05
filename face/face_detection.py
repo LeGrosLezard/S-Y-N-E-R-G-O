@@ -13,6 +13,7 @@ def points_landmarks(gray, predictor, detector):
     return predictor(gray, face[0]), face
 
 
+#Interior of face
 def intra_face(landmarks, faces, img):
     """Recuperate all coordiantes of landmarks (faces points).
     Recuperate convex points (exterior of face) and triangle
@@ -42,6 +43,7 @@ def intra_face(landmarks, faces, img):
     return t_points, head, convexhull
 
 
+#Exterior of face
 def exterior_face(face, img):
     """Recuperate area of the forehead and of the exterior of the head"""
 
@@ -53,12 +55,16 @@ def exterior_face(face, img):
 
 
 
-#-------------------------------------- yeux
+#---------------------------------------------------------------------------------------------------- eye
 
+#Blinking function
 def closing_eyes(eye):
     """ Recuperate eye report dist euclidien(widths) / 2 (length)"""
     return (dist.euclidean(eye[1], eye[5]) + dist.euclidean(eye[2], eye[4])) / (2.0 * dist.euclidean(eye[0], eye[3]))
 
+
+
+#Recuperate eyes masks
 def make_mask(img, eye, gray):
     """Recuperate contour of eyes, make a mask, recuperate the area."""
 
@@ -99,6 +105,8 @@ def define_threshold(crop):
     return threshold(mask, minimum_thresh[1], 255, THRESH_BINARY)[1]
 
 
+
+#Recuperate eyes movements
 def get_eyes(crop, thresh, cropPicture, landmarks, num):
     """Recuperate center of contour"""
 
@@ -120,8 +128,6 @@ def get_eyes(crop, thresh, cropPicture, landmarks, num):
         pass
 
     return out
-
-
 
 
 def add_movement(movement, pos_eye, axis_eye):
@@ -156,6 +162,9 @@ def position_eye(crop, x, y, pos_eye):
     except TypeError:pass
 
 
+
+
+#Analyse eyes positions
 def ana(dico):
     """If a value is >= 3"""
     return list({k for k, v in dico.items() if v >= 3})
@@ -175,6 +184,8 @@ def analyse(left_eye, right_eye):
         if gaze != []: print("regarde vers", gaze)
 
 
+
+#Global function
 def tracking_eyes(landmarks, faces, img, gray, left_eye, right_eye):
     """Define rapport eye min and max for blink eyes. Define the movement
     of them."""
@@ -219,9 +230,9 @@ def tracking_eyes(landmarks, faces, img, gray, left_eye, right_eye):
     if state != "": print(state)
     
 
-
+#---------------------------------------------------------------------------------------------------- yeux
     
-#-------------------------------------- inclinaison
+#---------------------------------------------------------------------------------------------------- inclinaison
 
 def inclinaison(landmarks, img):
     """Analyse angles of the triangle beetween eyes and nose points"""
@@ -259,4 +270,4 @@ def inclinaison(landmarks, img):
 
     #print(head)
     return head, a1, a2
-
+#---------------------------------------------------------------------------------------------------- inclinaison
