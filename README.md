@@ -2,9 +2,9 @@
 
 
 
-- refactoriser eyes tracking
+- faire les commentaires + explications avant de faire sourciles ect mais pause
 
-- vérifier que ca fait top + gauche
+
 
 - sourcile
 
@@ -12,13 +12,15 @@
 
 - bouche 
 
+- commencer hand et des fois le pouces et en dehors en tout cas faut récupérer le contours des mains.
 
+- et faire : region figure // région du mec en bleu
 
 <br><br><br><br>
 
 - récupérer un modele émotion
 
-- commencer : region figure // région du mec en bleu
+
 
 - on pourra aussi avoir la chevelure, raise figure, thresh ect
 
