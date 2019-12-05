@@ -1,9 +1,15 @@
 # S-Y-N-E-R-G-O
 
 
+bon faire le truk face
+
+mon modele = 1 semaine et 4 jours et 3 nuits pour rien
+
+celui de vittoria marche du tonnerre sur non webcam .... essayer dlib landmark hand quand meme
+
 faire truck avec tete // oeil
 
-essayer le modele des mains sinon y'a des modeles hand dlib
+
 
 refaire eyes tracking, apprendre les generators et pk en normal c'est ok mais pas la
 
