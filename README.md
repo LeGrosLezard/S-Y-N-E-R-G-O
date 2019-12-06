@@ -28,15 +28,11 @@
 
 - faire un display eyes
 
-- faire un display intra face
-
-- commencer hand et des fois le pouces et en dehors en tout cas faut récupérer le contours des mains. (faire un suivis des mains genre cnn)
-
 - récupérer un modele émotion + pts qui bougent
 
 - on pourra aussi avoir la chevelure, raise figure, thresh ect
 
-
+- récupérer un model de main signification
 
 
 
