@@ -58,4 +58,8 @@ modele si existe de bijou
 
 <br><br><br>
 
+algo contexte
+
+<br><br><br>
+
 citer mec cv2, mec automatic et mec dlib, et mec cv2-1 vittoria et tuto yolo, tim et thhierry quand meme mettre leur tuto quoi
