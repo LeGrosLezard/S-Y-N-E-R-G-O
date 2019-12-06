@@ -1,7 +1,11 @@
 from dlib import get_frontal_face_detector, shape_predictor
 from time import time
 from cv2 import VideoCapture, resize, waitKey, destroyAllWindows, imshow, cvtColor, COLOR_BGR2GRAY, imwrite
-from face_detection import intra_face, points_landmarks, exterior_face, inclinaison, tracking_eyes
+from face.face_detection import recuperate_intra_face_points, intra_face, points_landmarks, exterior_face, inclinaison
+from eyes.eyes_detection import tracking_eyes
+from display.face_display import recuperate_face
+
+
 #from face_display import recuperate_face
 
 
@@ -25,6 +29,7 @@ def video_lecture(video_name, face_points):
 
     right_eye = {"droite":0, "gauche":0, "haut":0, "bas":0}
     left_eye = {"droite":0, "gauche":0, "haut":0, "bas":0}
+
     while True:
 
         #Timmer start
@@ -37,28 +42,35 @@ def video_lecture(video_name, face_points):
         #68 points of face + face
         landmarks, face = points_landmarks(gray, predictor, detector)
 
-        #Triangle of face points
-        head_points, head, convexhull = intra_face(landmarks, face, frame)
+        #Intra Face
+        head_points, head, convexhull = recuperate_intra_face_points(landmarks, face, frame)
 
+
+        #Ext Face
         exterior_face(head, gray)
 
-        inclinaison(landmarks, frame)
 
-        tracking_eyes(landmarks, head, frame, gray, left_eye, right_eye)
+        #DOIT ETRE UN THREAD
+        inclinaison(landmarks, frame)
+        leftEye, rightEye = tracking_eyes(landmarks, head, frame, gray, left_eye, right_eye)
+
+        #Doit etre un multiprocess ou thread chpas
+        intra_face(frame, gray, landmarks, head, leftEye, rightEye)
+
+
 
 
         #except (IndexError): pass
+
  
-
-
         #Display
         #recuperate_face(convexhull, gray, frame, head_points)
-        
 
-        imshow('frame', frame)
+
+        #imshow('frame', frame)
 
         #Timmer end
-        #timmer(start)
+        timmer(start)
 
         if waitKey(0) & 0xFF == ord("q"):
             imwrite("ici.jpg", frame)
