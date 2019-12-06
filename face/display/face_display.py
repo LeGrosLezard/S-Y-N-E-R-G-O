@@ -11,7 +11,7 @@ from numpy import zeros_like, hstack, empty, uint8
 
 def displaying(gray, img, copy, convexhull):
 
-    head_model = imread("head_model.jpg")
+    head_model = imread("display/head_model.jpg")
     head_model = resize(head_model, (int(gray.shape[1]/2), gray.shape[0]))
 
     mask = zeros_like(gray)
@@ -47,8 +47,25 @@ def recuperate_face(convexhull, gray, img, points):
 
 
 
-
-
+##def make_rectangle(area, color):
+##    area = np.array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in range(area[0], area[1])])
+##    x, y, w, h = boundingRect(area)
+##    cv2.rectangle(img, (x, y), (x + w, y + h), color, 1) 
+##    return x, y, w, h
+##
+##def make_contour(area, color):
+##    area = np.array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in area])
+##    cv2.drawContours(img, [area], 0, color, 1)
+##
+##
+##areas =  { "beet_eyes" :[21, 22, 27], "chin":[58, 56, 9, 7], "chin1":[58, 7, 3, 48],
+##           "chin2": [56, 54, 13, 9], "cheek1": [48, 3, 0, 28],
+##           "cheek2":[54, 13, 16, 28], "noze_area":[27, 48, 54], "mouse":(48, 61),
+##           "onEye1":(17, 22), "onEye2":(22, 27), "leftEye":(36, 42), "rightEye":(42, 48)}
+##
+##[make_contour(areas[k], (0,255,0)) for nb, k in enumerate(areas) if nb <= 6]
+##[make_rectangle(areas[k], (0,255,0)) for nb, k in enumerate(areas) if nb > 6]
+##
 
 
 
