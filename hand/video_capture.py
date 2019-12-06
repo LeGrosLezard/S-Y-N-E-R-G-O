@@ -47,21 +47,15 @@ def detect_objects(image_np, detection_graph, sess):
 
 
 
-def draw_box_on_image(num_hands_detect, score_thresh, scores, boxes, im_width, im_height):
+def draw_box_on_image(scores, boxes):
+
+    im_width = 500; im_height = 400
 
     box = [(boxes[i][1] * im_width, boxes[i][3] * im_width,
             boxes[i][0] * im_height, boxes[i][2] * im_height)
-           for i in range(num_hands_detect) if (scores[i] > score_thresh)]
-
+           for i in range(2) if (scores[i] > 0.20)]
     return box
 
-
-def hands(areas, img):
-
-    crop1 = img[int(areas[0][2] - 20):int(areas[0][3] + 20), int(areas[0][0]) - 20:int(areas[0][1]) + 20]
-    crop2 = img[int(areas[1][2] - 20):int(areas[1][3] + 20), int(areas[1][0]) - 20:int(areas[1][1]) + 20]
-
-    return crop1, crop2
 
 
 def add_border(img, crop):
@@ -77,76 +71,115 @@ def add_border(img, crop):
     return crop
 
 
-def only_part(areas):
-    """que le pouce par example"""
-
-    pass
-
-def CNN_jb(detections):
-    print("noooooooooooooooooooo hand")
-
-def determination_hand():
+def determination_hand(detections):
     """ droite ou gauche ?"""
 
+    hands = [[i for i in detections if (250 - i[0]) < 0], [i for i in detections if (250 - i[0]) > 0]]
+    return hands[0], hands[1]
+
+
+
+def only_part(leftHand, rightHand):
+    """que le pouce par example"""
+    
+    def add_(hand):
+        var = 40
+        hand = [(hand[0][0] - var, hand[0][1] + var, hand[0][2] - var, hand[0][3] + var)]
+        return hand
+    
+    try:
+        if leftHand[0][1] - leftHand[0][0] < 40:
+            leftHand = add_(leftHand)
+        if rightHand[0][1] - rightHand[0][0] < 40:rightHand = add_(rightHand)
+
+    except:
+        pass
+
+    return leftHand, rightHand
+
+
+def hands(hand, img):
+    
+    var = 25
+    hand = img[int(hand[0][2] - var):int(hand[0][3] + var), int(hand[0][0]) - var:int(hand[0][1]) + var]
+
+    return hand
+
+
+
+
+def CNN_jb(detections):
+##    for i in detections:
+##        print(int(i[0][0]), int(i[0][2]))
+##
+##    print("")
     pass
 
 
 def video_capture(video_name, hand_model):
 
     detection_graph, sess = load_inference_graph(hand_model)
-
     video = cv2.VideoCapture(video_name)
-
     detections = []
 
     while True:
 
-
-
         frame = cv2.resize(video.read()[1], (500, 400))
-
         frameRGB = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
         boxes, scores = detect_objects(frameRGB, detection_graph, sess)
-        determination_hand()
 
-        only_part(boxes)
-        
-        areas = draw_box_on_image(2, 0.20, scores, boxes, 500, 400)
-        detections.append(areas)
+        areas = draw_box_on_image(scores, boxes)
+
+        left_hand, right_hand = determination_hand(areas)
+        left_hand, right_hand = only_part(left_hand, right_hand)
 
         try:
-            leftHand, rightHand = hands(areas, frame)
+            left_hand = hands(left_hand, frame)
+            right_hand = hands(right_hand, frame)
+
+            cv2.rectangle(frame, (int(areas[0][0]), int(areas[0][2])), (int(areas[0][1]), int(areas[0][3])), (0,0, 255) , 3)
+            cv2.rectangle(frame, (int(areas[1][0]), int(areas[1][2])), (int(areas[1][1]), int(areas[1][3])), (255, 0, 0), 3)
+
+
         except:
             CNN_jb(detections)
 
 
+        if len(detections) == 20:
+            detections = detections[10:]
+        detections.append(areas)
 
 
 
 
 
+
+        try:
         #Dsiplay
+            #left_hand = add_border(frame, left_hand)
+            #right_hand = add_border(frame, right_hand)
 
-        leftHand = add_border(frame, leftHand)
-        rightHand = add_border(frame, rightHand)
+            #h,w = left_hand.shape[:2]
+            #right_hand = cv2.resize(right_hand, (w, h))
 
-        h,w = leftHand.shape[:2]
+            #frame = cv2.resize(frame, (w, h))
+            #displaying = np.hstack((left_hand, frame))
+            #displaying = np.hstack((displaying, right_hand))
+            #displaying = np.hstack((left_hand, right_hand))
 
-        rightHand = cv2.resize(rightHand, (w, h))
-        frame = cv2.resize(frame, (w, h))
+            cv2.imshow("tdisplaying", frame)
 
-        displaying = np.hstack((leftHand, frame))
-        displaying = np.hstack((displaying, rightHand))
 
-        cv2.imshow("tdisplaying", displaying)
 
+        except:
+            pass
 
         if cv2.waitKey(0) & 0xFF == ord("q"):
             break
 
     video.release()
-    destroyAllWindows()
+    cv2.destroyAllWindows()
 
 
 
