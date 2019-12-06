@@ -49,7 +49,7 @@ def intra_face(img, gray, landmarks, face):
     import cv2
     import numpy as np
     import pylab
-    import matplotlib.cm as cm
+    from matplotlib import pyplot as plt
     from PIL import Image
 
     def crop_rectangle(area, color):
@@ -79,13 +79,40 @@ def intra_face(img, gray, landmarks, face):
     d = [cv2.resize(img[i[1]:i[1] + i[3], i[0]:i[0] + i[2]], (100, 50)) for i in a + b]
 
 
-    images = [Image.fromarray(name) for name in d]
-    somme=[]
-    for img in images:
-        somme+=list((np.asarray(img)))
 
-    cv2.imshow("img", np.array(somme))
+    numpy_horizontal_concat = np.concatenate( (d[0], d[1]), axis=1)
+    numpy_horizontal_concat = np.concatenate( (numpy_horizontal_concat, d[2]), axis=1)
+    numpy_horizontal_concat = np.concatenate( (numpy_horizontal_concat, d[3]), axis=1)
+    numpy_horizontal_concat = np.concatenate( (numpy_horizontal_concat, d[4]), axis=1)
+    numpy_horizontal_concat = np.concatenate( (numpy_horizontal_concat, d[5]), axis=1)
+
+
+    numpy_horizontal_concat2 = np.concatenate( (d[7], d[9]), axis=1)
+    numpy_horizontal_concat2 = np.concatenate( (numpy_horizontal_concat2,  d[8]), axis=1)
+    numpy_horizontal_concat2 = np.concatenate( (numpy_horizontal_concat2, d[10]), axis=1)
+    numpy_horizontal_concat2 = np.concatenate( (numpy_horizontal_concat2, d[6]), axis=1)
+    numpy_horizontal_concat2 = np.concatenate( (numpy_horizontal_concat2, d[11]), axis=1)
+
+
+    numpy_vertical = np.vstack((numpy_horizontal_concat, numpy_horizontal_concat2))
+
+    cv2.imshow("numpy_vertical", numpy_vertical)
+
+
     cv2.waitKey(0)
+
+
+
+
+
+
+##    images = [Image.fromarray(name) for name in d]
+##    somme=[]
+##    for img in images:
+##        somme+=list((np.asarray(img)))
+##
+##    cv2.imshow("img", np.array(somme))
+##    cv2.waitKey(0)
 
 
 #---------------------------------------------------------------------------------------------------- Intra face
