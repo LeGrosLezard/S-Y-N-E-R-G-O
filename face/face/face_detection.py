@@ -50,31 +50,26 @@ def intra_face(img, gray, landmarks, face, leftEye, rightEye):
     import numpy as np
 
     def make_rectangle(area, color):
+        area = np.array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in range(area[0], area[1])])
         x, y, w, h = boundingRect(area)
         cv2.rectangle(img, (x, y), (x + w, y + h), color, 1) 
         return x, y, w, h
 
     def make_contour(area, color):
+        print(area[0], area)
+        area = np.array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in area])
         cv2.drawContours(img, [area], 0, color, 1)
 
  
     #beet_eyes, chin chin1 chin2 cheek1 cheek2 noze_area mouse onEye onEye
-    areas = [np.array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in [21, 22, 27]]),
-            np.array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in [58, 56, 9, 7]]),
-            np.array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in [58, 7, 3, 48]]),
-            np.array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in [56, 54, 13, 9]]),
-            np.array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in [48, 3, 0, 28]]),
-            np.array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in [54, 13, 16, 28]]),
-            np.array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in [27, 48, 54]]),
-            np.array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in range(48, 61)]),
-            np.array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in range(17, 22)]),
-            np.array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in range(22, 27)])]
+    areas =  [ [21, 22, 27], [58, 56, 9, 7], [58, 7, 3, 48], [56, 54, 13, 9], [48, 3, 0, 28],
+               [54, 13, 16, 28], [27, 48, 54], (48, 61), (17, 22), (22, 27)]
 
 
     for area in areas[0:6]:
         make_contour(area, (0,255,0))
 
-    for area in areas[6:]:
+    for area in areas[7:]:
         make_rectangle(area, (255, 255, 0))
 
     area_eye = [leftEye, rightEye]
