@@ -43,40 +43,48 @@ def recuperate_intra_face_points(landmarks, faces, img):
     return t_points, head, convexhull
 
 
-def intra_face(img, gray, landmarks, face, leftEye, rightEye):
+def intra_face(img, gray, landmarks, face):
 
 
     import cv2
     import numpy as np
+    import pylab
+    import matplotlib.cm as cm
+    from PIL import Image
 
-    def make_rectangle(area, color):
+    def crop_rectangle(area, color):
         area = np.array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in range(area[0], area[1])])
         x, y, w, h = boundingRect(area)
-        cv2.rectangle(img, (x, y), (x + w, y + h), color, 1) 
+        #cv2.rectangle(img, (x, y), (x + w, y + h), color, 1)
         return x, y, w, h
 
-    def make_contour(area, color):
-        print(area[0], area)
+    def crop_contour(area, color):
         area = np.array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in area])
-        cv2.drawContours(img, [area], 0, color, 1)
-
- 
-    #beet_eyes, chin chin1 chin2 cheek1 cheek2 noze_area mouse onEye onEye
-    areas =  [ [21, 22, 27], [58, 56, 9, 7], [58, 7, 3, 48], [56, 54, 13, 9], [48, 3, 0, 28],
-               [54, 13, 16, 28], [27, 48, 54], (48, 61), (17, 22), (22, 27)]
+        x, y, w, h = boundingRect(area)
+        #cv2.drawContours(img, [area], 0, color, 1)
+        return x, y, w, h
+            
 
 
-    for area in areas[0:6]:
-        make_contour(area, (0,255,0))
+    areas =  { "beet_eyes" :[21, 22, 27], "chin":[58, 56, 9, 7],
+               "chin1":[58, 7, 3, 48],  "chin2": [56, 54, 13, 9],
+               "cheek1": [48, 3, 0, 28], "cheek2":[54, 13, 16, 28],
+               "noze_area":[27, 48, 54], "mouse":(48, 61),
+               "onEye1":(17, 22), "onEye2":(22, 27),
+               "leftEye":(36, 42), "rightEye":(42, 48)}
 
-    for area in areas[7:]:
-        make_rectangle(area, (255, 255, 0))
+    b = [crop_contour(areas[k], (0,255,0)) for nb, k in enumerate(areas) if nb <= 6]
+    a = [crop_rectangle(areas[k], (0,255,0)) for nb, k in enumerate(areas) if nb > 6]
 
-    area_eye = [leftEye, rightEye]
-    for eye in area_eye:
-        cv2.rectangle(img, (eye[0], eye[1]), (eye[2] , eye[3]), (255, 0, 0), 1)
+    d = [cv2.resize(img[i[1]:i[1] + i[3], i[0]:i[0] + i[2]], (100, 50)) for i in a + b]
 
-    cv2.imshow("img", img)
+
+    images = [Image.fromarray(name) for name in d]
+    somme=[]
+    for img in images:
+        somme+=list((np.asarray(img)))
+
+    cv2.imshow("img", np.array(somme))
     cv2.waitKey(0)
 
 
