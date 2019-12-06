@@ -21,7 +21,7 @@
 
 - avec une petite définition
 
-
+- age et gender
 
 
 <br><br><br>
@@ -45,6 +45,14 @@ récupérer le modele de la silouhette
 speech recognition
 
 model de mot
+
+<br><br><br>
+
+ride + signification
+
+<br><br><br>
+
+modele si existe de bijou
 
 <br><br><br>
 
