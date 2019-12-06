@@ -8,7 +8,7 @@
 
 - réflechir a soi substrator comme l'autre truk et allumé la zone du mec bleu
 
-- avec une petite définition, exemple je me gratouille l'entre oeil et le mec critique un autre mec et je m'apercois qu'enfete le mec s'auto critique j'ai un don de meuf ...
+- avec une petite définition
 
 
 
