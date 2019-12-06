@@ -44,59 +44,46 @@ def recuperate_intra_face_points(landmarks, faces, img):
 
 
 def intra_face(img, gray, landmarks, face, leftEye, rightEye):
+
+
     import cv2
     import numpy as np
 
     def make_rectangle(area, color):
         x, y, w, h = boundingRect(area)
-        cv2.rectangle(img, (x, y), (x + w, y + h), color, size) 
+        cv2.rectangle(img, (x, y), (x + w, y + h), color, 1) 
         return x, y, w, h
 
     def make_contour(area, color):
         cv2.drawContours(img, [area], 0, color, 1)
 
-    beet_eyes = np.array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in [21, 22, 27]])
-    make_contour(beet_eyes, (0,255,0))
+ 
+    #beet_eyes, chin chin1 chin2 cheek1 cheek2 noze_area mouse onEye onEye
+    areas = [np.array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in [21, 22, 27]]),
+            np.array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in [58, 56, 9, 7]]),
+            np.array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in [58, 7, 3, 48]]),
+            np.array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in [56, 54, 13, 9]]),
+            np.array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in [48, 3, 0, 28]]),
+            np.array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in [54, 13, 16, 28]]),
+            np.array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in [27, 48, 54]]),
+            np.array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in range(48, 61)]),
+            np.array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in range(17, 22)]),
+            np.array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in range(22, 27)])]
 
 
-    mouse = np.array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in range(48, 61)])
-    make_rectangle(mouse, (255, 255, 0))
+    for area in areas[0:6]:
+        make_contour(area, (0,255,0))
 
-
-    chin = np.array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in [58, 56, 9, 7]])
-    make_contour(chin, (0, 255, 0))
-
-    chin1 = np.array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in [58, 7, 3, 48]])
-    make_contour(chin1, (0, 255, 255))
-
-    chin2 = np.array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in [56, 54, 13, 9]])
-    make_contour(chin2, (0, 255, 255))
-
-    
-    cheek1 = np.array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in [48, 3, 0, 28]])
-    make_contour(cheek1, (0, 255, 0))
-
-    cheek2 = np.array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in [54, 13, 16, 28]])
-    make_contour(cheek2, (0, 255, 0))
-
-    noze_area = np.array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in [27, 48, 54]])
-    make_contour(noze_area, (0,0,255))
-
-    onEyes = [np.array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in range(17, 22)]),
-              np.array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in range(22, 27)])]
-
-    for onEye in onEyes:
-        make_rectangle(onEye, (0, 0, 255))
-
+    for area in areas[6:]:
+        make_rectangle(area, (255, 255, 0))
 
     area_eye = [leftEye, rightEye]
     for eye in area_eye:
         cv2.rectangle(img, (eye[0], eye[1]), (eye[2] , eye[3]), (255, 0, 0), 1)
 
-
-
     cv2.imshow("img", img)
     cv2.waitKey(0)
+
 
 #---------------------------------------------------------------------------------------------------- Intra face
 
