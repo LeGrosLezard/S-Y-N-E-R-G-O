@@ -24,7 +24,7 @@
 
 
 
-<br><br><br><br>
+<br><br><br>
 
 - faire un display eyes
 
@@ -36,11 +36,16 @@
 
 
 
+<br><br><br>
 
+récupérer le modele de la silouhette
 
+<br><br><br>
 
+speech recognition
 
+model de mot
 
-
+<br><br><br>
 
 citer mec cv2, mec automatic et mec dlib, et mec cv2-1 vittoria et tuto yolo, tim et thhierry quand meme mettre leur tuto quoi
