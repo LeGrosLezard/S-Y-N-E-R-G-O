@@ -1,12 +1,23 @@
 # S-Y-N-E-R-G-O
 
+- récupérer que le  pourtour des mains
 
+- récupérer les précédentes valeurs
+
+    -  (en haut, en haut, pas de détection peut etre en haut ou en bas, faire box en haut en bas faire le pourtour des mains
+        voir si ca ressemble)
+
+- mains en vert
+
+- si main vers tete activer la tete
+
+<br><br><br>
 
 - mtn oreille, tempe, front et cou ! 
 
-- récup les pts du mec bleu
+- si haute présence de vers faire:
 
-- réflechir a soi substrator comme l'autre truk et allumé la zone du mec bleu
+- récup les pts du mec bleu
 
 - avec une petite définition
 
