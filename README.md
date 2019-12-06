@@ -1,23 +1,23 @@
 # S-Y-N-E-R-G-O
 
 
-- faire un display eyes
+- extraire les régions de la face
 
-- sourcile
-
-- nez
-
-- bouche 
-
-- commencer hand et des fois le pouces et en dehors en tout cas faut récupérer le contours des mains.
 
 - et faire : region figure // région du mec en bleu
 
+
+
+
 <br><br><br><br>
 
-- récupérer un modele émotion
+- faire un display eyes
 
+- faire un display intra face
 
+- commencer hand et des fois le pouces et en dehors en tout cas faut récupérer le contours des mains.
+
+- récupérer un modele émotion + pts qui bougent
 
 - on pourra aussi avoir la chevelure, raise figure, thresh ect
 
