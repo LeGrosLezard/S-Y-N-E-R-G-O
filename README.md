@@ -40,6 +40,8 @@
 
 récupérer le modele de la silouhette
 
+et faire les zones coude, genoux
+
 <br><br><br>
 
 speech recognition
