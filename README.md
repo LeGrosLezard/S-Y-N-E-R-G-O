@@ -1,8 +1,12 @@
 # S-Y-N-E-R-G-O
 
 
-- extraire les régions de la face
 
+- mtn oreille, tempe, front et cou ! 
+
+- récup les pts du mec bleu
+
+- réflechir a soi substrator comme l'autre truk et allumé la zone du mec bleu
 
 - et faire : region figure // région du mec en bleu
 
