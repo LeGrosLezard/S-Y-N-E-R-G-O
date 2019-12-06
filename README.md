@@ -11,6 +11,8 @@
 
 - si main vers tete activer la tete
 
+- si le modele detecte pas les mains qui vont vers la figure faire substractor et on compte le nombre de pixel quand la main va vers la figure
+
 <br><br><br>
 
 - mtn oreille, tempe, front et cou ! 
