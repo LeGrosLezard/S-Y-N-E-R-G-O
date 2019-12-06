@@ -1,6 +1,8 @@
 import cv2
 import tensorflow as tf
 import numpy as np
+from time import time
+
 
 print(tf.version.VERSION)
 
@@ -47,19 +49,20 @@ def detect_objects(image_np, detection_graph, sess):
 
 def draw_box_on_image(num_hands_detect, score_thresh, scores, boxes, im_width, im_height):
 
-    out = [(boxes[i][1] * im_width, boxes[i][3] * im_width,
+    box = [(boxes[i][1] * im_width, boxes[i][3] * im_width,
             boxes[i][0] * im_height, boxes[i][2] * im_height)
            for i in range(num_hands_detect) if (scores[i] > score_thresh)]
 
-    return out
+    return box
 
 
 def hands(areas, img):
 
-    import cv2
+    crop1 = img[int(areas[0][2] - 20):int(areas[0][3] + 20), int(areas[0][0]) - 20:int(areas[0][1]) + 20]
+    crop2 = img[int(areas[1][2] - 20):int(areas[1][3] + 20), int(areas[1][0]) - 20:int(areas[1][1]) + 20]
 
-    crop = img[int(areas[2] - 20):int(areas[3] + 20), int(areas[0]) - 20:int(areas[1]) + 20]
-    return crop
+    return crop1, crop2
+
 
 def add_border(img, crop):
 
@@ -69,18 +72,22 @@ def add_border(img, crop):
     addHeight = int((height - height_crop) / 2)
     addWidth = int((width - width_crop) / 2)
     
-    crop = cv2.copyMakeBorder(
-                 crop, 
-                 addHeight, 
-                 addHeight, 
-                 addWidth, 
-                 addWidth, 
-                 cv2.BORDER_CONSTANT, 
-                 value= (0, 0, 0))
-
+    crop = cv2.copyMakeBorder(crop, addHeight, addHeight, 
+                 addWidth, addWidth, cv2.BORDER_CONSTANT, value= (0, 0, 0))
     return crop
 
-def CNN_jb():
+
+def only_part(areas):
+    """que le pouce par example"""
+
+    pass
+
+def CNN_jb(detections):
+    print("noooooooooooooooooooo hand")
+
+def determination_hand():
+    """ droite ou gauche ?"""
+
     pass
 
 
@@ -89,18 +96,29 @@ def video_capture(video_name, hand_model):
     detection_graph, sess = load_inference_graph(hand_model)
 
     video = cv2.VideoCapture(video_name)
+
+    detections = []
+
     while True:
+
+
+
         frame = cv2.resize(video.read()[1], (500, 400))
 
         frameRGB = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
         boxes, scores = detect_objects(frameRGB, detection_graph, sess)
+        determination_hand()
 
+        only_part(boxes)
+        
         areas = draw_box_on_image(2, 0.20, scores, boxes, 500, 400)
+        detections.append(areas)
 
-        leftHand = hands(areas[0], frame)
-        rightHand = hands(areas[1], frame)
-
+        try:
+            leftHand, rightHand = hands(areas, frame)
+        except:
+            CNN_jb(detections)
 
 
 
@@ -115,19 +133,14 @@ def video_capture(video_name, hand_model):
 
         h,w = leftHand.shape[:2]
 
-        
-
         rightHand = cv2.resize(rightHand, (w, h))
         frame = cv2.resize(frame, (w, h))
 
-        
         displaying = np.hstack((leftHand, frame))
         displaying = np.hstack((displaying, rightHand))
 
-
-
-
         cv2.imshow("tdisplaying", displaying)
+
 
         if cv2.waitKey(0) & 0xFF == ord("q"):
             break
