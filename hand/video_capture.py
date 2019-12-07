@@ -46,37 +46,22 @@ def detect_objects(image_np, detection_graph, sess):
     return np.squeeze(boxes), np.squeeze(scores)
 
 
+ 
+def recuperate_detection(scores, boxes):
 
-def draw_box_on_image(scores, boxes):
+    width = 500; height = 400
 
-    im_width = 500; im_height = 400
-
-    box = [(boxes[i][1] * im_width, boxes[i][3] * im_width,
-            boxes[i][0] * im_height, boxes[i][2] * im_height)
+    box = [(boxes[i][1] * width, boxes[i][3] * width,
+            boxes[i][0] * height, boxes[i][2] * height)
            for i in range(2) if (scores[i] > 0.20)]
 
     return box
-
-
-
-def add_border(img, crop):
-
-    height, width = img.shape[:2]
-    height_crop, width_crop = crop.shape[:2]
-
-    addHeight = int((height - height_crop) / 2)
-    addWidth = int((width - width_crop) / 2)
-    
-    crop = cv2.copyMakeBorder(crop, addHeight, addHeight, 
-                 addWidth, addWidth, cv2.BORDER_CONSTANT, value= (0, 0, 0))
-    return crop
 
 
 def determination_hand(detections):
     """ droite ou gauche ?"""
     hands = [[i for i in detections if (250 - i[0]) < 0], [i for i in detections if (250 - i[0]) > 0]]
     return hands[0], hands[1]
-
 
 
 def only_part(hand, detections):
@@ -86,10 +71,10 @@ def only_part(hand, detections):
     return hand
 
 
-
-def CNN_jb(detections, hand):
+def no_hand(detections, hand):
     hand = [( detections[0][0],detections[0][1], detections[0][2], detections[0][3])]
     return hand
+
 
 def hands(hand, img):
     """Make a crop"""
@@ -97,79 +82,145 @@ def hands(hand, img):
     hand = img[int(hand[0][2] - var):int(hand[0][3] + var), int(hand[0][0]) - var:int(hand[0][1]) + var]
     return hand
 
+def skin_color(hand):
+
+    min_YCrCb = np.array([0,140,85],np.uint8)
+    max_YCrCb = np.array([240,180,130],np.uint8)
+
+    imageYCrCb = cv2.cvtColor(hand,cv2.COLOR_BGR2YCR_CB)
+    skinRegionYCrCb = cv2.inRange(imageYCrCb,min_YCrCb,max_YCrCb)
+
+    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
+    skinMask = cv2.dilate(skinRegionYCrCb, kernel, iterations = 2)
+
+    skinYCrCb = cv2.bitwise_and(hand, hand, mask = skinMask)
+
+    return skinYCrCb
 
 def video_capture(video_name, hand_model):
 
     detection_graph, sess = load_inference_graph(hand_model)
     video = cv2.VideoCapture(video_name)
     detections = [[], []]
+    fgbg = cv2.createBackgroundSubtractorMOG2()
 
 
     while True:
 
+
+
         frame = cv2.resize(video.read()[1], (500, 400))
+        copy = frame.copy()
         frameRGB = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-        boxes, scores = detect_objects(frameRGB, detection_graph, sess)
-        areas = draw_box_on_image(scores, boxes)
-        left_hand, right_hand = determination_hand(areas)
+        fgmask = fgbg.apply(frame)
+        bg = cv2.bitwise_and(frame, frame, mask=fgmask)
+
+        cv2.imshow("bg", bg)
+
+        frameRGB = cv2.cvtColor(bg, cv2.COLOR_BGR2RGB)
+        bg = skin_color(bg)
+
+        gray = cv2.cvtColor(bg, cv2.COLOR_BGR2GRAY)
+        contours = cv2.findContours(gray, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)[0]
+
+        cv2.drawContours(copy, contours, -1, (255, 255, 255), 1)
+        cv2.fillPoly(copy, pts =contours, color=(255, 255, 255))
+
+        gray = cv2.cvtColor(copy, cv2.COLOR_BGR2GRAY)
+        ret, thresh1 = cv2.threshold(gray, 250, 255,cv2.THRESH_BINARY)
 
 
-        if left_hand == []:left_hand = CNN_jb(detections[0], "left")
-        if right_hand == []:right_hand = CNN_jb(detections[1], "right")
-
-        left_hand = only_part(left_hand, detections[0])
-        right_hand = only_part(right_hand, detections[1])
-
-        detections[0] = left_hand
-        detections[1] = right_hand
-
-        #cv2.rectangle(frame, (int(right_hand[0][0]), int(right_hand[0][2])), (int(right_hand[0][1]), int(right_hand[0][3])), (255, 0, 0), 3)
-        #cv2.rectangle(frame, (int(left_hand[0][0]), int(left_hand[0][2])),(int(left_hand[0][1]), int(left_hand[0][3])), (0,0, 255) , 3)
-
-        left_hand = hands(left_hand, frame)
-        right_hand = hands(right_hand, frame)
+        contours = cv2.findContours(thresh1, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)[0]
+        for i in contours:
+            if cv2.contourArea(i) > 100:
+                x, y, w, h = cv2.boundingRect(i)
+                cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 0, 255), 2)
 
 
-        min_YCrCb = np.array([0,140,85],np.uint8)
-        max_YCrCb = np.array([240,180,130],np.uint8)
 
-        imageYCrCb = cv2.cvtColor(right_hand,cv2.COLOR_BGR2YCR_CB)
-        skinRegionYCrCb = cv2.inRange(imageYCrCb,min_YCrCb,max_YCrCb)
-
-        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
-        skinMask = cv2.dilate(skinRegionYCrCb, kernel, iterations = 2)
-
-        skinYCrCb = cv2.bitwise_and(right_hand, right_hand, mask = skinMask)
-
-        cv2.imshow("YCrCb_mask", skinYCrCb)
+        cv2.imshow("fgmask", frame)
 
 
 
 
 
 
-        try:
-        #Dsiplay
-            #left_hand = add_border(frame, left_hand)
-            #right_hand = add_border(frame, right_hand)
-
-            #h,w = left_hand.shape[:2]
-            #right_hand = cv2.resize(right_hand, (w, h))
-
-            #frame = cv2.resize(frame, (w, h))
-            #displaying = np.hstack((left_hand, frame))
-            #displaying = np.hstack((displaying, right_hand))
-            #displaying = np.hstack((left_hand, right_hand))
-
-            cv2.imshow("tdisplaying", frame)
 
 
 
-        except:
-            pass
 
-        if cv2.waitKey(0) & 0xFF == ord("q"):
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##        #Detect 2 boxes with > 0.27
+##        boxes, scores = detect_objects(frameRGB, detection_graph, sess)
+##
+##        #Recuperate 2 boxes
+##        areas = recuperate_detection(scores, boxes)
+##        #Define left and right hands
+##        left_hand, right_hand = determination_hand(areas)
+##
+##        #No hand
+##        if left_hand == []:left_hand = no_hand(detections[0], "left")
+##        if right_hand == []:right_hand = no_hand(detections[1], "right")
+##
+##        #Litlle detection
+##        left_hand = only_part(left_hand, detections[0])
+##        right_hand = only_part(right_hand, detections[1])
+##
+##        detections[0] = left_hand
+##        detections[1] = right_hand
+##
+##        cv2.rectangle(frame, (int(right_hand[0][0]), int(right_hand[0][2])), (int(right_hand[0][1]), int(right_hand[0][3])), (255, 0, 0), 3)
+##        cv2.rectangle(frame, (int(left_hand[0][0]), int(left_hand[0][2])),(int(left_hand[0][1]), int(left_hand[0][3])), (0,0, 255) , 3)
+##
+##        #Croping
+##        left_hand = hands(left_hand, frame)
+##        right_hand = hands(right_hand, frame)
+##
+##        left_hand_skin = skin_color(left_hand)
+##        right_hand_skin = skin_color(right_hand)
+##        frame_skin = skin_color(frame)
+##
+##
+##
+##
+##
+##
+##        cv2.imshow("left_hand_skin", left_hand_skin)
+##
+##        cv2.imshow("right_hand_skin", right_hand_skin)
+##        cv2.imshow("frame_skin", frame_skin)
+##
+##
+##        cv2.imshow("frame", frameRGB)
+
+
+        if cv2.waitKey(1) & 0xFF == ord("q"):
             break
 
     video.release()
