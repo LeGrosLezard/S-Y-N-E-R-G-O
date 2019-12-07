@@ -1,6 +1,21 @@
 # S-Y-N-E-R-G-O
 
-- tout reprendre a zero ca marche pas sur toutes les vidéo
+ok fait un bitewise
+
+faire le truk couleur
+
+recuperer les truk qui bougent
+
+mater pour chaque truk qui bouge
+
+est une detection ?
+
+attention, pour certaines vidéo ca bug a mort, certaine ont un fond chair
+
+le but c davoir les mains comme la vidéo du début.
+
+
+
 
 - récupérer l'alaphabet signe et faire // ex poingt ex y = cool, sachant que pouce = parent, petit = finesse 
 
