@@ -1,18 +1,14 @@
 # S-Y-N-E-R-G-O
 
+- mélanger mog et hand detect pour donner un meilleur resultat mais je sais pas comment faire
+
 - récupérer que le pourtour des mains
-
-- tester deep learning skin color 
-
-- test de mieux récupérer les mains si pas toruvé (via le skin)
 
 - mains en vert
 
-- si main vers tete activer la tete
-
-- faire un truk de mouvement supprimer les element statique de couleur chair
-
 - récupérer l'alaphabet signe et faire // ex poingt ex y = cool, sachant que pouce = parent, petit = finesse 
+
+
 
 <br><br><br>
 
