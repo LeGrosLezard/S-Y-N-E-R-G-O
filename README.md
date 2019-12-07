@@ -1,5 +1,6 @@
 # S-Y-N-E-R-G-O
 
+- tout reprendre a zero ca marche pas sur toutes les vidéo
 
 - récupérer l'alaphabet signe et faire // ex poingt ex y = cool, sachant que pouce = parent, petit = finesse 
 
