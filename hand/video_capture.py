@@ -81,27 +81,20 @@ def determination_hand(detections):
 
 def only_part(hand, detections):
     """que le pouce par example"""
-
     if hand[0][1] - hand[0][0] < 40:
         hand = [( detections[0][0],detections[0][1], detections[0][2], detections[0][3])]
-
     return hand
 
+
+
+def CNN_jb(detections, hand):
+    hand = [( detections[0][0],detections[0][1], detections[0][2], detections[0][3])]
+    return hand
 
 def hands(hand, img):
     """Make a crop"""
     var = 25
     hand = img[int(hand[0][2] - var):int(hand[0][3] + var), int(hand[0][0]) - var:int(hand[0][1]) + var]
-
-    return hand
-
-
-
-
-def CNN_jb(detections, hand):
-
-    hand = [( detections[0][0],detections[0][1], detections[0][2], detections[0][3])]
-
     return hand
 
 
@@ -131,14 +124,25 @@ def video_capture(video_name, hand_model):
         detections[0] = left_hand
         detections[1] = right_hand
 
-        cv2.rectangle(frame, (int(right_hand[0][0]), int(right_hand[0][2])), (int(right_hand[0][1]), int(right_hand[0][3])), (255, 0, 0), 3)
-        cv2.rectangle(frame, (int(left_hand[0][0]), int(left_hand[0][2])),(int(left_hand[0][1]), int(left_hand[0][3])), (0,0, 255) , 3)
+        #cv2.rectangle(frame, (int(right_hand[0][0]), int(right_hand[0][2])), (int(right_hand[0][1]), int(right_hand[0][3])), (255, 0, 0), 3)
+        #cv2.rectangle(frame, (int(left_hand[0][0]), int(left_hand[0][2])),(int(left_hand[0][1]), int(left_hand[0][3])), (0,0, 255) , 3)
 
         left_hand = hands(left_hand, frame)
         right_hand = hands(right_hand, frame)
 
 
+        min_YCrCb = np.array([0,140,85],np.uint8)
+        max_YCrCb = np.array([240,180,130],np.uint8)
 
+        imageYCrCb = cv2.cvtColor(right_hand,cv2.COLOR_BGR2YCR_CB)
+        skinRegionYCrCb = cv2.inRange(imageYCrCb,min_YCrCb,max_YCrCb)
+
+        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
+        skinMask = cv2.dilate(skinRegionYCrCb, kernel, iterations = 2)
+
+        skinYCrCb = cv2.bitwise_and(right_hand, right_hand, mask = skinMask)
+
+        cv2.imshow("YCrCb_mask", skinYCrCb)
 
 
 
