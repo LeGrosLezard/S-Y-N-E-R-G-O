@@ -1,6 +1,6 @@
 # S-Y-N-E-R-G-O
 
-test pause estimation
+test pause estimation / openpause
 
 j'ai un model de landmark de main mais il marche pas purée... essayer d'en trouver
 
