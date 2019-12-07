@@ -4,13 +4,15 @@
 
 - tester deep learning skin color 
 
-- test de mieux récupérer les mains si pas toruvé
+- test de mieux récupérer les mains si pas toruvé (via le skin)
 
 - mains en vert
 
 - si main vers tete activer la tete
 
-- si le modele detecte pas les mains qui vont vers la figure faire substractor et on compte le nombre de pixel quand la main est sur la figure
+- faire un truk de mouvement supprimer les element statique de couleur chair
+
+- récupérer l'alaphabet signe et faire // ex poingt ex y = cool, sachant que pouce = parent, petit = finesse 
 
 <br><br><br>
 
