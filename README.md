@@ -1,5 +1,8 @@
 # S-Y-N-E-R-G-O
 
+mog -> donne plusieurs rectangle aussi
+
+
 - mélanger mog et hand detect pour donner un meilleur resultat mais je sais pas comment faire
 
 - récupérer que le pourtour des mains
