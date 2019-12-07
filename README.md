@@ -2,6 +2,8 @@
 
 - récupérer que le pourtour des mains
 
+- si pas de main pendant quelques frames stop affichage
+
 - récupérer les précédentes valeurs (sinon pas grave mais ca fait un moment que je le traine ca)
 
     -  (en haut, en haut, pas de détection peut etre en haut ou en bas, faire box en haut en bas faire le pourtour des mains
