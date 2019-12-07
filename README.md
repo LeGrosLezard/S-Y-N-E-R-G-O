@@ -2,6 +2,8 @@
 
 test pause estimation
 
+j'ai un model de landmark de main mais il marche pas purée... essayer d'en trouver
+
 ok fait un bitewise
 
 faire le truk couleur
