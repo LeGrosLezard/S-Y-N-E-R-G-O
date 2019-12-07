@@ -54,6 +54,7 @@ def draw_box_on_image(scores, boxes):
     box = [(boxes[i][1] * im_width, boxes[i][3] * im_width,
             boxes[i][0] * im_height, boxes[i][2] * im_height)
            for i in range(2) if (scores[i] > 0.20)]
+
     return box
 
 
@@ -73,33 +74,22 @@ def add_border(img, crop):
 
 def determination_hand(detections):
     """ droite ou gauche ?"""
-
     hands = [[i for i in detections if (250 - i[0]) < 0], [i for i in detections if (250 - i[0]) > 0]]
     return hands[0], hands[1]
 
 
 
-def only_part(leftHand, rightHand):
+def only_part(hand, detections):
     """que le pouce par example"""
-    
-    def add_(hand):
-        var = 40
-        hand = [(hand[0][0] - var, hand[0][1] + var, hand[0][2] - var, hand[0][3] + var)]
-        return hand
-    
-    try:
-        if leftHand[0][1] - leftHand[0][0] < 40:
-            leftHand = add_(leftHand)
-        if rightHand[0][1] - rightHand[0][0] < 40:rightHand = add_(rightHand)
 
-    except:
-        pass
+    if hand[0][1] - hand[0][0] < 40:
+        hand = [( detections[0][0],detections[0][1], detections[0][2], detections[0][3])]
 
-    return leftHand, rightHand
+    return hand
 
 
 def hands(hand, img):
-    
+    """Make a crop"""
     var = 25
     hand = img[int(hand[0][2] - var):int(hand[0][3] + var), int(hand[0][0]) - var:int(hand[0][1]) + var]
 
@@ -108,19 +98,19 @@ def hands(hand, img):
 
 
 
-def CNN_jb(detections):
-##    for i in detections:
-##        print(int(i[0][0]), int(i[0][2]))
-##
-##    print("")
-    pass
+def CNN_jb(detections, hand):
+
+    hand = [( detections[0][0],detections[0][1], detections[0][2], detections[0][3])]
+
+    return hand
 
 
 def video_capture(video_name, hand_model):
 
     detection_graph, sess = load_inference_graph(hand_model)
     video = cv2.VideoCapture(video_name)
-    detections = []
+    detections = [[], []]
+
 
     while True:
 
@@ -128,27 +118,27 @@ def video_capture(video_name, hand_model):
         frameRGB = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
         boxes, scores = detect_objects(frameRGB, detection_graph, sess)
-
         areas = draw_box_on_image(scores, boxes)
-
         left_hand, right_hand = determination_hand(areas)
-        left_hand, right_hand = only_part(left_hand, right_hand)
-
-        try:
-            left_hand = hands(left_hand, frame)
-            right_hand = hands(right_hand, frame)
-
-            cv2.rectangle(frame, (int(areas[0][0]), int(areas[0][2])), (int(areas[0][1]), int(areas[0][3])), (0,0, 255) , 3)
-            cv2.rectangle(frame, (int(areas[1][0]), int(areas[1][2])), (int(areas[1][1]), int(areas[1][3])), (255, 0, 0), 3)
 
 
-        except:
-            CNN_jb(detections)
+        if left_hand == []:left_hand = CNN_jb(detections[0], "left")
+        if right_hand == []:right_hand = CNN_jb(detections[1], "right")
+
+        left_hand = only_part(left_hand, detections[0])
+        right_hand = only_part(right_hand, detections[1])
+
+        detections[0] = left_hand
+        detections[1] = right_hand
+
+        cv2.rectangle(frame, (int(right_hand[0][0]), int(right_hand[0][2])), (int(right_hand[0][1]), int(right_hand[0][3])), (255, 0, 0), 3)
+        cv2.rectangle(frame, (int(left_hand[0][0]), int(left_hand[0][2])),(int(left_hand[0][1]), int(left_hand[0][3])), (0,0, 255) , 3)
+
+        left_hand = hands(left_hand, frame)
+        right_hand = hands(right_hand, frame)
 
 
-        if len(detections) == 20:
-            detections = detections[10:]
-        detections.append(areas)
+
 
 
 
