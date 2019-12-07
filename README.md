@@ -1,5 +1,7 @@
 # S-Y-N-E-R-G-O
 
+test pause estimation
+
 ok fait un bitewise
 
 faire le truk couleur
