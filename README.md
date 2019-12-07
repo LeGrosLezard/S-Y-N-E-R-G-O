@@ -1,8 +1,8 @@
 # S-Y-N-E-R-G-O
 
-- récupérer que le  pourtour des mains
+- récupérer que le pourtour des mains
 
-- récupérer les précédentes valeurs
+- récupérer les précédentes valeurs (sinon pas grave mais ca fait un moment que je le traine ca)
 
     -  (en haut, en haut, pas de détection peut etre en haut ou en bas, faire box en haut en bas faire le pourtour des mains
         voir si ca ressemble)
