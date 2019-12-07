@@ -1,6 +1,6 @@
 # S-Y-N-E-R-G-O
 
-test pause estimation / openpause
+test pause estimation / openpause et y'a un episode chui gaté ce soir !
 
 j'ai un model de landmark de main mais il marche pas purée... essayer d'en trouver
 
