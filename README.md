@@ -6,9 +6,7 @@
 
 - LAAAAA il faut aussi ajuster last du coup !!! (c pour ca que ca marche pas) et dire last = bleu
 
-- faut trouvé un moyen de rendre le substrator bien ou de fusionner les rectangle via le substrateur
-
-jvai pas dormir jusqu'a y arrivé, mais bon on sait tous ce qui se passe si jdors pas bcp ^^ mais j'avais un super truk pour UNE vidéo UNE ptin c'était super....
+<br><br><br><br><br><br>
 
 - récupérer l'alaphabet signe et faire // ex poingt ex y = cool, sachant que pouce = parent, petit = finesse 
 
