@@ -1,13 +1,9 @@
 # S-Y-N-E-R-G-O
 
 
-
-
-tout bien réécrire 
-
 faut faire petite  detection = aggrandissement
 
-
+finir de réécrire
 
 
 
