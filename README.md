@@ -6,7 +6,12 @@
 
 - LAAAAA il faut aussi ajuster last du coup !!! (c pour ca que ca marche pas) et dire last = bleu
 
-faut auss ifusionner bleu et vert
+faut auss ifusionner bleu et vert, mettre a histo 100
+
+
+<br><br>
+
+le seul truk possible c pose estimation, history 1 = rapidement moins de detection, 100 = plein de detection
 
 <br><br><br><br><br><br>
 
