@@ -5,6 +5,8 @@
 
 - faut trouvé un moyen de rendre le substrator bien ou de fusionner les rectangle via le substrateur
 
+jvai pas dormir jusqu'a y arrivé, mais bon on sait tous ce qui se passe si jdors pas bcp ^^ mais j'avais un super truk pour UNE vidéo UNE ptin c'était super....
+
 - récupérer l'alaphabet signe et faire // ex poingt ex y = cool, sachant que pouce = parent, petit = finesse 
 
 
