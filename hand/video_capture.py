@@ -102,78 +102,46 @@ def video_capture(video_name, hand_model):
     detection_graph, sess = load_inference_graph(hand_model)
     video = cv2.VideoCapture(video_name)
     detections = [[], []]
-    fgbg = cv2.createBackgroundSubtractorMOG2(history=3, varThreshold=25, detectShadows=False)
+    fgbg = cv2.createBackgroundSubtractorMOG2(history=10, detectShadows=False)
 
 
     while True:
 
 
-
         frame = cv2.resize(video.read()[1], (500, 400))
-        copy = frame.copy()
+
+        R = cv2.RETR_TREE
+        P = cv2.CHAIN_APPROX_NONE
+        suba = fgbg.apply(frame)
+        contours, _ = cv2.findContours(suba, R, P)
+        for cnts in contours:
+            if cv2.contourArea(cnts) > 300: #500 / 1.7:
+                x, y, w, h = cv2.boundingRect(cnts)
+                cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 0, 255), 3, 1)
+
+
+
         frameRGB = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-
-
-
-        #Detect 2 boxes with > 0.27
         boxes, scores = detect_objects(frameRGB, detection_graph, sess)
-
-        #Recuperate 2 boxes
-        areas = recuperate_detection(scores, boxes)
-        #Define left and right hands
-        left_hand, right_hand = determination_hand(areas)
-
-        #No hand
-        if left_hand == []:left_hand = no_hand(detections[0], "left")
-        if right_hand == []:right_hand = no_hand(detections[1], "right")
-
-        #Litlle detection
-        left_hand = only_part(left_hand, detections[0])
-        right_hand = only_part(right_hand, detections[1])
-
-        detections[0] = left_hand
-        detections[1] = right_hand
-
-        #frameframe = frame.copy()
-        var = 30
-        #cv2.rectangle(frameframe, (int(right_hand[0][0]) - var, int(right_hand[0][2])- var), (int(right_hand[0][1]) + var, int(right_hand[0][3]) + var), (255, 0, 0), 3)
-        #cv2.rectangle(frameframe, (int(left_hand[0][0]) - var, int(left_hand[0][2])- var) ,(int(left_hand[0][1]) + var, int(left_hand[0][3]) + var), (0,0, 255) , 3)
+        for i in range(2):
+            if (scores[i] > 0.10):
+                (left, right, top, bottom) = (boxes[i][1] * 500, boxes[i][3] * 500,
+                                              boxes[i][0] * 400, boxes[i][2] * 400)
+                p1 = (int(left), int(top))
+                p2 = (int(right), int(bottom))
+                cv2.rectangle(frame, p1, p2, (77, 255, 9), 3, 1)
 
 
 
-        left_hand = hands(left_hand, frame)
-        right_hand = hands(right_hand, frame)
-
-        left_hand_skin = skin_color(left_hand)
-        right_hand_skin = skin_color(right_hand)
-        frame_skin = skin_color(frame)
-
-        try:
-            R = cv2.RETR_TREE
-            P = cv2.CHAIN_APPROX_NONE
-            gray1 = cv2.cvtColor(left_hand_skin, cv2.COLOR_BGR2GRAY)
-            gray2 = cv2.cvtColor(right_hand_skin, cv2.COLOR_BGR2GRAY)
-
-            contours, _ = cv2.findContours(gray1, R, P)
-            c = max(contours, key = cv2.contourArea)
-            cv2.drawContours(left_hand, c, -1, (0,0,255), 1)
-            cv2.fillPoly(left_hand, pts =[c], color=(0, 255, 0))
 
 
-            contours, _ = cv2.findContours(gray2, R, P)
-            c = max(contours, key = cv2.contourArea)
-            cv2.drawContours(right_hand, c, -1, (0,0,255), 1)
-            cv2.fillPoly(right_hand, pts =[c], color=(0, 255, 0))
 
 
-            cv2.imshow("zfafaz", frame)
-        except:
-             cv2.imshow("frame_skin", frame_skin)
-             cv2.waitKey(0)
 
 
-        #cv2.imshow("fa", frameframe)
 
+
+        cv2.imshow("mask", frame)
 
 
         if cv2.waitKey(1) & 0xFF == ord("q"):
@@ -181,27 +149,3 @@ def video_capture(video_name, hand_model):
 
     video.release()
     cv2.destroyAllWindows()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
