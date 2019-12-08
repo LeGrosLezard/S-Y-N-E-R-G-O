@@ -87,16 +87,54 @@ def video_capture(video_name, hand_model):
                 cv2.rectangle(frame, p1, p2, (77, 255, 9), 3, 1)
                 last.append((p1[0], p1[1], p2[0], p2[1]))
 
+
         for i in liste:
             print(i)
 
+        ok = [[], [], [], []]
+        for i in liste:
+            a = abs(i[0] - last[1][0])
+            b = abs(i[1] - last[1][1])
+            c = abs(i[2] - last[1][2])
+            d = abs(i[3] - last[1][3])
 
+            print(a, b ,c ,d, "1")
+
+            nb = 100;
+            if a < nb and b < nb and c < nb and d < nb:
+                ok[0].append(i[0])
+                ok[1].append(i[1])
+                ok[2].append(i[2])
+                ok[3].append(i[3])
+                print("ouiiiiiiii")
+        
+
+        ok1 = [[], [], [], []]
+        for i in liste:
+            a = abs(i[0] - last[0][0])
+            b = abs(i[1] - last[0][1])
+            c = abs(i[2] - last[0][2])
+            d = abs(i[3] - last[0][3])
+            print(a, b ,c ,d, "2")
+
+            if a < nb and b < nb and c < nb and d < nb:
+                ok1[0].append(i[0])
+                ok1[1].append(i[1])
+                ok1[2].append(i[2])
+                ok1[3].append(i[3])
+                print("oui")
+
+        if len(ok[0]) != 0:
+            cv2.rectangle(frame, (min(ok[0]), min(ok[1])), (max(ok[2]), max(ok[3])), (77, 0, 0), 3, 1)
+        if len(ok1[0]) != 0:
+            cv2.rectangle(frame, (min(ok1[0]), min(ok1[1])), (max(ok1[2]), max(ok1[3])), (77, 0, 0), 3, 1)
 
         print("")
         print("actuel", last[-2], last[-1])
         print("passé", last[0], last[1])
         print("")
 
+        print("current last", last)
 
         last = [last[-2], last[-1]]
 
