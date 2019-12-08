@@ -46,56 +46,10 @@ def detect_objects(image_np, detection_graph, sess):
     return np.squeeze(boxes), np.squeeze(scores)
 
 
- 
-def recuperate_detection(scores, boxes):
+def fusion():
 
-    width = 500; height = 400
+    pass
 
-    box = [(boxes[i][1] * width, boxes[i][3] * width,
-            boxes[i][0] * height, boxes[i][2] * height)
-           for i in range(2) if (scores[i] > 0.20)]
-
-    return box
-
-
-def determination_hand(detections):
-    """ droite ou gauche ?"""
-    hands = [[i for i in detections if (250 - i[0]) < 0], [i for i in detections if (250 - i[0]) > 0]]
-    return hands[0], hands[1]
-
-
-def only_part(hand, detections):
-    """que le pouce par example"""
-    if hand[0][1] - hand[0][0] < 40:
-        hand = [( detections[0][0],detections[0][1], detections[0][2], detections[0][3])]
-    return hand
-
-
-def no_hand(detections, hand):
-    hand = [( detections[0][0],detections[0][1], detections[0][2], detections[0][3])]
-    return hand
-
-
-def hands(hand, img):
-    """Make a crop"""
-    var = 30
-    hand = img[int(hand[0][2] - var):int(hand[0][3] + var), int(hand[0][0]) - var:int(hand[0][1]) + var]
-    return hand
-
-def skin_color(hand):
-
-    min_YCrCb = np.array([0,140,85],np.uint8)
-    max_YCrCb = np.array([240,180,130],np.uint8)
-
-    imageYCrCb = cv2.cvtColor(hand,cv2.COLOR_BGR2YCR_CB)
-    skinRegionYCrCb = cv2.inRange(imageYCrCb,min_YCrCb,max_YCrCb)
-
-    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
-    skinMask = cv2.dilate(skinRegionYCrCb, kernel, iterations = 2)
-    skinMask = cv2.erode(skinMask,kernel,iterations = 1)
-    skinYCrCb = cv2.bitwise_and(hand, hand, mask = skinMask)
-
-    return skinYCrCb
 
 def video_capture(video_name, hand_model):
 
@@ -104,10 +58,10 @@ def video_capture(video_name, hand_model):
     detections = [[], []]
     fgbg = cv2.createBackgroundSubtractorMOG2(history=10, detectShadows=False)
 
-
+    last = []
     while True:
 
-
+        liste = []
         frame = cv2.resize(video.read()[1], (500, 400))
 
         R = cv2.RETR_TREE
@@ -115,8 +69,9 @@ def video_capture(video_name, hand_model):
         suba = fgbg.apply(frame)
         contours, _ = cv2.findContours(suba, R, P)
         for cnts in contours:
-            if cv2.contourArea(cnts) > 300: #500 / 1.7:
+            if 1000 > cv2.contourArea(cnts) > 250: #500 / 1.7:
                 x, y, w, h = cv2.boundingRect(cnts)
+                liste.append((x, y, x+w, y+h))
                 cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 0, 255), 3, 1)
 
 
@@ -130,21 +85,26 @@ def video_capture(video_name, hand_model):
                 p1 = (int(left), int(top))
                 p2 = (int(right), int(bottom))
                 cv2.rectangle(frame, p1, p2, (77, 255, 9), 3, 1)
+                last.append((p1[0], p1[1], p2[0], p2[1]))
+
+        for i in liste:
+            print(i)
 
 
 
+        print("")
+        print("actuel", last[-2], last[-1])
+        print("passé", last[0], last[1])
+        print("")
 
 
-
-
-
-
+        last = [last[-2], last[-1]]
 
 
         cv2.imshow("mask", frame)
 
 
-        if cv2.waitKey(1) & 0xFF == ord("q"):
+        if cv2.waitKey(0) & 0xFF == ord("q"):
             break
 
     video.release()
