@@ -1,7 +1,10 @@
 # S-Y-N-E-R-G-O
 
 
-- en gros faut détécter tout le temps les mains par le mouvement et par les detections
+
+- en gros on ddetecte une main, si a 100 100 100 100 prés  alors on ajoute a une liste, on recup min min max max
+
+- LAAAAA il faut aussi ajuster last du coup !!! (c pour ca que ca marche pas) et dire last = bleu
 
 - faut trouvé un moyen de rendre le substrator bien ou de fusionner les rectangle via le substrateur
 
