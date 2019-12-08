@@ -16,7 +16,11 @@ si pas de tete alors non (je vois pas comment faire sans si...)
 
 finir de réécrire
 
+<br><br><br><br>
 
+faire la detection de la main (mélanger rgb et y_)
+
+trouvé un truk a cause de la couleur chair du fond et retrouver le commit du remplissage
 
 
 
