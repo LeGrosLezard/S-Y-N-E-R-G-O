@@ -158,37 +158,36 @@ def video_capture(video_name, hand_model):
             print("droite", possible_droite)
             print("gauche", possible_gauche)
 
+        if len(droite) >= 1:
+            droite_points = detections_from_substractor(points_movements, droite)
+            gauche_points = detections_from_substractor(points_movements, gauche)
 
-        droite_points = detections_from_substractor(points_movements, droite)
-        gauche_points = detections_from_substractor(points_movements, gauche)
+            draw(frame, droite_points)
+            draw(frame, gauche_points)
 
-        draw(frame, droite_points)
-        draw(frame, gauche_points)
+            no_hand_detection(droite, droite_points, hist_droite)
+            no_hand_detection(gauche, gauche_points, hist_gauche)
 
-        no_hand_detection(droite, droite_points, hist_droite)
-        no_hand_detection(gauche, gauche_points, hist_gauche)
-
-        fusion_movement_detection(droite, droite_points)
-        fusion_movement_detection(gauche, gauche_points)
-
-
-        false_hand_detection(possible_droite, droite_points, droite)
-        false_hand_detection(possible_gauche, gauche_points, gauche)
-
-        more_than_one_detection(droite)
-        more_than_one_detection(gauche)
+            fusion_movement_detection(droite, droite_points)
+            fusion_movement_detection(gauche, gauche_points)
 
 
+            false_hand_detection(possible_droite, droite_points, droite)
+            false_hand_detection(possible_gauche, gauche_points, gauche)
 
-        cv2.rectangle(frame, (droite[-1][0], droite[-1][1]),
-                      (droite[-1][2], droite[-1][3]), (77, 255, 9), 3)
-
-        cv2.rectangle(frame, (gauche[-1][0], gauche[-1][1]),
-                      (gauche[-1][2], gauche[-1][3]), (77, 255, 9), 3)
+            more_than_one_detection(droite)
+            more_than_one_detection(gauche)
 
 
-        droite = [droite[-1]]
-        gauche = [gauche[-1]]
+            cv2.rectangle(frame, (droite[-1][0], droite[-1][1]),
+                            (droite[-1][2], droite[-1][3]), (77, 255, 9), 3)
+
+            cv2.rectangle(frame, (gauche[-1][0], gauche[-1][1]),
+                            (gauche[-1][2], gauche[-1][3]), (77, 255, 9), 3)
+
+
+            droite = [droite[-1]]
+            gauche = [gauche[-1]]
         
 
 
