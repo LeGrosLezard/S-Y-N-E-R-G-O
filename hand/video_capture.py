@@ -58,10 +58,18 @@ def video_capture(video_name, hand_model):
     detections = [[], []]
     fgbg = cv2.createBackgroundSubtractorMOG2(history=10, detectShadows=False)
 
-    last = []
+    droite = []
+    gauche = []
+
+    hist_droite = [[], []]
+    hist_gauche = [[], []]
     while True:
 
         liste = []
+        possible_droite = ""
+        possible_gauche = ""
+
+
         frame = cv2.resize(video.read()[1], (500, 400))
 
         R = cv2.RETR_TREE
@@ -75,7 +83,7 @@ def video_capture(video_name, hand_model):
                 cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 0, 255), 3, 1)
 
 
-
+        print("")
         frameRGB = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         boxes, scores = detect_objects(frameRGB, detection_graph, sess)
         for i in range(2):
@@ -85,58 +93,180 @@ def video_capture(video_name, hand_model):
                 p1 = (int(left), int(top))
                 p2 = (int(right), int(bottom))
                 cv2.rectangle(frame, p1, p2, (77, 255, 9), 3, 1)
-                last.append((p1[0], p1[1], p2[0], p2[1]))
+
+                if p1[0] < 250:
+                    droite.append((p1[0], p1[1], p2[0], p2[1]))
+                    hist_droite[0].append(p1[0])
+                    hist_droite[1].append(p1[1])
+
+                    print("droite")
+                    try:
+                        print(hist_droite[0][-1], (hist_droite[0][-2]))
+                    except:pass
+                    try:
+                        
+##                        print(hist_droite[0][-1] - hist_droite[0][-2],
+##                              hist_droite[1][-1] - hist_droite[1][-2])
+
+                        if abs(hist_droite[0][-1] - hist_droite[0][-2]) > 50 or\
+                           abs(hist_droite[1][-1] - hist_droite[1][-2]) > 50:
+                            possible_droite = "impossible"
+                            print(possible_droite)
+ 
+                        else:
+                            print("possible droite")
+
+##                            if hist_droite[0][-1] - hist_droite[0][-2] < 0:
+##                                print("main droite vers droite")
+##                            else:
+##                                print("main droite vers gauche")
+##
+##                            if hist_droite[1][-1] - hist_droite[1][-2] < 0:
+##                                print("main droite vers haut")
+##                            else:
+##                                print("main droite vers bas")
+
+                    except:pass
 
 
-        for i in liste:
-            print(i)
 
-        ok = [[], [], [], []]
-        for i in liste:
-            a = abs(i[0] - last[1][0])
-            b = abs(i[1] - last[1][1])
-            c = abs(i[2] - last[1][2])
-            d = abs(i[3] - last[1][3])
+                else:
+                    gauche.append((p1[0], p1[1], p2[0], p2[1]))
+                    hist_gauche[0].append(p1[0])
+                    hist_gauche[1].append(p1[1])
 
-            print(a, b ,c ,d, "1")
+                    print("")
 
-            nb = 100;
-            if a < nb and b < nb and c < nb and d < nb:
-                ok[0].append(i[0])
-                ok[1].append(i[1])
-                ok[2].append(i[2])
-                ok[3].append(i[3])
-                print("ouiiiiiiii")
+                    print("gauche")
+                    try:
+                        print(hist_gauche[0][-1], (hist_gauche[0][-2]))
+                    except:pass
+                    try:
+
+                        if abs(hist_gauche[0][-1] - hist_gauche[0][-2]) > 50 or\
+                           abs(hist_gauche[1][-1] - hist_gauche[1][-2]) > 50:
+                            possible_gauche = "impossible"
+                            print(possible_gauche)
+ 
+                        else:
+
+                            print("possible gauche")
+##                            print(hist_gauche[0][-1] - hist_gauche[0][-2],
+##                                  hist_gauche[1][-1] - hist_gauche[1][-2])
+
+##                            if hist_gauche[0][-1] - hist_gauche[0][-2] < 0:
+##                                print("main gauche vers droite")
+##                            else:
+##                                print("main gauche vers gauche")
+##
+##                            if hist_gauche[1][-1] - hist_gauche[1][-2] < 0:
+##                                print("main gauche vers haut")
+##                            else:
+##                                print("main gauche vers bas")
+
+                    except:pass
+
+
+
+
+
+        print("")
+        print("")
+        print("")
+        print("")
         
 
-        ok1 = [[], [], [], []]
+
+        nb = 80
+        droite_points = [[], [], [], []]
         for i in liste:
-            a = abs(i[0] - last[0][0])
-            b = abs(i[1] - last[0][1])
-            c = abs(i[2] - last[0][2])
-            d = abs(i[3] - last[0][3])
-            print(a, b ,c ,d, "2")
-
+            #print(i)
+            a = abs(i[0] - droite[0][0])
+            b = abs(i[1] - droite[0][1])
+            c = abs(i[2] - droite[0][2])
+            d = abs(i[3] - droite[0][3])
+            #print("droite", a, b, c, d)
             if a < nb and b < nb and c < nb and d < nb:
-                ok1[0].append(i[0])
-                ok1[1].append(i[1])
-                ok1[2].append(i[2])
-                ok1[3].append(i[3])
-                print("oui")
+                droite_points[0].append(i[0])
+                droite_points[1].append(i[1])
+                droite_points[2].append(i[2])
+                droite_points[3].append(i[3])
+                #print("droite oui")
 
-        if len(ok[0]) != 0:
-            cv2.rectangle(frame, (min(ok[0]), min(ok[1])), (max(ok[2]), max(ok[3])), (77, 0, 0), 3, 1)
-        if len(ok1[0]) != 0:
-            cv2.rectangle(frame, (min(ok1[0]), min(ok1[1])), (max(ok1[2]), max(ok1[3])), (77, 0, 0), 3, 1)
 
         print("")
-        print("actuel", last[-2], last[-1])
-        print("passé", last[0], last[1])
+        gauche_points = [[], [], [], []]
+        for i in liste:
+            #print(i)
+            a = abs(i[0] - gauche[0][0])
+            b = abs(i[1] - gauche[0][1])
+            c = abs(i[2] - gauche[0][2])
+            d = abs(i[3] - gauche[0][3])
+            #print("gauche", a, b, c, d)
+            if a < nb and b < nb and c < nb and d < nb:
+                gauche_points[0].append(i[0])
+                gauche_points[1].append(i[1])
+                gauche_points[2].append(i[2])
+                gauche_points[3].append(i[3])
+                #print("gauche oui")
+
+
+        if len(droite_points[0]) != 0:
+            cv2.rectangle(frame, (min(droite_points[0]), min(droite_points[1])),
+                                 (max(droite_points[2]), max(droite_points[3])), (77, 0, 0), 3, 1)
+
+        if len(droite) == 1 and len(droite_points[0]) != 0:
+
+            droite.append((min(droite_points[0]), min(droite_points[1]),
+                           max(droite_points[2]), max(droite_points[3])))
+
+            hist_droite[0].append(min(droite_points[0]))
+            hist_droite[1].append(min(droite_points[1]))
+            
+
+        if possible_droite == "impossible" and len(droite_points[0]) != 0:
+            droite[-1] = ((min(droite_points[0]), min(droite_points[1]),
+                           max(droite_points[2]), max(droite_points[3])))
+
+
+        if len(gauche_points[0]) != 0:
+            cv2.rectangle(frame, (min(gauche_points[0]), min(gauche_points[1])),
+                                 (max(gauche_points[2]), max(gauche_points[3])), (77, 0, 0), 3, 1)
+
+        if len(gauche) == 1 and len(gauche_points[0]) != 0:
+
+            gauche.append((min(gauche_points[0]), min(gauche_points[1]),
+                          max(gauche_points[2]), max(gauche_points[3])))
+
+            hist_gauche[0].append(min(gauche_points[0]))
+            hist_gauche[1].append(min(gauche_points[1]))
+
+        if possible_gauche == "impossible" and len(gauche_points[0]) != 0:
+            gauche[-1] = ((min(droite_points[0]), min(droite_points[1]),
+                           max(droite_points[2]), max(droite_points[3])))
+
+
         print("")
 
-        print("current last", last)
+        print("droite", droite)
+        print("gauche", gauche)
 
-        last = [last[-2], last[-1]]
+        print("")
+        print("")
+
+
+        droite = [droite[-1]]
+        gauche = [gauche[-1]]
+        
+
+
+
+
+
+
+
+
+
 
 
         cv2.imshow("mask", frame)
