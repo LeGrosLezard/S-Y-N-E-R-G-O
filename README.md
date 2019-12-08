@@ -6,6 +6,8 @@ faut faire petite  detection = aggrandissement
 
 si pas de detection pendant x frame tout remettre a 0
 
+si pas de tete alors non (je vois pas comment faire sans si...)
+
 finir de réécrire
 
 
