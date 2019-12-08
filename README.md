@@ -1,7 +1,9 @@
 # S-Y-N-E-R-G-O
 
 
-- je fais exactement les meme truk pourtant, je vérifie 2 fois chai pas
+- en gros faut détécter tout le temps les mains par le mouvement et par les detections
+
+- faut trouvé un moyen de rendre le substrator bien
 
 - récupérer l'alaphabet signe et faire // ex poingt ex y = cool, sachant que pouce = parent, petit = finesse 
 
