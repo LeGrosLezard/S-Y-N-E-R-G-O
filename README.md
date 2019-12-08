@@ -22,11 +22,9 @@ faire la detection de la main (mélanger rgb et y_)
 
 trouvé un truk a cause de la couleur chair du fond et retrouver le commit du remplissage
 
+- récupérer l'alaphabet signe et faire // ex poingt ex y = cool  (si pas vers figure), si vers figure desactivé model pour mask et région
 
-
-<br><br><br><br><br><br>
-
-- récupérer l'alaphabet signe et faire // ex poingt ex y = cool, sachant que pouce = parent, petit = finesse 
+au pire desactivé tf si on a une detection + la main qui est suivis et on regagne de la vitesse
 
 
 
