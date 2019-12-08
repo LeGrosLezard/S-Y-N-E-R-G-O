@@ -43,7 +43,7 @@ def hands_detections(scores, boxes, droite, gauche, hist_droite, hist_gauche, fr
                 hist_gauche[1].append(p1[1])
 
 
-def possibles_movement(historic, movement):
+def possibles_movement(historic, movement, possibility):
 
     if abs(historic[0][-1] - historic[0][-2]) > 50 or\
        abs(historic[1][-1] - historic[1][-2]) > 50:
@@ -51,7 +51,8 @@ def possibles_movement(historic, movement):
 
         if possibility == "impossible":
             movement.remove(movement[-1])
-        
+
+    return possibility
 
 
 def detections_from_substractor(points_movements, movement):
@@ -152,11 +153,8 @@ def video_capture(video_name, hand_model):
 
 
         if len(hist_droite[0]) >= 2:
-            possibles_movement(hist_droite, droite)
-            possibles_movement(hist_gauche, gauche)
-
-            print("droite", possible_droite)
-            print("gauche", possible_gauche)
+            possible_droite = possibles_movement(hist_droite, droite, possible_droite)
+            possible_gauche = possibles_movement(hist_gauche, gauche, possible_gauche)
 
         if len(droite) >= 1:
             droite_points = detections_from_substractor(points_movements, droite)
