@@ -118,7 +118,7 @@ def more_than_one_detection(movement):
         a = movement[0][0] - movement[1][0]
         b = movement[0][0] -  movement[2][0]
         if a < b:
-            movement[-1] = droite[-2]
+            movement[-1] = movement[-2]
 
 
 
@@ -152,39 +152,42 @@ def video_capture(video_name, hand_model):
         hands_detections(scores, boxes, droite, gauche, hist_droite, hist_gauche, frame)
 
 
-        if len(hist_droite[0]) >= 2:
+        if len(hist_droite[0]) >= 2 and len(droite) >= 1:
             possible_droite = possibles_movement(hist_droite, droite, possible_droite)
+
+        if len(hist_gauche[0]) >= 2 and len(gauche) >= 1:
             possible_gauche = possibles_movement(hist_gauche, gauche, possible_gauche)
 
         if len(droite) >= 1:
             droite_points = detections_from_substractor(points_movements, droite)
-            gauche_points = detections_from_substractor(points_movements, gauche)
-
             draw(frame, droite_points)
-            draw(frame, gauche_points)
-
             no_hand_detection(droite, droite_points, hist_droite)
-            no_hand_detection(gauche, gauche_points, hist_gauche)
-
             fusion_movement_detection(droite, droite_points)
-            fusion_movement_detection(gauche, gauche_points)
-
-
             false_hand_detection(possible_droite, droite_points, droite)
-            false_hand_detection(possible_gauche, gauche_points, gauche)
-
             more_than_one_detection(droite)
-            more_than_one_detection(gauche)
 
 
             cv2.rectangle(frame, (droite[-1][0], droite[-1][1]),
                             (droite[-1][2], droite[-1][3]), (77, 255, 9), 3)
 
+            droite = [droite[-1]]
+
+        if len(gauche) >= 1:
+            gauche_points = detections_from_substractor(points_movements, gauche)
+            draw(frame, gauche_points)
+            no_hand_detection(gauche, gauche_points, hist_gauche)
+            fusion_movement_detection(gauche, gauche_points)
+
+            false_hand_detection(possible_gauche, gauche_points, gauche)
+            more_than_one_detection(gauche)
+
+
+
             cv2.rectangle(frame, (gauche[-1][0], gauche[-1][1]),
                             (gauche[-1][2], gauche[-1][3]), (77, 255, 9), 3)
 
 
-            droite = [droite[-1]]
+
             gauche = [gauche[-1]]
         
 
@@ -201,7 +204,7 @@ def video_capture(video_name, hand_model):
         cv2.imshow("mask", frame)
 
 
-        if cv2.waitKey(0) & 0xFF == ord("q"):
+        if cv2.waitKey(1) & 0xFF == ord("q"):
             break
 
     video.release()
