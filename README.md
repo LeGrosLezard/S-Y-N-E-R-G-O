@@ -9,7 +9,7 @@ rectangle bleu devient rectangle vert
 
 faut faire petite  detection = aggrandissement
 
-totu réécrire, réécrire les if sans etre des if parait que c pas bien les if
+totu réécrire, réécrire les if sans etre des if parait que c pas bien les if pcqu'il fallait baissé la detection sinon des fois y'avait pas de main....
 
 en gros on récupere les detection que l'on dit soit droite soit gauche, on les met aussi dans history, on compare les history, si valeur > 50 (d'aielleur faut reecrire de facon a fairfe des ratio genre grosseur des detections verte) on dit impossible et on récupere le bleu
 si un des mouvement x, y inf a 100 de l'ancien ou actuelle detection alors on dit que ce bleu est une detection.
