@@ -7,7 +7,7 @@ rectangle bleu devient rectangle vert
 
 faut faire petite  detection = aggrandissement
 
-totu réécrire, enelever les if
+totu réécrire, réécrire les if sans etre des if parait que c pas bien les if
 
 
 
