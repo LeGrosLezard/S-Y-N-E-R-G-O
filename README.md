@@ -1,12 +1,14 @@
 # S-Y-N-E-R-G-O
 
 
+fusion des rectangle
 
-- en gros on ddetecte une main, si a 100 100 100 100 prés  alors on ajoute a une liste, on recup min min max max
+rectangle bleu devient rectangle vert
 
-- LAAAAA il faut aussi ajuster last du coup !!! (c pour ca que ca marche pas) et dire last = bleu
+faut faire petite  detection = aggrandissement
 
-faut auss ifusionner bleu et vert, mettre a histo 100
+totu réécrire, enelever les if
+
 
 
 <br><br>
