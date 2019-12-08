@@ -3,7 +3,7 @@
 
 - en gros faut détécter tout le temps les mains par le mouvement et par les detections
 
-- faut trouvé un moyen de rendre le substrator bien
+- faut trouvé un moyen de rendre le substrator bien ou de fusionner les rectangle via le substrateur
 
 - récupérer l'alaphabet signe et faire // ex poingt ex y = cool, sachant que pouce = parent, petit = finesse 
 
