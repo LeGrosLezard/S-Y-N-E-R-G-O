@@ -1,6 +1,8 @@
 # S-Y-N-E-R-G-O
 
 
+
+
 fusion des rectangle
 
 rectangle bleu devient rectangle vert
@@ -9,7 +11,12 @@ faut faire petite  detection = aggrandissement
 
 totu réécrire, réécrire les if sans etre des if parait que c pas bien les if
 
+en gros on récupere les detection que l'on dit soit droite soit gauche, on les met aussi dans history, on compare les history, si valeur > 50 (d'aielleur faut reecrire de facon a fairfe des ratio genre grosseur des detections verte) on dit impossible et on récupere le bleu
+si un des mouvement x, y inf a 100 de l'ancien ou actuelle detection alors on dit que ce bleu est une detection.
 
+si impossible de l'ihistory on dit que la detection est bleu
+
+si detection mais impossible on dit que la vrai detection est le bleu
 
 <br><br>
 
