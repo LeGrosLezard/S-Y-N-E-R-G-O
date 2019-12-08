@@ -6,6 +6,8 @@
 
 - LAAAAA il faut aussi ajuster last du coup !!! (c pour ca que ca marche pas) et dire last = bleu
 
+faut auss ifusionner bleu et vert
+
 <br><br><br><br><br><br>
 
 - récupérer l'alaphabet signe et faire // ex poingt ex y = cool, sachant que pouce = parent, petit = finesse 
