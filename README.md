@@ -24,7 +24,7 @@ trouvé un truk a cause de la couleur chair du fond et retrouver le commit du re
 
 - récupérer l'alaphabet signe et faire // ex poingt ex y = cool  (si pas vers figure), si vers figure desactivé model pour mask et région
 
-au pire desactivé tf si on a une detection + la main qui est suivis et on regagne de la vitesse
+au pire desactivé tf si on a une detection + la main qui est suivis et on regagne de la vitesse (0.04 contre 1.02 .....)
 
 
 
