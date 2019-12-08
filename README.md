@@ -1,23 +1,5 @@
 # S-Y-N-E-R-G-O
 
-test pause estimation / openpause et y'a un episode chui gaté ce soir !
-
-j'ai un model de landmark de main mais il marche pas purée... essayer d'en trouver
-
-ok fait un bitewise
-
-faire le truk couleur
-
-recuperer les truk qui bougent
-
-mater pour chaque truk qui bouge
-
-est une detection ?
-
-attention, pour certaines vidéo ca bug a mort, certaine ont un fond chair
-
-le but c davoir les mains comme la vidéo du début.
-
 
 
 
