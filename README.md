@@ -1,5 +1,6 @@
 # S-Y-N-E-R-G-O
 
+detection trop grande ne pas les faire
 
 faut faire petite  detection = aggrandissement
 
