@@ -1,7 +1,7 @@
 # S-Y-N-E-R-G-O
 
 
-
+- je fais exactement les meme truk pourtant, je vérifie 2 fois chai pas
 
 - récupérer l'alaphabet signe et faire // ex poingt ex y = cool, sachant que pouce = parent, petit = finesse 
 
