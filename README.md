@@ -2,19 +2,12 @@
 
 detection trop grande ne pas les faire
 
-tout repose sur la detection du modele... et le modele est fait pour les main de jeu de plato....
-
-si mouvement rouge mais pas de blanc trouver un truk mais la chui en digestion et faire du sport/allé dehors pas ce temps c mort
-
 si pas de detection pendant x frame tout remettre a  0 (des fois y'a bonne detection mais impossible du coup faut a cause de pas de main pendant longtemps)
 
 faut faire petite  detection = aggrandissement
 
-si pas de detection pendant x frame tout remettre a 0
+si pas de tete alors non 
 
-si pas de tete alors non (je vois pas comment faire sans si...)
-
-finir de réécrire
 
 <br><br><br><br>
 
