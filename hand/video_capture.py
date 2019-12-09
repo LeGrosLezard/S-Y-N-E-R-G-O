@@ -75,7 +75,7 @@ def video_capture(video_name, hand_model):
         c = 0
         for i in a:
             if len(i) > 0:
-                nb = 0
+                nb = 25
 
 
                 roi = frame[ i[0][1]-nb : i[0][3]+nb, i[0][0]-nb : i[0][2]+nb ]
@@ -86,34 +86,28 @@ def video_capture(video_name, hand_model):
                     max_YCrCb = np.array([240,180,130],np.uint8)
                     imageYCrCb = cv2.cvtColor(roiback,cv2.COLOR_BGR2YCR_CB)
                     skinRegionYCrCb = cv2.inRange(imageYCrCb,min_YCrCb,max_YCrCb)
-                    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
-                    skinMask = cv2.dilate(skinRegionYCrCb, kernel, iterations = 4)
+                    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (4, 4))
+                    skinMask = cv2.dilate(skinRegionYCrCb, kernel, iterations = 3)
                     skinYCrCb = cv2.bitwise_and(roi, roi, mask = skinMask)
-                    cv2.imshow("skinYCrCb", skinYCrCb)
+                    #cv2.imshow("skinYCrCb", skinYCrCb)
 
 
                 except:
                     pass
 
 
-
-
-
                 imgray = cv2.cvtColor(skinYCrCb, cv2.COLOR_BGR2GRAY)
-                ret, thresh = cv2.threshold(imgray, 125, 255, 0)
-                kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
-                thresh = cv2.erode(thresh, kernel, iterations = 1)
-    
-                #cv2.imshow("thresh", thresh)
+                ret, thresh = cv2.threshold(imgray, 100, 255, 0)
+
+                cv2.imshow("thresh", thresh)
+
 
                 contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
 
                 for i in contours:
-                    cv2.drawContours(roi, [i], -1, (0,255,0), 4)
-                    cv2.fillPoly(roi, pts =[i], color=(77, 200, 9))
-
-
-
+                    if cv2.contourArea(i) > 100:
+                        cv2.drawContours(roi, [i], -1, (0,255,0), 3)
+                        cv2.fillPoly(roi, pts =[i], color=(77, 200, 9))
 
         cv2.imshow("mask", frame)
         if cv2.waitKey(1) & 0xFF == ord("q"):
