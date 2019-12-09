@@ -2,6 +2,8 @@
 
 le truk c que si le mec se met le doigt sur le visage, le visage aussi va devenir vert, a par s'il bouge pas la tete en meme temps...
 
+essayer de mettre un addweight sur la parti du visage sinon !!!!!
+
 - test de detecter la main quand y'en a pas
 
 
