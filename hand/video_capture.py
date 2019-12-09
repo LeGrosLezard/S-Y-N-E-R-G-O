@@ -126,6 +126,7 @@ def fusion_movement_detection(movement, points_movements):
 
         movement[-1] = (min(fusion[0]), min(fusion[1]), max(fusion[2]), max(fusion[3]))
 
+
 def false_hand_detection(possibility, points_movements, movement):
     """By history we observ a impossible detection, so we delete it from
     the movement list and replace it by movement substracor detection"""
@@ -187,7 +188,10 @@ def detections(movement, points_movements, historic, possibility, frame):
 
         cv2.rectangle(frame, (movement[-1][0], movement[-1][1]),
                        (movement[-1][2], movement[-1][3]), (77, 255, 9), 3)
+
         movement = [movement[-1]]
+
+        return movement
 
 
 def video_capture(video_name, hand_model):
@@ -212,8 +216,8 @@ def video_capture(video_name, hand_model):
         boxes, scores = detect_objects(frameRGB, detection_graph, sess)
         hands_detections(scores, boxes, droite, gauche, hist_droite, hist_gauche, frame)
 
-        detections(droite, points_movements, hist_droite, possible_droite, frame)
-        detections(gauche, points_movements, hist_gauche, possible_gauche, frame)
+        droite = detections(droite, points_movements, hist_droite, possible_droite, frame)
+        gauche = detections(gauche, points_movements, hist_gauche, possible_gauche, frame)
 
 
 
@@ -232,7 +236,7 @@ def video_capture(video_name, hand_model):
         cv2.imshow("mask", frame)
 
 
-        if cv2.waitKey(1) & 0xFF == ord("q"):
+        if cv2.waitKey(0) & 0xFF == ord("q"):
             break
 
     video.release()
