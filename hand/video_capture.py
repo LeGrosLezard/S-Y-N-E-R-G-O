@@ -37,7 +37,7 @@ def video_capture(video_name, hand_model):
     ok = False
     detection_graph, sess = load_inference_graph(hand_model)
     video = cv2.VideoCapture(video_name)
-    fgbg = cv2.createBackgroundSubtractorMOG2(history=200, varThreshold = 20, detectShadows=False)
+    fgbg = cv2.createBackgroundSubtractorMOG2(history=300, varThreshold = 1, detectShadows=False)
 
 
     while True:
