@@ -1,14 +1,14 @@
 # S-Y-N-E-R-G-O
 
-le cadre vert s'aggrandit plus
+des fois y'a pas de detection alors qu'il y a du rouge. Il faut alors faire une condition.
 
-detection trop grande ne pas les faire
+detection trop grande ne pas les faire.
 
-si pas de detection pendant x frame tout remettre a  0 
+si pas de detection pendant x frame tout remettre a zero. 
 
-faut faire petite  detection = aggrandissement
+Il faut aggrandir les zones qui ont une air trop petite.
 
-si pas de tete alors non 
+si pas de tete alors ne pas lancer le modele.
 
 
 <br><br><br><br>
