@@ -26,7 +26,7 @@ trouvé un truk a cause de la couleur chair du fond et retrouver le commit du re
 
 au pire desactivé tf si on a une detection + la main qui est suivis et on regagne de la vitesse (0.04 contre 1.02 .....)
 
-
+si plus de 3 detections on dit qu'on récupere la distance de pixel supp mais jcrois que c que pour la droite et l'incvers pour la gauche
 
 <br><br><br>
 
