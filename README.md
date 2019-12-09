@@ -1,6 +1,6 @@
 # S-Y-N-E-R-G-O
 
-on est d'accord ca vaut au moin 2 ou 3 prix nobels ca hin ?
+ptin c pas dingue mais ca marche sur les fond marron ouf mais ca lag... essayer avec le suivis par histo apres une detection de main
 
 - récupérer l'alaphabet signe et faire // ex poingt ex y = cool  (si pas vers figure), si vers figure desactivé model pour mask et région
 
