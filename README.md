@@ -1,10 +1,5 @@
 # S-Y-N-E-R-G-O
 
-bon ca me fait mal de voir ca mais ^^ jcrois qu'enfete ca sert a que dal
-
-mais jme suis amusé ^^
-
-<br><br><br><br>
 
 faire la detection de la main (mélanger rgb et y_)
 
