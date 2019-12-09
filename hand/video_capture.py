@@ -191,7 +191,7 @@ def detections(movement, points_movements, historic, possibility, frame):
 
         movement = [movement[-1]]
 
-        return movement
+    return movement
 
 
 def video_capture(video_name, hand_model):
@@ -236,7 +236,7 @@ def video_capture(video_name, hand_model):
         cv2.imshow("mask", frame)
 
 
-        if cv2.waitKey(0) & 0xFF == ord("q"):
+        if cv2.waitKey(1) & 0xFF == ord("q"):
             break
 
     video.release()
