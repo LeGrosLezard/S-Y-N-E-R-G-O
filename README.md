@@ -1,15 +1,12 @@
 # S-Y-N-E-R-G-O
 
 
-faire la detection de la main (mélanger rgb et y_)
 
-trouvé un truk a cause de la couleur chair du fond et retrouver le commit du remplissage
+
+
 
 - récupérer l'alaphabet signe et faire // ex poingt ex y = cool  (si pas vers figure), si vers figure desactivé model pour mask et région
 
-au pire desactivé tf si on a une detection + la main qui est suivis et on regagne de la vitesse (0.04 contre 1.02 .....)
-
-si plus de 3 detections on dit qu'on récupere la distance de pixel supp mais jcrois que c que pour la droite et l'incvers pour la gauche
 
 <br><br><br>
 
