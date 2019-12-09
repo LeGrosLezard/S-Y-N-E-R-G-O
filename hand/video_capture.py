@@ -10,47 +10,59 @@ print(tf.version.VERSION)
 
 
 def sustractor_background(frame, fgbg, liste):
+    """Delete background, find contours who's moving, add them to a list"""
 
-    R = cv2.RETR_TREE
-    P = cv2.CHAIN_APPROX_NONE
     suba = fgbg.apply(frame)
-    contours, _ = cv2.findContours(suba, R, P)
-    for cnts in contours:
-        if 1000 > cv2.contourArea(cnts) > 250: #500 / 1.7:
-            x, y, w, h = cv2.boundingRect(cnts)
-            liste.append((x, y, x+w, y+h))
-            cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 0, 255), 3, 1)
+    contours, _ = cv2.findContours(suba, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+    liste = [cv2.boundingRect(cnts) for cnts in contours if 1000 > cv2.contourArea(cnts) > 250]
+
+    #red rectangle
+##    for cnts in contours:
+##        if 1000 > cv2.contourArea(cnts) > 250: #500 / 1.7:
+##            x, y, w, h = cv2.boundingRect(cnts)
+##            liste.append((x, y, x+w, y+h))
+##            cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 0, 255), 3, 1)
 
 def hands_detections(scores, boxes, droite, gauche, hist_droite, hist_gauche, frame):
+    """Detect by our model the hand, define their position, append it to hand and history
+    for know if it's a possible detection"""
 
-    for i in range(2):
-        if (scores[i] > 0.10):
-            (left, right, top, bottom) = (boxes[i][1] * 500, boxes[i][3] * 500,
-                                          boxes[i][0] * 400, boxes[i][2] * 400)
-            p1 = (int(left), int(top))
-            p2 = (int(right), int(bottom))
+##    for i in range(2):
+##        if (scores[i] > 0.10):
+##            (left, right, top, bottom) = (boxes[i][1] * 500, boxes[i][3] * 500,
+##                                          boxes[i][0] * 400, boxes[i][2] * 400)
+##            p1 = (int(left), int(top))
+##            p2 = (int(right), int(bottom))
+##
+##            cv2.rectangle(frame, p1, p2, (255, 0, 0), 5)
 
-            cv2.rectangle(frame, p1, p2, (255, 255, 200), 1)
 
 
-            if p1[0] < 250:
-                droite.append((p1[0], p1[1], p2[0], p2[1]))
-                hist_droite[0].append(p1[0])
-                hist_droite[1].append(p1[1])
-            else:
-                gauche.append((p1[0], p1[1], p2[0], p2[1]))
-                hist_gauche[0].append(p1[0])
-                hist_gauche[1].append(p1[1])
+    detected_points = [(int(boxes[i][1] * 500), int(boxes[i][3] * 500),
+                        int(boxes[i][0] * 400), int(boxes[i][2] * 400)) for i in range(2) if scores[i] > 0.10]
+
+    right_left_points = [  [(pt[0], pt[2], pt[1], pt[3]) for pt in detected_points if pt[0] < 250],
+                           [(pt[0], pt[2], pt[1], pt[3]) for pt in detected_points if pt[0] > 250]   ]
+
+    def append_to_hand(hand, movement, historic, part):
+        if len(movement[part]) >= 1:
+            hand.append(movement[part][0])
+            historic[0].append(movement[part][0][0])
+            historic[1].append(movement[part][0][1])
+
+    append_to_hand(droite, right_left_points, hist_droite, 0)
+    append_to_hand(gauche, right_left_points, hist_gauche, 1)
 
 
 def possibles_movement(historic, movement, possibility):
+    """By history who keep x and y last movement
+    we verify if the new detection isn't highter than 60 px"""
 
-    if abs(historic[0][-1] - historic[0][-2]) > 50 or\
-       abs(historic[1][-1] - historic[1][-2]) > 50:
+    nb = 60
+    if abs(historic[0][-1] - historic[0][-2]) > nb or\
+       abs(historic[1][-1] - historic[1][-2]) > nb:
         possibility = "impossible"
-
-        if possibility == "impossible":
-            movement.remove(movement[-1])
+        movement.remove(movement[-1])
 
     return possibility
 
@@ -61,8 +73,8 @@ def detections_from_substractor(points_movements, movement):
     for i in points_movements:
         a = abs(i[0] - movement[0][0])
         b = abs(i[1] - movement[0][1])
-        c = abs(i[2] - movement[0][2])
-        d = abs(i[3] - movement[0][3])
+        c = abs((i[2] + i[0]) - movement[0][2])
+        d = abs((i[3] + i[1]) - movement[0][3])
 
         if a < nb and b < nb and c < nb and d < nb:
             points[0].append(i[0])
@@ -121,6 +133,14 @@ def more_than_one_detection(movement):
             movement[-1] = movement[-2]
 
 
+def start_timmer():
+    start = time()
+    return start
+
+def timmer(start):
+    elapsed = time() - start
+    print(elapsed)
+
 
 def video_capture(video_name, hand_model):
 
@@ -135,6 +155,8 @@ def video_capture(video_name, hand_model):
     hist_droite = [[], []]
     hist_gauche = [[], []]
     while True:
+
+        start = start_timmer()
 
         points_movements = []
         possible_droite = "possible"
@@ -157,6 +179,9 @@ def video_capture(video_name, hand_model):
 
         if len(hist_gauche[0]) >= 2 and len(gauche) >= 1:
             possible_gauche = possibles_movement(hist_gauche, gauche, possible_gauche)
+
+
+        print("droite", possible_droite, "gauche", possible_gauche)
 
         if len(droite) >= 1:
             droite_points = detections_from_substractor(points_movements, droite)
@@ -202,9 +227,9 @@ def video_capture(video_name, hand_model):
 
 
         cv2.imshow("mask", frame)
+        #timmer(start)
 
-
-        if cv2.waitKey(1) & 0xFF == ord("q"):
+        if cv2.waitKey(0) & 0xFF == ord("q"):
             break
 
     video.release()
