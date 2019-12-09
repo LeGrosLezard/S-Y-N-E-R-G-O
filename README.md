@@ -2,7 +2,7 @@
 
 detection trop grande ne pas les faire
 
-si pas de detection pendant x frame tout remettre a  0 (des fois y'a bonne detection mais impossible du coup faut a cause de pas de main pendant longtemps)
+si pas de detection pendant x frame tout remettre a  0 
 
 faut faire petite  detection = aggrandissement
 
