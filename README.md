@@ -1,10 +1,12 @@
 # S-Y-N-E-R-G-O
 
-le truk c que si le mec se met le doigt sur le visage, le visage aussi va devenir vert, a par s'il bouge pas la tete en meme temps...
+- récupérer l'alaphabet signe et faire // ex poingt ex y = cool  (si pas vers figure), si vers figure desactivé model pour mask et région
 
-essayer de mettre un addweight sur la parti du visage sinon !!!!!
+avec un peu de chance le sub thresh passera pour le début du mouvement
 
-- test de detecter la main quand y'en a pas
+essayer de mettre un addweight sur la parti du visage ou de changer la couleur de la figure 
+
+
 
 
 
@@ -15,7 +17,7 @@ essayer de mettre un addweight sur la parti du visage sinon !!!!!
 
 <br><br><br>
 
-- récupérer l'alaphabet signe et faire // ex poingt ex y = cool  (si pas vers figure), si vers figure desactivé model pour mask et région
+
 
 
 <br><br><br>
