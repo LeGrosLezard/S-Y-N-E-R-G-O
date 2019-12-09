@@ -1,5 +1,7 @@
 # S-Y-N-E-R-G-O
 
+le cadre vert s'aggrandit plus
+
 detection trop grande ne pas les faire
 
 si pas de detection pendant x frame tout remettre a  0 
