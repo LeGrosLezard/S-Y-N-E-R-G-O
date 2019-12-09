@@ -2,7 +2,15 @@
 
 
 
+- test de detecter la main quand y'en a pas
 
+- tester de grandir la detection quand le pouce manque
+
+supprimer les pex de pixel
+
+sur fond ou habit couleur chair c mort quand meme test
+
+retest openpose une fois
 
 
 - récupérer l'alaphabet signe et faire // ex poingt ex y = cool  (si pas vers figure), si vers figure desactivé model pour mask et région
