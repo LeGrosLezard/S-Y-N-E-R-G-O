@@ -1,5 +1,7 @@
 # S-Y-N-E-R-G-O
 
+on est d'accord ca vaut au moin 2 ou 3 prix nobels ca hin ?
+
 - récupérer l'alaphabet signe et faire // ex poingt ex y = cool  (si pas vers figure), si vers figure desactivé model pour mask et région
 
 avec un peu de chance le sub thresh passera pour le début du mouvement
