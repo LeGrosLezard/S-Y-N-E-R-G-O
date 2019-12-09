@@ -1,16 +1,14 @@
 # S-Y-N-E-R-G-O
 
-- définir thresh
+le truk c que si le mec se met le doigt sur le visage, le visage aussi va devenir vert, a par s'il bouge pas la tete en meme temps...
 
 - test de detecter la main quand y'en a pas
 
-- tester de grandir la detection quand le pouce manque
 
-- supprimer les pex de pixel
 
-- sur fond ou habit couleur chair c mort quand meme test
 
-- retest openpose une fois
+
+
 
 
 <br><br><br>
