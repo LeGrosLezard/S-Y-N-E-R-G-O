@@ -1,15 +1,8 @@
 # S-Y-N-E-R-G-O
 
-des fois y'a pas de detection alors qu'il y a du rouge. Il faut alors faire une condition.
+bon ca me fait mal de voir ca mais ^^ jcrois qu'enfete ca sert a que dal
 
-detection trop grande ne pas les faire.
-
-si pas de detection pendant x frame tout remettre a zero. 
-
-Il faut aggrandir les zones qui ont une air trop petite.
-
-si pas de tete alors ne pas lancer le modele.
-
+mais jme suis amusé ^^
 
 <br><br><br><br>
 
