@@ -124,7 +124,7 @@ def video_capture(video_name, hand_model):
                 for i in contours:
                     print(cv2.contourArea(i))
                     cv2.drawContours(roi, [i], -1, (0,255,0), 3)
-                
+                    cv2.fillPoly(roi, pts =[i], color=(77, 200, 9))
 ##                    cv2.imshow("roi", frame)
 ##                    cv2.waitKey(0)
 
