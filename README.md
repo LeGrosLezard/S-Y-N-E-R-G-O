@@ -1,9 +1,8 @@
 # S-Y-N-E-R-G-O
 
-- télécharger openpose ou leap motion mais jcrois que c que camera
+récuperer le model de main et comprendre (fallait comprendre)
 
-
-tf pose nécéssite 1.4 jsp ^^, du coup faudra enelevé tous les .io et . compat bon ca marche presque ! fin apres faut comprendre comment faire avec le model des mains j'ai trop hate de danser devant ma cam, ca me chauffe depuis avant hier serieux
+bon par contre ca lag sa mere fallait installer cuda 10 et ca mettais 2heurs chiant
 
 
 
