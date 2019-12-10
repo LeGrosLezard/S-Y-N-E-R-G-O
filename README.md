@@ -1,12 +1,10 @@
 # S-Y-N-E-R-G-O
 
-ptin c pas dingue mais ca marche sur les fond marron ouf mais ca lag... essayer avec le suivis par histo apres une detection de main
 
-- récupérer l'alaphabet signe et faire // ex poingt ex y = cool  (si pas vers figure), si vers figure desactivé model pour mask et région
+- récupérer l'alaphabet signe 
 
-avec un peu de chance le sub thresh passera pour le début du mouvement
+- trouvé un sans le thresh parfait, sinon un sans thresh
 
-essayer de mettre un addweight sur la parti du visage ou de changer la couleur de la figure 
 
 
 
