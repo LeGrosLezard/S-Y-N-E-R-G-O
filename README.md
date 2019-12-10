@@ -1,5 +1,6 @@
 # S-Y-N-E-R-G-O
 
+- reesayer openpose
 
 - récupérer l'alaphabet signe 
 
