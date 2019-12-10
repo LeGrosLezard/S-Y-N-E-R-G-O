@@ -3,7 +3,7 @@
 - télécharger openpose ou leap motion mais jcrois que c que camera
 
 
-
+- variable environement toujours les placé dans le c:/ fallait comprendre ca aussi
 
 
 
