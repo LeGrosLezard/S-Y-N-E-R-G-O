@@ -1,12 +1,7 @@
 # S-Y-N-E-R-G-O
 
-- reesayer openpose
+- télécharger openpose
 
-- récupérer l'alaphabet signe / plongé
-
-- trouvé un sans le thresh parfait, sinon un sans thresh
-
-ca mdonne q p y ... ptin y ont tous un tresh parfait de chez parfait c dingue ca grr moi mon thresh est tout pourrav mais si y'a un fond marron chui foutu enfete bon et sur certaine vidéo hand marche pas du coup mettre le model via les mouvements
 
 
 
