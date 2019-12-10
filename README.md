@@ -1,6 +1,6 @@
 # S-Y-N-E-R-G-O
 
-- télécharger openpose
+- télécharger openpose ou leap motion mais jcrois que c que camera
 
 
 
