@@ -5,7 +5,7 @@
 
 - trouvé un sans le thresh parfait, sinon un sans thresh
 
-ca mdonne q p y ...
+ca mdonne q p y ... ptin y ont tous un tresh parfait de chez parfait c dingue ca grr moi mon thresh est tout pourrav
 
 
 
