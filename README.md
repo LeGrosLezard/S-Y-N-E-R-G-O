@@ -3,7 +3,7 @@
 - télécharger openpose ou leap motion mais jcrois que c que camera
 
 
-tf pose nécéssite 1.4 jsp ^^, du coup faudra enelevé tous les .io et . compat bon ca marche presque ! fin apres faut comprendre comment faire avec le model des mains
+tf pose nécéssite 1.4 jsp ^^, du coup faudra enelevé tous les .io et . compat bon ca marche presque ! fin apres faut comprendre comment faire avec le model des mains j'ai trop hate de danser devant ma cam, ca me chauffe depuis avant hier serieux
 
 
 
