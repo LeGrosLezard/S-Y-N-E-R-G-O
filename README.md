@@ -1,8 +1,6 @@
 # S-Y-N-E-R-G-O
 
-récuperer le model de main et comprendre (fallait comprendre)
-
-bon par contre ca lag sa mere fallait installer cuda 10 et ca mettais 2heurs chiant
+me suis trompé c'était openpose et pas pose estimation oh ca me saoul
 
 
 
