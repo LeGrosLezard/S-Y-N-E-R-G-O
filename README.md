@@ -5,7 +5,7 @@ me suis trompé c'était openpose et pas pose estimation oh ca me saoul si j'ai 
 
 non mais c confu serieux y'a plein plein plein de model, moi je m'y perds, fin c'est bon mais y'a tellement d'extension...
 
-
+mais je commence a comprendre le trucks des models et de comment on fait, oh j'ai vu des trucks de dingue mais je comprenais pas comment les téléchargé....
 
 
 
