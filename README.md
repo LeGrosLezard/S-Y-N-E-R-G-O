@@ -1,6 +1,6 @@
 # S-Y-N-E-R-G-O
 
-me suis trompé c'était openpose et pas pose estimation oh ca me saoul si j'ai bie ncompris faut construire openpose, c'est comme si on télécharger avec pip mais la on doit le faire nous meme avec virtual studio et cmake !
+me suis trompé c'était openpose et pas pose estimation oh ca me saoul si j'ai bie ncompris faut construire openpose, c'est comme si on télécharger avec pip mais la on doit le faire nous meme avec virtual studio et cmake ! c'est foutu
 
 
 
