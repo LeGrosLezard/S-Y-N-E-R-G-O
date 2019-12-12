@@ -1,7 +1,9 @@
 # S-Y-N-E-R-G-O
 
 
+- récupérer modele d'émotion
 
+- récupérer les mouvements des points
 
 <br><br><br>
 
