@@ -1,60 +1,71 @@
-import numpy as np
-import matplotlib.pyplot as plt
-import sys
+from __future__ import division
 import cv2
+import time
+import numpy as np
 
-# Set the right path to your model definition file, pretrained model weights,
-# and the image you would like to classify.
-a = r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\openpose\models\pose\body_25"
-MODEL_FILE = a+ "\pose_deploy.prototxt"
-PRETRAINED = a + "\pose_iter_584000.caffemodel"
+protoFile = "pose_deploy.prototxt"
+weightsFile = "pose_iter_102000.caffemodel"
+nPoints = 22
+POSE_PAIRS = [ [0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],[0,9],[9,10],[10,11],[11,12],[0,13],[13,14],[14,15],[15,16],[0,17],[17,18],[18,19],[19,20] ]
+net = cv2.dnn.readNetFromCaffe(protoFile, weightsFile)
 
-net = cv2.dnn.readNetFromCaffe(MODEL_FILE, PRETRAINED)
-print("successfully loaded classifier")
+frame = cv2.imread("b.jpg")
+frameCopy = np.copy(frame)
+frameWidth = frame.shape[1]
+frameHeight = frame.shape[0]
+aspect_ratio = frameWidth/frameHeight
 
+threshold = 0.1
 
-# test on a image
-IMAGE_FILE = r'C:\Users\jeanbaptiste\Desktop\jgfdposgj\openpose\examples\tutorial_api_python\ici.jpg'
-im = cv2.imread(IMAGE_FILE)
-inpBlob = cv2.dnn.blobFromImage(im, 1.0 / 255, (im.shape[1], im.shape[0]),
-                                    (0, 0, 0), swapRB=False, crop=False)
-
+t = time.time()
+# input image dimensions for the network
+inHeight = 368
+inWidth = int(((aspect_ratio*inHeight)*8)//8)
+inpBlob = cv2.dnn.blobFromImage(frame, 1.0 / 255, (inWidth, inHeight), (0, 0, 0), swapRB=False, crop=False)
 
 net.setInput(inpBlob)
- 
+
 output = net.forward()
+print("time taken by network : {:.3f}".format(time.time() - t))
 
-
-
-
-
+# Empty list to store the detected keypoints
 points = []
- 
-for i in range(22):
+
+for i in range(nPoints):
     # confidence map of corresponding body's part.
     probMap = output[0, i, :, :]
-    probMap = cv2.resize(probMap, (im.shape[1], im.shape[0]))
- 
+    probMap = cv2.resize(probMap, (frameWidth, frameHeight))
+
     # Find global maxima of the probMap.
     minVal, prob, minLoc, point = cv2.minMaxLoc(probMap)
- 
-    if prob > 0.20 :
-        cv2.circle(im, (int(point[0]), int(point[1])), 8,
-                   (0, 255, 255), thickness=-1, lineType=cv2.FILLED)
-        cv2.putText(im, "{}".format(i), (int(point[0]), int(point[1])),
-                    cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, lineType=cv2.LINE_AA)
- 
+
+    if prob > threshold :
+        cv2.circle(frameCopy, (int(point[0]), int(point[1])), 8, (0, 255, 255), thickness=-1, lineType=cv2.FILLED)
+        cv2.putText(frameCopy, "{}".format(i), (int(point[0]), int(point[1])), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, lineType=cv2.LINE_AA)
+
         # Add the point to the list if the probability is greater than the threshold
         points.append((int(point[0]), int(point[1])))
     else :
         points.append(None)
-        cv2.imshow('Output-Keypoints', im)
-        cv2.waitKey(0)
+
+# Draw Skeleton
+for pair in POSE_PAIRS:
+    partA = pair[0]
+    partB = pair[1]
+
+    if points[partA] and points[partB]:
+        cv2.line(frame, points[partA], points[partB], (0, 255, 255), 2)
+        cv2.circle(frame, points[partA], 8, (0, 0, 255), thickness=-1, lineType=cv2.FILLED)
+        cv2.circle(frame, points[partB], 8, (0, 0, 255), thickness=-1, lineType=cv2.FILLED)
 
 
+cv2.imshow('Output-Keypoints', frameCopy)
+cv2.imshow('Output-Skeleton', frame)
 
 
+cv2.imwrite('Output-Keypoints.jpg', frameCopy)
+cv2.imwrite('Output-Skeleton.jpg', frame)
 
+print("Total time taken : {:.3f}".format(time.time() - t))
 
-
-        
+cv2.waitKey(0)
