@@ -1,7 +1,7 @@
 # S-Y-N-E-R-G-O
 
 ok faire un premier tour genre chargement reviens dans une heure et on charge juste toute les images ect, en gros on fait le display.
-
+c'est nuuuul...
 
 
 
