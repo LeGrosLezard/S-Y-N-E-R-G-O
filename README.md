@@ -2,9 +2,9 @@
 
 le but c'est de:
 
-- trouver comment faire si pas de mouvement
+- si pas de mouvement ré activer le modele.
 
-
+<br><br><br>
 
 - faire le skeletton dedans
 
