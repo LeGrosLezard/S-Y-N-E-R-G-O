@@ -1,9 +1,9 @@
 # S-Y-N-E-R-G-O
 
 
-- récupérer modele d'émotion
+- récupérer modele d'émotion (6 émotions primaires)
 
-- récupérer les mouvements des points
+- récupérer les mouvements des points (les émotions mélangées)
 
 <br><br><br>
 
