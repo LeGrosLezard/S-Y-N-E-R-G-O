@@ -1,8 +1,6 @@
 # S-Y-N-E-R-G-O
 
-- télécharger cuda 10 pour gpu
 
-ok je fais rien a part récupérer du code, je pense qu'il faut que je me mette au math et ca ressemble au code des fois jvai aimer c sur
 
 
 - récupérer les mouvements des points (les émotions mélangées)
@@ -10,6 +8,8 @@ ok je fais rien a part récupérer du code, je pense qu'il faut que je me mette 
 
 
 <br><br><br>
+
+-construire openpose (pcque jcrois que pour aovir la vidéo faut le cmake)
 
 - récupérer les mouvements des doigts
 
