@@ -7,7 +7,7 @@
 
 <br><br><br>
 
-- récupérer les mouvements de la main
+- récupérer les mouvements des doigts
 
 <br><br><br>
 
