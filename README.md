@@ -1,8 +1,18 @@
 # S-Y-N-E-R-G-O
 
-bon plus qu'a avoir tout le temps la main, mettre le skeletton et ok ! faire le truk qui dira si tel schéma de pts alors ce mouvement
+le but c'est de:
 
+- récupérer les mouvement pres de 50/100 pixels
 
+- vérifier la couleur (shift revient exactement au meme)
+
+- faire le skeletton dedans
+
+- récupérer numéro skeletton (mais bien ca marchera pas) donc récupérer les extrémité des pts (truk avec ananas)
+
+- sinon pts les plus proche (tous les pts)
+
+chai pas pcqu'il y a bcp de pouce index = ca tourne rond, ou ok, ou rien ou diametre ^^
 
 
 
