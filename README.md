@@ -4,7 +4,7 @@ le but c'est de:
 
 - récupérer les mouvement pres de 50/100 pixels
 
-- vérifier la couleur (shift revient exactement au meme)
+- vérifier la couleur (shift revient exactement au meme) avec countnonzero via yr truk
 
 - faire le skeletton dedans
 
@@ -12,9 +12,9 @@ le but c'est de:
 
 - sinon pts les plus proche (tous les pts)
 
-chai pas pcqu'il y a bcp de pouce index = ca tourne rond, ou ok, ou rien ou diametre ^^
+chai pas pcqu'il y a bcp de pouce index = ca tourne rond, ou ok, ou rien ou diametre 
 
-
+tfacon tester skeletton si la ca marche vrmnt pas passsé a émotion recognition via les pts.
 
 
 
