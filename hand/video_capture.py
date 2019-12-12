@@ -2,7 +2,7 @@ from cv2 import VideoCapture, resize, cvtColor, COLOR_BGR2RGB, imshow, waitKey, 
 from hand_detection.utils import load_inference_graph, detect_objects
 from hand_detection.hand_detection import hands_detections
 from hand_signification.skelettor import make_skelettor
-import tensorflow as tf
+
 
 
 
