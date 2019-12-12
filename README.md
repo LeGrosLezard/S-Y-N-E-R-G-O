@@ -1,13 +1,11 @@
 # S-Y-N-E-R-G-O
 
-ok faire un premier tour genre chargement reviens dans une heure et on charge juste toute les images ect, en gros on fait le display.
-c'est nuuuul...
 
 
 
 <br><br><br>
 
-- faire le skeletton dedans
+- faire le skeletton dedans (sinon le faire et dire ca marche pas pour les video avec fond marron)
 
 - récupérer numéro skeletton (mais bien ca marchera pas) donc récupérer les extrémité des pts (truk avec ananas)
 
