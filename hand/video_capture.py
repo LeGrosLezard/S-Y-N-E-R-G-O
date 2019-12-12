@@ -19,65 +19,11 @@ def hands_detections(scores, boxes, frame):
     return detections
 
 
-def detection_by_movement(frame, fgbg):
-
-    background_substractor = fgbg.apply(frame)
-    mask_substractor = cv2.bitwise_and(frame, frame, mask = background_substractor)
-
-    gray = cv2.cvtColor(mask_substractor, cv2.COLOR_BGR2GRAY)
-    contours = cv2.findContours(gray, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)[0]
-
-    movement = [cv2.boundingRect(cnts) for cnts in contours]
-
-    return movement
 
 
 
-def detection_by_proximity(movement, historic):
-
-    out = [[], []]
-
-    def define_movement(movement, historic, nb):
-
-        return [move for move in movement if abs(move[0] - historic[nb][0]) < 40 and\
-                                             abs(move[1] - historic[nb][1]) < 40]
-
-    if len(historic) > 0:
-
-        if len(historic[0]) > 0:
-            out[0] = define_movement(movement, historic, 0)
-
-        if len(historic[1]) > 0:
-            out[1] = define_movement(movement, historic, 1)
-
-    return out[0], out[1]
 
 
-
-def make_movement_detection(hand_movement_right, hand_movement_left, frame, historic):
-
-
-    out = [[], []]
-
-    def define_points(movement):
-
-        liste = [[], [], [], []]
-        for i in movement:
-            liste[0].append(i[0])
-            liste[1].append(i[1])
-            liste[2].append(i[0] + i[2])
-            liste[3].append(i[1] + i[3])
-
-        return  min(liste[0]), min(liste[1]), max(liste[2]), max(liste[3])
-
-    if hand_movement_right != []:
-        out[0] = define_points(hand_movement_right)
-
-    if hand_movement_left != []:
-        out[1] = define_points(hand_movement_left)
-
-
-    return out
 
 
 def video_capture(video_name, hand_model):
@@ -88,6 +34,9 @@ def video_capture(video_name, hand_model):
     fgbg = cv2.createBackgroundSubtractorMOG2(history=120, varThreshold = 120, detectShadows=False)
 
     historic = []
+
+    protoFile = "pose_deploy.prototxt"
+    weightsFile = "pose_iter_102000.caffemodel"
 
     while True:
 
@@ -100,24 +49,67 @@ def video_capture(video_name, hand_model):
 
         for hand in detections:
             if len(hand) > 0:
-                cv2.rectangle(frame, (hand[0], hand[1]), (hand[2], hand[3]), (79, 220, 25), 4)
+                #cv2.rectangle(frame, (hand[0], hand[1]), (hand[2], hand[3]), (79, 220, 25), 4)
+
+                oh = frame[hand[1]:hand[3], hand[0]:hand[2]]
+
+                nPoints = 22
+                POSE_PAIRS = [ [0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],[0,9],[9,10],[10,11],[11,12],[0,13],[13,14],[14,15],[15,16],[0,17],[17,18],[18,19],[19,20] ]
+                net = cv2.dnn.readNetFromCaffe(protoFile, weightsFile)
+
+                frameCopy = np.copy(oh)
+                frameWidth = oh.shape[1]
+                frameHeight = oh.shape[0]
+                aspect_ratio = frameWidth/frameHeight
+
+                threshold = 0.1
 
 
-        movements = detection_by_movement(frame, fgbg)
-        hand_movement_right, hand_movement_left = detection_by_proximity(movements, historic)
-        right_detection, left_detection = make_movement_detection(hand_movement_right, hand_movement_left, frame, historic)
+                # input image dimensions for the network
+                inHeight = 368
+                inWidth = int(((aspect_ratio*inHeight)*8)//8)
+                inpBlob = cv2.dnn.blobFromImage(oh, 1.0 / 255, (inWidth, inHeight), (0, 0, 0), swapRB=False, crop=False)
 
-        if right_detection != []:
-            cv2.rectangle(frame, (right_detection[0], right_detection[1]),
-                          (right_detection[2], right_detection[3]), (100, 50, 255), 3)
+                net.setInput(inpBlob)
 
-        if left_detection != []:
-            cv2.rectangle(frame, (left_detection[0], left_detection[1]),
-                          (left_detection[2], left_detection[3]), (100, 50, 255), 3)
+                output = net.forward()
 
-        historic = [ [int((hand[0] + hand[2]) / 2), int((hand[1]+hand[3]) / 2)] for hand in detections]
 
-    
+                # Empty list to store the detected keypoints
+                points = []
+
+                for i in range(nPoints):
+                    # confidence map of corresponding body's part.
+                    probMap = output[0, i, :, :]
+                    probMap = cv2.resize(probMap, (frameWidth, frameHeight))
+
+                    # Find global maxima of the probMap.
+                    minVal, prob, minLoc, point = cv2.minMaxLoc(probMap)
+
+                    if prob > threshold :
+                        cv2.circle(frameCopy, (int(point[0]), int(point[1])), 8, (0, 255, 255), thickness=-1, lineType=cv2.FILLED)
+                        cv2.putText(frameCopy, "{}".format(i), (int(point[0]), int(point[1])), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, lineType=cv2.LINE_AA)
+
+                        # Add the point to the list if the probability is greater than the threshold
+                        points.append((int(point[0]), int(point[1])))
+                    else :
+                        points.append(None)
+
+                # Draw Skeleton
+                for pair in POSE_PAIRS:
+                    partA = pair[0]
+                    partB = pair[1]
+
+                    if points[partA] and points[partB]:
+                        cv2.line(oh, points[partA], points[partB], (0, 255, 255), 2)
+                        cv2.circle(oh, points[partA], 8, (0, 0, 255), thickness=-1, lineType=cv2.FILLED)
+                        cv2.circle(oh, points[partB], 8, (0, 0, 255), thickness=-1, lineType=cv2.FILLED)
+
+
+                cv2.imshow('Output-Keypoints', frameCopy)
+                cv2.imshow('Output-Skeleton', oh)
+                cv2.waitKey(0)
+
 
 
 
@@ -127,7 +119,7 @@ def video_capture(video_name, hand_model):
 
 
         cv2.imshow("frame", frame)
-        if cv2.waitKey(0) & 0xFF == ord("q"):
+        if cv2.waitKey(1) & 0xFF == ord("q"):
             break
 
         frame += 1
