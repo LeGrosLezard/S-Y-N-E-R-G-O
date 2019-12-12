@@ -2,7 +2,7 @@
 
 le but c'est de:
 
-- si pas de mouvement ré activer le modele.
+bon ca marche mais c trop long
 
 <br><br><br>
 
