@@ -1,9 +1,11 @@
-from cv2 import rectangle, convexHull, Subdiv2D, boundingRect
-from numpy import array, int32
+from cv2 import rectangle, convexHull, Subdiv2D, boundingRect, resize, putText, countNonZero, FONT_HERSHEY_SIMPLEX
+from numpy import array, int32, expand_dims
 from numpy import min as np_min
+from numpy import max as np_max
 from math import sin, acos
 from scipy.spatial import distance as dist
-
+from keras.preprocessing.image import img_to_array
+from keras.models import load_model
 
 def points_landmarks(gray, predictor, detector):
     """ Return the 68 points of the face and the face"""
@@ -46,26 +48,23 @@ def recuperate_intra_face_points(landmarks, faces, img):
 def intra_face(img, gray, landmarks, face, fgbg):
 
     #A CONTINUER
-    import cv2
-    import numpy as np
 
     subastrac = fgbg.apply(img)
 
     def crop_rectangle(area, color):
-        area = np.array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in range(area[0], area[1])])
+        area = array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in range(area[0], area[1])])
         x, y, w, h = boundingRect(area)
         #cv2.rectangle(img, (x, y), (x + w, y + h), color, 1)
         return x - 5, y - 5, w + 5, h + 10
 
     def crop_contour(area, color):
-        area = np.array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in area])
+        area = array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in area])
         x, y, w, h = boundingRect(area)
         #cv2.drawContours(img, [area], 0, color, 1)
         return x , y , w, h
 
-
     def counter(area):
-        a = cv2.countNonZero(area)
+        a = countNonZero(area)
         #print(a)
 
 
@@ -89,6 +88,26 @@ def intra_face(img, gray, landmarks, face, fgbg):
 
 
 
+def emotions(frame, gray, faces, emotion_model):
+
+    emotion_classifier = load_model(emotion_model, compile=False)
+    EMOTIONS = ["angry", "disgust", "scared", "happy", "sad", "surprised", "neutral"]
+    
+    if faces:
+
+        faces = sorted([list(faces)], reverse=True, key=lambda x: (x[2] - x[0]) * (x[3] - x[1]))[0]
+        (fX, fY, fW, fH) = faces
+        roi = gray[fY:fY + fH, fX:fX + fW]
+        roi = resize(roi, (64, 64))
+        roi = roi.astype("float") / 255.0
+        roi = img_to_array(roi)
+        roi = expand_dims(roi, axis=0)
+        preds = emotion_classifier.predict(roi)[0]
+        emotion_probability = np_max(preds)
+        label = EMOTIONS[preds.argmax()]
+
+        putText(frame, label, (fX, fY - 10), FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 255), 2)
+        rectangle(frame, (fX, fY), (fX + fW, fY + fH),(0, 0, 255), 2)
 
 
 
@@ -102,7 +121,7 @@ def intra_face(img, gray, landmarks, face, fgbg):
 
 #Exterior of face
 def exterior_face(face, img):
-    import cv2
+
     """Recuperate area of the forehead and of the exterior of the head"""
 
     #front, FAIRE RATIO
