@@ -1,9 +1,13 @@
 # S-Y-N-E-R-G-O
 
+- télécharger cuda 10 pour gpu
 
-- récupérer modele d'émotion (6 émotions primaires)
+ok je fais rien a part récupérer du code, je pense qu'il faut que je me mette au math et ca ressemble au code des fois jvai aimer c sur
+
 
 - récupérer les mouvements des points (les émotions mélangées)
+
+
 
 <br><br><br>
 
