@@ -1,11 +1,6 @@
 # S-Y-N-E-R-G-O
 
-me suis trompé c'était openpose et pas pose estimation oh ca me saoul si j'ai bie ncompris faut construire openpose, c'est comme si on télécharger avec pip mais la on doit le faire nous meme avec virtual studio et cmake ! c'est foutu
-
-
-non mais c confu serieux y'a plein plein plein de model, moi je m'y perds, fin c'est bon mais y'a tellement d'extension...
-
-mais je commence a comprendre le trucks des models et de comment on fait, oh j'ai vu des trucks de dingue mais je comprenais pas comment les téléchargé....
+bon plus qu'a avoir tout le temps la main, mettre le skeletton et ok ! faire le truk qui dira si tel schéma de pts alors ce mouvement
 
 
 
