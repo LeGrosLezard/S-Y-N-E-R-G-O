@@ -1,8 +1,9 @@
 # S-Y-N-E-R-G-O
 
-le but c'est de:
+ok faire un premier tour genre chargement reviens dans une heure et on charge juste toute les images ect, en gros on fait le display.
 
-bon ca marche mais c trop long
+
+
 
 <br><br><br>
 
