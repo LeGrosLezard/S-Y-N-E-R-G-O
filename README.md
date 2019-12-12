@@ -5,32 +5,7 @@
 
 <br><br><br>
 
-- faire le skeletton dedans (sinon le faire et dire ca marche pas pour les video avec fond marron)
-
-- récupérer numéro skeletton (mais bien ca marchera pas) donc récupérer les extrémité des pts (truk avec ananas)
-
-- sinon pts les plus proche (tous les pts)
-
-- faire un siplay qui retrace les mouvement de la main et qui sefface peut apres)
-
-chai pas pcqu'il y a bcp de pouce index = ca tourne rond, ou ok, ou rien ou diametre 
-
-tfacon tester skeletton si la ca marche vrmnt pas passsé a émotion recognition via les pts.
-
-
-
-
-
-
-
-
-
-
-
-<br><br><br>
-
-
-
+- récupérer les mouvements de la main
 
 <br><br><br>
 
