@@ -11,7 +11,7 @@
 
 <br><br><br>
 
-- mtn oreille, tempe, front et cou ! 
+- récupérer les pts des oreilles, et des tempes ! 
 
 - si haute présence de vers faire:
 
