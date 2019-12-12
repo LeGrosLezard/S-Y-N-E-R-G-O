@@ -26,8 +26,6 @@
 
 - faire un display eyes
 
-- récupérer un modele émotion + pts qui bougent
-
 - on pourra aussi avoir la chevelure, raise figure, thresh ect
 
 - récupérer un model de main signification
