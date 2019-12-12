@@ -2,9 +2,9 @@
 
 le but c'est de:
 
-- récupérer les mouvement pres de 50/100 pixels
+- trouver comment faire si pas de mouvement
 
-- vérifier la couleur (shift revient exactement au meme) avec countnonzero via yr truk + background sub en gros faut supprimer le fond (history chai pas)
+
 
 - faire le skeletton dedans
 
