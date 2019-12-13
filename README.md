@@ -1,5 +1,9 @@
 # S-Y-N-E-R-G-O
 
+- continuer apprendre pourcentage, et finir les display
+
+
+
 - récupérer les mouvements des points (les émotions mélangées)
 
 - récupérer age et gender
