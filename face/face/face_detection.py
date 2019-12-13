@@ -88,7 +88,7 @@ def intra_face(img, gray, landmarks, face, fgbg):
 
 
 
-def emotions(frame, gray, faces, emotion_model):
+def emotions_model(frame, gray, faces, emotion_model):
 
     emotion_classifier = load_model(emotion_model, compile=False)
     EMOTIONS = ["angry", "disgust", "scared", "happy", "sad", "surprised", "neutral"]
@@ -108,6 +108,36 @@ def emotions(frame, gray, faces, emotion_model):
 
         putText(frame, label, (fX, fY - 10), FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 255), 2)
         rectangle(frame, (fX, fY), (fX + fW, fY + fH),(0, 0, 255), 2)
+
+def emotion_points(img, landmarks):
+
+
+    anatomy_y =  {"open_mouse_points_top" :[62, 63, 64], "open_mouse_points_bot":[58, 57, 66],
+                  "top_eyes_left": [38, 39], "bot_eyes_left":[42, 41],
+                  "top_eyes_right":[44, 45], "bot_eyes_right":[48, 47],
+                  "on_eye_left":[23, 24, 25, 26, 27], "on_eye_right":[18, 19, 20, 21, 22]}
+
+    anatomy_x = {"right_side_mouse": [49], "left_side_mouse": [55], "nose":[32, 33, 34, 35, 36]}
+
+    def coordinates(coordinate, axis):
+        if axis == "x": out = [(landmarks.part(i).x) for i in coordinate]
+        else: out = [(landmarks.part(i).y) for i in coordinate]
+        return out
+
+    for k, v in anatomy_y.items():
+        a = coordinates(v, "x")
+        print(k, a)
+
+    for k, v in anatomy_x.items():
+        b = coordinates(v, "y")
+        print(k, b)
+
+
+
+
+
+
+
 
 
 
