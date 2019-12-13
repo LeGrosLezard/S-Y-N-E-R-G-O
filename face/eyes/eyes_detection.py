@@ -126,9 +126,8 @@ def analyse(left_eye, right_eye):
     #If yes display the last 3 movements.
     if left_gaze != no and right_gaze != no:
         gaze = [i for i in left_gaze for j in right_gaze if i == j]
-        if gaze != []: print("regarde vers", gaze)
-
-
+        if gaze != []:
+            return gaze
 
 #Global function
 def tracking_eyes(landmarks, faces, img, gray, left_eye, right_eye):
@@ -142,7 +141,8 @@ def tracking_eyes(landmarks, faces, img, gray, left_eye, right_eye):
             convexHull(array([(landmarks.part(n).x, landmarks.part(n).y)
                     for pts in faces for n in range(42, 48)])))
 
-    try: #Calculus rapport of eye (EAR) 
+    try: #Calculus rapport of eye (EAR)
+        
         left_ear, right_ear = closing_eyes(eyes[0]), closing_eyes(eyes[1])
     except (IndexError): pass
 
@@ -170,7 +170,10 @@ def tracking_eyes(landmarks, faces, img, gray, left_eye, right_eye):
         position_eye(cropMaskRight, x_right, y_right, right_eye)
 
         #Display it
-        analyse(left_eye, right_eye)
+        movements = analyse(left_eye, right_eye)
 
+        if movements != []:
+            return movements
     if state != "": print(state)
-    
+
+
