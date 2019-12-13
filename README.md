@@ -1,9 +1,11 @@
 # S-Y-N-E-R-G-O
 
-
-
-
 - récupérer les mouvements des points (les émotions mélangées)
+
+- récupérer age et gender
+
+- récupérer les pts des oreilles, et des tempes ! 
+
 
 
 
@@ -15,7 +17,7 @@
 
 <br><br><br>
 
-- récupérer les pts des oreilles, et des tempes ! 
+
 
 - si haute présence de vers faire:
 
@@ -23,7 +25,7 @@
 
 - avec une petite définition
 
-- age et gender
+
 
 
 <br><br><br>
