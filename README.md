@@ -1,10 +1,13 @@
 # S-Y-N-E-R-G-O
 
-- faire un jolie truk eyes display et re pourcentage
+
+- faire la figure ensuite les doigts (pcque soit je fais sans les fond marrons et sans les non detections pour l'instant pcque la...)
+
+- faire un jolie truk eyes display faire la definition, si dans les prochains frame ya ex: gauche et haut les additionner.
+
+- re pourcentage
 
 - continuer apprendre pourcentage, et finir les display
-
-
 
 - récupérer les mouvements des points (les émotions mélangées)
 
@@ -12,6 +15,7 @@
 
 - récupérer les pts des oreilles, et des tempes ! 
 
+- on pourra aussi avoir la chevelure, raise figure, thresh ect
 
 
 
@@ -35,10 +39,6 @@
 
 
 <br><br><br>
-
-- faire un display eyes
-
-- on pourra aussi avoir la chevelure, raise figure, thresh ect
 
 - récupérer un model de main signification
 
