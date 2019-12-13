@@ -119,7 +119,7 @@ def emotion_points(img, landmarks):
                   "top_eyes_right":[44, 45], "bot_eyes_right":[48, 47],
                   "on_eye_left":[23, 24, 25, 26, 27], "on_eye_right":[18, 19, 20, 21, 22]}
 
-    anatomy_x = {"right_side_mouse": [49], "left_side_mouse": [55], "nose":[32, 33, 34, 35, 36]}
+    anatomy_x = {"right_side_mouse": [49], "left_side_mouse": [55], "nose":[32, 36]}
 
     def coordinates(coordinate, axis):
         if axis == "x": out = [(landmarks.part(i).x) for i in coordinate]
@@ -130,12 +130,12 @@ def emotion_points(img, landmarks):
 
 
     for k, v in anatomy_y.items():
-        a = coordinates(v, "x")
+        a = coordinates(v, "y")
         dico_points[k] = a
 
     for k, v in anatomy_x.items():
-        b = coordinates(v, "y")
-        dico_points[k] = a
+        b = coordinates(v, "x")
+        dico_points[k] = b
 
 
     for k, v in dico_points.items():
