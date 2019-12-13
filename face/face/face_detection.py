@@ -122,6 +122,7 @@ def emotion_points(img, landmarks):
     anatomy_x = {"right_side_mouse": [49], "left_side_mouse": [55], "nose":[32, 36]}
 
     def coordinates(coordinate, axis):
+        #(landmarks.part(i).x), (landmarks.part(i).y) ICI CIRCLE POUR VERIGIER
         if axis == "x": out = [(landmarks.part(i).x) for i in coordinate]
         else: out = [(landmarks.part(i).y) for i in coordinate]
         return out
@@ -129,17 +130,16 @@ def emotion_points(img, landmarks):
     dico_points = {}
 
 
-    for k, v in anatomy_y.items():
-        a = coordinates(v, "y")
-        dico_points[k] = a
+    for (k1, v1), (k2, v2) in zip(anatomy_y.items(), anatomy_x.items()):
+        a = coordinates(v1, "y")
+        b = coordinates(v2, "x")
 
-    for k, v in anatomy_x.items():
-        b = coordinates(v, "x")
-        dico_points[k] = b
+        dico_points[k1] = a
+        dico_points[k2] = b
 
 
-    for k, v in dico_points.items():
-        print(k, v)
+    print(dico_points)
+
 
 
 
