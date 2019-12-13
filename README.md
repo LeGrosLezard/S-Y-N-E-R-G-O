@@ -1,5 +1,7 @@
 # S-Y-N-E-R-G-O
 
+- faire un jolie truk eyes display et re pourcentage
+
 - continuer apprendre pourcentage, et finir les display
 
 
