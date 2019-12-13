@@ -109,6 +109,8 @@ def emotions_model(frame, gray, faces, emotion_model):
         putText(frame, label, (fX, fY - 10), FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 255), 2)
         rectangle(frame, (fX, fY), (fX + fW, fY + fH),(0, 0, 255), 2)
 
+
+
 def emotion_points(img, landmarks):
 
 
@@ -124,17 +126,20 @@ def emotion_points(img, landmarks):
         else: out = [(landmarks.part(i).y) for i in coordinate]
         return out
 
+    dico_points = {}
+
+
     for k, v in anatomy_y.items():
         a = coordinates(v, "x")
-        print(k, a)
+        dico_points[k] = a
 
     for k, v in anatomy_x.items():
         b = coordinates(v, "y")
-        print(k, b)
+        dico_points[k] = a
 
 
-
-
+    for k, v in dico_points.items():
+        print(k, v)
 
 
 
