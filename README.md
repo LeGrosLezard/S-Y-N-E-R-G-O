@@ -3,7 +3,7 @@
 
 - finir eyes display
 
-- finir tous les diplay
+- finir tous les diplay de la figure
 
 - récupérer les mouvements des points (les émotions mélangées)
 
