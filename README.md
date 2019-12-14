@@ -4,6 +4,8 @@
 
 - finir tous les diplay de la figure
 
+- verifier cam si ca marche au cas ou
+
 - récupérer les mouvements des points (les émotions mélangées)
 
 - récupérer age et gender
