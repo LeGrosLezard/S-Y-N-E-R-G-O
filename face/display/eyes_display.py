@@ -1,6 +1,44 @@
 import cv2
 from numpy import array, hstack, zeros_like
 
+def croping(frame, points):
+    """Recuperate portion of eyes detected from the frame"""
+    x, y, w, h = cv2.boundingRect(points)
+    return frame[y-10:y+h, x:x+w]
+
+
+def resizing(right, left):
+    """Resizing for an egal crops for the display"""
+
+    width_coeff = 10; height_coeff = 8;
+
+    height, width = right.shape[:2]
+
+    #Make crop bigger and sames dimensions.
+    right = cv2.resize(right, (width*width_coeff, height*height_coeff))
+    left = cv2.resize(left, (width*width_coeff, height*height_coeff))
+
+    return right, left, height, width
+
+
+def make_border(frame, height, width, crop):
+    
+    height_frame, width_frame = frame.shape[:2]
+
+    #Define border from the frame.
+    h = int((height_frame - height) / 2)
+    w = int((width_frame - width) / 2)
+
+    crop = cv2.copyMakeBorder(crop, top=h,bottom=h,left=w,right=w,
+                              borderType=cv2.BORDER_CONSTANT, value=[0, 0, 0])
+
+
+    return crop
+    
+
+
+
+
 def eyes_display(frame, gray, landmarks, eyes_movements):
 
     right_eye_points = cv2.convexHull(array([(landmarks.part(n).x, landmarks.part(n).y) for n in range(36, 42)]))
@@ -8,28 +46,15 @@ def eyes_display(frame, gray, landmarks, eyes_movements):
 
     copy = frame.copy()
 
+    right = croping(frame, right_eye_points)
+    left = croping(frame, left_eye_points)
+    right_eye, left_eye = resizing(right, left)
+
+    right, left, height, width = resizing_make_border(right, left)
 
 
-    x1, y1, w1, h1 = cv2.boundingRect(right_eye_points)
-    right_crop = frame[y1-10:y1+h1, x1:x1+w1]
-
-
-
-    x2, y2, w2, h2 = cv2.boundingRect(left_eye_points)
-    left_crop = frame[y2-10:y2+h2, x2:x2+w2]
-
-
-
-
-
-    height, width = right_crop.shape[:2]
-    right_eye = cv2.resize(right_crop, (width*10, height*8))
-    left_eye = cv2.resize(left_crop, (width*10, height*8))
-
-    height_f, width_f = frame.shape[:2]
-
-    h = int((height_f - height) / 2)
-    w = int((width_f - width) / 2)
+    right = make_border(frame, height, width, right)
+    left = make_border(frame, height, width, left)
 
 
 
@@ -37,16 +62,6 @@ def eyes_display(frame, gray, landmarks, eyes_movements):
 
 
 
-
-
-
-
-
-
-    right_eye = cv2.copyMakeBorder(right_eye,
-                                    top=h,bottom=h,left=w,right=w,
-                                    borderType=cv2.BORDER_CONSTANT,
-                                    value=[0, 0, 0])
 
     a = int(((y1+h1)) + h - 30)
     
@@ -69,6 +84,9 @@ def eyes_display(frame, gray, landmarks, eyes_movements):
              "gauche":[(w + 140, a), (w + 340, a), (w + 340 - 30, a - 30), (w + 340 - 30, a + 30)],
              "gauche haut":[(w + 140, aa), (w + 240, aa - 100), (w + 240, aa - 100 + 30), (w + 240 - 30, aa - 100)],
              "gauche bas":[(w + 140, aaa), (w + 240, aaa + 100), (w + 240 - 30, aaa + 100), (w + 240, aaa + 100 - 30)]}
+
+
+
 
 
 
@@ -174,11 +192,6 @@ def eyes_display(frame, gray, landmarks, eyes_movements):
 
     cv2.imshow("displaying", displaying)
     cv2.waitKey(0)
-
-
-
-
-
 
 
 
