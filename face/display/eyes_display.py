@@ -1,32 +1,31 @@
-import cv2
-from numpy import array, hstack, zeros_like
-import numpy as np
+from cv2 import boundingRect, resize, BORDER_CONSTANT, copyMakeBorder, line, FONT_HERSHEY_PLAIN, imread, putText, convexHull, imshow
+from numpy import array, hstack, zeros_like, zeros, uint8, vstack
+
 
 def work_on_eye_picture(points, frame):
     """We treat the crop eyes"""
     def eyes_crop(eye, frame):
         """Recuperate area of the frame interest."""
-        x, y, w, h = cv2.boundingRect(eye)
+        x, y, w, h = boundingRect(eye)
         return frame[y-10:y+h, x:x+w], x, y, w, h
 
     def resizing(crop):
         """Resize the crop (*10;*8)"""
         height, width = crop.shape[:2]
-        return cv2.resize(crop, (width*10, height*8))
+        return resize(crop, (width*10, height*8))
 
     def difference_dimension(frame, crop):
         """Recuperate difference beetween frame and the crop dimensions.
         Because we need the same sizes for stack them."""
         height, width = crop.shape[:2]
         height_frame, width_frame = frame.shape[:2]
-
         return int((height_frame - height) / 2), int((width_frame - width) / 2)
 
     def bordering(crop, border_height, border_width):
         """Make balck borders of the mask."""
-        return cv2.copyMakeBorder(crop, top=border_height,bottom=border_height,
-                                 left=border_width,right=border_width,
-                                 borderType=cv2.BORDER_CONSTANT, value=[0, 0, 0])
+        return copyMakeBorder(crop, top=border_height,bottom=border_height,
+                              left=border_width,right=border_width,
+                              borderType=BORDER_CONSTANT, value=[0, 0, 0])
 
     crop, x, y, w, h = eyes_crop(points, frame)
     crop = resizing(crop)
@@ -78,9 +77,9 @@ def animations(h, w, x1, y1, w1, h1, eye, eye_display):
         for i in movement:
             for k, v in moves.items():
                 if i == k:
-                    cv2.line(eye, (v[0][0], v[0][1]), (v[1][0], v[1][1]), (0, 0, 255), 3)
-                    cv2.line(eye, (v[1][0], v[1][1]), (v[2][0], v[2][1]), (0, 0, 255), 3)
-                    cv2.line(eye, (v[1][0], v[1][1]), (v[3][0], v[3][1]), (0, 0, 255), 3)
+                    line(eye, (v[0][0], v[0][1]), (v[1][0], v[1][1]), (0, 0, 255), 3)
+                    line(eye, (v[1][0], v[1][1]), (v[2][0], v[2][1]), (0, 0, 255), 3)
+                    line(eye, (v[1][0], v[1][1]), (v[3][0], v[3][1]), (0, 0, 255), 3)
                     watch = k
 
         if watch == "":
@@ -102,7 +101,7 @@ def displaying(frame, analyse, watch, right_eye, left_eye):
 
     def part_analyse(analyse, watch):
         """Recuperate in function of the movement the picture path"""
-        font = cv2.FONT_HERSHEY_PLAIN; x = 80; y = 100
+        font = FONT_HERSHEY_PLAIN; x = 80; y = 100
         path = {"center" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\0.jpg",
                 "droite haut" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\1.jpg",
                 "droite" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\2.jpg",
@@ -111,16 +110,16 @@ def displaying(frame, analyse, watch, right_eye, left_eye):
                 "gauche" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\5.jpg",
                 "gauche bas" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\6.jpg"}
 
-        image = cv2.imread(path[watch])
-        image = cv2.resize(image, (400, 350))
+        image = imread(path[watch])
+        image = resize(image, (400, 350))
 
-        mask = np.zeros((350, 800 ,3), np.uint8)
+        mask = zeros((350, 800 ,3), uint8)
         mask[0:, 0:] = 255, 255, 255
 
-        cv2.putText(mask, "Watch to " + str(watch), (80, 50), font, 1, 0)
+        putText(mask, "Watch to " + str(watch), (80, 50), font, 1, 0)
 
         for i in range(len(analyse)):
-            cv2.putText(mask, "Write context " + str(analyse[i]), (x, y), cv2.FONT_HERSHEY_PLAIN, 1, 0)
+            putText(mask, "Write context " + str(analyse[i]), (x, y), FONT_HERSHEY_PLAIN, 1, 0)
             y += 50
 
         return hstack((image, mask))
@@ -131,9 +130,9 @@ def displaying(frame, analyse, watch, right_eye, left_eye):
 
         width = 400; height = 350
 
-        right_eye = cv2.resize(right_eye, (width, height))
-        left_eye = cv2.resize(left_eye, (width, height))
-        frame = cv2.resize(frame, (width, height))
+        right_eye = resize(right_eye, (width, height))
+        left_eye = resize(left_eye, (width, height))
+        frame = resize(frame, (width, height))
 
         displaying = hstack((right_eye, frame))
         displaying = hstack((displaying, left_eye))
@@ -143,7 +142,7 @@ def displaying(frame, analyse, watch, right_eye, left_eye):
 
     displaying_analyse = part_analyse(analyse, watch)
     displaying_video = part_video(frame, right_eye, left_eye)
-    horizontal_concat = np.vstack( (displaying_analyse, displaying_video) )
+    horizontal_concat = vstack( (displaying_analyse, displaying_video) )
 
     return horizontal_concat
 
@@ -158,13 +157,14 @@ def eyes_display(frame, gray, landmarks, eyes_movements, eye_display, counter_fr
     if eyes_movements != None:
         for i in eyes_movements:
             eye_display.append(i)
+
     #We del the list in case no movements
     if eye_display != [] and eyes_movements == None:
         raising = True
 
     #Recuperate eyes dlib points
-    right_eye_points = cv2.convexHull(array([(landmarks.part(n).x, landmarks.part(n).y) for n in range(36, 42)]))
-    left_eye_points = cv2.convexHull(array([(landmarks.part(n).x, landmarks.part(n).y) for n in range(42, 48)]))
+    right_eye_points = convexHull(array([(landmarks.part(n).x, landmarks.part(n).y) for n in range(36, 42)]))
+    left_eye_points = convexHull(array([(landmarks.part(n).x, landmarks.part(n).y) for n in range(42, 48)]))
 
     #Treating our crops
     right_crop, _, _, _, _, _,_  = work_on_eye_picture(right_eye_points, frame)
@@ -178,7 +178,7 @@ def eyes_display(frame, gray, landmarks, eyes_movements, eye_display, counter_fr
     analyse = [",npo,p", "j)l$^m$", "jçh_gè"]
     horizontal_concat = displaying(frame, analyse, watch, right_eye, left_eye)
 
-    cv2.imshow("horizontal_concat", horizontal_concat)
+    imshow("horizontal_concat", horizontal_concat)
 
     return raising
     
