@@ -36,8 +36,6 @@ def work_on_eye_picture(points, frame):
 
 
 
-
-
 def animations(h, w, x1, y1, w1, h1, eye, eye_display):
     """Eye display is the last movements from the eyes of personn"""
 
@@ -95,20 +93,19 @@ def animations(h, w, x1, y1, w1, h1, eye, eye_display):
     return eye, watch
 
 
-
 def displaying(frame, analyse, watch, right_eye, left_eye):
     """We make the top part who's analyse and bottom who's video for the display"""
 
     def part_analyse(analyse, watch):
         """Recuperate in function of the movement the picture path"""
         font = FONT_HERSHEY_PLAIN; x = 80; y = 100
-        path = {"center" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\0.jpg",
-                "droite haut" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\1.jpg",
-                "droite" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\2.jpg",
-                "droite bas" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\3.jpg",
-                "gauche haut" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\4.jpg",
-                "gauche" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\5.jpg",
-                "gauche bas" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\6.jpg"}
+        path = {"center" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\eyes_pictures\0.jpg",
+                "droite haut" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\eyes_pictures\1.jpg",
+                "droite" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\eyes_pictures\2.jpg",
+                "droite bas" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\eyes_pictures\3.jpg",
+                "gauche haut" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\eyes_pictures\4.jpg",
+                "gauche" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\eyes_pictures\5.jpg",
+                "gauche bas" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\eyes_pictures\6.jpg"}
 
         image = imread(path[watch])
         image = resize(image, (400, 350))
