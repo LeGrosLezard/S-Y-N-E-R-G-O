@@ -1,13 +1,9 @@
 # S-Y-N-E-R-G-O
 
 
-- faire la figure ensuite les doigts (pcque soit je fais sans les fond marrons et sans les non detections pour l'instant pcque la...)
+- finir eyes display
 
-- faire un jolie truk eyes display faire la definition, si dans les prochains frame ya ex: gauche et haut les additionner.
-
-- re pourcentage
-
-- continuer apprendre pourcentage, et finir les display
+- finir tous les diplay
 
 - récupérer les mouvements des points (les émotions mélangées)
 
@@ -17,7 +13,9 @@
 
 - on pourra aussi avoir la chevelure, raise figure, thresh ect
 
+- tout mettre a part
 
+- faire un display général
 
 <br><br><br>
 
