@@ -2,30 +2,32 @@ from cv2 import boundingRect, resize, BORDER_CONSTANT, copyMakeBorder, line, FON
 from numpy import array, hstack, zeros_like, zeros, uint8, vstack
 
 
+def eyes_crop(eye, frame):
+    """Recuperate area of the frame interest."""
+    x, y, w, h = boundingRect(eye)
+    return frame[y-10:y+h, x:x+w], x, y, w, h
+
+def resizing(crop):
+    """Resize the crop (*10;*8)"""
+    height, width = crop.shape[:2]
+    return resize(crop, (width*10, height*8))
+
+def difference_dimension(frame, crop):
+    """Recuperate difference beetween frame and the crop dimensions.
+    Because we need the same sizes for stack them."""
+    height, width = crop.shape[:2]
+    height_frame, width_frame = frame.shape[:2]
+    return int((height_frame - height) / 2), int((width_frame - width) / 2)
+
+def bordering(crop, border_height, border_width):
+    """Make balck borders of the mask."""
+    return copyMakeBorder(crop, top=border_height,bottom=border_height,
+                          left=border_width,right=border_width,
+                          borderType=BORDER_CONSTANT, value=[0, 0, 0])
+
+
 def work_on_eye_picture(points, frame):
     """We treat the crop eyes"""
-    def eyes_crop(eye, frame):
-        """Recuperate area of the frame interest."""
-        x, y, w, h = boundingRect(eye)
-        return frame[y-10:y+h, x:x+w], x, y, w, h
-
-    def resizing(crop):
-        """Resize the crop (*10;*8)"""
-        height, width = crop.shape[:2]
-        return resize(crop, (width*10, height*8))
-
-    def difference_dimension(frame, crop):
-        """Recuperate difference beetween frame and the crop dimensions.
-        Because we need the same sizes for stack them."""
-        height, width = crop.shape[:2]
-        height_frame, width_frame = frame.shape[:2]
-        return int((height_frame - height) / 2), int((width_frame - width) / 2)
-
-    def bordering(crop, border_height, border_width):
-        """Make balck borders of the mask."""
-        return copyMakeBorder(crop, top=border_height,bottom=border_height,
-                              left=border_width,right=border_width,
-                              borderType=BORDER_CONSTANT, value=[0, 0, 0])
 
     crop, x, y, w, h = eyes_crop(points, frame)
     crop = resizing(crop)
@@ -36,54 +38,55 @@ def work_on_eye_picture(points, frame):
 
 
 
+
+
+def combinate_movements(eye_display):
+    """From the last frame we recuperate eyes movements and combinate
+    them"""
+    movement = []
+    if "right" in eye_display and "top" in eye_display: movement.append("droite haut")
+    elif "right" in eye_display and "bot" in eye_display: movement.append("droite bas")
+    elif "left" in eye_display and "top" in eye_display: movement.append("gauche haut")
+    elif "left" in eye_display and "bot" in eye_display: movement.append("gauche bas")
+    elif "right" in eye_display: movement.append("droite")
+    elif "left" in eye_display: movement.append("gauche")
+    elif "right" in eye_display and "left" in eye_display: movement.append("don")
+    return movement
+
+def situate_corner(height_difference, width_difference, x, y, w, h):
+    """Find corner of the mask for draw the arrows"""
+    return int( (y+h) + height_difference - 90),\
+           int( (y+h) + height_difference - 30),\
+           int( (1+h) + height_difference + 30)
+
+def ajust_positions(h, w, corner_top, center, corner_bot):
+    """Ajust position of arrow in function of the size of the crop"""
+    return { "droite":[(w, center), (w - 200, center), (w - 200 + 30, center + 30), (w - 200 + 30, center - 30)],
+             "gauche":[(w + 140, center), (w + 340, center), (w + 340 - 30, center - 30), (w + 340 - 30, center + 30)],
+             "droite haut":[(w, corner_top), (w - 100, corner_top - 100), (w - 100, corner_top - 100 + 30),(w - 100 + 30, corner_top - 100)],
+             "droite bas":[(w, corner_bot), (w - 100, corner_bot + 100),(w - 100 + 30, corner_bot + 100),(w - 100, corner_bot + 100 - 30)],
+             "gauche haut":[(w + 140, corner_top),(w + 240, corner_top - 100),(w + 240, corner_top - 100 + 30),(w + 240 - 30, corner_top - 100)],
+             "gauche bas":[(w + 140, corner_bot), (w + 240, corner_bot + 100), (w + 240 - 30, corner_bot + 100),(w + 240, corner_bot + 100 - 30)]
+           }
+
+def draw_lines(movement, moves, eye):
+    """Draw lines"""
+    watch = ""
+    for i in movement:
+        for k, v in moves.items():
+            if i == k:
+                line(eye, (v[0][0], v[0][1]), (v[1][0], v[1][1]), (0, 0, 255), 3)
+                line(eye, (v[1][0], v[1][1]), (v[2][0], v[2][1]), (0, 0, 255), 3)
+                line(eye, (v[1][0], v[1][1]), (v[3][0], v[3][1]), (0, 0, 255), 3)
+                watch = k
+
+    if watch == "":
+        watch = "center"
+
+    return watch, eye
+
 def animations(h, w, x1, y1, w1, h1, eye, eye_display):
     """Eye display is the last movements from the eyes of personn"""
-
-
-    def combinate_movements(eye_display):
-        """From the last frame we recuperate eyes movements and combinate
-        them"""
-        movement = []
-        if "right" in eye_display and "top" in eye_display: movement.append("droite haut")
-        elif "right" in eye_display and "bot" in eye_display: movement.append("droite bas")
-        elif "left" in eye_display and "top" in eye_display: movement.append("gauche haut")
-        elif "left" in eye_display and "bot" in eye_display: movement.append("gauche bas")
-        elif "right" in eye_display: movement.append("droite")
-        elif "left" in eye_display: movement.append("gauche")
-        elif "right" in eye_display and "left" in eye_display: movement.append("don")
-        return movement
-
-    def situate_corner(height_difference, width_difference, x, y, w, h):
-        """Find corner of the mask for draw the arrows"""
-        return int( (y+h) + height_difference - 90),\
-               int( (y+h) + height_difference - 30),\
-               int( (1+h) + height_difference + 30)
-
-    def ajust_positions(h, w, corner_top, center, corner_bot):
-        """Ajust position of arrow in function of the size of the crop"""
-        return { "droite":[(w, center), (w - 200, center), (w - 200 + 30, center + 30), (w - 200 + 30, center - 30)],
-                 "gauche":[(w + 140, center), (w + 340, center), (w + 340 - 30, center - 30), (w + 340 - 30, center + 30)],
-                 "droite haut":[(w, corner_top), (w - 100, corner_top - 100), (w - 100, corner_top - 100 + 30),(w - 100 + 30, corner_top - 100)],
-                 "droite bas":[(w, corner_bot), (w - 100, corner_bot + 100),(w - 100 + 30, corner_bot + 100),(w - 100, corner_bot + 100 - 30)],
-                 "gauche haut":[(w + 140, corner_top),(w + 240, corner_top - 100),(w + 240, corner_top - 100 + 30),(w + 240 - 30, corner_top - 100)],
-                 "gauche bas":[(w + 140, corner_bot), (w + 240, corner_bot + 100), (w + 240 - 30, corner_bot + 100),(w + 240, corner_bot + 100 - 30)]
-               }
-
-    def draw_lines(movement, moves, eye):
-        """Draw lines"""
-        watch = ""
-        for i in movement:
-            for k, v in moves.items():
-                if i == k:
-                    line(eye, (v[0][0], v[0][1]), (v[1][0], v[1][1]), (0, 0, 255), 3)
-                    line(eye, (v[1][0], v[1][1]), (v[2][0], v[2][1]), (0, 0, 255), 3)
-                    line(eye, (v[1][0], v[1][1]), (v[3][0], v[3][1]), (0, 0, 255), 3)
-                    watch = k
-
-        if watch == "":
-            watch = "center"
-
-        return watch, eye
 
     movement = combinate_movements(eye_display)
     corner_top, center, corner_bot = situate_corner(h, w, x1, y1, w1, h1)
@@ -93,49 +96,53 @@ def animations(h, w, x1, y1, w1, h1, eye, eye_display):
     return eye, watch
 
 
+
+
+
+def part_analyse(analyse, watch):
+    """Recuperate in function of the movement the picture path"""
+    font = FONT_HERSHEY_PLAIN; x = 80; y = 100
+    path = {"center" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\eyes_pictures\0.jpg",
+            "droite haut" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\eyes_pictures\1.jpg",
+            "droite" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\eyes_pictures\2.jpg",
+            "droite bas" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\eyes_pictures\3.jpg",
+            "gauche haut" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\eyes_pictures\4.jpg",
+            "gauche" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\eyes_pictures\5.jpg",
+            "gauche bas" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\eyes_pictures\6.jpg"}
+
+    image = imread(path[watch])
+    image = resize(image, (400, 350))
+
+    mask = zeros((350, 800 ,3), uint8)
+    mask[0:, 0:] = 255, 255, 255
+
+    putText(mask, "Watch to " + str(watch), (80, 50), font, 1, 0)
+
+    for i in range(len(analyse)):
+        putText(mask, "Write context " + str(analyse[i]), (x, y), FONT_HERSHEY_PLAIN, 1, 0)
+        y += 50
+
+    return hstack((image, mask))
+
+
+def part_video(frame, right_eye, left_eye):
+    """Resize crops and frame for stack them"""
+
+    width = 400; height = 350
+
+    right_eye = resize(right_eye, (width, height))
+    left_eye = resize(left_eye, (width, height))
+    frame = resize(frame, (width, height))
+
+    displaying = hstack((right_eye, frame))
+    displaying = hstack((displaying, left_eye))
+
+    return displaying
+
+
+
 def displaying(frame, analyse, watch, right_eye, left_eye):
     """We make the top part who's analyse and bottom who's video for the display"""
-
-    def part_analyse(analyse, watch):
-        """Recuperate in function of the movement the picture path"""
-        font = FONT_HERSHEY_PLAIN; x = 80; y = 100
-        path = {"center" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\eyes_pictures\0.jpg",
-                "droite haut" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\eyes_pictures\1.jpg",
-                "droite" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\eyes_pictures\2.jpg",
-                "droite bas" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\eyes_pictures\3.jpg",
-                "gauche haut" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\eyes_pictures\4.jpg",
-                "gauche" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\eyes_pictures\5.jpg",
-                "gauche bas" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\eyes_pictures\6.jpg"}
-
-        image = imread(path[watch])
-        image = resize(image, (400, 350))
-
-        mask = zeros((350, 800 ,3), uint8)
-        mask[0:, 0:] = 255, 255, 255
-
-        putText(mask, "Watch to " + str(watch), (80, 50), font, 1, 0)
-
-        for i in range(len(analyse)):
-            putText(mask, "Write context " + str(analyse[i]), (x, y), FONT_HERSHEY_PLAIN, 1, 0)
-            y += 50
-
-        return hstack((image, mask))
-
-
-    def part_video(frame, right_eye, left_eye):
-        """Resize crops and frame for stack them"""
-
-        width = 400; height = 350
-
-        right_eye = resize(right_eye, (width, height))
-        left_eye = resize(left_eye, (width, height))
-        frame = resize(frame, (width, height))
-
-        displaying = hstack((right_eye, frame))
-        displaying = hstack((displaying, left_eye))
-
-        return displaying
-
 
     displaying_analyse = part_analyse(analyse, watch)
     displaying_video = part_video(frame, right_eye, left_eye)
@@ -175,7 +182,7 @@ def eyes_display(frame, gray, landmarks, eyes_movements, eye_display, counter_fr
     analyse = [",npo,p", "j)l$^m$", "jçh_gè"]
     horizontal_concat = displaying(frame, analyse, watch, right_eye, left_eye)
 
-    imshow("horizontal_concat", horizontal_concat)
+    imshow("eyes", horizontal_concat)
 
     return raising
     
