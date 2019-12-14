@@ -1,7 +1,6 @@
 # S-Y-N-E-R-G-O
 
 
-- finir eyes display
 
 - finir tous les diplay de la figure
 
@@ -19,6 +18,11 @@
 
 - faire avec la caméra le truk des zones touchées + récupérer une vidéo ou un mec se touche le visage
 
+<br><br><br>
+
+speech recognition
+
+model de mot 
 
 <br><br><br>
 
@@ -53,11 +57,9 @@ et faire les zones coude, genoux
 
 <br><br><br>
 
-speech recognition
 
-model de mot
 
-<br><br><br>
+
 
 ride + signification
 
