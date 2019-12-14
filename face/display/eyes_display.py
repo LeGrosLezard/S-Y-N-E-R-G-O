@@ -79,7 +79,7 @@ def animations(h, w, x1, y1, w1, h1, eye, eye_display):
              "gauche haut":[(w + 140, aa), (w + 240, aa - 100), (w + 240, aa - 100 + 30), (w + 240 - 30, aa - 100)],
              "gauche bas":[(w + 140, aaa), (w + 240, aaa + 100), (w + 240 - 30, aaa + 100), (w + 240, aaa + 100 - 30)]}
 
-
+    watch = ""
     for i in movement:
         for k,v in moves.items():
             if i == k:
@@ -87,7 +87,14 @@ def animations(h, w, x1, y1, w1, h1, eye, eye_display):
                 cv2.line(eye, (v[1][0], v[1][1]), (v[2][0], v[2][1]), (0, 0, 255), 3)
                 cv2.line(eye, (v[1][0], v[1][1]), (v[3][0], v[3][1]), (0, 0, 255), 3)
 
-    return eye
+                watch += k
+    
+
+    
+    if watch == "":
+        watch = "center"
+
+    return eye, watch
 
 
 
@@ -110,22 +117,53 @@ def eyes_display(frame, gray, landmarks, eyes_movements, eye_display, counter_fr
 
 
     right_eye, h, w, x1, y1, w1, h1 = eyes_animations(frame, right_eye_points)
-    right_eye = animations(h, w, x1, y1, w1, h1, right_eye, eye_display)
+    right_eye, watch = animations(h, w, x1, y1, w1, h1, right_eye, eye_display)
 
     left_eye, h, w, x1, y1, w1, h1 = eyes_animations(frame, left_eye_points)
-    left_eye = animations(h, w, x1, y1, w1, h1, left_eye, eye_display)
+    left_eye, watch = animations(h, w, x1, y1, w1, h1, left_eye, eye_display)
 
 
-
+    import numpy as np
 
     right_eye = cv2.resize(right_eye, (400, 350))
     left_eye = cv2.resize(left_eye, (400, 350))
     frame = cv2.resize(frame, (400, 350))
 
+    image = cv2.imread(r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\eyes_model.jpg")
+    image = cv2.resize(image, (400, 350))
+
+    mask = np.zeros((350, 800 ,3), np.uint8)
+    mask[0:, 0:] = 255, 255, 255
+
+    
+
+    analyse = ["dza", "njoi", "boiboibnoio"]
+    x = 80
+    y = 50
+
+    cv2.putText(mask, "Watch to " + str(watch), (x, y), cv2.FONT_HERSHEY_PLAIN, 1, 0)
+    x = 80
+    y = 100
+
+    for i in range(len(analyse)):
+        cv2.putText(mask, "Write context " + str(analyse[i]), (x, y), cv2.FONT_HERSHEY_PLAIN, 1, 0)
+
+        y += 50
+
+    displaying1 = hstack((image, mask))
+
+
+    
+
     displaying = hstack((right_eye, frame))
     displaying = hstack((displaying, left_eye))
 
-    cv2.imshow("aaa", displaying)
+
+
+
+    numpy_horizontal_concat = np.vstack( (displaying1, displaying) )
+
+    cv2.imshow("aaa", numpy_horizontal_concat)
     cv2.waitKey(0)
 
 
