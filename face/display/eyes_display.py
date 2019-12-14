@@ -35,71 +35,68 @@ def work_on_eye_picture(points, frame):
 
 
 
-def movement_eyes(eye_display):
-
-    dico_movement = {"right":0, "left":0, "top":0, "bot":0}
-
-    if eye_display != []:
-        for i in eye_display:
-            for k, v in dico_movement.items():
-                if i == k:
-                    dico_movement[k] += 1
-
-    return dico_movement
-
-
-
-def combinate_movements(dico_movement):
-    movement = []
-    for k, v in dico_movement.items():
-        if dico_movement["right"] > 0 and dico_movement["top"] > 0: movement.append("droite haut")
-        elif dico_movement["right"] > 0 and dico_movement["bot"] > 0: movement.append("droite bas")
-        elif dico_movement["left"] > 0 and dico_movement["top"] > 0: movement.append("gauche haut")
-        elif dico_movement["left"] > 0 and dico_movement["bot"] > 0: movement.append("gauche bas")
-        elif dico_movement["right"] > 0: movement.append("droite")
-        elif dico_movement["left"] > 0: movement.append("gauche")
-
-    return movement
-
-def situate_corner(height_difference, width_difference, x, y, w, h):
-
-    corner_top = int((y+h) + height_difference - 90)
-    center = int((y+h) + height_difference - 30)
-    corner_bot = int((1+h) + height_difference + 30)
-
-    return corner_top, center, corner_bot
-
-
-def ajust_positions(h, w, corner_top, center, corner_bot):
-    moves = {"droite":[(w, center), (w - 200, center), (w - 200 + 30, center + 30), (w - 200 + 30, center - 30)],
-             "gauche":[(w + 140, center), (w + 340, center), (w + 340 - 30, center - 30), (w + 340 - 30, center + 30)],
-             "droite haut":[(w, corner_top), (w - 100, corner_top - 100), (w - 100, corner_top - 100 + 30),(w - 100 + 30, corner_top - 100)],
-             "droite bas":[(w, corner_bot), (w - 100, corner_bot + 100),(w - 100 + 30, corner_bot + 100),(w - 100, corner_bot + 100 - 30)],
-             "gauche haut":[(w + 140, corner_top),(w + 240, corner_top - 100),(w + 240, corner_top - 100 + 30),(w + 240 - 30, corner_top - 100)],
-             "gauche bas":[(w + 140, corner_bot), (w + 240, corner_bot + 100), (w + 240 - 30, corner_bot + 100),(w + 240, corner_bot + 100 - 30)]}
-
-    return moves
-
-def draw_lines(movement, moves, eye):
-
-    watch = ""
-    for i in movement:
-        for k,v in moves.items():
-            if i == k:
-                cv2.line(eye, (v[0][0], v[0][1]), (v[1][0], v[1][1]), (0, 0, 255), 3)
-                cv2.line(eye, (v[1][0], v[1][1]), (v[2][0], v[2][1]), (0, 0, 255), 3)
-                cv2.line(eye, (v[1][0], v[1][1]), (v[3][0], v[3][1]), (0, 0, 255), 3)
-                watch = k
-
-    if watch == "":
-        watch = "center"
-
-    return watch, eye
 
 
 def animations(h, w, x1, y1, w1, h1, eye, eye_display):
     """Eye display is the last movements from the eyes of personn"""
-    
+
+    def movement_eyes(eye_display):
+
+        dico_movement = {"right":0, "left":0, "top":0, "bot":0}
+        if eye_display != []:
+            for i in eye_display:
+                for k, v in dico_movement.items():
+                    if i == k: dico_movement[k] += 1
+  
+        return dico_movement
+
+
+
+    def combinate_movements(dico_movement):
+
+        movement = []
+        for k, v in dico_movement.items():
+            if dico_movement["right"] > 0 and dico_movement["top"] > 0: movement.append("droite haut")
+            elif dico_movement["right"] > 0 and dico_movement["bot"] > 0: movement.append("droite bas")
+            elif dico_movement["left"] > 0 and dico_movement["top"] > 0: movement.append("gauche haut")
+            elif dico_movement["left"] > 0 and dico_movement["bot"] > 0: movement.append("gauche bas")
+            elif dico_movement["right"] > 0: movement.append("droite")
+            elif dico_movement["left"] > 0: movement.append("gauche")
+
+        return movement
+
+    def situate_corner(height_difference, width_difference, x, y, w, h):
+        return int( (y+h) + height_difference - 90),\
+               int( (y+h) + height_difference - 30),\
+               int( (1+h) + height_difference + 30)
+
+    def ajust_positions(h, w, corner_top, center, corner_bot):
+        return {"droite":[(w, center), (w - 200, center), (w - 200 + 30, center + 30), (w - 200 + 30, center - 30)],
+                 "gauche":[(w + 140, center), (w + 340, center), (w + 340 - 30, center - 30), (w + 340 - 30, center + 30)],
+                 "droite haut":[(w, corner_top), (w - 100, corner_top - 100), (w - 100, corner_top - 100 + 30),(w - 100 + 30, corner_top - 100)],
+                 "droite bas":[(w, corner_bot), (w - 100, corner_bot + 100),(w - 100 + 30, corner_bot + 100),(w - 100, corner_bot + 100 - 30)],
+                 "gauche haut":[(w + 140, corner_top),(w + 240, corner_top - 100),(w + 240, corner_top - 100 + 30),(w + 240 - 30, corner_top - 100)],
+                 "gauche bas":[(w + 140, corner_bot), (w + 240, corner_bot + 100), (w + 240 - 30, corner_bot + 100),(w + 240, corner_bot + 100 - 30)]}
+
+
+
+    def draw_lines(movement, moves, eye):
+
+        watch = ""
+        for i in movement:
+            for k, v in moves.items():
+                if i == k:
+                    cv2.line(eye, (v[0][0], v[0][1]), (v[1][0], v[1][1]), (0, 0, 255), 3)
+                    cv2.line(eye, (v[1][0], v[1][1]), (v[2][0], v[2][1]), (0, 0, 255), 3)
+                    cv2.line(eye, (v[1][0], v[1][1]), (v[3][0], v[3][1]), (0, 0, 255), 3)
+                    watch = k
+
+        if watch == "":
+            watch = "center"
+
+        return watch, eye
+
+
     dico_movement =  movement_eyes(eye_display)
     movement = combinate_movements(dico_movement)
     corner_top, center, corner_bot = situate_corner(h, w, x1, y1, w1, h1)
@@ -132,21 +129,6 @@ def eyes_display(frame, gray, landmarks, eyes_movements, eye_display, counter_fr
 
     right_eye, _ = animations(border_height, border_width, x, y, w, h, right_crop, eye_display)
     left_eye, watch = animations(border_height, border_width, x, y, w, h, left_crop, eye_display)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
