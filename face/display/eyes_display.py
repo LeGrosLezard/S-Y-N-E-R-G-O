@@ -40,29 +40,19 @@ def work_on_eye_picture(points, frame):
 def animations(h, w, x1, y1, w1, h1, eye, eye_display):
     """Eye display is the last movements from the eyes of personn"""
 
-    def movement_eyes(eye_display):
 
-        dico_movement = {"right":0, "left":0, "top":0, "bot":0}
-        if eye_display != []:
-            for i in eye_display:
-                for k, v in dico_movement.items():
-                    if i == k: dico_movement[k] += 1
-  
-        return dico_movement
+    def combinate_movements(eye_display):
 
-
-
-    def combinate_movements(dico_movement):
 
         movement = []
-        for k, v in dico_movement.items():
-            if dico_movement["right"] > 0 and dico_movement["top"] > 0: movement.append("droite haut")
-            elif dico_movement["right"] > 0 and dico_movement["bot"] > 0: movement.append("droite bas")
-            elif dico_movement["left"] > 0 and dico_movement["top"] > 0: movement.append("gauche haut")
-            elif dico_movement["left"] > 0 and dico_movement["bot"] > 0: movement.append("gauche bas")
-            elif dico_movement["right"] > 0: movement.append("droite")
-            elif dico_movement["left"] > 0: movement.append("gauche")
 
+        if "right" in eye_display and "top" in eye_display: movement.append("droite haut")
+        elif "right" in eye_display and "bot" in eye_display: movement.append("droite bas")
+        elif "left" in eye_display and "top" in eye_display: movement.append("gauche haut")
+        elif "left" in eye_display and "bot" in eye_display: movement.append("gauche bas")
+        elif "right" in eye_display: movement.append("droite")
+        elif "left" in eye_display: movement.append("gauche")
+        elif "right" in eye_display and "left" in eye_display: movement.append("don")
         return movement
 
     def situate_corner(height_difference, width_difference, x, y, w, h):
@@ -96,9 +86,7 @@ def animations(h, w, x1, y1, w1, h1, eye, eye_display):
 
         return watch, eye
 
-
-    dico_movement =  movement_eyes(eye_display)
-    movement = combinate_movements(dico_movement)
+    movement = combinate_movements(eye_display)
     corner_top, center, corner_bot = situate_corner(h, w, x1, y1, w1, h1)
     moves = ajust_positions(h, w, corner_top, center, corner_bot)
     watch, eye = draw_lines(movement, moves, eye)
