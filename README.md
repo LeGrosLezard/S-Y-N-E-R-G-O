@@ -17,6 +17,9 @@
 
 - faire un display général
 
+- faire avec la caméra le truk des zones touchées + récupérer une vidéo ou un mec se touche le visage
+
+
 <br><br><br>
 
 -construire openpose (pcque jcrois que pour aovir la vidéo faut le cmake)
