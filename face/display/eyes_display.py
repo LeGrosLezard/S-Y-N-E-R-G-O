@@ -1,6 +1,6 @@
 import cv2
 from numpy import array, hstack, zeros_like
-
+import numpy as np
 
 def work_on_eye_picture(points, frame):
 
@@ -25,7 +25,6 @@ def work_on_eye_picture(points, frame):
 
         return int((height_frame - height) / 2), int((width_frame - width) / 2)
 
-
     crop, x, y, w, h = eyes_crop(points, frame)
     crop = resizing(crop)
     border_height, border_width = difference_dimension(frame, crop)
@@ -43,9 +42,7 @@ def animations(h, w, x1, y1, w1, h1, eye, eye_display):
 
     def combinate_movements(eye_display):
 
-
         movement = []
-
         if "right" in eye_display and "top" in eye_display: movement.append("droite haut")
         elif "right" in eye_display and "bot" in eye_display: movement.append("droite bas")
         elif "left" in eye_display and "top" in eye_display: movement.append("gauche haut")
@@ -61,14 +58,13 @@ def animations(h, w, x1, y1, w1, h1, eye, eye_display):
                int( (1+h) + height_difference + 30)
 
     def ajust_positions(h, w, corner_top, center, corner_bot):
-        return {"droite":[(w, center), (w - 200, center), (w - 200 + 30, center + 30), (w - 200 + 30, center - 30)],
+        return { "droite":[(w, center), (w - 200, center), (w - 200 + 30, center + 30), (w - 200 + 30, center - 30)],
                  "gauche":[(w + 140, center), (w + 340, center), (w + 340 - 30, center - 30), (w + 340 - 30, center + 30)],
                  "droite haut":[(w, corner_top), (w - 100, corner_top - 100), (w - 100, corner_top - 100 + 30),(w - 100 + 30, corner_top - 100)],
                  "droite bas":[(w, corner_bot), (w - 100, corner_bot + 100),(w - 100 + 30, corner_bot + 100),(w - 100, corner_bot + 100 - 30)],
                  "gauche haut":[(w + 140, corner_top),(w + 240, corner_top - 100),(w + 240, corner_top - 100 + 30),(w + 240 - 30, corner_top - 100)],
-                 "gauche bas":[(w + 140, corner_bot), (w + 240, corner_bot + 100), (w + 240 - 30, corner_bot + 100),(w + 240, corner_bot + 100 - 30)]}
-
-
+                 "gauche bas":[(w + 140, corner_bot), (w + 240, corner_bot + 100), (w + 240 - 30, corner_bot + 100),(w + 240, corner_bot + 100 - 30)]
+               }
 
     def draw_lines(movement, moves, eye):
 
@@ -95,7 +91,52 @@ def animations(h, w, x1, y1, w1, h1, eye, eye_display):
 
 
 
+def displaying(frame, analyse, watch, right_eye, left_eye):
+    
+    def part_analyse(analyse, watch):
 
+        font = cv2.FONT_HERSHEY_PLAIN; x = 80; y = 100
+        path = {"center" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\0.jpg",
+                "droite haut" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\1.jpg",
+                "droite" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\2.jpg",
+                "droite bas" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\3.jpg",
+                "gauche haut" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\4.jpg",
+                "gauche" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\5.jpg",
+                "gauche bas" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\6.jpg"}
+
+        image = cv2.imread(path[watch])
+        image = cv2.resize(image, (400, 350))
+
+        mask = np.zeros((350, 800 ,3), np.uint8)
+        mask[0:, 0:] = 255, 255, 255
+
+        cv2.putText(mask, "Watch to " + str(watch), (80, 50), font, 1, 0)
+
+        for i in range(len(analyse)):
+            cv2.putText(mask, "Write context " + str(analyse[i]), (x, y), cv2.FONT_HERSHEY_PLAIN, 1, 0)
+            y += 50
+
+        return hstack((image, mask))
+
+
+    def part_video(frame, right_eye, left_eye):
+        width = 400; height = 350
+
+        right_eye = cv2.resize(right_eye, (width, height))
+        left_eye = cv2.resize(left_eye, (width, height))
+        frame = cv2.resize(frame, (width, height))
+
+        displaying = hstack((right_eye, frame))
+        displaying = hstack((displaying, left_eye))
+
+        return displaying
+
+
+    displaying_analyse = part_analyse(analyse, watch)
+    displaying_video = part_video(frame, right_eye, left_eye)
+    horizontal_concat = np.vstack( (displaying_analyse, displaying_video) )
+
+    return horizontal_concat
 
 def eyes_display(frame, gray, landmarks, eyes_movements, eye_display, counter_frame):
 
@@ -119,88 +160,14 @@ def eyes_display(frame, gray, landmarks, eyes_movements, eye_display, counter_fr
     left_eye, watch = animations(border_height, border_width, x, y, w, h, left_crop, eye_display)
 
 
+    analyse = [",npo,p", "j)l$^m$", "jçh_gè"]
+    horizontal_concat = displaying(frame, analyse, watch, right_eye, left_eye)
 
 
-
-
-    import numpy as np
-
-    right_eye = cv2.resize(right_eye, (400, 350))
-    left_eye = cv2.resize(left_eye, (400, 350))
-    frame = cv2.resize(frame, (400, 350))
-
-    image = cv2.imread(r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\eyes_model.jpg")
-    image = cv2.resize(image, (400, 350))
-
-    mask = np.zeros((350, 800 ,3), np.uint8)
-    mask[0:, 0:] = 255, 255, 255
-
-    
-
-    analyse = ["dza", "njoi", "boiboibnoio"]
-    x = 80
-    y = 50
-
-    cv2.putText(mask, "Watch to " + str(watch), (x, y), cv2.FONT_HERSHEY_PLAIN, 1, 0)
-    x = 80
-    y = 100
-
-    for i in range(len(analyse)):
-        cv2.putText(mask, "Write context " + str(analyse[i]), (x, y), cv2.FONT_HERSHEY_PLAIN, 1, 0)
-
-        y += 50
-
-    displaying1 = hstack((image, mask))
-    displaying = hstack((right_eye, frame))
-    displaying = hstack((displaying, left_eye))
-
-    numpy_horizontal_concat = np.vstack( (displaying1, displaying) )
-
-    cv2.imshow("aaa", numpy_horizontal_concat)
+    cv2.imshow("horizontal_concat", horizontal_concat)
     cv2.waitKey(0)
-
 
     return raising
     
 
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ 
