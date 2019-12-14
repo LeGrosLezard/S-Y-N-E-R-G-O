@@ -3,27 +3,30 @@ from numpy import array, hstack, zeros_like
 import numpy as np
 
 def work_on_eye_picture(points, frame):
-
+    """We treat the crop eyes"""
     def eyes_crop(eye, frame):
+        """Recuperate area of the frame interest."""
         x, y, w, h = cv2.boundingRect(eye)
         return frame[y-10:y+h, x:x+w], x, y, w, h
 
     def resizing(crop):
+        """Resize the crop (*10;*8)"""
         height, width = crop.shape[:2]
         return cv2.resize(crop, (width*10, height*8))
 
-
-    def bordering(crop, border_height, border_width):
-      
-        return cv2.copyMakeBorder(crop, top=border_height,bottom=border_height,
-                                 left=border_width,right=border_width,
-                                 borderType=cv2.BORDER_CONSTANT, value=[0, 0, 0])
-
     def difference_dimension(frame, crop):
+        """Recuperate difference beetween frame and the crop dimensions.
+        Because we need the same sizes for stack them."""
         height, width = crop.shape[:2]
         height_frame, width_frame = frame.shape[:2]
 
         return int((height_frame - height) / 2), int((width_frame - width) / 2)
+
+    def bordering(crop, border_height, border_width):
+        """Make balck borders of the mask."""
+        return cv2.copyMakeBorder(crop, top=border_height,bottom=border_height,
+                                 left=border_width,right=border_width,
+                                 borderType=cv2.BORDER_CONSTANT, value=[0, 0, 0])
 
     crop, x, y, w, h = eyes_crop(points, frame)
     crop = resizing(crop)
@@ -41,7 +44,8 @@ def animations(h, w, x1, y1, w1, h1, eye, eye_display):
 
 
     def combinate_movements(eye_display):
-
+        """From the last frame we recuperate eyes movements and combinate
+        them"""
         movement = []
         if "right" in eye_display and "top" in eye_display: movement.append("droite haut")
         elif "right" in eye_display and "bot" in eye_display: movement.append("droite bas")
@@ -53,11 +57,13 @@ def animations(h, w, x1, y1, w1, h1, eye, eye_display):
         return movement
 
     def situate_corner(height_difference, width_difference, x, y, w, h):
+        """Find corner of the mask for draw the arrows"""
         return int( (y+h) + height_difference - 90),\
                int( (y+h) + height_difference - 30),\
                int( (1+h) + height_difference + 30)
 
     def ajust_positions(h, w, corner_top, center, corner_bot):
+        """Ajust position of arrow in function of the size of the crop"""
         return { "droite":[(w, center), (w - 200, center), (w - 200 + 30, center + 30), (w - 200 + 30, center - 30)],
                  "gauche":[(w + 140, center), (w + 340, center), (w + 340 - 30, center - 30), (w + 340 - 30, center + 30)],
                  "droite haut":[(w, corner_top), (w - 100, corner_top - 100), (w - 100, corner_top - 100 + 30),(w - 100 + 30, corner_top - 100)],
@@ -67,7 +73,7 @@ def animations(h, w, x1, y1, w1, h1, eye, eye_display):
                }
 
     def draw_lines(movement, moves, eye):
-
+        """Draw lines"""
         watch = ""
         for i in movement:
             for k, v in moves.items():
@@ -92,9 +98,10 @@ def animations(h, w, x1, y1, w1, h1, eye, eye_display):
 
 
 def displaying(frame, analyse, watch, right_eye, left_eye):
-    
-    def part_analyse(analyse, watch):
+    """We make the top part who's analyse and bottom who's video for the display"""
 
+    def part_analyse(analyse, watch):
+        """Recuperate in function of the movement the picture path"""
         font = cv2.FONT_HERSHEY_PLAIN; x = 80; y = 100
         path = {"center" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\0.jpg",
                 "droite haut" : r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\display\1.jpg",
@@ -120,6 +127,8 @@ def displaying(frame, analyse, watch, right_eye, left_eye):
 
 
     def part_video(frame, right_eye, left_eye):
+        """Resize crops and frame for stack them"""
+
         width = 400; height = 350
 
         right_eye = cv2.resize(right_eye, (width, height))
@@ -138,36 +147,38 @@ def displaying(frame, analyse, watch, right_eye, left_eye):
 
     return horizontal_concat
 
+
+
 def eyes_display(frame, gray, landmarks, eyes_movements, eye_display, counter_frame):
+    """Here's the main function"""
 
+    
     raising = False
-
+    #Recuperate movement of eyes
     if eyes_movements != None:
         for i in eyes_movements:
             eye_display.append(i)
-
+    #We del the list in case no movements
     if eye_display != [] and eyes_movements == None:
         raising = True
 
-
+    #Recuperate eyes dlib points
     right_eye_points = cv2.convexHull(array([(landmarks.part(n).x, landmarks.part(n).y) for n in range(36, 42)]))
     left_eye_points = cv2.convexHull(array([(landmarks.part(n).x, landmarks.part(n).y) for n in range(42, 48)]))
 
+    #Treating our crops
     right_crop, _, _, _, _, _,_  = work_on_eye_picture(right_eye_points, frame)
     left_crop, border_height, border_width, x, y, w, h = work_on_eye_picture(left_eye_points, frame)
 
+    #Making arrows
     right_eye, _ = animations(border_height, border_width, x, y, w, h, right_crop, eye_display)
     left_eye, watch = animations(border_height, border_width, x, y, w, h, left_crop, eye_display)
 
-
+    #Display the top and bot parts with analyse
     analyse = [",npo,p", "j)l$^m$", "jçh_gè"]
     horizontal_concat = displaying(frame, analyse, watch, right_eye, left_eye)
 
-
     cv2.imshow("horizontal_concat", horizontal_concat)
-    cv2.waitKey(0)
 
     return raising
     
-
- 
