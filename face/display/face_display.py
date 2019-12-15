@@ -54,7 +54,7 @@ def make_border(img, areas):
     return copyMakeBorder(areas, top=0,bottom=0, left=0,right=540, borderType=BORDER_CONSTANT, value=[0, 0, 0])
 
 
-def intra_face_displaying(img, gray, landmarks, face, fgbg, displaying):
+def intra_face_displaying(img, gray, landmarks, face, displaying):
 
     areas =  { "cheek2":[54, 13, 16, 28], "chin":[58, 56, 9, 7], "beet_eyes" :[21, 22, 27], "chin1":[58, 7, 3, 48],
                "chin2": [56, 54, 13, 9], "cheek1": [48, 3, 0, 28], "noze_area":[27, 48, 54],
@@ -73,7 +73,7 @@ def intra_face_displaying(img, gray, landmarks, face, fgbg, displaying):
 
 
 #============================================================================================================= Main
-def face_displaying(gray, img, convexhull, head_points, landmarks, fgbg):
+def face_displaying(gray, img, convexhull, landmarks):
 
     copy = img.copy()
     areas =  { "chin":[58, 56, 9, 7], "beet_eyes" :[21, 22, 27], "chin1":[58, 7, 3, 48],
@@ -96,7 +96,7 @@ def face_displaying(gray, img, convexhull, head_points, landmarks, fgbg):
     displaying = hstack((head_model, img))
     displaying = hstack((displaying, face))
 
-    areas = intra_face_displaying(img, gray, landmarks, face, fgbg, displaying)
+    areas = intra_face_displaying(img, gray, landmarks, face, displaying)
     areas = cv2.resize(areas, (int(displaying.shape[1]), int(areas.shape[0])) )
 
     horizontal_concat = vstack( (areas, displaying) )
