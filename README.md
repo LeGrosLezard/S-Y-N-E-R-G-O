@@ -55,6 +55,10 @@ model de mot
 
 - ou si on arrive a faire mariow, faire un txt soit meme !
 
+- transformer l'image (récupérer valeur yrcrb de la video) selon yrcrbr de la videoA (en gros ca detect mieux quand c lumineux mais pas trop)
+
+- test de voir si on peut faire un scalfactor pour la rapidité
+
 <br><br><br>
 
 récupérer le modele de la silouhette
