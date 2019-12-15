@@ -8,8 +8,6 @@
 
 - récupérer age et gender
 
-- récupérer les pts des oreilles, et des tempes ! 
-
 - on pourra aussi avoir la chevelure, raise figure, thresh ect
 
 - faire un display général
