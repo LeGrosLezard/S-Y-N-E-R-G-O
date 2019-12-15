@@ -6,11 +6,11 @@
 
 - récupérer les mouvements des points (les émotions mélangées)
 
-- récupérer age et gender
-
 - on pourra aussi avoir la chevelure, raise figure, thresh ect
 
 - faire un display général
+
+- si on ne detecte plus la figure récupérer la figure du gender
 
 <br><br><br>
 
