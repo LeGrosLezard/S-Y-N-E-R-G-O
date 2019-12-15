@@ -4,8 +4,6 @@
 
 - finir tous les diplay de la figure
 
-- verifier cam si ca marche au cas ou
-
 - récupérer les mouvements des points (les émotions mélangées)
 
 - récupérer age et gender
@@ -14,11 +12,7 @@
 
 - on pourra aussi avoir la chevelure, raise figure, thresh ect
 
-- tout mettre a part
-
 - faire un display général
-
-- faire avec la caméra le truk des zones touchées + récupérer une vidéo ou un mec se touche le visage
 
 <br><br><br>
 
@@ -27,6 +21,8 @@ speech recognition
 model de mot 
 
 <br><br><br>
+
+- zone touché (mettre les zones dans des listes si non detection figure) en récupérant les verts de la main
 
 -construire openpose (pcque jcrois que pour aovir la vidéo faut le cmake)
 
