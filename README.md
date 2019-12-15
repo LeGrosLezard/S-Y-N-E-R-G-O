@@ -45,7 +45,11 @@ model de mot
 
 - récupérer un model de main signification
 
+- voir si on peut récup les parametre YCrCb d'une image et adapté
 
+- atta nan ! c'est vrai, les background maron c pas grave
+
+- faire le truk des retangle mais avec la main verte (c pour ca les para YCrCb)
 
 <br><br><br>
 
