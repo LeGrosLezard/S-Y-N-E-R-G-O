@@ -35,9 +35,6 @@ def recuperate_intra_face_points(landmarks, faces, img):
 
 
 
-
-
-
 #===============================================================================================    All areas face
 def crop_rectangle(area, color, landmarks):
     area = array([(landmarks.part(n).x, landmarks.part(n).y) for n in range(area[0], area[1])])
@@ -48,6 +45,7 @@ def crop_contour(area, color, landmarks):
     area = array([(landmarks.part(n).x, landmarks.part(n).y) for n in area])
     x, y, w, h = boundingRect(area)
     return x , y , w, h
+
 
 def counter(area):
     pass
@@ -67,8 +65,7 @@ def intra_face(img, gray, landmarks, face):
 
 
 
-    cv2.imshow("numpy_vertical11", numpy_vertical11)
-
+    #cv2.imshow("numpy_vertical11", numpy_vertical11)
 
 
 
@@ -83,8 +80,8 @@ def emotions_model(frame, gray, faces, emotion_model, open_right_eye, open_left_
     if faces:
 
         faces = sorted([list(faces)], reverse=True, key=lambda x: (x[2] - x[0]) * (x[3] - x[1]))[0]
-        (fX, fY, fW, fH) = faces
-        roi = gray[fY:fY + fH, fX:fX + fW]
+        (x, y, w, h) = faces
+        roi = gray[y:y + h, x:x + w]
         roi = resize(roi, (64, 64))
         roi = roi.astype("float") / 255.0
         roi = img_to_array(roi)
@@ -133,7 +130,6 @@ def emotion_points(img, landmarks, em_nose, open_right_eye, open_left_eye):
 
     for i in range(len(dico_points["nose"])):
         em_nose[i].append(dico_points["nose"][i])
-
 
     for i in range(len(dico_points["top_eyes_right"])):
         open_right_eye[i].append(dico_points["top_eyes_right"][i])
@@ -186,9 +182,10 @@ def expressions(counter_frame, em_nose, open_right_eye, open_left_eye):
 
 
 #Exterior of face
-def exterior_face(face, img):
+def exterior_face(face, img, landmarks):
 
     """Recuperate area of the forehead and of the exterior of the head"""
+    import cv2
 
     #front, FAIRE RATIO
     rectangle(img, (face[0], face[1] - 25), (face[0] + face[2], face[1]), 3)
@@ -199,11 +196,29 @@ def exterior_face(face, img):
     #cou
     rectangle(img, (face[0], face[3] + face[1]), (face[0] + face[2], face[3] + face[1] + 40), 3)
 
+
+    #oreille
+    cv2.rectangle(img, (landmarks.part(0).x - 20, landmarks.part(0).y),
+                  (landmarks.part(0).x, landmarks.part(2).y), (0, 0, 255), 2)
+
+    cv2.rectangle(img, (landmarks.part(16).x, landmarks.part(16).y),
+                 (landmarks.part(16).x + 20, landmarks.part(14).y), (0, 0, 255), 2)
+
+    #tempes
+
+    cv2.rectangle(img, (landmarks.part(0).x - 20, landmarks.part(0).y - 40),
+                  (landmarks.part(0).x, landmarks.part(0).y - 10), (0, 0, 255), 2)
+
+    cv2.rectangle(img, (landmarks.part(16).x, landmarks.part(16).y - 40),
+                 (landmarks.part(16).x + 20, landmarks.part(16).y - 10), (0, 0, 255), 2)
+
+
+
     #chevelure (effacer la tronche recupérer le pourtour ?)
     #rectangle(img, (face[0] - 50, face[1] - 100), (face[0] + face[2] + 50, face[1] + face[3]), 3)
 
-##    cv2.imshow("img", img)
-##    cv2.waitKey(0)
+    cv2.imshow("img", img)
+    cv2.waitKey(0)
 
 
 
