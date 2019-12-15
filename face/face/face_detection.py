@@ -1,5 +1,5 @@
 from cv2 import rectangle, convexHull, Subdiv2D, boundingRect, resize, putText, countNonZero, FONT_HERSHEY_SIMPLEX
-from numpy import array, int32, expand_dims
+from numpy import array, int32, expand_dims, mean
 from numpy import min as np_min
 from numpy import max as np_max
 from math import sin, acos
@@ -15,7 +15,7 @@ def points_landmarks(gray, predictor, detector):
 
 
 
-#---------------------------------------------------------------------------------------------------- Intra face
+#---------------------------------------------------------------------------------------------------- Intra face points
 #Interior of face
 def recuperate_intra_face_points(landmarks, faces, img):
     """Recuperate all coordiantes of landmarks (faces points).
@@ -28,67 +28,54 @@ def recuperate_intra_face_points(landmarks, faces, img):
     #Convex points (contour of face)
     convexhull = convexHull(array(points))
 
+    #Head points
     head = boundingRect(convexhull)
 
-    #Find triangles into rectangles points (face)
-    subdiv = Subdiv2D(head)
-
-    #Put points for extract the list
-    subdiv.insert(points)
-
-    #Get triangles list
-    triangles = array(subdiv.getTriangleList(), dtype=int32)
-
-    #Recup points
-    t_points = [[(t[0], t[1]), (t[2], t[3]), (t[4], t[5])] for t in triangles ]
-
-    return t_points, head, convexhull
-
-
-def intra_face(img, gray, landmarks, face, fgbg):
-
-    #A CONTINUER
-
-    subastrac = fgbg.apply(img)
-
-    def crop_rectangle(area, color):
-        area = array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in range(area[0], area[1])])
-        x, y, w, h = boundingRect(area)
-        #cv2.rectangle(img, (x, y), (x + w, y + h), color, 1)
-        return x - 5, y - 5, w + 5, h + 10
-
-    def crop_contour(area, color):
-        area = array([(landmarks.part(n).x, landmarks.part(n).y) for pts in face for n in area])
-        x, y, w, h = boundingRect(area)
-        #cv2.drawContours(img, [area], 0, color, 1)
-        return x , y , w, h
-
-    def counter(area):
-        a = countNonZero(area)
-        #print(a)
-
-
-    areas =  { "beet_eyes" :[21, 22, 27], "chin":[58, 56, 9, 7],
-               "chin1":[58, 7, 3, 48],  "chin2": [56, 54, 13, 9],
-               "cheek1": [48, 3, 0, 28], "cheek2":[54, 13, 16, 28],
-               "noze_area":[27, 48, 54], "mouse":(48, 61),
-               "onEye1":(17, 22), "onEye2":(22, 27),
-               "leftEye":(36, 42), "rightEye":(42, 48) }
-
-
-    area_by_contour = [crop_contour(areas[k], (0,255,0)) for nb, k in enumerate(areas) if nb <= 6]
-    area_by_rect = [crop_rectangle(areas[k], (0,255,0)) for nb, k in enumerate(areas) if nb > 6]
-
-##    for area, cnts in zip(areas, area_by_contour):
-##        print(area, cnts)
-##
-##    for area, cnts in zip(areas, area_by_rect):
-##        print(area, cnts)
+    return head, convexhull
 
 
 
 
-def emotions_model(frame, gray, faces, emotion_model):
+
+
+#===============================================================================================    All areas face
+def crop_rectangle(area, color, landmarks):
+    area = array([(landmarks.part(n).x, landmarks.part(n).y) for n in range(area[0], area[1])])
+    x, y, w, h = boundingRect(area)
+    return x - 5, y - 5, w + 5, h + 10
+
+def crop_contour(area, color, landmarks):
+    area = array([(landmarks.part(n).x, landmarks.part(n).y) for n in area])
+    x, y, w, h = boundingRect(area)
+    return x , y , w, h
+
+def counter(area):
+    pass
+    #ICIIIIIIIIIIIIIIIIIIIIII // HAND ZONE ATTENTION TETE SENLEVE LES GARDER EN M2MOIRE
+
+def intra_face(img, gray, landmarks, face):
+
+    import cv2
+    import numpy as np
+
+    areas =  { "cheek2":[54, 13, 16, 28], "chin":[58, 56, 9, 7], "beet_eyes" :[21, 22, 27], "chin1":[58, 7, 3, 48],
+               "chin2": [56, 54, 13, 9], "cheek1": [48, 3, 0, 28], "noze_area":[27, 48, 54],
+               "mouse":(48, 61), "onEye1":(17, 22), "onEye2":(22, 27), "leftEye":(36, 42), "rightEye":(42, 48)}
+
+    area_by_contour = [crop_contour(areas[k], (0,255,0), landmarks) for nb, k in enumerate(areas) if nb <= 6]
+    area_by_rect = [crop_rectangle(areas[k], (0,255,0), landmarks) for nb, k in enumerate(areas) if nb > 6]
+
+
+
+    cv2.imshow("numpy_vertical11", numpy_vertical11)
+
+
+
+
+
+
+#===============================================================================================
+def emotions_model(frame, gray, faces, emotion_model, open_right_eye, open_left_eye):
 
     emotion_classifier = load_model(emotion_model, compile=False)
     EMOTIONS = ["angry", "disgust", "scared", "happy", "sad", "surprised", "neutral"]
@@ -111,7 +98,7 @@ def emotions_model(frame, gray, faces, emotion_model):
 
 
 
-def emotion_points(img, landmarks):
+def emotion_points(img, landmarks, em_nose, open_right_eye, open_left_eye):
 
     import cv2
 
@@ -144,7 +131,49 @@ def emotion_points(img, landmarks):
         print(k, v)
 
 
+    for i in range(len(dico_points["nose"])):
+        em_nose[i].append(dico_points["nose"][i])
 
+
+    for i in range(len(dico_points["top_eyes_right"])):
+        open_right_eye[i].append(dico_points["top_eyes_right"][i])
+
+    for i in range(len(dico_points["top_eyes_left"])):
+        open_left_eye[i].append(dico_points["top_eyes_left"][i])
+
+
+
+
+def expressions(counter_frame, em_nose, open_right_eye, open_left_eye):
+
+    def meanning(liste):
+        return mean(liste)
+
+    def open_nose(em_nose):
+        nose_left_points = meanning(em_nose[0])
+        nose_right_points = meanning(em_nose[1])
+        #print(nose_left_points, nose_right_points)
+
+
+    def open_eyes(open_right_eye, open_left_eye):
+        eye_right_first_points = meanning(open_right_eye[0])
+        eye_right_second_points = meanning(open_right_eye[1])
+
+        eye_left_first_points = meanning(open_left_eye[0])
+        eye_left_second_points = meanning(open_left_eye[1])
+        #print(eye_right_first_points, eye_right_second_points, eye_left_first_points, eye_left_second_points)
+
+    def movements_mouse():
+        pass
+
+    def movement_on_eyes():
+        pass
+
+
+    if counter_frame > 4:
+        open_nose(em_nose)
+        open_eyes(open_right_eye, open_left_eye)
+    
 
 
 
