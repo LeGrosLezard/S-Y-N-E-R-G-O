@@ -51,6 +51,10 @@ model de mot
 
 - faire le truk des retangle mais avec la main verte (c pour ca les para YCrCb)
 
+- et du coup on peut suivre la main meme sans detection en faisant carré neightboors !
+
+- ou si on arrive a faire mariow, faire un txt soit meme !
+
 <br><br><br>
 
 récupérer le modele de la silouhette
