@@ -1,5 +1,18 @@
 # S-Y-N-E-R-G-O
 
+- faire un site web 
+
+- expliquer comment ca marche
+
+- faire la doc
+
+- faire tous les combo
+
+- envoyer si ca sert a un truk
+
+mais la jpe plus 
+
+<br><br><br>
 
 - display figure fin et dormir
 
