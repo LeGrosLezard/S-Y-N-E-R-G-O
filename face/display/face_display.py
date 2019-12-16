@@ -106,63 +106,42 @@ def face_displaying(gray, img, convexhull, landmarks):
 
 
 
+#============================================================================================================= Emotion
+
+def coordinates(coordinate, axis, landmarks):
+
+    if axis == "x": out = [(landmarks.part(i).x, landmarks.part(i).y) for i in coordinate]
+    else: out = [(landmarks.part(i).x, landmarks.part(i).y) for i in coordinate]
+    return out
 
 
+def emotion_points(img, landmarks):
 
+    import cv2
+    copy = img.copy()
 
+    anatomy_y =  {"open_mouse_points_top" :[61, 62, 63], "open_mouse_points_bot":[67, 66, 65],
+                  "top_eyes_left": [37, 38], "bot_eyes_left":[41, 40],
+                  "top_eyes_right":[43, 44], "bot_eyes_right":[47, 46],
+                  "on_eye_right":[17, 18, 19, 20, 21], "on_eye_left":[22, 23, 24, 25, 26]}
 
+    anatomy_x = {"right_side_mouse": [48], "left_side_mouse": [54], "nose":[31, 35]}
 
+    dico_points = {}
 
+    for k1, v1 in anatomy_y.items():
+        a = coordinates(v1, "y", landmarks)
+        dico_points[k1] = a
 
- 
+    for k1, v1 in anatomy_x.items():
+        b = coordinates(v1, "x", landmarks)
+        dico_points[k1] = b
 
+    for k, v in dico_points.items():
+        for i in v:
+            cv2.circle(copy, (i[0], i[1]), 1, (0, 255, 0), 1)
 
-
-
-
-
-
-
-
-
-
-
-
-
-##def emotion_points(img, landmarks):
-##
-##    import cv2
-##
-##    anatomy_y =  {"open_mouse_points_top" :[61, 62, 63], "open_mouse_points_bot":[67, 66, 65],
-##                  "top_eyes_left": [37, 38], "bot_eyes_left":[41, 40],
-##                  "top_eyes_right":[43, 44], "bot_eyes_right":[47, 46],
-##                  "on_eye_right":[17, 18, 19, 20, 21], "on_eye_left":[22, 23, 24, 25, 26]}
-##
-##    anatomy_x = {"right_side_mouse": [48], "left_side_mouse": [54], "nose":[31, 35]}
-##
-##
-##    def coordinates(coordinate, axis):
-##
-##        if axis == "x": out = [(landmarks.part(i).x, landmarks.part(i).y) for i in coordinate]
-##        else: out = [(landmarks.part(i).x, landmarks.part(i).y) for i in coordinate]
-##        return out
-##
-##    dico_points = {}
-##
-##    for k1, v1 in anatomy_y.items():
-##        a = coordinates(v1, "y")
-##        dico_points[k1] = a
-##
-##    for k1, v1 in anatomy_x.items():
-##        b = coordinates(v1, "x")
-##        dico_points[k1] = b
-##
-##
-##    for k, v in dico_points.items():
-##        for i in v:
-##            cv2.circle(img, (i[0], i[1]), 1, (0, 255, 0), 1)
-
-
+    cv2.imshow("copy", copy)
 
 
 
