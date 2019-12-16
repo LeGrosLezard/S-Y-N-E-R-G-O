@@ -4,8 +4,6 @@
 
 - faire la doc de face
 
-
-
 <br><br><br>
 
 - finir tous les diplay de la figure
