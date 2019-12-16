@@ -1,6 +1,7 @@
 # S-Y-N-E-R-G-O
 
 
+- display figure fin et dormir
 
 - finir tous les diplay de la figure
 
