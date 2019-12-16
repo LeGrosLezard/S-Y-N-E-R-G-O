@@ -1,30 +1,26 @@
 # S-Y-N-E-R-G-O
 
-- faire un site web 
 
-- expliquer comment ca marche
 
-- faire la doc
+- faire la doc de face
 
-- faire tous les combo
 
-- envoyer si ca sert a un truk
-
-mais la jpe plus 
 
 <br><br><br>
-
-- display figure fin et dormir
 
 - finir tous les diplay de la figure
 
 - récupérer les mouvements des points (les émotions mélangées)
 
-- on pourra aussi avoir la chevelure, raise figure, thresh ect
-
 - faire un display général
 
-- si on ne detecte plus la figure récupérer la figure du gender
+- faire un site web 
+
+- expliquer comment ca marche
+
+- faire tous les combo
+
+- envoyer si ca sert a un truk
 
 <br><br><br>
 
