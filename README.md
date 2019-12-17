@@ -1,5 +1,10 @@
 # S-Y-N-E-R-G-O
 
+mask rnn de la demo si possible que les mains
+
+faire le lien avec speech recognition
+
+
 page d'apres (transition mais pas la faire, la faire apres doc)
 
 un mec en face, on fait un truk a la iron man yeux, bouche nez ect (faut que ce soit rapide) puis accueil
