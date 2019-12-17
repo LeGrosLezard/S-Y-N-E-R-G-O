@@ -4,7 +4,7 @@
 
 - faire la doc de face
 
-- faire un site web (mais ste fois classe du genre pro)
+- faire un site web (mais comme les autres fois pro)
 
 - expliquer comment ca marche
 
