@@ -20,9 +20,27 @@ puis la doc (partie site/partie algo)
 
 - faire un display général
 
+- pleins de truks marchent pas les résoudres
+
 - faire tous les combo
 
+
+
 <br><br><br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 speech recognition
 
