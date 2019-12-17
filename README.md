@@ -2,7 +2,7 @@
 
 faire la page d'accueille (synergo qui va de gauche a droite)
 
-puis a la fin mettre en face de sa bouche continuer
+puis a la fin mettre en face de sa bouche continuer/continue/continuer ?/acceuil
 
 puis la doc (partie site/partie algo)
 
