@@ -1,18 +1,18 @@
 # S-Y-N-E-R-G-O
 
-
+- faire un site web (mais ste fois classe)
 
 - faire la doc de face
 
 <br><br><br>
 
-- finir tous les diplay de la figure
 
-- récupérer les mouvements des points (les émotions mélangées)
+
+- signification des mouvements des points
 
 - faire un display général
 
-- faire un site web 
+
 
 - expliquer comment ca marche
 
