@@ -105,15 +105,39 @@ def meanning(liste):
 
 def open_nose(em_nose, nose):
 
-    #print(nose)
+    
+    if len(em_nose[0]) > 0:
 
-    for i in range(len(nose)):
-        em_nose[i].append(nose[i])
+        print(nose[0] - nose[1])
+        a = meanning(em_nose[1])
+        b = meanning(em_nose[0])
+        print(a - b)
+        print("")
 
-    nose_left_points = meanning(em_nose[0])
-    nose_right_points = meanning(em_nose[1])
+        if (nose[1] - nose[0]) > (a - b) + 10:
+            return "nose"
 
-    #print(nose_left_points, nose_right_points)
+        elif (nose[1] - nose[0]) < (a - b) - 10:
+            return "nose"
+
+
+        elif (nose[1] - nose[0]) < (a - b) - 2:
+            print("RAPETISSIS")
+
+
+        elif (nose[1] - nose[0]) > (a - b) + 2:
+            print("GRANDIT")
+
+
+
+
+        #print(em_nose[-1][0] - em_nose[-1][1])
+    
+    em_nose[0].append(nose[0])
+    em_nose[1].append(nose[1])
+
+
+
 
     #if nose[0] < nose_left_points and nose[1] > nose_right_points:
     #    print("nez ouvrant")
@@ -130,6 +154,7 @@ def open_eyes(eye_liste, eye):
     eyes_points_B = meanning(eye_liste[1])
 
     #print(eyes_points_A, eyes_points_B)
+
 
 
 def open_mouse(mouse_liste_top, mouse_top, mouse_liste_bot, mouse_bot):
@@ -245,21 +270,32 @@ def emotion_points(img, landmarks, em_nose, open_right_eye, open_left_eye,
         dico_points[k1] = b
 
 
-    open_nose(em_nose, dico_points["nose"]) #aggradissement nez
-    open_eyes(open_right_eye, dico_points["top_eyes_right"])#ouvert oeil droit
-    open_eyes(open_left_eye, dico_points["top_eyes_left"])#ouvert oeil gauche
-    
-
-    open_mouse(dico_points["open_mouse_points_top"], mouse_top,#bouhe souvre
-               dico_points["open_mouse_points_bot"], mouse_bot)
-
-    width_mouse(dico_points["right_side_mouse"], dico_points["left_side_mouse"], mouse_x)
-
-    smyle(smyling, landmarks)
+    nose = open_nose(em_nose, dico_points["nose"]) #aggradissement nez
 
 
-    pos_on_eyes_right(on_eye_right, dico_points["on_eye_right"])
-    pos_on_eyes_left(on_eye_left, dico_points["on_eye_left"])
+
+    out = []
+    if nose == "nose":
+        out.append("nose")
+
+
+    return out
+
+
+##    open_eyes(open_right_eye, dico_points["top_eyes_right"])#ouvert oeil droit
+##    open_eyes(open_left_eye, dico_points["top_eyes_left"])#ouvert oeil gauche
+##    
+##
+##    open_mouse(dico_points["open_mouse_points_top"], mouse_top,#bouhe souvre
+##               dico_points["open_mouse_points_bot"], mouse_bot)
+##
+##    width_mouse(dico_points["right_side_mouse"], dico_points["left_side_mouse"], mouse_x)
+##
+##    smyle(smyling, landmarks)
+##
+##
+##    pos_on_eyes_right(on_eye_right, dico_points["on_eye_right"])
+##    pos_on_eyes_left(on_eye_left, dico_points["on_eye_left"])
     
 
 
