@@ -6,6 +6,9 @@ from math import sin, acos
 from scipy.spatial import distance as dist
 from keras.preprocessing.image import img_to_array
 from keras.models import load_model
+from pylab import *
+from time import *
+
 
 def points_landmarks(gray, predictor, detector):
     """ Return the 68 points of the face and the face"""
@@ -105,148 +108,46 @@ def meanning(liste):
 
 def open_nose(em_nose, nose):
 
-    
-    if len(em_nose[0]) > 0:
-
-        print(nose[0] - nose[1])
-        a = meanning(em_nose[1])
-        b = meanning(em_nose[0])
-        print(a - b)
-        print("")
-
-        if (nose[1] - nose[0]) > (a - b) + 10:
-            return "nose"
-
-        elif (nose[1] - nose[0]) < (a - b) - 10:
-            return "nose"
-
-
-        elif (nose[1] - nose[0]) < (a - b) - 2:
-            print("RAPETISSIS")
-
-
-        elif (nose[1] - nose[0]) > (a - b) + 2:
-            print("GRANDIT")
-
-
-
-
-        #print(em_nose[-1][0] - em_nose[-1][1])
-    
     em_nose[0].append(nose[0])
     em_nose[1].append(nose[1])
 
 
-
-
-    #if nose[0] < nose_left_points and nose[1] > nose_right_points:
-    #    print("nez ouvrant")
-
-
-def open_eyes(eye_liste, eye):
-
-    #print(eye)
-
-    for i in range(len(eye)):
-        eye_liste[i].append(eye[i])
-
-    eyes_points_A = meanning(eye_liste[0])
-    eyes_points_B = meanning(eye_liste[1])
-
-    #print(eyes_points_A, eyes_points_B)
-
-
-
 def open_mouse(mouse_liste_top, mouse_top, mouse_liste_bot, mouse_bot):
-
-    #print(mouse_top, mouse_bot)
 
     for i in range(len(mouse_liste_top)):
         mouse_top[i].append(mouse_liste_top[i])
 
-    mouse_points_TA = meanning(mouse_top[0])
-    mouse_points_TB = meanning(mouse_top[1])
-    mouse_points_TC = meanning(mouse_top[2])
-
-    #print(mouse_points_TA, mouse_points_TB, mouse_points_TC)
-
-    
-
-    #print(mouse_liste_bot)
     for i in range(len(mouse_liste_bot)):
         mouse_bot[i].append(mouse_liste_bot[i])
-
-    mouse_points_BA = meanning(mouse_bot[0])
-    mouse_points_BB = meanning(mouse_bot[1])
-    mouse_points_BC = meanning(mouse_bot[2])
-
-
-    #print(mouse_points_BA, mouse_points_BB, mouse_points_BC)
-    #print("")
-    #print(mouse_points_BA-mouse_points_TA, ...)
 
 
 def width_mouse(pointsA, pointsB, liste_mouse):
 
-
-    #print(pointsA, pointsB)
- 
     liste_mouse[0].append(pointsA)
     liste_mouse[1].append(pointsB)
-
-    mouse_A = meanning(liste_mouse[0])
-    mouse_B = meanning(liste_mouse[1])
-    #ICI c si un mec sourit que d'un coté
-    #print(mouse_A, mouse_B)
-
-
-
 
 def smyle(smyling, landmarks):
 
     coordinate = [48, 54]
     points = [(landmarks.part(i).x, landmarks.part(i).y) for i in coordinate]
 
-    
-    try:
-        print(points)
-        print(smyling[-1])
-    except:
-        pass
-
-
     smyling.append(points)
     
 
 def pos_on_eyes_right(on_eye_right, on_eye_right_points):
-
-
-##
-##    if len(on_eye_right) > 1:
-##        print(on_eye_right_points)
-##        print(on_eye_right[-1])
-
-
     on_eye_right.append(on_eye_right_points)
 
 
 
 def pos_on_eyes_left(on_eye_left, on_eye_left_points):
-
-##    if len(on_eye_left) > 1:
-##        print(on_eye_left_points)
-##        print(on_eye_left[-1])
-
-
     on_eye_left.append(on_eye_left_points)
 
 
 
 
-
-
 def emotion_points(img, landmarks, em_nose, open_right_eye, open_left_eye,
-                   mouse_top, mouse_bot, mouse_x, on_eye_right, on_eye_left, smyling):
+                   mouse_top, mouse_bot, mouse_x, on_eye_right, on_eye_left, smyling,
+                   counter_frame):
     """We recuperate points"""
 
     import cv2
@@ -270,34 +171,21 @@ def emotion_points(img, landmarks, em_nose, open_right_eye, open_left_eye,
         dico_points[k1] = b
 
 
-    nose = open_nose(em_nose, dico_points["nose"]) #aggradissement nez
+    import numpy as np
+    import matplotlib.pyplot as plt
+
+    open_right_eye.append(int(np.mean(dico_points["on_eye_right"])))
+    timey = [nb for nb in range(counter_frame)]
 
 
-
-    out = []
-    if nose == "nose":
-        out.append("nose")
-
-
-    return out
-
-
-##    open_eyes(open_right_eye, dico_points["top_eyes_right"])#ouvert oeil droit
-##    open_eyes(open_left_eye, dico_points["top_eyes_left"])#ouvert oeil gauche
-##    
-##
-##    open_mouse(dico_points["open_mouse_points_top"], mouse_top,#bouhe souvre
-##               dico_points["open_mouse_points_bot"], mouse_bot)
-##
-##    width_mouse(dico_points["right_side_mouse"], dico_points["left_side_mouse"], mouse_x)
-##
-##    smyle(smyling, landmarks)
-##
-##
-##    pos_on_eyes_right(on_eye_right, dico_points["on_eye_right"])
-##    pos_on_eyes_left(on_eye_left, dico_points["on_eye_left"])
-    
-
+    if counter_frame > 0:
+        a = open_right_eye
+        b = timey
+        y = np.array(a)
+        x = np.array(b)
+        plt.plot(x, y)
+        plt.show(block=False)
+        plt.pause(0.000000000001)
 
 
 #=============================================================================================== Intra face
