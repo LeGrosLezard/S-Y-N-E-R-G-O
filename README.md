@@ -1,24 +1,18 @@
 # S-Y-N-E-R-G-O
 
-- faire un site web (mais ste fois classe)
+- signification des mouvements des points
 
 - faire la doc de face
 
-<br><br><br>
-
-
-
-- signification des mouvements des points
-
-- faire un display général
-
-
+- faire un site web (mais ste fois classe du genre pro)
 
 - expliquer comment ca marche
 
-- faire tous les combo
+<br><br><br>
 
-- envoyer si ca sert a un truk
+- faire un display général
+
+- faire tous les combo
 
 <br><br><br>
 
