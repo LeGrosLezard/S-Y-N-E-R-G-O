@@ -15,7 +15,7 @@ def points_landmarks(gray, predictor, detector):
 
 
 
-#---------------------------------------------------------------------------------------------------- Intra face points
+#=============================================================================================== Intra face points
 #Interior of face
 def recuperate_intra_face_points(landmarks, faces, img):
     """Recuperate all coordiantes of landmarks (faces points).
@@ -71,7 +71,7 @@ def intra_face(img, gray, landmarks, face):
 
 
 
-#===============================================================================================
+#===============================================================================================    Model emotion
 def emotions_model(frame, gray, faces, emotion_model, open_right_eye, open_left_eye):
 
     emotion_classifier = load_model(emotion_model, compile=False)
@@ -94,8 +94,135 @@ def emotions_model(frame, gray, faces, emotion_model, open_right_eye, open_left_
         rectangle(frame, (fX, fY), (fX + fW, fY + fH),(0, 0, 255), 2)
 
 
+#===============================================================================================    Emotion points
+def coordinates(coordinate, axis, landmarks):
+    if axis == "x": out = [(landmarks.part(i).x) for i in coordinate]
+    else: out = [(landmarks.part(i).y) for i in coordinate]
+    return out
 
-def emotion_points(img, landmarks, em_nose, open_right_eye, open_left_eye):
+def meanning(liste):
+    return mean(liste)
+
+def open_nose(em_nose, nose):
+
+    #print(nose)
+
+    for i in range(len(nose)):
+        em_nose[i].append(nose[i])
+
+    nose_left_points = meanning(em_nose[0])
+    nose_right_points = meanning(em_nose[1])
+
+    #print(nose_left_points, nose_right_points)
+
+    #if nose[0] < nose_left_points and nose[1] > nose_right_points:
+    #    print("nez ouvrant")
+
+
+def open_eyes(eye_liste, eye):
+
+    #print(eye)
+
+    for i in range(len(eye)):
+        eye_liste[i].append(eye[i])
+
+    eyes_points_A = meanning(eye_liste[0])
+    eyes_points_B = meanning(eye_liste[1])
+
+    #print(eyes_points_A, eyes_points_B)
+
+
+def open_mouse(mouse_liste_top, mouse_top, mouse_liste_bot, mouse_bot):
+
+    #print(mouse_top, mouse_bot)
+
+    for i in range(len(mouse_liste_top)):
+        mouse_top[i].append(mouse_liste_top[i])
+
+    mouse_points_TA = meanning(mouse_top[0])
+    mouse_points_TB = meanning(mouse_top[1])
+    mouse_points_TC = meanning(mouse_top[2])
+
+    #print(mouse_points_TA, mouse_points_TB, mouse_points_TC)
+
+    
+
+    #print(mouse_liste_bot)
+    for i in range(len(mouse_liste_bot)):
+        mouse_bot[i].append(mouse_liste_bot[i])
+
+    mouse_points_BA = meanning(mouse_bot[0])
+    mouse_points_BB = meanning(mouse_bot[1])
+    mouse_points_BC = meanning(mouse_bot[2])
+
+
+    #print(mouse_points_BA, mouse_points_BB, mouse_points_BC)
+    #print("")
+    #print(mouse_points_BA-mouse_points_TA, ...)
+
+
+def width_mouse(pointsA, pointsB, liste_mouse):
+
+
+    #print(pointsA, pointsB)
+ 
+    liste_mouse[0].append(pointsA)
+    liste_mouse[1].append(pointsB)
+
+    mouse_A = meanning(liste_mouse[0])
+    mouse_B = meanning(liste_mouse[1])
+    #ICI c si un mec sourit que d'un coté
+    #print(mouse_A, mouse_B)
+
+
+
+
+def smyle(smyling, landmarks):
+
+    coordinate = [48, 54]
+    points = [(landmarks.part(i).x, landmarks.part(i).y) for i in coordinate]
+
+    
+    try:
+        print(points)
+        print(smyling[-1])
+    except:
+        pass
+
+
+    smyling.append(points)
+    
+
+def pos_on_eyes_right(on_eye_right, on_eye_right_points):
+
+
+##
+##    if len(on_eye_right) > 1:
+##        print(on_eye_right_points)
+##        print(on_eye_right[-1])
+
+
+    on_eye_right.append(on_eye_right_points)
+
+
+
+def pos_on_eyes_left(on_eye_left, on_eye_left_points):
+
+##    if len(on_eye_left) > 1:
+##        print(on_eye_left_points)
+##        print(on_eye_left[-1])
+
+
+    on_eye_left.append(on_eye_left_points)
+
+
+
+
+
+
+def emotion_points(img, landmarks, em_nose, open_right_eye, open_left_eye,
+                   mouse_top, mouse_bot, mouse_x, on_eye_right, on_eye_left, smyling):
+    """We recuperate points"""
 
     import cv2
 
@@ -107,78 +234,37 @@ def emotion_points(img, landmarks, em_nose, open_right_eye, open_left_eye):
     anatomy_x = {"right_side_mouse": [48], "left_side_mouse": [54], "nose":[31, 35]}
 
 
-    def coordinates(coordinate, axis):
-
-        if axis == "x": out = [(landmarks.part(i).x) for i in coordinate]
-        else: out = [(landmarks.part(i).y) for i in coordinate]
-        return out
-
     dico_points = {}
 
     for k1, v1 in anatomy_y.items():
-        a = coordinates(v1, "y")
+        a = coordinates(v1, "y", landmarks)
         dico_points[k1] = a
 
     for k1, v1 in anatomy_x.items():
-        b = coordinates(v1, "x")
+        b = coordinates(v1, "x", landmarks)
         dico_points[k1] = b
 
 
-    for k, v in dico_points.items():
-        print(k, v)
+    open_nose(em_nose, dico_points["nose"]) #aggradissement nez
+    open_eyes(open_right_eye, dico_points["top_eyes_right"])#ouvert oeil droit
+    open_eyes(open_left_eye, dico_points["top_eyes_left"])#ouvert oeil gauche
+    
+
+    open_mouse(dico_points["open_mouse_points_top"], mouse_top,#bouhe souvre
+               dico_points["open_mouse_points_bot"], mouse_bot)
+
+    width_mouse(dico_points["right_side_mouse"], dico_points["left_side_mouse"], mouse_x)
+
+    smyle(smyling, landmarks)
 
 
-    for i in range(len(dico_points["nose"])):
-        em_nose[i].append(dico_points["nose"][i])
-
-    for i in range(len(dico_points["top_eyes_right"])):
-        open_right_eye[i].append(dico_points["top_eyes_right"][i])
-
-    for i in range(len(dico_points["top_eyes_left"])):
-        open_left_eye[i].append(dico_points["top_eyes_left"][i])
-
-
-
-
-def expressions(counter_frame, em_nose, open_right_eye, open_left_eye):
-
-    def meanning(liste):
-        return mean(liste)
-
-    def open_nose(em_nose):
-        nose_left_points = meanning(em_nose[0])
-        nose_right_points = meanning(em_nose[1])
-        #print(nose_left_points, nose_right_points)
-
-
-    def open_eyes(open_right_eye, open_left_eye):
-        eye_right_first_points = meanning(open_right_eye[0])
-        eye_right_second_points = meanning(open_right_eye[1])
-
-        eye_left_first_points = meanning(open_left_eye[0])
-        eye_left_second_points = meanning(open_left_eye[1])
-        #print(eye_right_first_points, eye_right_second_points, eye_left_first_points, eye_left_second_points)
-
-    def movements_mouse():
-        pass
-
-    def movement_on_eyes():
-        pass
-
-
-    if counter_frame > 4:
-        open_nose(em_nose)
-        open_eyes(open_right_eye, open_left_eye)
+    pos_on_eyes_right(on_eye_right, dico_points["on_eye_right"])
+    pos_on_eyes_left(on_eye_left, dico_points["on_eye_left"])
     
 
 
 
-#---------------------------------------------------------------------------------------------------- Intra face
-
-
-
-
-
+#=============================================================================================== Intra face
 
 
 #Exterior of face
@@ -216,16 +302,14 @@ def exterior_face(face, img, landmarks):
 
     #chevelure (effacer la tronche recupérer le pourtour ?)
     #rectangle(img, (face[0] - 50, face[1] - 100), (face[0] + face[2] + 50, face[1] + face[3]), 3)
-
-    cv2.imshow("img", img)
-    cv2.waitKey(0)
-
-
+##
+##    cv2.imshow("img", img)
+##    cv2.waitKey(0)
 
 
 
 
-
+#=============================================================================================== Gender, older
 
 
 
@@ -246,7 +330,9 @@ def exterior_face(face, img, landmarks):
 
 
 
-#---------------------------------------------------------------------------------------------------- inclinaison
+
+
+#=============================================================================================== inclinaison
 
 def inclinaison(landmarks, img):
     """Analyse angles of the triangle beetween eyes and nose points"""
