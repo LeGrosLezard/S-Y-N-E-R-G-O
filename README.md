@@ -1,5 +1,8 @@
 # S-Y-N-E-R-G-O
 
+ben j'étais en L du coup oui le design c'est mon dada
+
+
 - signification des mouvements des points
 
 - faire la doc de face
