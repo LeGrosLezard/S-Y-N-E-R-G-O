@@ -8,8 +8,9 @@ puis la doc (partie site/partie algo)
 
 
 
+page d'apres (transition mais pas la faire, la faire apres doc)
 
-
+un mec en face, on fait un truk a la iron man yeux, bouche nez ect (faut que ce soit rapide) puis accueil
 
 
 
