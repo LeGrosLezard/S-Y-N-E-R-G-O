@@ -1,6 +1,6 @@
 # S-Y-N-E-R-G-O
 
-mask rnn de la demo si possible que les mains
+mask r-cnn de la demo si possible que les mains
 
 faire le lien avec speech recognition
 
