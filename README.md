@@ -1,13 +1,5 @@
 # S-Y-N-E-R-G-O
 
-faire la page d'accueille (synergo qui va de gauche a droite)
-
-puis a la fin mettre en face de sa bouche continuer/continue/continuer ?/acceuil
-
-puis la doc (partie site/partie algo)
-
-
-
 page d'apres (transition mais pas la faire, la faire apres doc)
 
 un mec en face, on fait un truk a la iron man yeux, bouche nez ect (faut que ce soit rapide) puis accueil
