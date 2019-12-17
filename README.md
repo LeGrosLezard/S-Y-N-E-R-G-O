@@ -1,17 +1,22 @@
 # S-Y-N-E-R-G-O
 
-ben j'étais en L du coup oui le design c'est mon dada
+faire la page d'accueille (synergo qui va de gauche a droite)
+
+puis a la fin mettre en face de sa bouche continuer
+
+puis la doc (partie site/partie algo)
 
 
-- signification des mouvements des points
 
-- faire la doc de face
 
-- faire un site web (mais comme les autres fois pro)
 
-- expliquer comment ca marche
+
+
+
 
 <br><br><br>
+
+- signification des mouvements des points via les graphes
 
 - faire un display général
 
