@@ -1,7 +1,7 @@
 # S-Y-N-E-R-G-O
 
 
-- faut améliorer le thresh jcrois, faire le site partie yeux et faire un genre de suivis pour que ce soit classe et demain on fait l'inclianison
+- ca rend dingue enfete, sur une c'est parfait et sur l'autre c completement l'inverse
 
 
 ca marche pour droite gauche selon 4 différents plan mais mtn faut faire haut et bas
