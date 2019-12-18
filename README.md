@@ -14,6 +14,8 @@ un mec en face, on fait un truk a la iron man yeux, bouche nez ect (faut que ce 
 
 <br><br><br>
 
+- mouvement et clignement pas bien selon si le mec est pres ou pas
+
 - signification des mouvements des points via les graphes
 
 - faire un display général
