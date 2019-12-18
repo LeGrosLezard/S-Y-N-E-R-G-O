@@ -1,7 +1,7 @@
 # S-Y-N-E-R-G-O
 
 
-- mouvement et clignement pas bien selon si le mec est pres ou pas
+- ok en gros on a le mask de l'oeil mais le mouvemetn de la tete fait tout bouger et le thresh bah voila y'a le truk pyeze ptetre
 
 ca marche pour droite gauche selon 4 différents plan mais mtn faut faire haut et bas
 
