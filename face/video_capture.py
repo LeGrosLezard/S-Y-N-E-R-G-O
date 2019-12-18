@@ -1,10 +1,10 @@
 from dlib import get_frontal_face_detector, shape_predictor
 from time import time
 from cv2 import VideoCapture, resize, waitKey, createBackgroundSubtractorMOG2, destroyAllWindows, imshow, cvtColor, COLOR_BGR2GRAY, imwrite
-from face.face_detection import recuperate_intra_face_points, intra_face, points_landmarks, exterior_face, inclinaison, emotion_points, emotions_model, expressions
-from eyes.eyes_detection import tracking_eyes
+from face.face_detection import recuperate_intra_face_points, intra_face, points_landmarks, exterior_face, inclinaison, emotion_points, emotions_model
+from eyes.eyes_detection import tracking_eyes, position, close_eyes_frequency
 
-from display.face_display import face_displaying
+from display.face_display import face_displaying, emotion_points_display
 from display.eyes_display import eyes_display
 
 #from face_display import recuperate_face
@@ -22,7 +22,7 @@ def timmer(start):
 
 def video_capture(video_name, face_points, emotion_model):
 
-    video = VideoCapture(0)
+    video = VideoCapture(video_name)
 
     #Detect head
     detector = get_frontal_face_detector()
@@ -31,12 +31,27 @@ def video_capture(video_name, face_points, emotion_model):
     right_eye = {"right":0, "left":0, "top":0, "bot":0}
     left_eye = {"right":0, "left":0, "top":0, "bot":0}
 
+    points_position = [[], [], []]
+    closed_list = [0]
+
     em_nose = [[], []]
-    open_right_eye = [[], []]
-    open_left_eye = [[], []]
+    open_right_eye = []
+    open_left_eye = []
+
+    mouse_top = [[], [], []]
+    mouse_bot = [[], [], []]
+
+    mouse_x = [[], []]
+    smyling = []
+
+    on_eye_right = []
+    on_eye_left = []
+
+
     eye_display = []
 
-    counter_frame = 0
+
+    counter_frame = 1
     while True:
 
         #Timmer start
@@ -49,31 +64,45 @@ def video_capture(video_name, face_points, emotion_model):
             #68 points of face + face
             landmarks, face = points_landmarks(gray, predictor, detector)
 
+            plan = position(landmarks, points_position)
+            if plan is True:
+                points_position = [[], [], []]
+
+
             #Intra Face
             head, convexhull = recuperate_intra_face_points(landmarks, face, frame)
 
+        
+
+            eyes_movements = tracking_eyes(landmarks, head, frame, gray, left_eye, right_eye)
+            close_eyes_frequency(eyes_movements, closed_list, counter_frame)
+
 
             #Ext Face
-            exterior_face(head, gray)
+            #exterior_face(head, gray, landmarks)
 
 
             #DOIT ETRE UN THREAD
-            inclinaison(landmarks, frame)
-            eyes_movements = tracking_eyes(landmarks, head, frame, gray, left_eye, right_eye)
+            #inclinaison(landmarks, frame)
 
             #Doit etre un multiprocess ou thread chpas
-            intra_face(frame, gray, landmarks, head)
-            #emotion_points(frame, landmarks, em_nose, open_right_eye, open_left_eye)
-            #expressions(counter_frame, em_nose, open_right_eye, open_left_eye)
+            #intra_face(frame, gray, landmarks, head)
+
+            #emotion_points(frame, landmarks, em_nose, open_right_eye, open_left_eye, mouse_top,
+            #                           mouse_bot, mouse_x, on_eye_right, on_eye_left, smyling,
+            #                          counter_frame)
+
+
 
 
         
      
             #Display
-            face_displaying(gray, frame, convexhull, landmarks)
+            raising = eyes_display(frame, gray, landmarks, eyes_movements, eye_display, counter_frame)
 
-            #raising = eyes_display(frame, gray, landmarks, eyes_movements, eye_display, counter_frame)
 
+            #face_displaying(gray, frame, convexhull, landmarks)
+            #emotion_points_display(frame, landmarks)
 
 
 
@@ -85,8 +114,10 @@ def video_capture(video_name, face_points, emotion_model):
         #timmer(start)
         raising = False
 
-        if raising == True:
-            eye_display = []
+        if counter_frame % 20 == 0:
+            open_right_eye = open_right_eye[-10:]
+            points_position = [points_position[0][-10:], points_position[1][-10:], points_position[2][-10:]]
+            closed_list = closed_list[-10:]
 
         counter_frame += 1
 
