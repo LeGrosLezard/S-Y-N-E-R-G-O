@@ -1,7 +1,8 @@
 # S-Y-N-E-R-G-O
 
 
-- ok en gros on a le mask de l'oeil mais le mouvemetn de la tete fait tout bouger et le thresh bah voila y'a le truk pyeze ptetre
+- faut améliorer le thresh jcrois, faire le site partie yeux et faire un genre de suivis pour que ce soit classe et demain on fait l'inclianison
+
 
 ca marche pour droite gauche selon 4 différents plan mais mtn faut faire haut et bas
 
