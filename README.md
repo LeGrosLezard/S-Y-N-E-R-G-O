@@ -5,7 +5,7 @@
 
 - calme, en vrai si t'arrive a dire des combo et que ca colle sur au moins une vidéo c'est deja hyper bien donc stop faire qu'un type,
 
-un mec pas trop pres ni trop loin, blanc, fond pas marron, les grand grand ouvert sans meche avec une luminosité ok
+un mec pas trop pres ni trop loin, blanc, fond pas marron, les grand grand ouvert sans meche avec une luminosité ok, de face avec une bonne qualité
 
 
 
