@@ -1,5 +1,14 @@
 # S-Y-N-E-R-G-O
 
+
+- mouvement et clignement pas bien selon si le mec est pres ou pas
+
+ca marche pour droite gauche selon 4 différents plan mais mtn faut faire haut et bas
+
+
+
+<br><br><br>
+
 mask r-cnn de la demo si possible que les mains
 
 faire le lien avec speech recognition
@@ -10,11 +19,6 @@ page d'apres (transition mais pas la faire, la faire apres doc)
 un mec en face, on fait un truk a la iron man yeux, bouche nez ect (faut que ce soit rapide) puis accueil
 
 
-
-
-<br><br><br>
-
-- mouvement et clignement pas bien selon si le mec est pres ou pas
 
 - signification des mouvements des points via les graphes
 
