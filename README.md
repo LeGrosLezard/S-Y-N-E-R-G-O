@@ -3,8 +3,10 @@
 
 - ca rend dingue enfete, sur une c'est parfait et sur l'autre c completement l'inverse
 
+- calme, en vrai si t'arrive a dire des combo et que ca colle sur au moins une vidéo c'est deja hyper bien donc stop faire qu'un type,
 
-ca marche pour droite gauche selon 4 différents plan mais mtn faut faire haut et bas
+un mec pas trop pres ni trop loin, blanc, fond pas marron, les grand grand ouvert sans meche avec une luminosité ok
+
 
 
 
