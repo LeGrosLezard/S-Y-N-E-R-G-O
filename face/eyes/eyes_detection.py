@@ -2,6 +2,29 @@ from cv2 import convexHull, boundingRect, bitwise_not, circle, fillPoly, moments
 from numpy import array, zeros, uint8, full, ones
 from scipy.spatial import distance as dist
 
+
+def position(landmarks, points_position):
+    import numpy as np
+    pointsA = [0, 1, 2]
+    pointsB = [16, 15, 14]
+
+    out = False
+    for i in range(len(pointsA)):
+        a = landmarks.part(pointsA[i]).x
+        b = landmarks.part(pointsB[i]).x
+
+        if (b-a) < np.mean(points_position[i]) - 10:
+            print("changement de plan recule")
+            out = True
+        elif (b-a) > np.mean(points_position[i]) + 10:
+            print("changement de plan, gros plan")
+            out = True
+
+        points_position[i].append(b-a)
+
+    return out
+
+
 #Blinking function
 def closing_eyes(eye):
     """ Recuperate eye report dist euclidien(widths) / 2 (length)"""
@@ -78,8 +101,8 @@ def get_eyes(crop, thresh, cropPicture, landmarks, num):
 def add_movement(movement, pos_eye, axis_eye):
     """Add + 1 if the movement isn't center"""
 
-    if movement != "centre": pos_eye[movement] += 1
-    elif movement == "centre":
+    if movement != "center": pos_eye[movement] += 1
+    elif movement == "center":
         for k,v in axis_eye.items():
             pos_eye[k] = 0
 
@@ -91,10 +114,10 @@ def position_eye(crop, x, y, pos_eye):
     ex: crop = 40: right = 0, mid = 20 left = 40"""
     try:
         #Define center, left and right from the crop.
-        horrizontal = {"centre": abs(crop.shape[0] / 2 - x), "droite":abs(x),
-                       "gauche":abs(crop.shape[0] - x)}
-        vertical = {"centre":abs(crop.shape[1] / 2 - y), "haut":abs(y),
-                    "bas":abs(crop.shape[1] - y)}
+        horrizontal = {"center": abs(crop.shape[0] / 2 - x), "right":abs(x),
+                       "left":abs(crop.shape[0] - x)}
+        vertical = {"center":abs(crop.shape[1] / 2 - y), "top":abs(y),
+                    "bot":abs(crop.shape[1] - y)}
 
         #Verify if the pupil tends to a side.
         verti = min(horrizontal, key=horrizontal.get)
@@ -135,21 +158,19 @@ def tracking_eyes(landmarks, faces, img, gray, left_eye, right_eye):
     of them."""
 
     #Define min and max EAR. Recuperate exterior/convex points of the face.
-    state = ""; min_ear = 0.3; max_ear = 0.5; left_ear = 0.4; right_ear = 0.4
+    state = "";min_ear = 0.3; max_ear = 0.5; left_ear = 0.4; right_ear = 0.4; out="";
     eyes = (convexHull(array([(landmarks.part(n).x, landmarks.part(n).y)
                     for pts in faces for n in range(36, 42)])),
             convexHull(array([(landmarks.part(n).x, landmarks.part(n).y)
                     for pts in faces for n in range(42, 48)])))
 
     try: #Calculus rapport of eye (EAR)
-        
         left_ear, right_ear = closing_eyes(eyes[0]), closing_eyes(eyes[1])
     except (IndexError): pass
 
     #Verify rapport eye ratio.
     if left_ear <= min_ear and right_ear <= min_ear: state = "closed"
-    elif left_ear <= min_ear: state = "blinking gauche"
-    elif right_ear <= min_ear: state = "blinking droite"
+    #elif closing_eyes[0] == [] and closing_eyes[1] == []: state = "CLOSED"
     elif left_ear >= max_ear and right_ear >= max_ear: state= "very open eyes"
     else:
 
@@ -172,8 +193,21 @@ def tracking_eyes(landmarks, faces, img, gray, left_eye, right_eye):
         #Display it
         movements = analyse(left_eye, right_eye)
 
-        if movements != []:
-            return movements
-    if state != "": print(state)
+        out =  movements
 
+    if state != "": out = state
 
+    return out
+
+def close_eyes_frequency(eyes_movements, closed_list, counter_frame):
+
+    if len(closed_list) > 0:
+        if eyes_movements == "closed":
+
+            if counter_frame < closed_list[-1] + 10:
+                print("yeux plissé ? stressé ? speech recog")
+            else:
+                print("closed")
+   
+            closed_list.append(counter_frame)
+    
