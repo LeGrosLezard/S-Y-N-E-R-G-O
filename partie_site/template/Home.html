@@ -26,26 +26,27 @@
     -->
 
 
-    <div id="contain_tilte" style="border:"2px solid red">
+    <div id="contain_tilte">
 
             <h1 class="h1_responsiv" id="div_logo1">S Y N E R G O</h1>
 
             <p id="Paragraphe">
-                Un site en ligne pour mais aussi implementer l'uplad de video<br>
+
+                la ca m'a l'air pas trop mal peut etre mettre un peu de couleur ou une histoire<br>
  
-                les personnes qui ne voient pas faut mettre la position de la tete<br>
+                les personnes qui ne voient pas faut mettre la positionss<br>
     
                 mais aussi pour les curieux genre une carte de restaurant<br>
           
                 communication non verbale et pour les repere visuauxs<br>
 
-                un text pour le design mais qui ne ressemble pas a grand chose<br>
+                un text pour le design mais qui ne ressemble pas a grand chose chose ici faut une demi<br>
 
-                on devrait augmenter la longueur des lignes jpense que comme ca c'est bon<br>
+                on devrait augmenter la longueur des lignes jpense que comme ca c'est bon la ici ou mais car<br>
 
                 voila mais bon un site en ligne qui ne marche pas encore <br>
                 
-                la ca m'a l'air pas trop mal peut etre mettre un peu de couleur ou une histoire<br>
+                Un site en ligne pour mais aussi implementer l'uplad de video la aussi<br>
      
 
             </p>
@@ -53,7 +54,7 @@
 
             <a href="">
                 <h3 class="h3_responsiv" id="h3_continue"
-                        onclick=oContinuer()>C o n t i n u e r
+                        onclick=oContinuer()>c o n t i n u e r
                 </h3>
             </a>
     </div>
@@ -111,14 +112,47 @@
         text-decoration:none;
     }
     #Paragraphe{
-        font-size:1.5vw;
-        margin-top:10%;
+        font-size:1.55vw;
+        margin-top:8%;
     }
 
 </style>
 
 
 <script>
+
+    function pages_y_axis(){
+        window.addEventListener("mousewheel", function(event) {
+
+            var scroll = event.deltaY;
+            var scroll_bot = scroll > 0;
+            var scroll_top = scroll < 0;
+
+            if (scroll_bot) {
+                alert("bas")
+            }else if (scroll_top) {
+                alert("ahut")
+            }
+
+        });
+    };
+
+
+
+
+    //Pages navifation in function of wheel actions on Y axis.
+    pages_y_axis()
+
+
+
+
+
+
+
+
+
+
+
 
 </script>
 
