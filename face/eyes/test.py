@@ -1,7 +1,24 @@
 from dlib import get_frontal_face_detector, shape_predictor
 import cv2
 import numpy as np
+from skimage import exposure
+from skimage import feature
 
+def HOG_detection(gray):
+
+    """We detect contour orientation gradient
+    from color"""
+
+    (H, hogImage) = feature.hog(gray, orientations=9,
+                                pixels_per_cell=(10, 10),
+                                cells_per_block=(2, 2),
+                                transform_sqrt=True,
+                                block_norm="L1", visualize=True)
+
+    hogImage = exposure.rescale_intensity(hogImage, out_range=(0, 255))
+    hogImage = hogImage.astype("uint8")
+
+    return H, hogImage
 
 def points_landmarks(gray, predictor, detector):
     """ Return the 68 points of the face and the face"""
@@ -35,7 +52,7 @@ def masking_for_eyes(eyes):
 def rezsizing(crop):
 
     height, width = crop.shape[:2]
-    crop = cv2.resize(crop, (width*2, height*2))
+    crop = cv2.resize(crop, (width*10, height*8))
     return crop
 
 
@@ -49,10 +66,10 @@ def position(landmarks, points_position):
         a = landmarks.part(pointsA[i]).x
         b = landmarks.part(pointsB[i]).x
 
-        if (b-a) < mean(points_position[i]) - 10:
+        if (b-a) < np.mean(points_position[i]) - 10:
             print("changement de plan recule")
             out = True
-        elif (b-a) > mean(points_position[i]) + 10:
+        elif (b-a) > np.mean(points_position[i]) + 10:
             print("changement de plan, gros plan")
             out = True
 
@@ -97,6 +114,11 @@ def find_center(tresh):
     return out
 
 
+
+
+ 
+
+
 facePoints = r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\face\models\shape_predictor_68_face_landmarks.dat"
 video_name = r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\video\a.mp4"
 
@@ -115,77 +137,78 @@ points_position = [[], [], []]
 
 while True:
 
-    try:
-        frame = cv2.resize(video.read()[1], (500, 400))
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    frame = cv2.resize(video.read()[1], (500, 400))
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-        landmarks, face = points_landmarks(gray, predictor, detector)
-        position(landmarks, points_position)
+    landmarks, face = points_landmarks(gray, predictor, detector)
+    position(landmarks, points_position)
 
-        faces, convexhull = recuperate_intra_face_points(landmarks, face, frame)
+    faces, convexhull = recuperate_intra_face_points(landmarks, face, frame)
 
-        crop_face = frame[faces[1]:faces[1] + faces[3], faces[0]:faces[0] + faces[2]]
+    crop_face = frame[faces[1]:faces[1] + faces[3], faces[0]:faces[0] + faces[2]]
 
-        eyes = (cv2.convexHull(np.array([(landmarks.part(n).x, landmarks.part(n).y)
-                        for pts in faces for n in range(36, 42)])),
-                cv2.convexHull(np.array([(landmarks.part(n).x, landmarks.part(n).y)
-                        for pts in faces for n in range(42, 48)])))
+    eyes = (cv2.convexHull(np.array([(landmarks.part(n).x, landmarks.part(n).y)
+                    for pts in faces for n in range(36, 42)])),
+            cv2.convexHull(np.array([(landmarks.part(n).x, landmarks.part(n).y)
+                    for pts in faces for n in range(42, 48)])))
 
-        for i in eyes[0]:
-            cv2.circle(frame, (i[0][0], i[0][1]), 1, (0, 0, 255), 1)
+    for i in eyes[0]:
+        cv2.circle(frame, (i[0][0], i[0][1]), 1, (0, 0, 255), 1)
 
-        for i in eyes[1]:
-            cv2.circle(frame, (i[0][0], i[0][1]), 1, (255, 0, 0), 1)
-
-
-        cv2.imshow('crop_face', crop_face)
+    for i in eyes[1]:
+        cv2.circle(frame, (i[0][0], i[0][1]), 1, (255, 0, 0), 1)
 
 
-
-        cropMask1 = masking_for_eyes(eyes[0])
-        cropMask1 = rezsizing(cropMask1)
-
-        cropMask2 = masking_for_eyes(eyes[1])
-        cropMask2 = rezsizing(cropMask2)
-
-        cv2.imshow('cropMask1', cropMask1)
-        cv2.imshow('cropMask2', cropMask2)
+    cv2.imshow('crop_face', crop_face)
 
 
-        tresh = define_threshold(cropMask1)
-        tresh2 = define_threshold(cropMask2)
+
+    cropMask1 = masking_for_eyes(eyes[0])
+    cropMask1 = rezsizing(cropMask1)
+
+    cv2.imshow('cropMask1', cropMask1)
+
+    cropMask2 = masking_for_eyes(eyes[1])
+    cropMask2 = rezsizing(cropMask2)
+    #cv2.imshow('cropMask2', cropMask2)
 
 
-        x, y = find_center(tresh1)
-        #x1, y1 = find_center(tresh2)
+    tresh = define_threshold(cropMask1)
+    tresh2 = define_threshold(cropMask2)
 
 
-        print((0,0), x, y, (tresh.shape[1], tresh.shape[0]))
+    x, y = find_center(tresh)
+    #x1, y1 = find_center(tresh2)
 
 
-        if x > (0.65) * tresh.shape[1]:
-            print("droite")
-
-        elif x < 0.45 * tresh.shape[1]:
-            print("gauche")
-
-        if x > 0.65 * tresh.shape[1] and y > 0.48 * tresh.shape[0]:
-            print("droite bas")
-
-        if x > 0.65 * tresh.shape[1] and y < 0.45 * tresh.shape[0]:
-            print("droite haut")
-
-        if x < 0.45 * tresh.shape[1] and y < 0.45 * tresh.shape[0]:
-            print("gauche haut")
-
-        if x < 0.45 * tresh.shape[1] and y > 0.48 * tresh.shape[0]:
-            print("gauche bas")
+    print((0,0), x, y, (tresh.shape[1], tresh.shape[0]))
 
 
-    except:
-        pass
+    if x > (0.51) * tresh.shape[1]:
+        print("droite")
+
+    elif x < 0.49 * tresh.shape[1]:
+        print("gauche")
 
 
+    if x > 0.51 * tresh.shape[1] and y > 0.48 * tresh.shape[0]:
+        print("droite bas")
+
+    if x < 0.49 * tresh.shape[1] and y > 0.48 * tresh.shape[0]:
+        print("gauche bas")
+
+
+    if x < 0.49 * tresh.shape[1] and y < 0.51 * tresh.shape[0]:
+        print("gauche haut")
+
+    if x > 0.51 * tresh.shape[1] and y < 0.51 * tresh.shape[0]:
+        print("droite haut")
+
+
+
+
+
+    cv2.imshow("daz", frame)
 
     if cv2.waitKey(0) & 0xFF == ord("q"):
         break
