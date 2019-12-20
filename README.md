@@ -1,9 +1,7 @@
 # S-Y-N-E-R-G-O
 
 
-- finir de comprendre pygaze 
-
-- faire le seo de la premiere page
+pupilFrame = cv2.equalizeHist(crop)
 
 
 
