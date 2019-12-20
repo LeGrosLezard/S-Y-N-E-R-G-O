@@ -1,7 +1,7 @@
 # S-Y-N-E-R-G-O
 
 
-- ca fait trop parfum
+- chui a une librarie d'avoir eyes laser ...
 
 
 
