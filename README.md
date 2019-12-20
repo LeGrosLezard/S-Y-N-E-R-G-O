@@ -1,7 +1,9 @@
 # S-Y-N-E-R-G-O
 
 
-- chui a une librarie d'avoir eyes laser ...
+- finir de comprendre pygaze 
+
+- faire le seo de la premiere page
 
 
 
