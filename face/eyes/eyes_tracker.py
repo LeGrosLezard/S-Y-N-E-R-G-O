@@ -8,9 +8,11 @@ import matplotlib.pyplot as plt
 
 #===================================================== Video part
 def resize_frame(frame):
-
+    """Resize frame for a ' good accuracy ' and speed """
+ 
     height, width = frame.shape[:2]
-    frame = cv2.resize(frame, (int(width / 1.1), int(height / 1.1)))
+    nb = 1.1
+    frame = cv2.resize(frame, (int(width / nb), int(height / nb)))
     gray = cv2.cvtColor(frame,cv2.COLOR_RGB2GRAY)
 
     return frame, gray
@@ -20,23 +22,26 @@ def resize_frame(frame):
 
 
 
+#===================================================== Mask part
+def rectangle_eye_area(img, eye, gray):
+    """Recuperate contour of eyes in a box, make an egalizer,
+    make a color and gray mask."""
 
-def croping(img, eye, gray):
-    """Recuperate contour of eyes, make a mask, recuperate the area."""
-
-    """Recuperate the eye area"""
+    nb = 5
     x, y, w, h = cv2.boundingRect(eye)
-    cropMask = gray[y-5:y+h+5, x-5:x+w+5]
+    cropMask = gray[y-nb:y+h+nb, x-nb:x+w+nb]
     cropMask = cv2.equalizeHist(cropMask)
 
-    cropImg = img[y-5:y+h+5, x-5:x+w+5]
+    cropImg = img[y-nb:y+h+nb, x-nb:x+w+nb]
 
     return cropMask, cropImg
 
 
-def make_mask(img, eye, gray):
-    """Recuperate contour of eyes, make a mask, recuperate the area."""
+def eye_contour_masking(img, eye, gray):
+    """Recuperate contour of eyes points, delimitate that
+    recuperate color and gray mask."""
 
+    nb = 5
     height, width = gray.shape[:2]
     black_frame = np.zeros((height, width), np.uint8)
     mask = np.full((height, width), 255, np.uint8)
@@ -44,13 +49,13 @@ def make_mask(img, eye, gray):
     mask = cv2.bitwise_not(black_frame, gray.copy(), mask=mask)
 
     x, y, w, h = cv2.boundingRect(eye)
-    cropMask = mask[y-5:y+h+5, x-5:x+w+5]
-    cropImg = img[y-5:y+h+5, x-5:x+w+5]
+    cropMask = mask[y-nb:y+h+nb, x-nb:x+w+nb]
+    cropImg = img[y-nb:y+h+nb, x-nb:x+w+nb]
 
     return cropMask, cropImg
 
 
-def make_masking(mask_eyes_gray, crop):
+def superpose_contour_eye_rectangle(mask_eyes_gray, crop):
     for i in range(mask_eyes_gray.shape[0]):
         for j in range(mask_eyes_gray.shape[1]):
             if mask_eyes_gray[i, j] == 255:
@@ -59,20 +64,47 @@ def make_masking(mask_eyes_gray, crop):
 
 
 
+#===================================================== Pupille center part
+
 def find_center_pupille(crop, mask_eyes_img):
+    """Find contours. Don't recuperate rectangle contour,
+    find centers."""
 
     contours, hierarchy = cv2.findContours(crop, cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
 
-    for cnt in contours:
+    height, width = mask_eyes_img.shape[:2]
+    percent_contour = 0.80
 
-        if cv2.contourArea(cnt) < (0.80 * (mask_eyes_img.shape[0] * mask_eyes_img.shape[1])):
+    pupille_center = [(int(cv2.moments(cnt)['m10']/cv2.moments(cnt)['m00']),
+                       int(cv2.moments(cnt)['m01']/cv2.moments(cnt)['m00']))
+                      for cnt in contours if cv2.contourArea(cnt) < (percent_contour * (width * height))]
 
-            area = cv2.contourArea(cnt)
-            center = cv2.moments(cnt)
-            try:
-                cx,cy = int(center['m10']/center['m00']), int(center['m01']/center['m00'])
-                cv2.circle(mask_eyes_img, (cx,cy), 6, (0, 0, 255),2)
-            except:pass
+    x_center, y_center = pupille_center[0][0], pupille_center[0][1]
+
+    cv2.circle(mask_eyes_img, (x_center, y_center), 6, (0, 0, 255), 1)
+
+    return x_center, y_center
+
+
+
+
+def pupille_part_function(eye):
+    """Recuperate egalized rectangle area or box area,
+       recuperate contour eyes,
+       Superpose egalized rectangle with contour eyes,
+       find centers"""
+
+    gray_crop, color_crop = rectangle_eye_area(frame, eye, gray)
+    
+    mask_eyes_gray, mask_eyes_img = eye_contour_masking(frame, eye, gray)
+
+    gray_crop = superpose_contour_eye_rectangle(mask_eyes_gray, gray_crop)
+
+    x_center, y_center = find_center_pupille(gray_crop, mask_eyes_img)
+
+    return x_center, y_center
+
+
 
 video = cv2.VideoCapture("a.mp4")
 detector = get_frontal_face_detector()
@@ -94,25 +126,13 @@ while True:
                     for pts in faces for n in range(42, 48)])))
 
 
-    right_eyes = cv2.convexHull(np.array(eyes[0]))
+    right_eyes = eyes[0]
+    pupille_part_function(right_eyes)
 
-    right_crop, right_maskimg = croping(frame, right_eyes, gray)
-    right_mask_eyes_gray, right_mask_eyes_img = make_mask(frame, right_eyes, gray)
-
-    right_crop = make_masking(right_mask_eyes_gray, right_crop)
-
-    find_center_pupille(right_crop, right_mask_eyes_img)
+    left_eyes = eyes[1]
+    pupille_part_function(left_eyes)
 
 
-
-    left_eyes = cv2.convexHull(np.array(eyes[1]))
-
-    left_crop, left_maskimg = croping(frame, left_eyes, gray)
-    left_mask_eyes_gray, left_mask_eyes_img = make_mask(frame, left_eyes, gray)
-
-    left_crop = make_masking(left_mask_eyes_gray, left_crop)
-
-    find_center_pupille(left_crop, left_mask_eyes_img)
 
 
 
