@@ -1,7 +1,7 @@
 # S-Y-N-E-R-G-O
 
 
-mtn, active contour du cercle blanc réduit ici, noir aggrandit la
+mtn, active contour du cercle blanc réduit ici, noir aggrandit la fin ca serait super mais ^^
 
 
 
