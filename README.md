@@ -1,5 +1,6 @@
 # S-Y-N-E-R-G-O
 
+selon la position d'un truk (du nez) réduire le coté (me tourne vers droite ok mais vers gauche nan pcque moins du coup réduire a gauche si nez va vers droite) y'a plusieurs cercles aussi
 
 mtn, active contour du cercle blanc réduit ici, noir aggrandit la fin ca serait super mais ^^
 
