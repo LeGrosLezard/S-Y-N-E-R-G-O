@@ -3,7 +3,7 @@
 
 mtn, active contour du cercle blanc réduit ici, noir aggrandit la fin ca serait super mais ^^
 
-
+(réduire a droite pour l'oeil gfauche)
 
 
 <br><br><br>
