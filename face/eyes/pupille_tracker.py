@@ -19,24 +19,27 @@ def resize_frame(frame):
 
 #===================================================== Landmarks part
 def recuperate_landmarks(gray):
-    out = None, None
+
     faces = detector(gray)
     if len(faces) > 0:
         landmarks = predictor(gray, faces[0])
         out = faces, landmarks
+    else:
+        out = None, None    #No face detected = no landmarks
 
     return out
 
 
 def recuperate_eyes(landmarks):
-    out = None
+
     if landmarks is not None:
         eyes = (cv2.convexHull(np.array([(landmarks.part(n).x, landmarks.part(n).y)
                         for pts in faces for n in range(36, 42)])),
                 cv2.convexHull(np.array([(landmarks.part(n).x, landmarks.part(n).y)
                         for pts in faces for n in range(42, 48)])))
-
         out = eyes
+    else:
+        out = None  #No landmarks
 
     return out
 
@@ -90,7 +93,6 @@ def find_center_pupille(crop, mask_eyes_img):
     """Find contours. Don't recuperate rectangle contour,
     find centers."""
 
-    out = None, None
     contours, hierarchy = cv2.findContours(crop, cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
 
     height, width = mask_eyes_img.shape[:2]
@@ -104,6 +106,8 @@ def find_center_pupille(crop, mask_eyes_img):
         x_center, y_center = pupille_center[0][0], pupille_center[0][1]
         cv2.circle(mask_eyes_img, (x_center, y_center), 4, (0, 0, 255), 1)
         out = x_center, y_center
+    else:
+        out = None, None    #no pupils detected
 
     return out
 
@@ -114,12 +118,13 @@ def main_function_pupille_part(eye):
        Superpose egalized rectangle with contour eyes,
        find centers"""
 
+    #Box egalized eyes areas
     gray_crop, color_crop = rectangle_eye_area(frame, eye, gray)
-    
+    #Contours of the broder of the eyes
     mask_eyes_gray, mask_eyes_img = eye_contour_masking(frame, eye, gray)
-
+    #Superpose box and contours
     gray_crop = superpose_contour_eye_rectangle(mask_eyes_gray, gray_crop)
-
+    #Define centers of pupils
     x_center, y_center = find_center_pupille(gray_crop, mask_eyes_img)
 
     return x_center, y_center
