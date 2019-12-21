@@ -1,8 +1,7 @@
 from dlib import get_frontal_face_detector, shape_predictor
 import numpy as np
 import cv2
-import time
-import matplotlib.pyplot as plt
+
 
 
 
@@ -11,14 +10,35 @@ def resize_frame(frame):
     """Resize frame for a ' good accuracy ' and speed """
  
     height, width = frame.shape[:2]
-    nb = 1.1
+    nb = 2
     frame = cv2.resize(frame, (int(width / nb), int(height / nb)))
     gray = cv2.cvtColor(frame,cv2.COLOR_RGB2GRAY)
 
     return frame, gray
 
-    
 
+#===================================================== Landmarks part
+def recuperate_landmarks(gray):
+    out = None, None
+    faces = detector(gray)
+    if len(faces) > 0:
+        landmarks = predictor(gray, faces[0])
+        out = faces, landmarks
+
+    return out
+
+
+def recuperate_eyes(landmarks):
+    out = None
+    if landmarks is not None:
+        eyes = (cv2.convexHull(np.array([(landmarks.part(n).x, landmarks.part(n).y)
+                        for pts in faces for n in range(36, 42)])),
+                cv2.convexHull(np.array([(landmarks.part(n).x, landmarks.part(n).y)
+                        for pts in faces for n in range(42, 48)])))
+
+        out = eyes
+
+    return out
 
 
 
@@ -70,6 +90,7 @@ def find_center_pupille(crop, mask_eyes_img):
     """Find contours. Don't recuperate rectangle contour,
     find centers."""
 
+    out = None, None
     contours, hierarchy = cv2.findContours(crop, cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
 
     height, width = mask_eyes_img.shape[:2]
@@ -79,16 +100,15 @@ def find_center_pupille(crop, mask_eyes_img):
                        int(cv2.moments(cnt)['m01']/cv2.moments(cnt)['m00']))
                       for cnt in contours if cv2.contourArea(cnt) < (percent_contour * (width * height))]
 
-    x_center, y_center = pupille_center[0][0], pupille_center[0][1]
+    if len(pupille_center) > 0:
+        x_center, y_center = pupille_center[0][0], pupille_center[0][1]
+        cv2.circle(mask_eyes_img, (x_center, y_center), 4, (0, 0, 255), 1)
+        out = x_center, y_center
 
-    cv2.circle(mask_eyes_img, (x_center, y_center), 6, (0, 0, 255), 1)
-
-    return x_center, y_center
+    return out
 
 
-
-
-def pupille_part_function(eye):
+def main_function_pupille_part(eye):
     """Recuperate egalized rectangle area or box area,
        recuperate contour eyes,
        Superpose egalized rectangle with contour eyes,
@@ -106,6 +126,10 @@ def pupille_part_function(eye):
 
 
 
+
+
+
+
 video = cv2.VideoCapture("a.mp4")
 detector = get_frontal_face_detector()
 predictor = shape_predictor("shape_predictor_68_face_landmarks.dat")
@@ -116,28 +140,24 @@ while True:
     _, frame = video.read()
     frame, gray = resize_frame(frame)
 
-    faces = detector(gray)
-    landmarks = predictor(gray, faces[0])
 
+    faces, landmarks = recuperate_landmarks(gray)
+    eyes = recuperate_eyes(landmarks)
 
-    eyes = (cv2.convexHull(np.array([(landmarks.part(n).x, landmarks.part(n).y)
-                    for pts in faces for n in range(36, 42)])),
-            cv2.convexHull(np.array([(landmarks.part(n).x, landmarks.part(n).y)
-                    for pts in faces for n in range(42, 48)])))
+    if eyes is not None:
 
+        right_eyes = eyes[0]
+        main_function_pupille_part(right_eyes)
 
-    right_eyes = eyes[0]
-    pupille_part_function(right_eyes)
-
-    left_eyes = eyes[1]
-    pupille_part_function(left_eyes)
+        left_eyes = eyes[1]
+        main_function_pupille_part(left_eyes)
 
 
 
 
 
     cv2.imshow('frame', frame)
-    if cv2.waitKey(0) & 0xFF == ord('q'):
+    if cv2.waitKey(1) & 0xFF == ord('q'):
         break
     
 video.release()
