@@ -23,14 +23,9 @@ def make_mask(img, eye, gray):
 
     mask = np.full((height, width), 255, np.uint8)
 
-
-
-    cv2.fillPoly(mask, [eye], (0, 0, 0))
-
+    cv2.fillPoly(mask, [eye], (0, 0, 255))
 
     mask = cv2.bitwise_not(black_frame, gray.copy(), mask=mask)
-
-
 
     """Recuperate the eye area"""
     x, y, w, h = cv2.boundingRect(eye)
@@ -49,68 +44,87 @@ predictor = shape_predictor("shape_predictor_68_face_landmarks.dat")
 while True:
 
     _, frame = video.read()
-    frame = cv2.resize(frame, (500, 400))
+    #frame = cv2.resize(frame, (500, 400))
     gray = cv2.cvtColor(frame,cv2.COLOR_RGB2GRAY)
 
     faces = detector(gray)
     landmarks = predictor(gray, faces[0])
 
 
+    eyes = [(landmarks.part(36).x + 2, landmarks.part(36).y),
+            (landmarks.part(37).x , landmarks.part(37).y - 2),
+            (landmarks.part(38).x + 5, landmarks.part(38).y - 2),
+            (landmarks.part(39).x, landmarks.part(39).y),
+            (landmarks.part(40).x, landmarks.part(40).y),
+            (landmarks.part(41).x, landmarks.part(41).y)]
 
-    eyes = (cv2.convexHull(np.array([(landmarks.part(n).x, landmarks.part(n).y)
-                    for pts in faces for n in range(36, 42)])),
-            cv2.convexHull(np.array([(landmarks.part(n).x, landmarks.part(n).y)
-                    for pts in faces for n in range(42, 48)])))
+ 
+    eyes = cv2.convexHull(np.array(eyes))
 
 
-    crop, maskimg = croping(frame, eyes[0], gray)
+    crop, maskimg = croping(frame, eyes, gray)
     crop = cv2.equalizeHist(crop)
+    #cv2.imshow('crop', crop)
+
+    #height, width = crop.shape[:2]
+    #cropcrop = cv2.resize(crop, (width*4, height*4))
+    #cv2.imshow('cropcrop', cropcrop)
 
 
-    crop = cv2.resize(crop, (crop.shape[1] * 8, crop.shape[0] * 6))
-    cv2.imshow('crop', crop)
-
-
-
-
-
-
-
-
+    mask_eyes, aaaaaaaa = make_mask(frame, eyes, gray)
+    #cv2.imshow('mask_eyes', mask_eyes)
 
 
 
-    cropMask, cropImg = make_mask(frame, eyes[0], gray)
-    th3 = cv2.equalizeHist(cropMask)
-    cv2.imshow('th3', th3)
+    for i in range(mask_eyes.shape[0]):
+        for j in range(mask_eyes.shape[1]):
+            if mask_eyes[i, j] == 255:
+                crop[i, j] = 255
+
+
+    #height, width = crop.shape[:2]
+    #crop = cv2.resize(crop, (width*4, height*4))
+    #aaaaaaaa = cv2.resize(aaaaaaaa, (width*4, height*4))
+    #cv2.imshow('after', crop)
+
+
+    windowClose = np.ones((5,5),np.uint8)
+    windowOpen = np.ones((5,5),np.uint8)
+    windowErode = np.ones((2,2),np.uint8)
+
+
+    ret, pupilFrame = cv2.threshold(crop,240,255,cv2.THRESH_BINARY)
+    pupilFrame = cv2.morphologyEx(pupilFrame, cv2.MORPH_CLOSE, windowClose)
+    pupilFrame = cv2.morphologyEx(pupilFrame, cv2.MORPH_ERODE, windowErode)
+    pupilFrame = cv2.morphologyEx(pupilFrame, cv2.MORPH_OPEN, windowOpen)
+
+    cv2.imshow('pupilFrame',pupilFrame)
+
+    threshold = cv2.inRange(pupilFrame,250,255)
+    contours, hierarchy = cv2.findContours(threshold,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
 
 
 
-    contours, _ = cv2.findContours(th3, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
-    contours = sorted(contours, key=cv2.contourArea)
+    for cnt in contours:
+        area = cv2.contourArea(cnt)
+        center = cv2.moments(cnt)
+        try:
+            cx,cy = int(center['m10']/center['m00']), int(center['m01']/center['m00'])
+            cv2.circle(aaaaaaaa,(cx,cy), 8, (0, 0, 255),1)
+        except:pass
 
-
-    cv2.drawContours(cropMask, [contours[0]], -1, (255, 255, 255), 1)
-
-
-
-
-
-##    height, width = cropMask.shape[:2]
-##    black_frame = np.zeros((height, width), np.uint8)
-##    mask = np.full((height, width), 255, np.uint8)
-##
-##    cv2.fillPoly(mask, contours, (0, 0, 0))
-##
-##    maskmask = cv2.bitwise_not(black_frame, crop, mask=mask)
-##
-##    cv2.imshow('maskmask', maskmask)
+    cv2.imshow('aaaaaaaa',aaaaaaaa)
 
 
 
-    mask = cv2.resize(cropMask, (cropMask.shape[1] * 8, cropMask.shape[0] * 6))
 
-    cv2.imshow('mask', mask)
+    
+
+
+
+
+
+
 
 
 
