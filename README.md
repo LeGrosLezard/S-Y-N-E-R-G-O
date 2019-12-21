@@ -1,7 +1,7 @@
 # S-Y-N-E-R-G-O
 
 
-pupilFrame = cv2.equalizeHist(crop)
+mtn, active contour du cercle blanc réduit ici, noir aggrandit la
 
 
 
