@@ -1,6 +1,10 @@
 # S-Y-N-E-R-G-O
 
+- finir de réécrire
 
+- faire l'upload
+
+- faire la premiere demo de l'oeil et le design et c ok pour ojd (c pas niveau eye lazer encore mais bon)
 
 
 <br><br><br>
