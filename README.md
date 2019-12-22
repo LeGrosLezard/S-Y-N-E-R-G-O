@@ -8,9 +8,11 @@
 
 - et mettre des demo webcam
 
-- avant d'oublier en gros pour la vidéo A on a un mec hyper pres de la cam plus pres tu meurs,
 
-on prend son ratio qui est de 6, on récupere l'air de sa figure, et pour toutes les autres video qui auront une figure plus petite on divise merde
+
+le mec a 6 pour 7400 on récupere le ratio !
+
+donc on divise la tete grosse via la tete actuelle, on divise le ratio via ce nouveau ratio tete ce qui nous donne le ratio pour la nouvelle tete plus petite ! et on remplace tete par air ! ou air par w*h
 
 
 <br><br><br>
