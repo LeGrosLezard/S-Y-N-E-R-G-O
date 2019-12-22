@@ -10,9 +10,7 @@
 
 
 
-le mec a 6 pour 7400 on récupere le ratio !
-
-donc on divise l'air la plus frande via l'air actuelle, on divise le ratio via ce nouveau ratio air ce qui nous donne le ratio pour la nouvelle air plus petite !
+verifier blinking
 
 
 <br><br><br>
