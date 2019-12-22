@@ -6,6 +6,7 @@
 
 - faire la premiere demo de l'oeil et le design et c ok pour ojd (c pas niveau eye lazer encore mais bon)
 
+par contre dans la bataille y'a une ou deux images qui ont disparuent, faire uplaod et y mettre cv2
 
 <br><br><br>
 
