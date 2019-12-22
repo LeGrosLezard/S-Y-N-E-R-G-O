@@ -1,7 +1,5 @@
 # S-Y-N-E-R-G-O
 
-- réécrire blinking
-
 - sur la page, en gros premier page coool
 
 - deuxieme page on dit ce qu'on fait
