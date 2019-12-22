@@ -1,12 +1,17 @@
 # S-Y-N-E-R-G-O
 
-- finir de réécrire
+- réécrire blinking
 
-- faire l'upload
+- sur la page, en gros premier page coool
 
-- faire la premiere demo de l'oeil et le design et c ok pour ojd (c pas niveau eye lazer encore mais bon)
+- deuxieme page on dit ce qu'on fait
 
-par contre dans la bataille y'a une ou deux images qui ont disparuent, faire uplaod et y mettre cv2
+- et les pages suivantes c'est les news ! et la faudrait mettre blinking et eyes
+
+- et mettre des demo webcam
+
+
+
 
 <br><br><br>
 
