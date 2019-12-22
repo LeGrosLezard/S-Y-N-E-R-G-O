@@ -8,7 +8,9 @@
 
 - et mettre des demo webcam
 
+- avant d'oublier en gros pour la vidéo A on a un mec hyper pres de la cam plus pres tu meurs,
 
+on prend son ratio qui est de 6, on récupere l'air de sa figure, et pour toutes les autres video qui auront une figure plus petite on divise merde
 
 
 <br><br><br>
