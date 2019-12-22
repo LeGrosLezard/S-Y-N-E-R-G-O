@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf.urls import include
 
 #Media imports
 from django.conf import settings
@@ -25,8 +26,38 @@ from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.Garde),
-    path('transition', views.transition),
-    path('home', views.home),
-    path('upload', views.upload),
+    path(r'', views.Garde),
+    path(r'transition', views.transition),
+    path(r'home', views.home),
+    path(r'essais', views.essais),
+    path(r'download', include('download.urls')),
 ]+ static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
