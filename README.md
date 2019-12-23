@@ -10,7 +10,7 @@
 
 - mais sur le site on met que le vrai truk
 
-verifier blinking
+pcque on peut faire directement avec les pts mais est ce qu'on peut transformer en dist puis faire la formule ?
 
 
 <br><br><br>
