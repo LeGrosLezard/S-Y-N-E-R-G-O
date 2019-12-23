@@ -47,11 +47,13 @@ cap = cv2.VideoCapture("d.mp4")
 detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
 
+blinking = 0
+
 while True:
    
     _, frame = cap.read()
-
-    frame = cv2.resize(frame, (500, 400))
+    height, width = frame.shape[:2]
+    frame = cv2.resize(frame, (int(width/2), int(height/2)))
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
     #We analysed 4 videos with faces
@@ -68,11 +70,43 @@ while True:
         length_left = get_length_eye([43, 44, 46, 47], landmarks)
 
         length_mean = (length_right + length_left) / 2
-        if length_mean < head_eye_ratio * length_head:
+        if blinking > 5:
+            print("close or not good detection or ")
+
+        elif length_mean < head_eye_ratio * length_head:
             print("BLINK")
+            blinking += 1
+        else:
+            blinking = 0
+
+
+
+##
+##        eyes = (cv2.convexHull(np.array([(landmarks.part(n).x, landmarks.part(n).y)
+##                         for n in range(36, 42)])),
+##                cv2.convexHull(np.array([(landmarks.part(n).x, landmarks.part(n).y)
+##                         for n in range(42, 48)])))
+##
+##
+##        for i in eyes[0]:
+##            for j in i:
+##                cv2.circle(frame, (j[0], j[1]), 1, (0, 0, 255), 1)
+##
+##        for i in eyes[1]:
+##            for j in i:
+##                cv2.circle(frame, (j[0], j[1]), 1, (0, 0, 255), 1)
+
+
+ 
     else:
         print("no detection")
 
+
+
+
+
+
+ 
     cv2.imshow("Frame", frame)
 
 
