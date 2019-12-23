@@ -88,8 +88,16 @@ def profil_points_distance(frame, landmarks):
 def angle_head(frame, landmarks):
 
     right_tempe = landmarks.part(0).x, landmarks.part(0).y
-    center_nose = landmarks.part(33).x, landmarks.part(33).y
+    center_nose = landmarks.part(8).x, landmarks.part(8).y
     left_tempe = landmarks.part(16).x, landmarks.part(16).y
+
+##    cv2.line(frame, (right_tempe[0], right_tempe[1]), (center_nose[0], center_nose[1]), (0, 255, 0))
+##    cv2.line(frame, (center_nose[0], center_nose[1]), (left_tempe[0], left_tempe[1]), (0, 255, 0))
+##
+##    cv2.circle(frame, (right_tempe[0], right_tempe[1]), 3, (0, 0, 255), 1)
+##    cv2.circle(frame, (center_nose[0], center_nose[1]), 3, (0, 0, 255), 1)
+##    cv2.circle(frame, (left_tempe[0], left_tempe[1]), 3, (0, 0, 255), 1)
+    
 
     ac = hypot((center_nose[0] - right_tempe[0]), (center_nose[1] - right_tempe[1]))
     ab = hypot((center_nose[0] - left_tempe[0]), (center_nose[1] - left_tempe[1]))
@@ -102,30 +110,73 @@ def angle_head(frame, landmarks):
 
 
 
-    a = landmarks.part(33).x, landmarks.part(33).y
-    b = landmarks.part(0).x, landmarks.part(0).y
-    c = landmarks.part(16).x, landmarks.part(16).y
-
-
-    abb = (b[0] - a[0], b[1] - a[1])
-    ab = sqrt( ((abb[0]) ** 2) + ((abb[1]) ** 2))
-
-    acc = (c[0] - a[0], c[1] - a[1])
-    ac = sqrt( ((acc[0]) ** 2) + ((acc[1]) ** 2))
-
-    truk = (abb[0] * acc[0]) + (abb[1] * acc[1])
-
-
-    oo = ab*ac
-    ooo = (ab*ac)**2
-
-
-    o = degrees(acos((truk*oo)/ooo))
-    print(o)
 
 
 
-video = cv2.VideoCapture("a.mp4")
+
+
+
+    left_tempe = landmarks.part(16).x, landmarks.part(16).y
+    center_nose = landmarks.part(8).x, landmarks.part(8).y
+    entre_sourcile = landmarks.part(27).x, landmarks.part(27).y
+
+
+    ac = hypot((center_nose[0] - left_tempe[0]), (center_nose[1] - left_tempe[1]))
+    ab = hypot((center_nose[0] - entre_sourcile[0]), (center_nose[1] - entre_sourcile[1]))
+    bc = hypot((left_tempe[0] - entre_sourcile[0]), (left_tempe[1] - entre_sourcile[1]))
+
+    scalaire = 1/2 * ((ab**2 + ac**2) - (bc) ** 2)
+    angle = degrees(acos(scalaire / (ab * ac)))
+
+    print(angle)
+
+
+    cv2.line(frame, (left_tempe[0], left_tempe[1]), (center_nose[0], center_nose[1]), (0, 255, 0))
+    cv2.line(frame, (center_nose[0], center_nose[1]), (entre_sourcile[0], entre_sourcile[1]), (0, 255, 0))
+
+    cv2.circle(frame, (left_tempe[0], left_tempe[1]), 3, (0, 0, 255), 1)
+    cv2.circle(frame, (center_nose[0], center_nose[1]), 3, (0, 0, 255), 1)
+    cv2.circle(frame, (entre_sourcile[0], entre_sourcile[1]), 3, (0, 0, 255), 1)
+
+
+
+
+
+
+    right_tempe = landmarks.part(0).x, landmarks.part(0).y
+    center_nose = landmarks.part(8).x, landmarks.part(8).y
+    entre_sourcile = landmarks.part(27).x, landmarks.part(27).y
+
+
+    ac = hypot((center_nose[0] - right_tempe[0]), (center_nose[1] - right_tempe[1]))
+    ab = hypot((center_nose[0] - entre_sourcile[0]), (center_nose[1] - entre_sourcile[1]))
+    bc = hypot((right_tempe[0] - entre_sourcile[0]), (right_tempe[1] - entre_sourcile[1]))
+
+    scalaire = 1/2 * ((ab**2 + ac**2) - (bc) ** 2)
+    angle = degrees(acos(scalaire / (ab * ac)))
+
+    print(angle)
+
+
+    cv2.line(frame, (right_tempe[0], right_tempe[1]), (center_nose[0], center_nose[1]), (0, 255, 0))
+    cv2.line(frame, (center_nose[0], center_nose[1]), (entre_sourcile[0], entre_sourcile[1]), (0, 255, 0))
+
+    cv2.circle(frame, (right_tempe[0], right_tempe[1]), 3, (0, 0, 255), 1)
+    cv2.circle(frame, (center_nose[0], center_nose[1]), 3, (0, 0, 255), 1)
+    cv2.circle(frame, (entre_sourcile[0], entre_sourcile[1]), 3, (0, 0, 255), 1)
+
+
+
+    print("")
+
+
+
+
+
+
+
+
+video = cv2.VideoCapture(0)
 detector = get_frontal_face_detector()
 predictor = shape_predictor("shape_predictor_68_face_landmarks.dat")
 
@@ -134,22 +185,23 @@ while True:
 
     _, frame = video.read()
     frame, gray = resize_frame(frame)
+    try:
+        faces, landmarks = recuperate_landmarks(gray)
 
-    faces, landmarks = recuperate_landmarks(gray)
+        profil_points_distance(frame, landmarks)
+        
+        angle_head(frame, landmarks)
 
-    profil_points_distance(frame, landmarks)
-    
-    angle_head(frame, landmarks)
-
-    eyes = recuperate_eyes(landmarks)
-    right_coord =  rectangle_eye_area(frame, eyes[0])
-    left_coord =  rectangle_eye_area(frame, eyes[1])
-
+        eyes = recuperate_eyes(landmarks)
+        right_coord =  rectangle_eye_area(frame, eyes[0])
+        left_coord =  rectangle_eye_area(frame, eyes[1])
+    except:
+        pass
 
 
 
     cv2.imshow('frame', frame)
-    if cv2.waitKey(0) & 0xFF == ord('q'):
+    if cv2.waitKey(1) & 0xFF == ord('q'):
         break
     
 video.release()
