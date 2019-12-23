@@ -1,14 +1,14 @@
 # S-Y-N-E-R-G-O
 
-- sur la page, en gros premier page coool
+- mettre les trucks sur le site
 
-- deuxieme page on dit ce qu'on fait
+- (soit on peut faire video html avec cv2) soit toutes les 5 minutes enregisstrer et afficher avec la vidéo modifier
 
-- et les pages suivantes c'est les news ! et la faudrait mettre blinking et eyes
+- faire partie yeux
 
-- et mettre des demo webcam
+- en gros les pages la -> yeux, geste ect, clique dessus on montre les techniques + chaque truk
 
-
+- mais sur le site on met que le vrai truk
 
 verifier blinking
 
