@@ -1,7 +1,8 @@
 from dlib import get_frontal_face_detector, shape_predictor
 import cv2
 import numpy as np
-from math import hypot, cos, degrees, acos
+from math import hypot, cos, degrees, acos, sqrt
+
 
 
 def resize_frame(frame):
@@ -71,10 +72,8 @@ def profil_points_distance(frame, landmarks):
     left_face = landmarks.part(14).x, landmarks.part(14).y
 
     left_nose_face = distance(left_face[0], left_nose[0], left_face[1], left_nose[1])
-    #print(left_nose_face)
-
-
     cv2.line(frame, (left_nose[0], left_nose[1]), (left_face[0], left_face[1]), (0, 255, 0))
+    #print(left_nose_face)
 
 
 
@@ -82,7 +81,6 @@ def profil_points_distance(frame, landmarks):
     right_face = landmarks.part(2).x, landmarks.part(2).y
 
     right_nose_face = distance(right_nose[0], right_face[0], right_nose[1], right_face[1])
-
     cv2.line(frame, (right_nose[0], right_nose[1]), (right_face[0], right_face[1]), (0, 255, 0))
     #print(right_nose_face)
 
@@ -94,11 +92,8 @@ def angle_head(frame, landmarks):
     left_tempe = landmarks.part(16).x, landmarks.part(16).y
 
     ac = hypot((center_nose[0] - right_tempe[0]), (center_nose[1] - right_tempe[1]))
-
     ab = hypot((center_nose[0] - left_tempe[0]), (center_nose[1] - left_tempe[1]))
-
     bc = hypot((right_tempe[0] - left_tempe[0]), (right_tempe[1] - left_tempe[1]))
-
 
     scalaire = 1/2 * ((ab**2 + ac**2) - (bc) ** 2)
     angle = degrees(acos(scalaire / (ab * ac)))
@@ -107,8 +102,26 @@ def angle_head(frame, landmarks):
 
 
 
+    a = landmarks.part(33).x, landmarks.part(33).y
+    b = landmarks.part(0).x, landmarks.part(0).y
+    c = landmarks.part(16).x, landmarks.part(16).y
 
 
+    abb = (b[0] - a[0], b[1] - a[1])
+    ab = sqrt( ((abb[0]) ** 2) + ((abb[1]) ** 2))
+
+    acc = (c[0] - a[0], c[1] - a[1])
+    ac = sqrt( ((acc[0]) ** 2) + ((acc[1]) ** 2))
+
+    truk = (abb[0] * acc[0]) + (abb[1] * acc[1])
+
+
+    oo = ab*ac
+    ooo = (ab*ac)**2
+
+
+    o = degrees(acos((truk*oo)/ooo))
+    print(o)
 
 
 
@@ -126,7 +139,7 @@ while True:
 
     profil_points_distance(frame, landmarks)
     
-
+    angle_head(frame, landmarks)
 
     eyes = recuperate_eyes(landmarks)
     right_coord =  rectangle_eye_area(frame, eyes[0])
