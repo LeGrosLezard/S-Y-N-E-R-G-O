@@ -3,14 +3,17 @@ import cv2
 import numpy as np
 from math import hypot, cos, degrees, acos, sqrt
 
-
+from numpy import min as np_min
+from numpy import max as np_max
+from math import sin, acos
+from scipy.spatial import distance as dist
 
 def resize_frame(frame):
     """Resize frame for a ' good accuracy ' and speed """
  
     height, width = frame.shape[:2]
     nb = 2
-    frame = cv2.resize(frame, (int(width / nb), int(height / nb)))
+    #frame = cv2.resize(frame, (int(width / nb), int(height / nb)))
     gray = cv2.cvtColor(frame,cv2.COLOR_RGB2GRAY)
 
     return frame, gray
@@ -50,10 +53,10 @@ def rectangle_eye_area(frame, eye):
     coord = cv2.boundingRect(eye)
 
 
-    cv2.rectangle(frame, (coord[0], coord[1]),
-                  (coord[0] + coord[2],
-                   coord[1] + coord[3]),
-                  (0, 0, 255), 1)
+##    cv2.rectangle(frame, (coord[0], coord[1]),
+##                  (coord[0] + coord[2],
+##                   coord[1] + coord[3]),
+##                  (0, 0, 255), 1)
 
 
     return coord
@@ -72,7 +75,7 @@ def profil_points_distance(frame, landmarks):
     left_face = landmarks.part(14).x, landmarks.part(14).y
 
     left_nose_face = distance(left_face[0], left_nose[0], left_face[1], left_nose[1])
-    cv2.line(frame, (left_nose[0], left_nose[1]), (left_face[0], left_face[1]), (0, 255, 0))
+    #cv2.line(frame, (left_nose[0], left_nose[1]), (left_face[0], left_face[1]), (0, 255, 0))
     #print(left_nose_face)
 
 
@@ -81,100 +84,109 @@ def profil_points_distance(frame, landmarks):
     right_face = landmarks.part(2).x, landmarks.part(2).y
 
     right_nose_face = distance(right_nose[0], right_face[0], right_nose[1], right_face[1])
-    cv2.line(frame, (right_nose[0], right_nose[1]), (right_face[0], right_face[1]), (0, 255, 0))
+    #cv2.line(frame, (right_nose[0], right_nose[1]), (right_face[0], right_face[1]), (0, 255, 0))
     #print(right_nose_face)
 
 
-def angle_head(frame, landmarks):
+def leaning_head(frame, landmarks):
 
-    right_tempe = landmarks.part(0).x, landmarks.part(0).y
-    center_nose = landmarks.part(8).x, landmarks.part(8).y
-    left_tempe = landmarks.part(16).x, landmarks.part(16).y
+    #Recuperate landmarks.
+    right_eye = landmarks.part(36).x, landmarks.part(36).y
+    left_eye = landmarks.part(45).x, landmarks.part(45).y
+    nose = landmarks.part(30).x, landmarks.part(30).y
 
-##    cv2.line(frame, (right_tempe[0], right_tempe[1]), (center_nose[0], center_nose[1]), (0, 255, 0))
-##    cv2.line(frame, (center_nose[0], center_nose[1]), (left_tempe[0], left_tempe[1]), (0, 255, 0))
-##
-##    cv2.circle(frame, (right_tempe[0], right_tempe[1]), 3, (0, 0, 255), 1)
-##    cv2.circle(frame, (center_nose[0], center_nose[1]), 3, (0, 0, 255), 1)
-##    cv2.circle(frame, (left_tempe[0], left_tempe[1]), 3, (0, 0, 255), 1)
+    d1 = dist.euclidean(right_eye, nose) 
+    d2 = dist.euclidean(left_eye, nose) 
+
+    coeff = d1 + d2
+
+    angle = int(250*(right_eye[1]-left_eye[1])/coeff)
+
+    if angle < -0.05 * coeff:
+        print("penche gauche")
+    elif angle > 0.225 * coeff:
+        print("penche droite")
+        
+
+def look_right_left(landmarks):
+
+    right_eye = landmarks.part(36).x, landmarks.part(36).y
+    left_eye = landmarks.part(45).x, landmarks.part(45).y
+    nose = landmarks.part(30).x, landmarks.part(30).y
+
+    right_eye_nose = dist.euclidean(right_eye, nose) 
+    left_eye_nose = dist.euclidean(left_eye, nose)
+
+    coeff = right_eye_nose + left_eye_nose
+
+    a1 = int(250*(right_eye_nose-left_eye_nose)/coeff)
+
+    if right_eye_nose + left_eye_nose > 95:
+
+        if a1 < -0.50 * (right_eye_nose + left_eye_nose):
+            print("tourne a droite")
+
+        elif a1 < -0.30 * (right_eye_nose + left_eye_nose):
+            print("tourne legerement a droite")
+
+
+        elif a1 > 0.50 * (right_eye_nose + left_eye_nose):
+            print("tourne a gauche")
+
+        elif a1 > 0.30 * (right_eye_nose + left_eye_nose):
+            print("tourne legerement a gauche")
+
+
+
+    else:
+        if a1 < -0.55 * (right_eye_nose + left_eye_nose):
+            print("tourne a droite")
+
+        elif a1 < -0.43 * (right_eye_nose + left_eye_nose):
+            print("tourne legerement a droite")
+
+
+        elif a1 > 0.55 * (right_eye_nose + left_eye_nose):
+            print("tourne a gauche")
+
+        elif a1 > 0.43 * (right_eye_nose + left_eye_nose):
+            print("tourne legerement a gauche")
+
     
 
-    ac = hypot((center_nose[0] - right_tempe[0]), (center_nose[1] - right_tempe[1]))
-    ab = hypot((center_nose[0] - left_tempe[0]), (center_nose[1] - left_tempe[1]))
-    bc = hypot((right_tempe[0] - left_tempe[0]), (right_tempe[1] - left_tempe[1]))
 
-    scalaire = 1/2 * ((ab**2 + ac**2) - (bc) ** 2)
-    angle = degrees(acos(scalaire / (ab * ac)))
+def look_top_bot(landmarks):
+    a = landmarks.part(36).x, landmarks.part(36).y
+    b = landmarks.part(45).x, landmarks.part(45).y
+    c = landmarks.part(30).x, landmarks.part(30).y
 
-    print(angle)
+    #Recuperate distances.
+    d_eyes = dist.euclidean(a, b) 
+    d1 = dist.euclidean(a, c) 
+    d2 = dist.euclidean(b, c) 
 
+    coeff = d1 + d2
 
+    cosb = np_min( (pow(d2, 2) - pow(d1, 2) + pow(d_eyes, 2) ) / (2*d2*d_eyes) )
+    a2 = int(250*(d2*sin(acos(cosb))-coeff/4)/coeff)
 
-
-
-
-
-
-
-    left_tempe = landmarks.part(16).x, landmarks.part(16).y
-    center_nose = landmarks.part(8).x, landmarks.part(8).y
-    entre_sourcile = landmarks.part(27).x, landmarks.part(27).y
+    print(coeff)
+    print(a2)
 
 
-    ac = hypot((center_nose[0] - left_tempe[0]), (center_nose[1] - left_tempe[1]))
-    ab = hypot((center_nose[0] - entre_sourcile[0]), (center_nose[1] - entre_sourcile[1]))
-    bc = hypot((left_tempe[0] - entre_sourcile[0]), (left_tempe[1] - entre_sourcile[1]))
+    if a2 > 0.30 * coeff:
+        print("baisse tete")
 
-    scalaire = 1/2 * ((ab**2 + ac**2) - (bc) ** 2)
-    angle = degrees(acos(scalaire / (ab * ac)))
-
-    print(angle)
+    if a2 > 0.165 * coeff:
+        print("un peu bas")
 
 
-    cv2.line(frame, (left_tempe[0], left_tempe[1]), (center_nose[0], center_nose[1]), (0, 255, 0))
-    cv2.line(frame, (center_nose[0], center_nose[1]), (entre_sourcile[0], entre_sourcile[1]), (0, 255, 0))
+    if a2 < 0.016*coeff:
+        print("un peu haut")
 
-    cv2.circle(frame, (left_tempe[0], left_tempe[1]), 3, (0, 0, 255), 1)
-    cv2.circle(frame, (center_nose[0], center_nose[1]), 3, (0, 0, 255), 1)
-    cv2.circle(frame, (entre_sourcile[0], entre_sourcile[1]), 3, (0, 0, 255), 1)
-
-
-
-
-
-
-    right_tempe = landmarks.part(0).x, landmarks.part(0).y
-    center_nose = landmarks.part(8).x, landmarks.part(8).y
-    entre_sourcile = landmarks.part(27).x, landmarks.part(27).y
-
-
-    ac = hypot((center_nose[0] - right_tempe[0]), (center_nose[1] - right_tempe[1]))
-    ab = hypot((center_nose[0] - entre_sourcile[0]), (center_nose[1] - entre_sourcile[1]))
-    bc = hypot((right_tempe[0] - entre_sourcile[0]), (right_tempe[1] - entre_sourcile[1]))
-
-    scalaire = 1/2 * ((ab**2 + ac**2) - (bc) ** 2)
-    angle = degrees(acos(scalaire / (ab * ac)))
-
-    print(angle)
-
-
-    cv2.line(frame, (right_tempe[0], right_tempe[1]), (center_nose[0], center_nose[1]), (0, 255, 0))
-    cv2.line(frame, (center_nose[0], center_nose[1]), (entre_sourcile[0], entre_sourcile[1]), (0, 255, 0))
-
-    cv2.circle(frame, (right_tempe[0], right_tempe[1]), 3, (0, 0, 255), 1)
-    cv2.circle(frame, (center_nose[0], center_nose[1]), 3, (0, 0, 255), 1)
-    cv2.circle(frame, (entre_sourcile[0], entre_sourcile[1]), 3, (0, 0, 255), 1)
-
-
-
-    print("")
-
-
-
-
-
-
-
+    if a2 < -0.1*coeff:
+        print("tres haut")
+    
 
 video = cv2.VideoCapture(0)
 detector = get_frontal_face_detector()
@@ -190,18 +202,20 @@ while True:
 
         profil_points_distance(frame, landmarks)
         
-        angle_head(frame, landmarks)
+        #leaning_head(frame, landmarks)
+        #look_right_left(landmarks)
+        look_top_bot(landmarks)
+
 
         eyes = recuperate_eyes(landmarks)
         right_coord =  rectangle_eye_area(frame, eyes[0])
         left_coord =  rectangle_eye_area(frame, eyes[1])
-    except:
-        pass
 
-
+    except:pass
+    
 
     cv2.imshow('frame', frame)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+    if cv2.waitKey(0) & 0xFF == ord('q'):
         break
     
 video.release()
