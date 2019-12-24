@@ -23,7 +23,6 @@ def resize_frame(frame):
     return frame, gray
 
 
-
 def recuperate_landmarks(gray):
     """Recuperate landmarks from dlib"""
 
@@ -38,43 +37,47 @@ def recuperate_landmarks(gray):
 
 
 
-def leaning_head(right_eye, left_eye, nose)):
+def leaning_head(right_eye, left_eye, nose):
     """Calculus euclidian distance beetween eyes and nose,
     we calculus y coordiantes"""
-    
 
     coeff = dist.euclidean(right_eye, nose) + dist.euclidean(left_eye, nose) 
     angle = int(250*(right_eye[1]-left_eye[1])/coeff)
 
     if angle < -0.05 * coeff:print("penche gauche")
     elif angle > 0.225 * coeff:print("penche droite")
-        
 
-def look_right_left(right_eye, left_eye, nose)):
+
+def look_right_left(right_eye, left_eye, nose):
     """Calculus difference beetween left right distance"""
 
-    coeff = dist.euclidean(right_eye, nose)  + dist.euclidean(left_eye, nose)
 
-    look_to = int(250*(right_eye_nose-left_eye_nose)/coeff)
+    d1 = dist.euclidean(right_eye, nose) 
+    d2 = dist.euclidean(left_eye, nose)
+    coeff = d1 + d2
+
+    look_to = int(250*(d1-d2)/coeff)
 
     if coeff > 95:
-
-        if look_to < -0.50 * (right_eye_nose + left_eye_nose):print("tourne a droite")
-        elif look_to < -0.30 * (right_eye_nose + left_eye_nose):print("tourne legerement a droite")
-        elif look_to > 0.50 * (right_eye_nose + left_eye_nose):print("tourne a gauche")
-        elif look_to > 0.30 * (right_eye_nose + left_eye_nose): print("tourne legerement a gauche")
+        if look_to < -0.50 * coeff:print("tourne a droite")
+        elif look_to < -0.30 * coeff:print("tourne legerement a droite")
+        elif look_to > 0.50 * coeff:print("tourne a gauche")
+        elif look_to > 0.30 * coeff: print("tourne legerement a gauche")
     else:
-        if look_to < -0.55 * (right_eye_nose + left_eye_nose):print("tourne a droite")
-        elif look_to < -0.43 * (right_eye_nose + left_eye_nose):print("tourne legerement a droite")
-        elif look_to > 0.55 * (right_eye_nose + left_eye_nose):print("tourne a gauche")
-        elif look_to > 0.43 * (right_eye_nose + left_eye_nose):print("tourne legerement a gauche")
+        if look_to < -0.55 * coeff:print("tourne a droite")
+        elif look_to < -0.43 * coeff:print("tourne legerement a droite")
+        elif look_to > 0.55 * coeff:print("tourne a gauche")
+        elif look_to > 0.43 * coeff:print("tourne legerement a gauche")
 
 
 def look_top_bot(right_eye, left_eye, nose):
     """Calculus distance beetween nose and eyes line"""
 
-    d_eyes = dist.euclidean(right_eye, left_eye) 
-    coeff = dist.euclidean(right_eye, nose) + dist.euclidean(left_eye, nose) 
+    d_eyes = dist.euclidean(right_eye, left_eye)
+
+    d1 = dist.euclidean(right_eye, nose) 
+    d2 = dist.euclidean(left_eye, nose)
+    coeff = d1 + d2 
 
     cosb = np_min( (pow(d2, 2) - pow(d1, 2) + pow(d_eyes, 2) ) / (2*d2*d_eyes) )
     look_to = int(250*(d2*sin(acos(cosb))-coeff/4)/coeff)
@@ -87,7 +90,7 @@ def look_top_bot(right_eye, left_eye, nose):
     
 
 
-video = cv2.VideoCapture(0)
+video = cv2.VideoCapture("c.mp4")
 detector = get_frontal_face_detector()
 predictor = shape_predictor("shape_predictor_68_face_landmarks.dat")
 
