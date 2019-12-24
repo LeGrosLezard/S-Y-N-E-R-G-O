@@ -17,7 +17,7 @@ def resize_frame(frame):
  
     height, width = frame.shape[:2]
     nb = 2
-    #frame = cv2.resize(frame, (int(width / nb), int(height / nb)))
+    frame = cv2.resize(frame, (int(width / nb), int(height / nb)))
     gray = cv2.cvtColor(frame,cv2.COLOR_RGB2GRAY)
 
     return frame, gray
