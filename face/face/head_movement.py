@@ -70,31 +70,63 @@ def look_right_left(right_eye, left_eye, nose):
         elif look_to > 0.43 * coeff:print("tourne legerement a gauche")
 
 
-def look_top_bot(right_eye, left_eye, nose):
+
+
+
+
+def recuperate_intra_face_points(landmarks, faces, img):
+    """Recuperate all coordiantes of landmarks (faces points).
+    Recuperate convex points (exterior of face) and triangle
+    points (area of the interior of the face)."""
+
+    #points of face
+    points = [(landmarks.part(n).x, landmarks.part(n).y) for n in range(0, 68)]
+
+    #Convex points (contour of face)
+    convexhull = cv2.convexHull(np.array(points))
+
+    #Head points
+    head = cv2.boundingRect(convexhull)
+
+    return head
+
+
+
+def look_top_bot(landmarks, frame, head_position, head):
     """Calculus distance beetween nose and eyes line"""
 
-    d_eyes = dist.euclidean(right_eye, left_eye)
 
-    d1 = dist.euclidean(right_eye, nose) 
-    d2 = dist.euclidean(left_eye, nose)
-    coeff = d1 + d2 
+    eyes = (cv2.convexHull(np.array([(landmarks.part(n).x, landmarks.part(n).y)
+                    for n in range(36, 42)])),
+            cv2.convexHull(np.array([(landmarks.part(n).x, landmarks.part(n).y)
+                    for n in range(42, 48)])))
 
-    cosb = np_min( (pow(d2, 2) - pow(d1, 2) + pow(d_eyes, 2) ) / (2*d2*d_eyes) )
-    look_to = int(250*(d2*sin(acos(cosb))-coeff/4)/coeff)
+    _, y, _, _ = cv2.boundingRect(eyes[0])
+    _, y1, _, _ = cv2.boundingRect(eyes[1])
 
-    if look_to > 0.30 * coeff:print("baisse tete")
-    elif look_to > 0.165 * coeff:print("un peu bas")
-    elif look_to < -0.1 * coeff: print("tres haut")
-    elif look_to < 0.016 * coeff: print("un peu haut")
 
-    
+    #print(head)
+
+
+
+
+    print((y + y1)/2)
+
+    head_position.append((y + y1)/2)
+    print(np.mean(head_position))
+
+
+
+
+
+
 
 
 video = cv2.VideoCapture("c.mp4")
 detector = get_frontal_face_detector()
 predictor = shape_predictor("shape_predictor_68_face_landmarks.dat")
 
-
+head_position = []
 while True:
 
     _, frame = video.read()
@@ -104,13 +136,17 @@ while True:
 
     if landmarks is not None:
 
+
         right_eye = landmarks.part(36).x, landmarks.part(36).y
         left_eye = landmarks.part(45).x, landmarks.part(45).y
         nose = landmarks.part(30).x, landmarks.part(30).y
 
         leaning_head(right_eye, left_eye, nose)
         look_right_left(right_eye, left_eye, nose)
-        look_top_bot(right_eye, left_eye, nose)
+
+
+        head = recuperate_intra_face_points(landmarks, faces, frame)
+        look_top_bot(landmarks, frame, head_position, head)
 
 
     
