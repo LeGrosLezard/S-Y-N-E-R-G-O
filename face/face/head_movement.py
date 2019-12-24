@@ -60,14 +60,10 @@ def look_right_left(right_eye, left_eye, nose):
 
     if coeff > 95:
         if look_to < -0.50 * coeff:print("tourne a droite")
-        elif look_to < -0.30 * coeff:print("tourne legerement a droite")
         elif look_to > 0.50 * coeff:print("tourne a gauche")
-        elif look_to > 0.30 * coeff: print("tourne legerement a gauche")
     else:
         if look_to < -0.55 * coeff:print("tourne a droite")
-        elif look_to < -0.43 * coeff:print("tourne legerement a droite")
         elif look_to > 0.55 * coeff:print("tourne a gauche")
-        elif look_to > 0.43 * coeff:print("tourne legerement a gauche")
 
 
 
@@ -105,17 +101,28 @@ def look_top_bot(landmarks, frame, head_position, head):
     _, y1, _, _ = cv2.boundingRect(eyes[1])
 
 
-    #print(head)
-
-
-
-
+    print(head[3])
     print((y + y1)/2)
+    
+    out = False
+
+
+    if len(head_position) > 0:
+        print(np.mean(head_position))
+        if (y + y1)/2 > np.mean(head_position) + 10:
+            print("baisse")
+            out =  True
+        elif (y + y1)/2 < np.mean(head_position) - 10:
+            print("monte")
+            out = True
+
+
 
     head_position.append((y + y1)/2)
-    print(np.mean(head_position))
 
 
+
+    return out
 
 
 
@@ -146,8 +153,9 @@ while True:
 
 
         head = recuperate_intra_face_points(landmarks, faces, frame)
-        look_top_bot(landmarks, frame, head_position, head)
-
+        delete = look_top_bot(landmarks, frame, head_position, head)
+        if delete is True:
+            head_position = []
 
     
 
