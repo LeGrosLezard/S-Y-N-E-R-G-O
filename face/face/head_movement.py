@@ -16,6 +16,7 @@ def resize_frame(frame):
     """Resize frame for a ' good accuracy ' and speed """
  
     height, width = frame.shape[:2]
+    nb = 1.5
     nb = 2
     frame = cv2.resize(frame, (int(width / nb), int(height / nb)))
     gray = cv2.cvtColor(frame,cv2.COLOR_RGB2GRAY)
@@ -37,15 +38,15 @@ def recuperate_landmarks(gray):
 
 
 
-def leaning_head(right_eye, left_eye, nose):
+def leaning_head(right_eye, left_eye, nose, head):
     """Calculus euclidian distance beetween eyes and nose,
     we calculus y coordiantes"""
 
     coeff = dist.euclidean(right_eye, nose) + dist.euclidean(left_eye, nose) 
     angle = int(250*(right_eye[1]-left_eye[1])/coeff)
-
-    if angle < -0.05 * coeff:print("penche gauche")
-    elif angle > 0.225 * coeff:print("penche droite")
+    print("if nb_frame > 10 le mec penche plus")
+    if angle < int(-0.16 * head[2]):print("penche gauche")
+    elif angle > int(0.16 * head[2]):print("penche droite")
 
 
 def look_right_left(right_eye, left_eye, nose):
@@ -129,7 +130,7 @@ def look_top_bot(landmarks, frame, head_position, head):
 
 
 
-video = cv2.VideoCapture("c.mp4")
+video = cv2.VideoCapture("a.mp4")
 detector = get_frontal_face_detector()
 predictor = shape_predictor("shape_predictor_68_face_landmarks.dat")
 
@@ -148,14 +149,16 @@ while True:
         left_eye = landmarks.part(45).x, landmarks.part(45).y
         nose = landmarks.part(30).x, landmarks.part(30).y
 
-        leaning_head(right_eye, left_eye, nose)
+        head = recuperate_intra_face_points(landmarks, faces, frame)
+
+        leaning_head(right_eye, left_eye, nose, head)
         look_right_left(right_eye, left_eye, nose)
 
 
-        head = recuperate_intra_face_points(landmarks, faces, frame)
-        delete = look_top_bot(landmarks, frame, head_position, head)
-        if delete is True:
-            head_position = []
+
+        #delete = look_top_bot(landmarks, frame, head_position, head)
+##        if delete is True:
+##            head_position = []
 
     
 
