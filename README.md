@@ -1,5 +1,7 @@
 # S-Y-N-E-R-G-O
 
+quand on regarde en bas on ferme les yeux mais on a une detection, mais des fois des mecs ne ferment pas completement les yeux en fermant les yeux
+
 - mettre les trucks sur le site
 
 - (soit on peut faire video html avec cv2) soit toutes les 5 minutes enregisstrer et afficher avec la vidéo modifier
