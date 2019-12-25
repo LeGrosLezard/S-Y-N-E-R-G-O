@@ -87,44 +87,32 @@ def superpose_contour_eye_rectangle(mask_eyes_gray, crop):
 def find_center_pupille(crop, mask_eyes_img):
     """Find contours. Don't recuperate rectangle contour,
     find centers."""
-    cv2.imshow("crop", crop)
-    cv2.imshow("mask_eyes_img", mask_eyes_img)
 
     out = None, None
 
-    rows, cols = crop.shape
-    gray_roi = crop
-    gray_roi = cv2.GaussianBlur(gray_roi, (9, 9), 0)
-
-
-    #_, threshold = cv2.threshold(gray_roi, 140, 255, cv2.THRESH_BINARY_INV)
-
+    gaussian = cv2.GaussianBlur(crop, (9, 9), 0)
 
     for thresh in range(0, 200, 5):
-        _, threshold = cv2.threshold(gray_roi, thresh, 255, cv2.THRESH_BINARY_INV)
-
+        _, threshold = cv2.threshold(gaussian, thresh, 255, cv2.THRESH_BINARY_INV)
         contours, _ = cv2.findContours(threshold, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
-        print(len(contours))
         if len(contours) > 1:
             break
 
-    _, threshold = cv2.threshold(gray_roi, thresh - 5, 255, cv2.THRESH_BINARY_INV)
-    cv2.imshow("threshold", threshold)
+    _, threshold = cv2.threshold(gaussian, thresh - 10, 255, cv2.THRESH_BINARY_INV)
+    kernel = np.ones((3,3), np.uint8)
+    img_erosion = cv2.erode(threshold, kernel, iterations=1) 
 
-    height, width = mask_eyes_img.shape[:2]
-
-    contours, hierarchy = cv2.findContours(threshold, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    contours = cv2.findContours(img_erosion, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)[0]
     contours = sorted(contours, key=lambda x: cv2.contourArea(x), reverse=True)
 
-    a = cv2.moments(contours[0])['m00']
+    if len(contours) > 0:
 
-    if a > 0:
+        a = cv2.moments(contours[0])['m00']
+        pupille_center = [(int(cv2.moments(contours[0])['m10']/a),
+                          int(cv2.moments(contours[0])['m01']/a)) for cnt in contours if a > 0]
 
-        pupille_center = (int(cv2.moments(contours[0])['m10']/a),
-                          int(cv2.moments(contours[0])['m01']/a))
-
-        if len(pupille_center) > 0:
-            x_center, y_center = pupille_center[0], pupille_center[1]
+        if pupille_center != []:
+            x_center, y_center = pupille_center[0][0], pupille_center[0][1]
             cv2.circle(mask_eyes_img, (x_center, y_center), 4, (0, 0, 255), 1)
             out = x_center, y_center
 
