@@ -37,7 +37,6 @@ def recuperate_eyes(landmarks):
     return eyes
 
 
-
 #===================================================== Get eye
 def rectangle_eye_area(img, eye, gray):
     """Recuperate contour of eyes in a box, make an egalizer,
@@ -66,17 +65,19 @@ def eye_contour_masking(img, eye, gray):
     mask = cv2.bitwise_not(black_frame, gray.copy(), mask=mask)
 
     x, y, w, h = cv2.boundingRect(eye)
-    cropMask = gray[y-nb : (y+h)+nb, x-nb : (x+w)+nb]
+    cropMask = mask[y-nb : (y+h)+nb, x-nb : (x+w)+nb]
     cropImg = img[y-nb : (y+h)+nb, x-nb : (x+w)+nb]
 
     return cropMask, cropImg
 
 
 def superpose_contour_eye_rectangle(mask_eyes_gray, crop):
+
     for i in range(mask_eyes_gray.shape[0]):
         for j in range(mask_eyes_gray.shape[1]):
-            if mask_eyes_gray[i, j] == 255:
+            if mask_eyes_gray[i, j] > 200:
                 crop[i, j] = 255
+
     return crop
 
 
@@ -86,16 +87,19 @@ def superpose_contour_eye_rectangle(mask_eyes_gray, crop):
 def find_center_pupille(crop, mask_eyes_img):
     """Find contours. Don't recuperate rectangle contour,
     find centers."""
+    cv2.imshow("crop", crop)
+    cv2.imshow("mask_eyes_img", mask_eyes_img)
 
     out = None, None
-    percent_contour = 0.80
+
+
     height, width = mask_eyes_img.shape[:2]
 
     contours, hierarchy = cv2.findContours(crop, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 
     pupille_center = [(int(cv2.moments(cnt)['m10']/cv2.moments(cnt)['m00']),
                        int(cv2.moments(cnt)['m01']/cv2.moments(cnt)['m00']))
-                      for cnt in contours if cv2.contourArea(cnt) < (percent_contour * (width * height))]
+                      for cnt in contours]
 
     if len(pupille_center) > 0:
         x_center, y_center = pupille_center[0][0], pupille_center[0][1]
