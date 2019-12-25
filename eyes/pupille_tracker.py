@@ -94,38 +94,39 @@ def find_center_pupille(crop, mask_eyes_img):
 
     rows, cols = crop.shape
     gray_roi = crop
-    gray_roi = cv2.GaussianBlur(gray_roi, (7, 7), 0)
+    gray_roi = cv2.GaussianBlur(gray_roi, (9, 9), 0)
 
 
-    _, threshold = cv2.threshold(gray_roi, 150, 255, cv2.THRESH_BINARY_INV)
-    contours, _ = cv2.findContours(threshold, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    contours = sorted(contours, key=lambda x: cv2.contourArea(x), reverse=True)
-    for cnt in contours:
-        (x, y, w, h) = cv2.boundingRect(cnt)
-        #cv2.drawContours(roi, [cnt], -1, (0, 0, 255), 3)
-        cv2.rectangle(mask_eyes_img, (x, y), (x + w, y + h), (255, 0, 0), 2)
-        cv2.line(mask_eyes_img, (x + int(w/2), 0), (x + int(w/2), rows), (0, 255, 0), 2)
-        cv2.line(mask_eyes_img, (0, y + int(h/2)), (cols, y + int(h/2)), (0, 255, 0), 2)
-        break
+    #_, threshold = cv2.threshold(gray_roi, 140, 255, cv2.THRESH_BINARY_INV)
 
 
+    for thresh in range(0, 200, 5):
+        _, threshold = cv2.threshold(gray_roi, thresh, 255, cv2.THRESH_BINARY_INV)
 
-    cv2.imshow("Threshold", threshold)
-    cv2.imshow("gray roi", gray_roi)
+        contours, _ = cv2.findContours(threshold, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+        print(len(contours))
+        if len(contours) > 1:
+            break
 
-    cv2.imshow("mask_eyes_img", mask_eyes_img)
+    _, threshold = cv2.threshold(gray_roi, thresh - 5, 255, cv2.THRESH_BINARY_INV)
+    cv2.imshow("threshold", threshold)
+
     height, width = mask_eyes_img.shape[:2]
 
-    contours, hierarchy = cv2.findContours(crop, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    contours, hierarchy = cv2.findContours(threshold, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    contours = sorted(contours, key=lambda x: cv2.contourArea(x), reverse=True)
 
-    pupille_center = [(int(cv2.moments(cnt)['m10']/cv2.moments(cnt)['m00']),
-                       int(cv2.moments(cnt)['m01']/cv2.moments(cnt)['m00']))
-                      for cnt in contours]
+    a = cv2.moments(contours[0])['m00']
 
-    if len(pupille_center) > 0:
-        x_center, y_center = pupille_center[0][0], pupille_center[0][1]
-        cv2.circle(mask_eyes_img, (x_center, y_center), 4, (0, 0, 255), 1)
-        out = x_center, y_center
+    if a > 0:
+
+        pupille_center = (int(cv2.moments(contours[0])['m10']/a),
+                          int(cv2.moments(contours[0])['m01']/a))
+
+        if len(pupille_center) > 0:
+            x_center, y_center = pupille_center[0], pupille_center[1]
+            cv2.circle(mask_eyes_img, (x_center, y_center), 4, (0, 0, 255), 1)
+            out = x_center, y_center
 
 
     return out
