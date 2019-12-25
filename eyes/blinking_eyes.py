@@ -1,8 +1,8 @@
 import cv2
-import numpy as np
-import dlib
+
+#hypot = sqrt((x2-x1)**2 + (y2-y1)**2)
 from math import hypot
-import time
+
 
 
 def get_length_face(face):
@@ -11,9 +11,9 @@ def get_length_face(face):
     return hypot( (0), ((y+h) - y))
 
 
-def midpoint(p1 ,p2):
+def midpoint(point1 ,point2):
     """Mid points beetween the 2 tops points."""
-    return int((p1.x + p2.x)/2), int((p1.y + p2.y)/2)
+    return int((point1.x + point2.x)/2), int((point1.y + point2.y)/2)
 
 
 def get_length_eye(eye_points, landmarks):
@@ -32,20 +32,11 @@ def get_length_eye(eye_points, landmarks):
 
 
 
-def points_landmarks(gray, predictor, detector):
-    """ Return the 68 points of the face and the face"""
-    out = None, None
-    face = detector(gray)
-    if len(face) > 0:
-        landmarks = predictor(gray, face[0])
-        out = landmarks, face
-    return out
 
-
-blinking_frame = 0
+BLINKING_FRAME = 0
 def blinking_eyes(landmarks, face):
 
-    global blinking_frame
+    global BLINKING_FRAME
 
     result = ""
     head_eye_ratio = 0.035
@@ -55,20 +46,21 @@ def blinking_eyes(landmarks, face):
     right_eyes_points = [37, 38, 40, 41]
     left_eyes_points = [43, 44, 46, 47]
 
+
+
     length_right = get_length_eye(right_eyes_points, landmarks)
     length_left = get_length_eye(left_eyes_points, landmarks)
     length_mean = (length_right + length_left) / 2
 
-
-    if blinking_frame > 10:
+    if BLINKING_FRAME > 10:
         result += "close or not good detection or chinese"
 
     elif length_mean < head_eye_ratio * length_head:
         result += "BLINK"
-        blinking_frame += 1
+        BLINKING_FRAME += 1
 
     if length_mean > head_eye_ratio * length_head:
-        blinking_frame = 0
+        BLINKING_FRAME = 0
 
 
-    return blinking_frame, result
+    return BLINKING_FRAME, result
