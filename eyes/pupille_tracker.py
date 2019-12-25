@@ -92,7 +92,28 @@ def find_center_pupille(crop, mask_eyes_img):
 
     out = None, None
 
+    rows, cols = crop.shape
+    gray_roi = crop
+    gray_roi = cv2.GaussianBlur(gray_roi, (7, 7), 0)
 
+
+    _, threshold = cv2.threshold(gray_roi, 150, 255, cv2.THRESH_BINARY_INV)
+    contours, _ = cv2.findContours(threshold, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    contours = sorted(contours, key=lambda x: cv2.contourArea(x), reverse=True)
+    for cnt in contours:
+        (x, y, w, h) = cv2.boundingRect(cnt)
+        #cv2.drawContours(roi, [cnt], -1, (0, 0, 255), 3)
+        cv2.rectangle(mask_eyes_img, (x, y), (x + w, y + h), (255, 0, 0), 2)
+        cv2.line(mask_eyes_img, (x + int(w/2), 0), (x + int(w/2), rows), (0, 255, 0), 2)
+        cv2.line(mask_eyes_img, (0, y + int(h/2)), (cols, y + int(h/2)), (0, 255, 0), 2)
+        break
+
+
+
+    cv2.imshow("Threshold", threshold)
+    cv2.imshow("gray roi", gray_roi)
+
+    cv2.imshow("mask_eyes_img", mask_eyes_img)
     height, width = mask_eyes_img.shape[:2]
 
     contours, hierarchy = cv2.findContours(crop, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
