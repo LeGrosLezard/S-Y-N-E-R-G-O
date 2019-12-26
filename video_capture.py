@@ -1,16 +1,20 @@
 import cv2
 import numpy as np
-import dlib
 from dlib import get_frontal_face_detector, shape_predictor
 
 
-from paths import dlib_model
+from paths import dlib_model, emotion_model
 
 #Treat video for have 90 px width head.
 from video_treatment import resize_frame
 
 #Load DLIB model and Recuperate Landmarks and head.
 from head_points import load_model_dlib, head_points
+from head_emotion import load_model_emotion
+
+
+
+from head_movement import head_movement
 
 #Blink part
 from blinking_eyes import blinking_eyes
@@ -20,17 +24,18 @@ from analysis_eyes import blink_analysis
 #Pupil part
 from pupille_tracker import pupille_tracker
 #Eyes movement part
-from eyes_movement import eyes_position
+from eyes_movement import eyes_movements
+
 
 
 
 
 #Load dlib model
 predictor, detector = load_model_dlib(dlib_model)
-
+emotion_classifier = load_model_emotion(emotion_model)
 
 nb_frame = 0
-cap = cv2.VideoCapture("a.mp4")
+cap = cv2.VideoCapture("g.mp4")
 
 while True:
    
@@ -45,6 +50,8 @@ while True:
 
     if landmarks is not None:
 
+        #Recuperate head movements
+        head_movement(landmarks, head_box, emotion_classifier, gray)
 
         #Recuperate blink algorythme
         blinking_frame, result = blinking_eyes(landmarks, head_box)
@@ -52,8 +59,8 @@ while True:
 
         #Recuperate pupil center
         right_eye, left_eye = pupille_tracker(landmarks, frame, gray)
-        eyes_position(landmarks, frame, right_eye, left_eye)
-
+        eyes = eyes_movements(landmarks, frame, right_eye, left_eye)
+        #if eyes != "":print(eyes)
 
 
 
