@@ -42,6 +42,12 @@ def eyes_position(landmarks, frame, right_eye, left_eye):
         if h <=  np.mean(LAST_H_RIGHT) - 1.5 and y_center <= int(0.45*h):
             right_bot = "bas"
 
+            if x_center >= int(0.80 * w):
+                right = "bas gauche"
+
+            elif x_center <= int(0.65 * w):
+                right = "bas droite"
+
 
         if x_center >= int(0.85 * w):
             right = "gauche"
@@ -69,13 +75,6 @@ def eyes_position(landmarks, frame, right_eye, left_eye):
         h = h + 10
 
 
-        if x_center >= int(0.85 * w):
-            left = "gauche"
-
-        elif x_center <= int(0.72 * w):
-            left = "droite"
-
-
         if len(LAST_H_LEFT) >= 2 and h >= LAST_H_LEFT[-2] + 2 and y_center >= int(0.40*h):
             left_top = "haut"
         else:
@@ -85,6 +84,20 @@ def eyes_position(landmarks, frame, right_eye, left_eye):
         #and pupil Y < 40% of the height of frame
         if h <=  np.mean(LAST_H_LEFT) - 1.5 and y_center <= int(0.45*h):
             left_bot = "bas"
+
+            if x_center >= int(0.80 * w):
+                left = "bas gauche"
+
+            elif x_center <= int(0.65 * w):
+                left = "bas droite"
+
+
+        if x_center >= int(0.85 * w):
+            left = "gauche"
+
+        elif x_center <= int(0.72 * w):
+            left = "droite"
+
 
 
     movement = ""
@@ -96,10 +109,20 @@ def eyes_position(landmarks, frame, right_eye, left_eye):
 
 
     if right_top == "haut" and left_top == "haut":
-        movement += "haut")
+        movement += "haut "
     elif right_bot == "bas" and left_bot == "bas":
-        movement += "bas"
+        movement += "bas "
 
+    if right == "bas gauche" and left == "bas gauche":
+        movement += "bas gauche "
+    elif right == "bas droite" and left == "bas droite":
+        movement += "bas droite "
+
+
+
+
+    if movement != "":
+        print(movement)
 
 
 
