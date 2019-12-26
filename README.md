@@ -1,6 +1,6 @@
 # S-Y-N-E-R-G-O
 
-quand on regarde en bas on ferme les yeux mais on a une detection, mais des fois des mecs ne ferment pas completement les yeux en fermant les yeux et juste en baissant les yeux pour la vidéo bah mes tics de pas content ont surgi par auto c'est dingue !
+
 
 - mettre les trucks sur le site
 
