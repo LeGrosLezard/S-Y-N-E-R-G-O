@@ -39,7 +39,7 @@ def blinking_eyes(landmarks, face):
     global BLINKING_FRAME
 
     result = ""
-    head_eye_ratio = 0.035
+    head_eye_ratio = 0.020
 
     length_head = get_length_face(face)
 
@@ -51,10 +51,10 @@ def blinking_eyes(landmarks, face):
     length_right = get_length_eye(right_eyes_points, landmarks)
     length_left = get_length_eye(left_eyes_points, landmarks)
     length_mean = (length_right + length_left) / 2
-
+ 
     if BLINKING_FRAME > 10:
         result += "close or not good detection or chinese"
-
+    
     elif length_mean < head_eye_ratio * length_head:
         result += "BLINK"
         BLINKING_FRAME += 1
