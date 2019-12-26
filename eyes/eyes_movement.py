@@ -7,7 +7,7 @@
     For have a detection we need the 2 eyes in the same time
     in the same position !
 
-    Care blink and botttom movements must be differeenciate.
+    Care blink and botttom movements must be differenciate.
 """
     
 
@@ -33,8 +33,6 @@ def eyes_box(eyes):
     """Place eyes convexhull from dlib in a box"""
     _, _, w, h = cv2.boundingRect(eyes)
     return w, h + 10
-
-
 
 
 def top_movement(CONTENEUR, y_center, h, movements_dico, move):
@@ -125,7 +123,7 @@ def movements(movement, movements_dico):
 LAST_H_RIGHT = []
 LAST_H_LEFT = []
 
-def eyes_position(landmarks, frame, right_eye, left_eye):
+def eyes_movements(landmarks, frame, right_eye, left_eye):
 
     global LAST_H_RIGHT
     global LAST_H_LEFT
@@ -138,19 +136,16 @@ def eyes_position(landmarks, frame, right_eye, left_eye):
 
 
     if right_eye[0] is not None:
-
         main_movements(eyes[0], right_eye, LAST_H_RIGHT, movements_dico,
                    "right_top", "right_bot", "right")
 
+    if left_eye[0] is not None:    
         main_movements(eyes[1], left_eye, LAST_H_LEFT, movements_dico,
                    "left_top", "left_bot", "left")
 
 
     movement = movements(movement, movements_dico)
 
-
-    if movement != "":
-        print(movement)
 
     return movement
 
