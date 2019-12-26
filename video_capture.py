@@ -19,7 +19,8 @@ from analysis_eyes import blink_analysis
 
 #Pupil part
 from pupille_tracker import pupille_tracker
-
+#Eyes movement part
+from eyes_movement import eyes_position
 
 
 
@@ -51,7 +52,7 @@ while True:
 
         #Recuperate pupil center
         right_eye, left_eye = pupille_tracker(landmarks, frame, gray)
-
+        eyes_position(landmarks, frame, right_eye, left_eye)
 
 
 
@@ -62,7 +63,7 @@ while True:
     cv2.imshow("Frame", frame)
 
     
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+    if cv2.waitKey(0) & 0xFF == ord('q'):
         break
  
 cap.release()
