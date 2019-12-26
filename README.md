@@ -2,7 +2,7 @@
 
 - difference entre blinkink et bot look
 
-bah c'est vrai c'est ok jcrois bah ca marche donc trouver une phrase qui pete avec le mot statistique dedans
+
 
 - mettre les trucks sur le site
 
