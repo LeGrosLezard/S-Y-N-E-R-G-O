@@ -1,4 +1,5 @@
-def look_right_left(right_eye, left_eye, nose):
+from scipy.spatial import distance as dist
+def look_right_left(right_eye, left_eye, nose, head_box):
     """Calculus difference beetween left right distance"""
 
     d1 = dist.euclidean(right_eye, nose) 
@@ -7,9 +8,19 @@ def look_right_left(right_eye, left_eye, nose):
 
     look_to = int(250*(d1-d2)/coeff)
 
-    if coeff > 95:
-        if look_to < -0.50 * coeff : print("tourne a droite")
-        elif look_to > 0.50 * coeff : print("tourne a gauche")
-    else:
-        if look_to < -0.55 * coeff : print("tourne a droite")
-        elif look_to > 0.55 * coeff : print("tourne a gauche")
+    w = head_box[2]
+
+    if look_to > int(0.25 * w):
+        out = "gauche"
+
+    elif look_to > int(0.145 * w):
+        out = "legerement a gauche"
+
+
+    if look_to < - int(0.25 * w):
+        out = "droite"
+
+    elif look_to < - int(0.145 * w):
+        out = "legerement a droite"
+
+    return out
