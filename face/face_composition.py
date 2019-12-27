@@ -26,13 +26,7 @@ def make_landmarks_points(landmarks, area):
 
 
 def on_eyes(landmarks, frame, head_box):
-    """We recuperate on eyes points.
-    We make a mean of the points.
-    We have define - 2.5 of the mean for down and
-                   + 4.5 of the mean for up.
-    This mean is ok for 90-94 head width.
-    So at each head movement's who's reduce or not reduce
-    we need to resize the frame"""
+
 
 
     on_eyes_points = {"onEye1":[18, 22], "onEye2":[22, 26]}
