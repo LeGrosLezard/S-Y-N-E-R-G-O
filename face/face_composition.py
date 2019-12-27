@@ -21,7 +21,20 @@ def make_mean_points(onEye, frame, mean_points):
 def position(ON_EYE, mean_points, on_eye_pos):
     """If current mean of points are < at 2.5:
     on eye's down.
-    Elif points are > 4.5 on eye's up"""
+    Elif points are > 4.5 on eye's up
+    so we have:
+
+        f:y -> (y - E) <= -2.5
+        g:y -> (y + E) >=  4.5
+
+    where E is the sum of all y
+    
+    if w n 90 < w < 94 where w is head width
+
+    if f so down
+    elif g so up
+
+    """
 
     if len(ON_EYE) > 10:
         if mean_points <= round(np.mean(ON_EYE) - 2.5):
