@@ -2,7 +2,7 @@
 
 - difference entre blinkink et bot look
 
-
+javais faim jt'ai content, y'a des mecs qui font des quadruples intégrales et qui font des eyes laser trackers
 
 - mettre les trucks sur le site
 
