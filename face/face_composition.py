@@ -28,10 +28,8 @@ def position(ON_EYE, mean_points, on_eye_pos):
 
     where E is the sum of all y
     
-    if w n 90 < w < 94 where w is head width
-
-    if f so down
-    elif g so up
+    ssi w ∈ I[90, 94] where w is head width
+    
 
     """
 
