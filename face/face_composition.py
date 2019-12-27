@@ -24,8 +24,7 @@ def position(ON_EYE, mean_points, on_eye_pos):
     Elif points are > 4.5 on eye's up
     so we have:
 
-        f:y -> (y - E) <= -2.5
-        g:y -> (y + E) >=  4.5
+        f:y -> 4.5 >= (y - E) <= -2.5
 
     where E is the sum of all y
     
