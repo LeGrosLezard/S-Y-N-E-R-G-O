@@ -6,36 +6,54 @@ def make_landmarks_points(landmarks, area):
     return np.array([(landmarks.part(n).x, landmarks.part(n).y)
                      for n in range(area[0], area[1])])
 
-def on_eyes(landmarks, frame):
+
+def make_mean_points(onEye, frame, mean_points):
+
+    for nb, i in enumerate(onEye):
+        cv2.circle(frame, (i[0], i[1]), 1, (0, 0, 255), 1)
+        mean_points += i[1]
+
+    mean_points =  mean_points / nb
+    return mean_points
+
+
+def position(ON_EYE, mean_points, on_eye_pos):
+
+    if len(ON_EYE) > 10:
+        if mean_points <= round(np.mean(ON_EYE) - 2.5):
+            print(on_eye_pos + " levé")
+
+    if  mean_points >= round(np.mean(ON_EYE) + 4.5):
+            print(on_eye_pos + " baissé")
+
+
+    ON_EYE.append(mean_points)
+
+
+
+RIGHT_ON_EYES = []
+LEFT_ON_EYES = []
+
+def on_eyes(landmarks, frame, head_box):
     on_eyes_points = {"onEye1":[18, 22], "onEye2":[22, 26]}
 
+    global RIGHT_ON_EYES
+    global LEFT_ON_EYES
+
+    right_mean_points = 0
+    left_mean_points = 0
 
     onEye1 = make_landmarks_points(landmarks, on_eyes_points["onEye1"])
     onEye2 = make_landmarks_points(landmarks, on_eyes_points["onEye2"])  
 
+    x, y, w, h = head_box
 
-    for i in onEye1:
-        cv2.circle(frame, (i[0], i[1]), 1, (0, 255, 0), 1)
+    if 90 => w >= 94:print("resizeeeeeeeeeeeeeeeeeeeee")
 
-    for i in onEye2:
-        cv2.circle(frame, (i[0], i[1]), 1, (0, 255, 0), 1)
-
-
+    right_mean_points = make_mean_points(onEye1, frame, right_mean_points)
+    position(RIGHT_ON_EYES, right_mean_points, "droit")
 
 
-
-
-
-    #monté 2
-    #monté 1
-    #baisse vers l'intérieur 1
-    #baisse vers l'intérieur 2
-
-
-
-
-
-
-
-
+    left_mean_points = make_mean_points(onEye2, frame, left_mean_points)
+    position(LEFT_ON_EYES, left_mean_points, "gauche")
 
