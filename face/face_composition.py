@@ -20,7 +20,7 @@ def euclidian_distance_onEye_Eye(onEye, eye, EYE_LISTE):
 
                     4
     mean_dist =     Σ euclidian distance (di, di')
-                 i=0,j=0
+                 i=0,i'=0
 
     where i is onEye point, i' is eye point
 
