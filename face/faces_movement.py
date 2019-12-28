@@ -1,5 +1,5 @@
-from face_composition import on_eyes
+from on_eyes import on_eyes
 
 
-def face_movement(landmarks):
-    on_eyes(landmarks)
+def face_movements(landmarks, frame, head_box):
+    on_eyes(landmarks, frame, head_box)
