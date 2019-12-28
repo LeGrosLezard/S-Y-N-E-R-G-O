@@ -25,10 +25,10 @@ def euclidian_distance_onEye_Eye(onEye, eye, EYE_LISTE):
     where i is onEye point, i' is eye point
 
                         4
-    mean_dist = sqrt(   Σ   d(P1 - P1')^2 + ... + d(P4 - P4')^2  )
+    mean_dist = sqrt(   Σ   d(P1 - P'1)^2 + ... + d(P4 - P'4)^2  )
                        i=0
 
-    where P1 is onEye point, P1' is eye point
+    where P is onEye point, P' is eye point
 
     mean_dist = mean_dist / 4
 
@@ -54,7 +54,7 @@ def movements(EYE_LISTE, mean_dist, eye_location):
 
         mean_dist is the mean of our 4 euclidian's distance
         beetween onEye and eye.
-                                              _
+                                               _
         f:mean_dist -> ∀x P(x) > (mean_dist - x) > ∀y P(y)
 
         where x = -2.5 and y = 2
