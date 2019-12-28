@@ -54,7 +54,7 @@ def movements(EYE_LISTE, mean_dist, eye_location):
 
         mean_dist is the mean of our 4 euclidian's distance
         beetween onEye and eye.
-                                        _
+                                              _
         f:mean_dist -> ∀x P(x) > (mean_dist - x) > ∀y P(y)
 
         where x = -2.5 and y = 2
