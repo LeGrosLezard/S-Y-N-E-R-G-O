@@ -113,10 +113,17 @@ def resize_frame(frame):
     """Resize frame for a ' good accuracy ' and speed """
  
     height, width = frame.shape[:2]
-    nb = 1.5#c
+
     nb = 2 #a
-    nb = 1.5500000000000007#cam normal
-    nb = 1.4500000000000006 #f
+    #nb = 2.20 #a 2nd partie
+    #nb = 1.5500000000000007#cam normal
+    #nb = 1.4000000000000006#g
+    #nb = 1.4500000000000006 #f
+    #nb = 0.9500000000000003 #i
+    #nb = 1.515 #h, c
+    #nb = 1.5000000000000007#j
+
+
     frame = cv2.resize(frame, (int(width / nb), int(height / nb)))
     gray = cv2.cvtColor(frame,cv2.COLOR_RGB2GRAY)
 
@@ -131,8 +138,8 @@ def resize_frame(frame):
 
 
 
-
-##cap = cv2.VideoCapture("f.mp4")
+##
+##cap = cv2.VideoCapture("j.mp4")
 ##
 ##detector = dlib.get_frontal_face_detector()
 ##predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
@@ -149,7 +156,7 @@ def resize_frame(frame):
 ##
 ##    nb = resizer(frame,  predictor, detector)
 ##
-##
+##    
 ####    he_moved = movements_dude(landmarks, points_position)
 ####    if he_moved is True:
 ####        print("RE SIZERRRRRRRRRR")
