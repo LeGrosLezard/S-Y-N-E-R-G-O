@@ -10,11 +10,14 @@ from video_treatment import resize_frame
 
 #Load DLIB model and Recuperate Landmarks and head.
 from head_points import load_model_dlib, head_points
-from head_emotion import load_model_emotion
+#from head_emotion import load_model_emotion
 
 
+#Head part
+#from head_movement import head_movement
 
-from head_movement import head_movement
+#Face part
+from face_movements import face_movements
 
 #Blink part
 from blinking_eyes import blinking_eyes
@@ -23,6 +26,7 @@ from analysis_eyes import blink_analysis
 
 #Pupil part
 from pupille_tracker import pupille_tracker
+
 #Eyes movement part
 from eyes_movement import eyes_movements
 
@@ -32,10 +36,10 @@ from eyes_movement import eyes_movements
 
 #Load dlib model
 predictor, detector = load_model_dlib(dlib_model)
-emotion_classifier = load_model_emotion(emotion_model)
+#emotion_classifier = load_model_emotion(emotion_model)
 
 nb_frame = 0
-cap = cv2.VideoCapture("g.mp4")
+cap = cv2.VideoCapture("m.mp4")
 
 while True:
    
@@ -51,7 +55,10 @@ while True:
     if landmarks is not None:
 
         #Recuperate head movements
-        head_movement(landmarks, head_box, emotion_classifier, gray)
+        #head_movement(landmarks, head_box, emotion_classifier, gray)
+
+        #Recuperate face movements
+        face_movements(landmarks, frame, head_box)
 
         #Recuperate blink algorythme
         blinking_frame, result = blinking_eyes(landmarks, head_box)
