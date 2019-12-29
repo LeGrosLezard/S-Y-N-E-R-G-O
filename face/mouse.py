@@ -18,12 +18,12 @@ def width_mouse(right_mouse, left_mouse, mid_mouse):
     return right_mid_mouse + left_mid_mouse
 
 
-def side_mouse(bot_to_right, bot_to_left):
+def side_mouse(bot_to_right, bot_to_left, right_point, left_point):
 
     out = ""
 
     coeff = bot_to_right + bot_to_left
-    angle = int(250*(pts1[1]-pts2[1])/coeff)
+    angle = int(250*(right_point[1]-left_point[1])/coeff)
 
     if angle <= -20:
         out = "smyle droite"
@@ -33,13 +33,15 @@ def side_mouse(bot_to_right, bot_to_left):
     return out
 
 
-def smyling(head_width, bot_to_right, bot_to_left):
+def smyling(mouse_width, head_width, bot_to_right, bot_to_left, height_head):
 
     out = ""
 
     #head_width * 0.41: "elargissement"
 
-    if mouse > head_width * 0.41 and bot_to_right > 0.24 * h1 and bot_to_left > 0.24 * h1:
+    if mouse_width > head_width * 0.41 and\
+       bot_to_right > 0.24 * height_head and\
+       bot_to_left > 0.24 * height_head:
         out = "sourire"
 
     return out
@@ -49,9 +51,10 @@ def mouse(landmarks, frame, head_box):
 
     mouse = [48, 68]
 
-    _, _, head_width, _ = head_box
+    _, _, head_width, hight_head = head_box
 
     mouse_points = make_landmarks_points(landmarks, mouse)
+    
     right_mouse = mouse_points[0]
     mid_mouse =  mouse_points[3]
     left_mouse = mouse_points[6]
@@ -60,10 +63,9 @@ def mouse(landmarks, frame, head_box):
     bot_to_right = dist.euclidean(right_mouse, bot_mid_mouse)
     bot_to_left = dist.euclidean(left_mouse, bot_mid_mouse)
 
-    mouse = width_mouse(right_mouse, left_mouse, mid_mouse)
-    side_mouse(bot_to_right, bot_to_left)
+    mouse_width = width_mouse(right_mouse, left_mouse, mid_mouse)
 
+    side = side_mouse(bot_to_right, bot_to_left, right_mouse, left_mouse)
+    smyle = smyling(mouse_width, head_width, bot_to_right, bot_to_left, hight_head)
 
-    smyle = smyling(head_width, bot_to_right, bot_to_left)
-
-    return smyle
+    return smyle, side
