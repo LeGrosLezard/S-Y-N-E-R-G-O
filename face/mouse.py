@@ -10,12 +10,9 @@ def make_landmarks_points(landmarks, area):
                      for n in range(area[0], area[1])])
 
 
-RIGHT_CHEEK = []
-LEFT_CHEEK = []
-def mouse(landmarks, frame, head_box):
 
-    global RIGHT_CHEEK
-    global LEFT_CHEEK
+
+def mouse(landmarks, frame, head_box):
 
 
     mouse = [48, 61]
@@ -63,6 +60,11 @@ def mouse(landmarks, frame, head_box):
     height_crop, width_crop = crop.shape[:2]
 
 
+    #if penché droite:
+        #height_crop * 0.36
+    #if penché gauche:
+        #height_crop * 0.36
+
 
     print(right_height, left_height, height_crop)
 
@@ -81,7 +83,7 @@ def mouse(landmarks, frame, head_box):
  
     if a == "droite" and b == "gauche":
         print("sourire")
-    
+
 
     cv2.imshow("aa", crop)
 
@@ -105,10 +107,14 @@ def mouse(landmarks, frame, head_box):
     print("")
     
 
+    #sourrire
+        #dans le cas ou le mec cris ? truk tonalité de voix
+
 
     #sourire coté
 
-        #quand la tete est incliné ca marche plus va falloir mettre l'inclinaison
+        #distance entre les deux extreémité etirement
+        #distance avec bas tete ratio
 
 
     #boude
