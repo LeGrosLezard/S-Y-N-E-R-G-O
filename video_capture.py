@@ -39,7 +39,7 @@ predictor, detector = load_model_dlib(dlib_model)
 #emotion_classifier = load_model_emotion(emotion_model)
 
 nb_frame = 0
-cap = cv2.VideoCapture("m.mp4")
+cap = cv2.VideoCapture("p.mp4")
 
 while True:
    
@@ -69,7 +69,9 @@ while True:
         eyes = eyes_movements(landmarks, frame, right_eye, left_eye)
         #if eyes != "":print(eyes)
 
-
+    else:
+        #Recuperate face movements
+        face_movements(None, frame, head_box)
 
 
 
