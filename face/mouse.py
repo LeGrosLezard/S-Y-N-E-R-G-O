@@ -10,59 +10,69 @@ def make_landmarks_points(landmarks, area):
                      for n in range(area[0], area[1])])
 
 
-RIGHT_MOUSE = []
-LEFT_MOUSE = []
+RIGHT_CHEEK = []
+LEFT_CHEEK = []
 def mouse(landmarks, frame, head_box):
 
-    global RIGHT_MOUSE
-    global LEFT_MOUSE
-    elargissement = False
+    global RIGHT_CHEEK
+    global LEFT_CHEEK
+
 
     mouse = [48, 61]
     mouse_points = make_landmarks_points(landmarks, mouse)
-    for i in mouse_points:
-        cv2.circle(frame, (i[0], i[1]), 1, (255, 0, 0), 1)
+
 
     x, y, w, h = head_box
 
-    cv2.circle(frame, (mouse_points[0][0], mouse_points[0][1]), 1, (0, 0, 255), 1)
-    cv2.circle(frame, (mouse_points[6][0], mouse_points[6][1]), 1, (0, 0, 255), 1)
-
-    dist_width_head = dist.euclidean((0, x), (0, x+w))
-    dist_width_mouse = dist.euclidean((mouse_points[0]), (mouse_points[6]))
-
-    #Width mouse
-    if dist_width_mouse >= round(0.40 * dist_width_head):
-        print("elargissement")
-        elargissement = True
-
-
-    right_point = mouse_points[0][1]
-    left_point = mouse_points[6][1]
-
-
-    RIGHT_MOUSE.append(mouse_points[0][1])
-    LEFT_MOUSE.append(mouse_points[6][1])
-    
-    right_mouse_mean = np.mean(RIGHT_MOUSE)
-    left_mouse_mean = np.mean(LEFT_MOUSE)
-
-    print(right_point, right_mouse_mean)
-
-
-    if elargissement is True and right_point <= right_mouse_mean - 6 and\
-       left_point <= left_mouse_mean - 5:
-        print("levé bouche gauche droite")
-
-
-    elif elargissement is True and right_point <= right_mouse_mean - 5:
-        print("levé bouche droit")
-
-    elif elargissement is True and left_point <= left_mouse_mean - 5:
-        print("levé bouche gauche")
+    cv2.circle(frame, (mouse_points[0][0], mouse_points[0][1]), 0, (255, 255, 255), 0)
+    cv2.circle(frame, (mouse_points[6][0], mouse_points[6][1]), 0, (255, 255, 255), 0)
 
 
 
+    mid_mouse = (landmarks.part(51).x, landmarks.part(51).y)
+
+    right_mid_mouse = dist.euclidean((mouse_points[0]), (mid_mouse))
+    left_mid_mouse = dist.euclidean((mouse_points[6]), (mid_mouse))
+
+    mouse = right_mid_mouse + left_mid_mouse
+
+    if mouse > w * 0.43:
+        print("sourire")
+
+
+    x, y, w, h = cv2.boundingRect(mouse_points)
+    cv2.rectangle(frame, (x-5, y-5), (x+w + 5, y+h+5), (0, 255, 0), 1)
+
+    print(x, x+w, w)
+
+    crop = frame[y-5:y+h+5, x-5:x+w+5]
+    crop = cv2.cvtColor(crop,cv2.COLOR_RGB2GRAY)
+
+    white = [(i, j) for i in range(crop.shape[0])
+             for j in range(crop.shape[1]) if crop[i, j] == 255]
+
+    print(white)
+
+    cv2.imshow("aa", crop)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    print("")
     
 
     #sourrire
