@@ -79,7 +79,7 @@ def mouse(landmarks, frame, head_box):
         print("gauche")
 
     if mouse > w1 * 0.41:
-        print("sourire 22 % car 17 lettre, sourire, tic, rapprochement, baillement")
+        print("sourire 4.5 (1*100)/22 car 17 lettre, sourire, tic, rapprochement, baillement")
  
     if a == "droite" and b == "gauche":
         print("sourire")
