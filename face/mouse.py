@@ -10,95 +10,60 @@ def make_landmarks_points(landmarks, area):
                      for n in range(area[0], area[1])])
 
 
+def width_mouse(right_mouse, left_mouse, mid_mouse):
+
+    right_mid_mouse = dist.euclidean((right_mouse), (mid_mouse))
+    left_mid_mouse = dist.euclidean((left_mouse), (mid_mouse))
+
+    return right_mid_mouse + left_mid_mouse
+
+
+def side_mouse(bot_to_right, bot_to_left):
+
+    out = ""
+
+    coeff = bot_to_right + bot_to_left
+    angle = int(250*(pts1[1]-pts2[1])/coeff)
+
+    if angle <= -20:
+        out = "smyle droite"
+    if angle >= 20:
+        out = "smyle gauche"
+
+    return out
+
+
+def smyling(head_width, bot_to_right, bot_to_left):
+
+    out = ""
+
+    #head_width * 0.41: "elargissement"
+
+    if mouse > head_width * 0.41 and bot_to_right > 0.24 * h1 and bot_to_left > 0.24 * h1:
+        out = "sourire"
+
+    return out
 
 
 def mouse(landmarks, frame, head_box):
 
-
     mouse = [48, 68]
+
+    _, _, head_width, _ = head_box
+
     mouse_points = make_landmarks_points(landmarks, mouse)
+    right_mouse = mouse_points[0]
+    mid_mouse =  mouse_points[3]
+    left_mouse = mouse_points[6]
+    bot_mid_mouse = mouse_points[9]
+
+    bot_to_right = dist.euclidean(right_mouse, bot_mid_mouse)
+    bot_to_left = dist.euclidean(left_mouse, bot_mid_mouse)
+
+    mouse = width_mouse(right_mouse, left_mouse, mid_mouse)
+    side_mouse(bot_to_right, bot_to_left)
 
 
+    smyle = smyling(head_width, bot_to_right, bot_to_left)
 
-
-
-
-    x1, y1, w1, h1 = head_box
-
-
-
-    mid_mouse = (landmarks.part(51).x, landmarks.part(51).y)
-
-    right_mid_mouse = dist.euclidean((mouse_points[0]), (mid_mouse))
-    left_mid_mouse = dist.euclidean((mouse_points[6]), (mid_mouse))
-
-    mouse = right_mid_mouse + left_mid_mouse
-    x, y, w, h = cv2.boundingRect(mouse_points)
-
-
-
-
-    pts1 = (landmarks.part(48).x, landmarks.part(48).y)
-    pts2 = (landmarks.part(54).x, landmarks.part(54).y)
-    pts3 = (landmarks.part(57).x, landmarks.part(57).y)
-
-    pts4 = (landmarks.part(51).x, landmarks.part(51).y)
-    pts5 = (landmarks.part(57).x, landmarks.part(57).y)
-
-    coeff = dist.euclidean(pts1, pts3) + dist.euclidean(pts2, pts3) 
-    angle = int(250*(pts1[1]-pts2[1])/coeff)
-
-    if angle <= -20:
-        print("droite")
-    if angle >= 20:
-        print("gauche")
-
-
-
-
-
-
-    a = dist.euclidean(pts1, pts4)
-    b = dist.euclidean(pts2, pts4)
-
-    c = dist.euclidean(pts1, pts5)
-    d = dist.euclidean(pts2, pts5)
-
-    mouse = a + b
-
-    if mouse > w1 * 0.41:
-        print("elargissement")
-
-
-    print(c, d, h1)
-
-    if mouse > w1 * 0.41 and c > 0.24 * h1 and d > 0.24 * h1:
-        print("sourire")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    return smyle
