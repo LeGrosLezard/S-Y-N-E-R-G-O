@@ -22,6 +22,8 @@ def make_contour_NONE(points, color, frame):
     area = np.array([points])
     #cv2.drawContours(frame, [area], 0, color, 1)
 
+
+
 def make_contour_by_range_NONE(points, color, frame):
 
     area = np.array([points])
@@ -52,7 +54,17 @@ def make_mask_area(area, gray, frame, sub):
                 cropImg[i, j] = 255
                 cropSub[i, j] = 255
 
-    return cropMask, cropImg, cropSub
+
+
+    ok = []
+    for i in range(cropMask.shape[0]):
+        for j in range(cropMask.shape[1]):
+            ok.append(cropMask[i, j])
+
+
+
+
+    return cropMask, cropImg, cropSub, ok
 
 
 
@@ -105,14 +117,76 @@ def head_size():
 AREA1 = []
 AREA1_SIZE = []
 COLOR_AREA1 = []
-
+aa = []
 AREA2 = []
 
 def face_area(frame, landmarks, subtractor, head_box):
+##    global AREA1
+##    if landmarks is not None:
+##        head = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 26, 25, 24, 23, 22,
+##                21, 20, 19, 18, 17]
+##
+##        area = [(landmarks.part(n).x, landmarks.part(n).y) for n in head]
+##        area = cv2.convexHull(np.array(area))
+##
+##        gray = cv2.cvtColor(frame,cv2.COLOR_RGB2GRAY)
+##
+##        height, width = frame.shape[:2]
+##        copy = frame.copy()
+##
+##        black_frame = np.zeros((height, width), np.uint8)
+##        mask = np.full((height, width), 255, np.uint8)
+##        cv2.fillPoly(mask, [area], (0, 0, 255))
+##        mask = cv2.bitwise_not(black_frame, gray.copy(), mask=mask)
+##
+##        cv2.imshow("mask", mask)
+##
+##
+##        AREA1 = area
+##
+##    else:
+##
+##        
+##
+##        area = AREA1
+##        
+##        gray = cv2.cvtColor(frame,cv2.COLOR_RGB2GRAY)
+##
+##        height, width = frame.shape[:2]
+##        copy = frame.copy()
+##
+##        black_frame = np.zeros((height, width), np.uint8)
+##        mask = np.full((height, width), 255, np.uint8)
+##        cv2.fillPoly(mask, [area], (0, 0, 255))
+##        mask = cv2.bitwise_not(black_frame, gray.copy(), mask=mask)
+##
+##        cv2.imshow("mask", mask)
+##
+##    sub = subtractor.apply(mask, learningRate = 0.9)
+##    cv2.imshow("sub", sub)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     global AREA1
     global AREA2
+    global aa
 
     areas =  { "cheek2":[54, 13, 16, 28], "chin":[58, 56, 9, 7],
                "beet_eyes" :[21, 22, 28], "chin1":[58, 7, 3, 48],
@@ -136,7 +210,7 @@ def face_area(frame, landmarks, subtractor, head_box):
         AREA1 = [make_contour(areas[k], (255,0,0), frame, landmarks)
                            for nb, k in enumerate(areas)]
 
-        a, b, c = make_mask_area(np.array(AREA1[5]), gray, frame, sub)
+        a, b, c, ok = make_mask_area(np.array(AREA1[5]), gray, frame, sub)
         movement_detection(c, b)
 
         cv2.imshow("a", a)
@@ -144,13 +218,13 @@ def face_area(frame, landmarks, subtractor, head_box):
         cv2.imshow("c", c)
 
 
-
-
-
-
-
-
-
+        d = 0
+        if aa != []:
+            for i, j in zip(ok, aa):
+                if i != j:
+                    d+=1
+        print(d)
+        aa = ok
 
 
 
@@ -182,27 +256,7 @@ def face_area(frame, landmarks, subtractor, head_box):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+##
 
 
 
