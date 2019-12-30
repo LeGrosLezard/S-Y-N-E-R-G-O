@@ -1,8 +1,8 @@
 # S-Y-N-E-R-G-O
 
-- difference entre blinkink et bot look
+- si une main va vers le visage récupérer la taille des zones ptin chai pas
 
-javais faim jt'ai content, y'a des mecs qui font des quadruples intégrales et qui font des eyes laser trackers
+- difference entre blinkink et bot look
 
 - mettre les trucks sur le site
 
