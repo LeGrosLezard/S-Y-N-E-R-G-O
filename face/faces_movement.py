@@ -86,14 +86,16 @@ AREA2 = []
 CHEEK5 = []
 
 a = 0
+bb = []
+cc = []
 def face_area(frame, landmarks, subtractor, head_box):
 
     global AREA1
     global AREA2
     global CHEEK5
     global a
-
-
+    global bb
+    global cc
 
 
     areas =  { "cheek2":[54, 13, 16, 28], "chin":[58, 56, 9, 7],
@@ -114,22 +116,26 @@ def face_area(frame, landmarks, subtractor, head_box):
         cropMask = make_mask_area(np.array(AREA1[5]), gray, frame)
 
         if a == 0:
-            cv2.imwrite("a.jpg", cropMask)
+            bb = cropMask
             a += 1
         else:
-            cv2.imwrite("b.jpg", cropMask)
+            w, h = bb.shape[:2]
+
+            cc = cropMask
+            cc = cv2.resize(cc, (h,w))
+
             a = 0
 
 
-            im1 = cv2.imread("a.jpg")
-            h, w = im1.shape[:2]
-            
-            im2 = cv2.imread("b.jpg")
-            im2 = cv2.resize(im2, (w, h))
 
-            diff = cv2.subtract(im1, im2)
+            h, w = bb.shape[:2]
+            print(h, w)
+            h, w = cc.shape[:2]
+            print(h, w)
 
-            cv2.imshow("diff", diff)
+            diff = cv2.subtract(bb, cc)
+
+            cv2.imshow("diff", np.array(diff))
 
 
 
