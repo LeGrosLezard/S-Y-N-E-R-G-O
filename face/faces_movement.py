@@ -6,7 +6,7 @@ import numpy as np
 
 def make_contour(area, color, frame, landmarks):
     area = np.array([(landmarks.part(n).x, landmarks.part(n).y) for n in area])
-    #cv2.drawContours(frame, [area], 0, color, 1)
+    cv2.drawContours(frame, [area], 0, color, 1)
 
     return area.tolist()
 
@@ -30,71 +30,37 @@ def make_contour_by_range_NONE(points, color, frame):
     cv2.drawContours(frame, [area], 0, color, 1)
 
 
-def make_mask_area(area, gray, frame, sub):
+def make_mask_area(area, gray, frame):
 
 
     height, width = gray.shape[:2]
-    nb = 5
+    nb = 0
     copy = frame.copy()
     black_frame = np.zeros((height, width), np.uint8)
     mask = np.full((height, width), 255, np.uint8)
     cv2.fillPoly(mask, [area], (0, 0, 255))
     mask = cv2.bitwise_not(black_frame, gray.copy(), mask=mask)
 
-
     x, y, w, h = cv2.boundingRect(area)
-
     cropMask = mask[y-nb : (y+h)+nb, x-nb : (x+w)+nb]
-    cropImg = copy[y-nb : (y+h)+nb, x-nb : (x+w)+nb]
-    cropSub = sub[y-nb : (y+h)+nb, x-nb : (x+w)+nb]
 
-    for i in range(cropMask.shape[0]):
-        for j in range(cropMask.shape[1]):
-            if cropMask[i, j] > 240:
-                cropImg[i, j] = 255
-                cropSub[i, j] = 255
+    return cropMask
 
 
+def recup_pixels(cropMask):
 
-    ok = []
-    for i in range(cropMask.shape[0]):
-        for j in range(cropMask.shape[1]):
-            ok.append(cropMask[i, j])
+    pixels = [(cropMask[i, j]) for i in range(cropMask.shape[0]) for j in range(cropMask.shape[1])]
+    return pixels
 
+def compare_pixels(PIXELS, pixels):
 
+    diff = 0
 
-
-    return cropMask, cropImg, cropSub, ok
-
-
-
-
-    
-
-def movement_detection(cropSub, cropImg):
-
-
-    contours, _ = cv2.findContours(cropSub, cv2.RETR_TREE,
-                                   cv2.CHAIN_APPROX_NONE)
-
-    maxi1 = 0
-    maxi2 = 0
-
-    for i in contours:
-        if cv2.contourArea(i) > maxi1:
-            maxi1 = cv2.contourArea(i)
-
-    for i in contours:
-        if cv2.contourArea(i) > maxi2 and\
-            cv2.contourArea(i) < maxi1:
-            maxi2 = cv2.contourArea(i)
-
-    for i in contours:
-        if cv2.contourArea(i) == maxi2:
-            cv2.drawContours(cropImg, [i], -1, (0, 0, 255), 1)
-
-
-    return maxi2
+    print(len(PIXELS), len(pixels))
+    for i, j in zip(PIXELS, pixels):
+        if i == j:
+            diff += 1
+    return diff
 
 
 
@@ -115,78 +81,20 @@ def head_size():
 
 
 AREA1 = []
-AREA1_SIZE = []
-COLOR_AREA1 = []
-aa = []
 AREA2 = []
 
+CHEEK5 = []
+
+a = 0
 def face_area(frame, landmarks, subtractor, head_box):
-##    global AREA1
-##    if landmarks is not None:
-##        head = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 26, 25, 24, 23, 22,
-##                21, 20, 19, 18, 17]
-##
-##        area = [(landmarks.part(n).x, landmarks.part(n).y) for n in head]
-##        area = cv2.convexHull(np.array(area))
-##
-##        gray = cv2.cvtColor(frame,cv2.COLOR_RGB2GRAY)
-##
-##        height, width = frame.shape[:2]
-##        copy = frame.copy()
-##
-##        black_frame = np.zeros((height, width), np.uint8)
-##        mask = np.full((height, width), 255, np.uint8)
-##        cv2.fillPoly(mask, [area], (0, 0, 255))
-##        mask = cv2.bitwise_not(black_frame, gray.copy(), mask=mask)
-##
-##        cv2.imshow("mask", mask)
-##
-##
-##        AREA1 = area
-##
-##    else:
-##
-##        
-##
-##        area = AREA1
-##        
-##        gray = cv2.cvtColor(frame,cv2.COLOR_RGB2GRAY)
-##
-##        height, width = frame.shape[:2]
-##        copy = frame.copy()
-##
-##        black_frame = np.zeros((height, width), np.uint8)
-##        mask = np.full((height, width), 255, np.uint8)
-##        cv2.fillPoly(mask, [area], (0, 0, 255))
-##        mask = cv2.bitwise_not(black_frame, gray.copy(), mask=mask)
-##
-##        cv2.imshow("mask", mask)
-##
-##    sub = subtractor.apply(mask, learningRate = 0.9)
-##    cv2.imshow("sub", sub)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     global AREA1
     global AREA2
-    global aa
+    global CHEEK5
+    global a
+
+
+
 
     areas =  { "cheek2":[54, 13, 16, 28], "chin":[58, 56, 9, 7],
                "beet_eyes" :[21, 22, 28], "chin1":[58, 7, 3, 48],
@@ -196,37 +104,41 @@ def face_area(frame, landmarks, subtractor, head_box):
 
     areas2 = {"onEye1":[17, 22], "onEye2":[22, 27]}
 
-
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    sub = subtractor.apply(frame)
-
-    #x_head, y_head, w_head, h_head = head_tracker(head_box)
-    #print(x_head, y_head)
-
-
+    gray = cv2.cvtColor(frame,cv2.COLOR_RGB2GRAY)
 
     if landmarks is not None:
 
         AREA1 = [make_contour(areas[k], (255,0,0), frame, landmarks)
                            for nb, k in enumerate(areas)]
 
-        a, b, c, ok = make_mask_area(np.array(AREA1[5]), gray, frame, sub)
-        movement_detection(c, b)
+        cropMask = make_mask_area(np.array(AREA1[5]), gray, frame)
 
-        cv2.imshow("a", a)
-        cv2.imshow("b", b)
-        cv2.imshow("c", c)
-
-
-        d = 0
-        if aa != []:
-            for i, j in zip(ok, aa):
-                if i != j:
-                    d+=1
-        print(d)
-        aa = ok
+        if a == 0:
+            cv2.imwrite("a.jpg", cropMask)
+            a += 1
+        else:
+            cv2.imwrite("b.jpg", cropMask)
+            a = 0
 
 
+            im1 = cv2.imread("a.jpg")
+            h, w = im1.shape[:2]
+            
+            im2 = cv2.imread("b.jpg")
+            im2 = cv2.resize(im2, (w, h))
+
+            diff = cv2.subtract(im1, im2)
+
+            cv2.imshow("diff", diff)
+
+
+
+
+
+        cheek5 = recup_pixels(cropMask)
+        diff = compare_pixels(CHEEK5, cheek5)
+        CHEEK5 = cheek5
+        print(diff)
 
 
 
@@ -240,13 +152,7 @@ def face_area(frame, landmarks, subtractor, head_box):
         for i in AREA1:
             make_contour_NONE(i, (0, 255, 0), frame)
 
-
-        a, b, c = make_mask_area(np.array(AREA1[5]), gray, frame, sub)
-        movement_detection(c, b)
-
-        cv2.imshow("a", a)
-        cv2.imshow("b", b)
-        cv2.imshow("c", c)
+        a, b, c = make_mask_area(np.array(AREA1[5]), gray, frame)
 
 
         for i in AREA2:
