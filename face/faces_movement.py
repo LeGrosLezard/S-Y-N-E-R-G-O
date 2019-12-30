@@ -6,7 +6,7 @@ import numpy as np
 
 def make_contour(area, color, frame, landmarks):
     area = np.array([(landmarks.part(n).x, landmarks.part(n).y) for n in area])
-    cv2.drawContours(frame, [area], 0, color, 1)
+    #cv2.drawContours(frame, [area], 0, color, 1)
 
     return area.tolist()
 
@@ -20,7 +20,7 @@ def make_contour_by_range(area, color, frame, landmarks):
 
 def make_contour_NONE(points, color, frame):
     area = np.array([points])
-    cv2.drawContours(frame, [area], 0, color, 1)
+    #cv2.drawContours(frame, [area], 0, color, 1)
 
 def make_contour_by_range_NONE(points, color, frame):
 
@@ -30,8 +30,9 @@ def make_contour_by_range_NONE(points, color, frame):
 
 def make_mask_area(area, gray, frame, sub):
 
+
     height, width = gray.shape[:2]
-    nb = 0
+    nb = 5
     copy = frame.copy()
     black_frame = np.zeros((height, width), np.uint8)
     mask = np.full((height, width), 255, np.uint8)
@@ -55,11 +56,37 @@ def make_mask_area(area, gray, frame, sub):
 
 
 
-def movement_detection(cropSub):
-    none_black = cv2.countNonZero(cropSub)
-    print(none_black)
 
-def head_tracker():
+    
+
+def movement_detection(cropSub, cropImg):
+
+
+    contours, _ = cv2.findContours(cropSub, cv2.RETR_TREE,
+                                   cv2.CHAIN_APPROX_NONE)
+
+    maxi1 = 0
+    maxi2 = 0
+
+    for i in contours:
+        if cv2.contourArea(i) > maxi1:
+            maxi1 = cv2.contourArea(i)
+
+    for i in contours:
+        if cv2.contourArea(i) > maxi2 and\
+            cv2.contourArea(i) < maxi1:
+            maxi2 = cv2.contourArea(i)
+
+    for i in contours:
+        if cv2.contourArea(i) == maxi2:
+            cv2.drawContours(cropImg, [i], -1, (0, 0, 255), 1)
+
+
+    return maxi2
+
+
+
+def head_tracker(head_box):
     pass
     #Ici on va suivre la tete
     #du genre droite 2px droite 2px plus rien donc droit 2px ? 1px ?
@@ -73,13 +100,15 @@ def head_size():
     #si oui on récupere une autre d
 
 
+
+
 AREA1 = []
 AREA1_SIZE = []
 COLOR_AREA1 = []
 
 AREA2 = []
 
-def face_area(frame, landmarks, subtractor):
+def face_area(frame, landmarks, subtractor, head_box):
 
 
     global AREA1
@@ -97,16 +126,31 @@ def face_area(frame, landmarks, subtractor):
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     sub = subtractor.apply(frame)
 
+    #x_head, y_head, w_head, h_head = head_tracker(head_box)
+    #print(x_head, y_head)
+
+
+
     if landmarks is not None:
 
         AREA1 = [make_contour(areas[k], (255,0,0), frame, landmarks)
                            for nb, k in enumerate(areas)]
 
         a, b, c = make_mask_area(np.array(AREA1[5]), gray, frame, sub)
-        movement_detection(c)
+        movement_detection(c, b)
+
         cv2.imshow("a", a)
         cv2.imshow("b", b)
         cv2.imshow("c", c)
+
+
+
+
+
+
+
+
+
 
 
 
@@ -124,7 +168,8 @@ def face_area(frame, landmarks, subtractor):
 
 
         a, b, c = make_mask_area(np.array(AREA1[5]), gray, frame, sub)
-        movement_detection(c)
+        movement_detection(c, b)
+
         cv2.imshow("a", a)
         cv2.imshow("b", b)
         cv2.imshow("c", c)
@@ -133,7 +178,7 @@ def face_area(frame, landmarks, subtractor):
         for i in AREA2:
             make_contour_by_range_NONE(i, (0, 255, 0), frame)
 
-
+    print("")
 
 
 
