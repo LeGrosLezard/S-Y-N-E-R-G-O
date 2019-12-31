@@ -66,9 +66,6 @@ def head_size():
 #================================================> TREAT AREA
 
 
-def make_area(cropMask, AREAS_FRAME_0):
-    for i in cropMask:
-        AREAS_FRAME_0.append(i)
 
 
 
@@ -80,11 +77,12 @@ AREA_LANDMARKS_2 = []
 AREAS_FRAME_0 = []
 AREAS_FRAME_1 = []
 
+RECTANGLE = []
 
 oo = []
 pp = []
 
-
+RECTANGLE = []
 def face_area(frame, landmarks, subtractor, head_box):
 
     global NB_FRAME
@@ -95,9 +93,10 @@ def face_area(frame, landmarks, subtractor, head_box):
     global AREAS_FRAME_0
     global AREAS_FRAME_1
 
+    global RECTANGLE
+
     global oo
     global pp
-
 
     areas =  { "cheek2":[54, 13, 15, 28], "chin":[58, 56, 9, 7], "beet_eyes" :[21, 22, 28],
                "chin1":[58, 7, 3, 48], "chin2": [56, 54, 13, 9], "cheek1": [48, 3, 1, 28],
@@ -109,15 +108,18 @@ def face_area(frame, landmarks, subtractor, head_box):
     gray = cv2.cvtColor(frame,cv2.COLOR_RGB2GRAY)
 
 
+##    x, y, _, _ = head_box
+##    print(x, y)
+
+
+
     if landmarks is not None:
 
 
 
-        #Recuperate area from dlib
         AREA_LANDMARKS_1 = [make_contour(areas[k], landmarks, frame)
                           for nb, k in enumerate(areas)]
 
-        #Make area from the face
         cropMask = [make_mask_area(np.array(AREA_LANDMARKS_1[n]), gray, frame)
                     for n in range(10)]
 
@@ -130,93 +132,58 @@ def face_area(frame, landmarks, subtractor, head_box):
 
             NB_FRAME += 1
 
-            oo = cropMask[5]
-            cv2.imshow("oo", oo)
-
-
-
 
         elif NB_FRAME == 1:
 
             NB_FRAME = 0
 
 
-            #for i in cropMask:
-                #AREAS_FRAME_1.append(i)
 
+            for i in cropMask:
+                AREAS_FRAME_1.append(i)
 
-            pp = cropMask[5]
-
-            width, height = oo.shape[:2]
-            pp = cv2.resize(pp, (height, width))
-
-            diff = cv2.subtract(oo, pp)
-            ret,diff = cv2.threshold(diff,10,255,cv2.THRESH_BINARY)
-
-            cv2.imshow("pp", pp)
-            cv2.imshow("diff", np.array(diff))
-
-            
-            h,w = diff.shape[:2]
-
-            no_zero_px = cv2.countNonZero(diff)
-            print(h*w)
-            print(no_zero_px)
+            counter = 0
+            for frame1, frame2 in zip(AREAS_FRAME_0, AREAS_FRAME_1):
 
 
 
+                width, height = frame1.shape[:2]
+                frame2 = cv2.resize(frame2, (height, width))
 
-            print("")
+                diff = cv2.subtract(frame1, frame2)
 
-
-
-
-
-
+                _, diff = cv2.threshold(diff, 5, 255,cv2.THRESH_BINARY)
 
 
 
+                dico_copy = list(areas.copy())
 
-##            counter = 0
-##            for frame1, frame2 in zip(AREAS_FRAME_0, AREAS_FRAME_1):
-##
-##                width, height = frame1.shape[:2]
-##                frame2 = cv2.resize(frame2, (height, width))
-##
-##                diff = cv2.subtract(frame1, frame2)
-##
-##
-##                dico_copy = list(areas.copy())
-##                
-##                print(dico_copy[counter])
-##
-##                cv2.imshow("frame1", frame1)
-##                cv2.imshow("frame2", frame2)
-##
-##
-##                cv2.imshow("diff", np.array(diff))
-##
-##
-##                h,w = diff.shape[:2]
-##                no_zero_px = cv2.countNonZero(diff)
-##
-##                print(no_zero_px)
-##
-##                
-##                cv2.waitKey(0)
-##
-##
-##
-##
-##
-##
-##                counter += 1
-##
-##
-##
-##
-##            AREAS_FRAME_0 = []
-##            AREAS_FRAME_1 = []
+
+                cv2.imshow("frame1", frame1)
+                cv2.imshow("frame2", frame2)
+
+
+                cv2.imshow("diff", np.array(diff))
+                cv2.waitKey(0)
+
+
+
+                cv2.imshow("diff", np.array(diff))
+
+
+                h,w = diff.shape[:2]
+                no_zero_px = cv2.countNonZero(diff)
+
+                print(no_zero_px, h*w)
+                if no_zero_px > 450:
+                    print(dico_copy[counter])
+
+                
+                counter += 1
+
+
+            AREAS_FRAME_0 = []
+            AREAS_FRAME_1 = []
 
 
 
@@ -224,27 +191,27 @@ def face_area(frame, landmarks, subtractor, head_box):
 
 
 
-##        AREA2 = [make_contour_by_range(areas2[k], (255,0,0), frame, landmarks)
-##                 for nb, k in enumerate(areas2)]
 
 
 
 
-    else:
 
 
 
 
-        #Recuperate area from dlib
+
+
+    if landmarks is None:
+
+
         AREA_LANDMARKS_2 = [make_contour_NONE(i, frame)
                             for i in AREA_LANDMARKS_1]
 
 
-
-
-        #Make area from the face
         cropMask = [make_mask_area(np.array(AREA_LANDMARKS_1[n]), gray, frame)
                     for n in range(10)]
+
+
 
         if NB_FRAME == 0:
 
@@ -253,10 +220,8 @@ def face_area(frame, landmarks, subtractor, head_box):
 
             NB_FRAME += 1
 
-            oo = cropMask[5]
-            cv2.imshow("oo", oo)
-
-
+            oo = cropMask[0]
+            cv2.imshow("o", oo)
 
 
         elif NB_FRAME == 1:
@@ -264,46 +229,56 @@ def face_area(frame, landmarks, subtractor, head_box):
             NB_FRAME = 0
 
 
-            #for i in cropMask:
-                #AREAS_FRAME_1.append(i)
+            for i in cropMask:
+                AREAS_FRAME_1.append(i)
 
+            counter = 0
+            for frame1, frame2 in zip(AREAS_FRAME_0, AREAS_FRAME_1):
 
-            pp = cropMask[5]
+                width, height = frame1.shape[:2]
+                frame2 = cv2.resize(frame2, (height, width))
 
-            width, height = oo.shape[:2]
-            pp = cv2.resize(pp, (height, width))
+                diff = cv2.subtract(frame1, frame2)
 
-            diff = cv2.subtract(oo, pp)
-            ret,diff = cv2.threshold(diff,10,255,cv2.THRESH_BINARY)
+                _, diff = cv2.threshold(diff, 5, 255,cv2.THRESH_BINARY)
 
-            cv2.imshow("pp", pp)
-            cv2.imshow("diff", np.array(diff))
+                dico_copy = list(areas.copy())
+                print(dico_copy[counter])
 
-            
-            h,w = diff.shape[:2]
-
-            no_zero_px = cv2.countNonZero(diff)
-            print(h*w)
-            print(no_zero_px)
-
-
-
-
-            print("")
+                cv2.imshow("frame1", frame1)
+                cv2.imshow("frame2", frame2)
 
 
 
 
 
 
+                h,w = diff.shape[:2]
+                no_zero_px = cv2.countNonZero(diff)
+
+                print(no_zero_px)
+                if no_zero_px > 450:
+                    print(dico_copy[counter])
+                
+
+
+
+                counter += 1
+
+
+            AREAS_FRAME_0 = []
+            AREAS_FRAME_1 = []
 
 
 
 
 
-##        #Make area from the face
-##        cropMask = [make_mask_area(np.array(AREA_LANDMARKS_1[n]), gray, frame)
-##                    for n in range(10)]
+    print("")
+
+
+
+
+
 
 
 
