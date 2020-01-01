@@ -1,190 +1,91 @@
 import cv2
 import numpy as np
-
-#================================================> AREA
-
-def make_contour(area, landmarks, frame):
-    area = np.array([(landmarks.part(n).x, landmarks.part(n).y) for n in area])
-    cv2.drawContours(frame, [area], 0, (0, 0, 255), 1)
-
-    return area.tolist()
+from dlib import get_frontal_face_detector, shape_predictor
 
 
-def make_contour_by_range(area, landmarks, frame):
-    area = np.array([(landmarks.part(n).x, landmarks.part(n).y) for n in range(area[0], area[1])])
-    cv2.drawContours(frame, [area], 0, (0, 0, 255), 1)
+from paths import dlib_model, emotion_model
 
-    return area.tolist()
+#Treat video for have 90 px width head.
+from video_treatment import resize_frame
 
-
-def make_contour_NONE(points, frame):
-    area = np.array([points])
-    cv2.drawContours(frame, [area], -1, (0, 255, 0), 1)
+#Load DLIB model and Recuperate Landmarks and head.
+from head_points import load_model_dlib, head_points
+#from head_emotion import load_model_emotion
 
 
-def make_contour_by_range_NONE(points, color, frame):
-    area = np.array([points])
-    cv2.drawContours(frame, [area], 0, color, 1)
+#Head part
+#from head_movement import head_movement
+
+#Face part
+from face_movements import face_movements
+
+#Blink part
+from blinking_eyes import blinking_eyes
+from analysis_eyes import blink_analysis
 
 
-def make_mask_area(area, gray, frame):
+#Pupil part
+from pupille_tracker import pupille_tracker
 
-
-    height, width = gray.shape[:2]
-
-    copy = frame.copy()
-    black_frame = np.zeros((height, width), np.uint8)
-    mask = np.full((height, width), 255, np.uint8)
-    cv2.fillPoly(mask, [area], (0, 0, 255))
-    mask = cv2.bitwise_not(black_frame, gray.copy(), mask=mask)
-
-
-    x, y, w, h = cv2.boundingRect(area)
-    cropMask = mask[y : (y+h), x : (x+w)]
-    cropMask1 = copy[y : (y+h), x : (x+w)]
-
-
-    for i in range(cropMask.shape[0]):
-        for j in range(cropMask.shape[1]):
-            if cropMask[i, j] > 240:
-                cropMask1[i, j] = 255, 255, 255
-
-    return cropMask1
-
-
-#================================================> AREA
-
-
-#================================================> NO AREA
-def head_tracker(head_box):
-    pass
-    #Ici on va suivre la tete
-    #du genre droite 2px droite 2px plus rien donc droit 2px ? 1px ?
-    #moindre jcrois
-
-
-def head_size():
-    pass
-    #ICI on récuepre les dimensions des zones des fois trop petit
-    #ou le truk deviens trop grand
-    #si oui on récupere une autre d
-
-#================================================> NO AREA
-
-#================================================> TREAT AREA
+#Eyes movement part
+from eyes_movement import eyes_movements
 
 
 
 
 
-NB_FRAME = 0
+#Load dlib model
+predictor, detector = load_model_dlib(dlib_model)
+#emotion_classifier = load_model_emotion(emotion_model)
 
-AREA_LANDMARKS_1 = []
-AREA_LANDMARKS_2 = []
-
-AREAS_FRAME_0 = []
-AREAS_FRAME_1 = []
-
-RECTANGLE = []
-
-oo = []
-pp = []
-
-RECTANGLE = []
-def face_area(frame, landmarks, subtractor, head_box):
-
-    global NB_FRAME
-
-    global AREA_LANDMARKS_1
-    global AREA_LANDMARKS_2
-
-    global AREAS_FRAME_0
-    global AREAS_FRAME_1
-
-    global RECTANGLE
-
-    global oo
-    global pp
+nb_frame = 0
+cap = cv2.VideoCapture("r.mp4")
+subtractor = cv2.createBackgroundSubtractorMOG2(history=120,
+                                                varThreshold = 20,
+                                                detectShadows=False)
 
 
+while True:
+   
+    _, frame = cap.read()
 
-    areas =  { "cheek2":[54, 13, 15, 28], "chin":[58, 56, 9, 7], "beet_eyes" :[21, 22, 28],
-               "chin1":[58, 7, 3, 48], "chin2": [56, 54, 13, 9], "cheek1": [48, 3, 1, 28],
-               "noze_area":[28, 48, 54], "mouse":(48, 50, 52, 54, 56, 58), "leftEye":(1, 17, 21, 28),
-               "rightEye":(22, 26, 15, 28)}
+    #Resize frame for have 90 px head width.
+    frame, gray = resize_frame(frame)
 
-    areas2 = {"onEye1":[17, 22], "onEye2":[22, 27]}
-
-    gray = cv2.cvtColor(frame,cv2.COLOR_RGB2GRAY)
-
-
-
-
-
-
+    #Recuperate landmarks and head box.
+    landmarks, head_box = head_points(gray, predictor, detector)
 
 
     if landmarks is not None:
 
-        #Recuperate area from dlib
-        AREA_LANDMARKS_1 = [make_contour(areas[k], landmarks, frame)
-                          for nb, k in enumerate(areas)]
+        #Recuperate head movements
+        #head_movement(landmarks, head_box, emotion_classifier, gray)
 
-        #Make area from the face
-        cropMask = [make_mask_area(np.array(AREA_LANDMARKS_1[n]), gray, frame)
-                    for n in range(10)]
+        #Recuperate face movements
+        face_movements(landmarks, frame, head_box, subtractor)
 
-        if NB_FRAME == 0:
+        #Recuperate blink algorythme
+        #blinking_frame, result = blinking_eyes(landmarks, head_box)
+        #blink_analysis(result, nb_frame, blinking_frame)
 
-            for i in cropMask:
-                AREAS_FRAME_0.append(i)
-
-            NB_FRAME += 1
-
-
-
-        elif NB_FRAME == 1:
-
-            NB_FRAME = 0
-
-
-
-
-
+        #Recuperate pupil center
+        #right_eye, left_eye = pupille_tracker(landmarks, frame, gray)
+        #eyes = eyes_movements(landmarks, frame, right_eye, left_eye)
+        #if eyes != "":print(eyes)
 
     else:
-
-
-        #Recuperate area from dlib
-        AREA_LANDMARKS_2 = [make_contour_NONE(i, frame)
-                            for i in AREA_LANDMARKS_1]
-
-        #Make area from the face
-        cropMask = [make_mask_area(np.array(AREA_LANDMARKS_1[n]), gray, frame)
-                    for n in range(10)]
-
-        if NB_FRAME == 0:
-
-            for i in cropMask:
-                AREAS_FRAME_0.append(i)
-
-            NB_FRAME += 1
+        #Recuperate face movements
+        face_movements(None, frame, head_box, subtractor)
 
 
 
+    nb_frame += 1
+    cv2.imshow("Frame", frame)
 
 
-
-        elif NB_FRAME == 1:
-            NB_FRAME = 0
-
-
-
-
-
-
-
-
-
-
-
+    
+    if cv2.waitKey(0) & 0xFF == ord('q'):
+        break
+ 
+cap.release()
+cv2.destroyAllWindows()
