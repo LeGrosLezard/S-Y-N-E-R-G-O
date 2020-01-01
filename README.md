@@ -1,5 +1,7 @@
 # S-Y-N-E-R-G-O
 
+- bon test le mask r-cnn mtn mais jcrois que si la main vient de l'intérieur ca marchera pas
+
 - si une main va vers le visage récupérer la taille des zones ptin chai pas
 
 - difference entre blinkink et bot look
