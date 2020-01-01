@@ -2,6 +2,9 @@
 
 - bon test le mask r-cnn mtn mais jcrois que si la main vient de l'intérieur ca marchera pas
 
+-             pp = cv2.adaptiveThreshold(pp,255,cv2.ADAPTIVE_THRESH_MEAN_C,\
+                                        cv2.THRESH_BINARY,11,2) pour les rides
+
 - si une main va vers le visage récupérer la taille des zones ptin chai pas
 
 - difference entre blinkink et bot look
