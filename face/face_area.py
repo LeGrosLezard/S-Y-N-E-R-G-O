@@ -12,7 +12,7 @@ def make_contour(area, landmarks, frame):
 
 def make_contour_by_range(area, landmarks, frame):
     area = np.array([(landmarks.part(n).x, landmarks.part(n).y) for n in range(area[0], area[1])])
-    cv2.drawContours(frame, [area], 0, (0, 0, 255), 1)
+    cv2.drawContours(frame, [area], 0, (0, 255, 0), 1)
 
     return area.tolist()
 
@@ -77,39 +77,34 @@ def head_size():
 #================================================> NO AREA
 
 #================================================> TREAT AREA
+def recuperate_area_zone(zone, frame):
+
+    contours = cv2.findContours(zone, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)[0]
+    contours = sorted(contours, key=cv2.contourArea)
+    print(cv2.contourArea(contours[-1]), zone.shape[0] * zone.shape[1],
+          (zone.shape[0] * zone.shape[1])/cv2.contourArea(contours[-1]))
+    cv2.drawContours(frame, [contours[-1]], -1, (0, 255, 0), 1)
+    return cv2.contourArea(contours[-1])
 
 
 
 
 
-NB_FRAME = 0
+
+
 
 AREA_LANDMARKS_1 = []
-AREA_LANDMARKS_2 = []
+REPEAR = []
 
-AREAS_FRAME_0 = []
-AREAS_FRAME_1 = []
 
-RECTANGLE = []
-
-oo = []
-pp = []
 
 RECTANGLE = []
 def face_area(frame, landmarks, subtractor, head_box):
 
-    global NB_FRAME
+
 
     global AREA_LANDMARKS_1
-    global AREA_LANDMARKS_2
-
-    global AREAS_FRAME_0
-    global AREAS_FRAME_1
-
-    global RECTANGLE
-
-    global oo
-    global pp
+    global REPEAR
 
 
 
@@ -122,53 +117,49 @@ def face_area(frame, landmarks, subtractor, head_box):
 
     gray = cv2.cvtColor(frame,cv2.COLOR_RGB2GRAY)
 
-    try:
-        x, y, w, h = head_box
-        print(x, y)
-    except:pass
+
+    if landmarks is not None:
+        pos_noze = (landmarks.part(30).x, landmarks.part(30).y)
+        REPEAR.append(pos_noze)
+        cv2.circle(frame, pos_noze, 2, (255, 0, 0), 2)
+        print(pos_noze)
+
+    else:
+        #cv2.circle(frame, REPEAR, 2, (255, 0, 0), 2)
+        print(REPEAR[-1], REPEAR)
+
+        #EN GROS MTN ON CHERCHE LES TRUCKS AVEC LE LAST REPEAR QUI EST LE PLUS PROCHE
+        #D4UN DES REPEAR
+
+
+
+
+
+
+
 
     gray = cv2.adaptiveThreshold(gray,255,cv2.ADAPTIVE_THRESH_MEAN_C,\
                 cv2.THRESH_BINARY,15,2)
 
 
 
-
-    if AREA_LANDMARKS_1 != []:
-        cropMask = [make_contour_NONE(i, frame) for i in AREA_LANDMARKS_1]
-        cropMask = [make_mask_area(np.array(AREA_LANDMARKS_1[n]), gray, frame)
-                    for n in range(10)]
-        
-
-
-        contours = cv2.findContours(cropMask[5], cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)[0]
-        contours = sorted(contours, key=cv2.contourArea, reverse=True)
-        print(cv2.contourArea(contours[0]))
-        cv2.drawContours(frame, [contours[0]], -1, (0, 0, 255), 1)
-
-
-
-
-
-
-
-
-    elif landmarks is not None:
-        AREA_LANDMARKS_1 = [make_contour(areas[k], landmarks, frame)
-                            for nb, k in enumerate(areas)]
-
-        cropMask = [make_mask_area(np.array(AREA_LANDMARKS_1[n]), gray, frame)
+    if landmarks is not None:
+        AREA_LANDMARKS_1.append([make_contour(areas[k], landmarks, frame)
+                            for nb, k in enumerate(areas)])
+        cropMask = [make_mask_area(np.array(AREA_LANDMARKS_1[-1][n]), gray, frame)
                                 for n in range(10)]
-        
 
-        contours = cv2.findContours(cropMask[5], cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)[0]
-        contours = sorted(contours, key=cv2.contourArea, reverse=True)
-        print(cv2.contourArea(contours[0]))
-        cv2.drawContours(frame, [contours[0]], -1, (0, 0, 255), 1)
+        recuperate_area_zone(cropMask[5], frame)
 
 
 
+    else:
+        cropMask = [make_contour_NONE(i, frame) for i in AREA_LANDMARKS_1[-1]]
+        cropMask = [make_mask_area(np.array(AREA_LANDMARKS_1[-1][n]), gray, frame)
+                    for n in range(10)]
 
-    cv2.imshow(",po", gray)
+        recuperate_area_zone(cropMask[5], frame)
+
 
 
 
