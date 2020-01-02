@@ -87,8 +87,8 @@ def recuperate_area_zone(zone, frame):
 
     contours = cv2.findContours(zone, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)[0]
     contours = sorted(contours, key=cv2.contourArea)
-    print(cv2.contourArea(contours[-1]), zone.shape[0] * zone.shape[1],
-          (zone.shape[0] * zone.shape[1])/cv2.contourArea(contours[-1]))
+    #print(cv2.contourArea(contours[-1]), zone.shape[0] * zone.shape[1],
+    #      (zone.shape[0] * zone.shape[1])/cv2.contourArea(contours[-1]))
     cv2.drawContours(frame, [contours[-1]], -1, (0, 255, 0), 1)
     return cv2.contourArea(contours[-1])
 
@@ -101,9 +101,10 @@ def recuperate_area_zone(zone, frame):
 
 AREA_LANDMARKS_1 = []
 REPEAR = []
+
 HEADX = []
 HEADY = []
-
+MOVE = []
 
 RECTANGLE = []
 def face_area(frame, landmarks, subtractor, head_box):
@@ -112,8 +113,10 @@ def face_area(frame, landmarks, subtractor, head_box):
 
     global AREA_LANDMARKS_1
     global REPEAR
+
     global HEADX
     global HEADY
+    global MOVE
 
 
 
@@ -131,39 +134,72 @@ def face_area(frame, landmarks, subtractor, head_box):
     #HEAD MOVEMENT
     if landmarks is not None:
         x, y, w, h = head_box
+        move = ""
+        nb = []
+        if len(HEADX) > 0:
+
+            print(x, y, HEADX[-1], HEADY[-1])
+
+            if x - HEADX[-1] > 0 :
+                move += "gauche "
+                nb.append(x - HEADX[-1])
+
+            elif x - HEADX[-1] < 0:
+                move += "droite "
+                nb.append(x - HEADX[-1])
+  
+            if y - HEADY[-1] > 0 :
+                move += "bas "
+                nb.append(y - HEADY[-1])
+
+            elif y - HEADY[-1] < 0:
+                move += "haut "
+                nb.append(y - HEADY[-1])
+ 
+            if move == "":
+                move = "none"
+
+            print(move)
+
+
+
         HEADX.append(x)
         HEADY.append(y)
-
+        MOVE.append((move, nb))
     else:
-        for i, j in zip(HEADX, HEADY):
-            print(i, j)
-            #on suit le mouvement de la tete depuis le debut et on dit la suite logique
-
-
-
-
-
-
-    #NOSE SECTION
-    if landmarks is not None:
-        pos_noze = (landmarks.part(30).x, landmarks.part(30).y)
-        REPEAR.append(pos_noze)
-        cv2.circle(frame, pos_noze, 2, (255, 0, 0), 2)
-        print(pos_noze)
-
-    else:
-        #cv2.circle(frame, REPEAR, 2, (255, 0, 0), 2)
-        print(REPEAR[-1], REPEAR)
-
-        for i, j in zip(REPEAR, AREA_LANDMARKS_1):
-            print(REPEAR[-1], i, REPEAR[-1][0] - i[0], REPEAR[-1][1] - i[1])
+        for nb, i in enumerate(MOVE):
+            print(i)
             
-            copy = frame.copy()
-            for k in j:
-                make_contour_NONE2(k, copy)
 
-            cv2.imshow("noi", copy)
-            cv2.waitKey(0)
+
+
+
+
+
+
+
+
+
+##    #NOSE SECTION
+##    if landmarks is not None:
+##        pos_noze = (landmarks.part(30).x, landmarks.part(30).y)
+##        REPEAR.append(pos_noze)
+##        cv2.circle(frame, pos_noze, 2, (255, 0, 0), 2)
+##        print(pos_noze)
+##
+##    else:
+##        #cv2.circle(frame, REPEAR, 2, (255, 0, 0), 2)
+##        print(REPEAR[-1], REPEAR)
+##
+##        for i, j in zip(REPEAR, AREA_LANDMARKS_1):
+##            print(REPEAR[-1], i, REPEAR[-1][0] - i[0], REPEAR[-1][1] - i[1])
+##            
+##            copy = frame.copy()
+##            for k in j:
+##                make_contour_NONE2(k, copy)
+##
+##            cv2.imshow("noi", copy)
+##            cv2.waitKey(0)
 
 
 
