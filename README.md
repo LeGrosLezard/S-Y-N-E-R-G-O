@@ -1,6 +1,6 @@
 # S-Y-N-E-R-G-O
 
-- bon test le mask r-cnn mtn mais jcrois que si la main vient de l'intérieur ca marchera pas
+- essayer js
 
 -             pp = cv2.adaptiveThreshold(pp,255,cv2.ADAPTIVE_THRESH_MEAN_C,\
                                         cv2.THRESH_BINARY,11,2) pour les rides
