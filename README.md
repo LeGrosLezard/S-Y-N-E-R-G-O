@@ -130,4 +130,4 @@ algo contexte
 
 mec mtn tout réécrire en fonction d'un ratio genre taille de la tete (tf t'as te fait grave grave ralentir aussi télécharge le gpu ptetre bonne chance)
 
-citer mec cv2, mec automatic et mec dlib, et mec cv2-1 vittoria et tuto yolo, tim et thhierry quand meme mettre leur tuto quoi, maxence gounon, valentin guerest et simon belleguy 
+citer mec cv2, mec automatic et mec dlib, et mec cv2-1 vittoria et tuto yolo, tim et thhierry quand meme mettre leur tuto quoi, maxence gounon, valentin guerest et simon belleguy, les mecs du groupe facebook
