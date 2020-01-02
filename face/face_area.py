@@ -22,6 +22,12 @@ def make_contour_NONE(points, frame):
     cv2.drawContours(frame, [area], -1, (0, 255, 0), 1)
 
 
+def make_contour_NONE2(points, copy):
+
+    area = np.array([points])
+    cv2.drawContours(copy, [area], -1, (0, 255, 0), 1)
+
+
 def make_contour_by_range_NONE(points, color, frame):
     area = np.array([points])
     cv2.drawContours(frame, [area], 0, color, 1)
@@ -95,7 +101,8 @@ def recuperate_area_zone(zone, frame):
 
 AREA_LANDMARKS_1 = []
 REPEAR = []
-
+HEADX = []
+HEADY = []
 
 
 RECTANGLE = []
@@ -105,6 +112,8 @@ def face_area(frame, landmarks, subtractor, head_box):
 
     global AREA_LANDMARKS_1
     global REPEAR
+    global HEADX
+    global HEADY
 
 
 
@@ -118,6 +127,24 @@ def face_area(frame, landmarks, subtractor, head_box):
     gray = cv2.cvtColor(frame,cv2.COLOR_RGB2GRAY)
 
 
+
+    #HEAD MOVEMENT
+    if landmarks is not None:
+        x, y, w, h = head_box
+        HEADX.append(x)
+        HEADY.append(y)
+
+    else:
+        for i, j in zip(HEADX, HEADY):
+            print(i, j)
+            #on suit le mouvement de la tete depuis le debut et on dit la suite logique
+
+
+
+
+
+
+    #NOSE SECTION
     if landmarks is not None:
         pos_noze = (landmarks.part(30).x, landmarks.part(30).y)
         REPEAR.append(pos_noze)
@@ -128,8 +155,15 @@ def face_area(frame, landmarks, subtractor, head_box):
         #cv2.circle(frame, REPEAR, 2, (255, 0, 0), 2)
         print(REPEAR[-1], REPEAR)
 
-        #EN GROS MTN ON CHERCHE LES TRUCKS AVEC LE LAST REPEAR QUI EST LE PLUS PROCHE
-        #D4UN DES REPEAR
+        for i, j in zip(REPEAR, AREA_LANDMARKS_1):
+            print(REPEAR[-1], i, REPEAR[-1][0] - i[0], REPEAR[-1][1] - i[1])
+            
+            copy = frame.copy()
+            for k in j:
+                make_contour_NONE2(k, copy)
+
+            cv2.imshow("noi", copy)
+            cv2.waitKey(0)
 
 
 
@@ -145,7 +179,7 @@ def face_area(frame, landmarks, subtractor, head_box):
 
     if landmarks is not None:
         AREA_LANDMARKS_1.append([make_contour(areas[k], landmarks, frame)
-                            for nb, k in enumerate(areas)])
+                                 for nb, k in enumerate(areas)])
         cropMask = [make_mask_area(np.array(AREA_LANDMARKS_1[-1][n]), gray, frame)
                                 for n in range(10)]
 
