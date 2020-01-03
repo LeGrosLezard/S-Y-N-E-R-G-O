@@ -108,7 +108,14 @@ def zone_detected(mask, frame, diviser, zone, landmarks, area, msg, nb, no_area)
 
     contour, size_crop = recuperate_area_zone(mask[no_area], frame)
 
-    if  diviser[no_area] > 0 and (size_crop/contour) > zone[no_area] / diviser[no_area] + nb:
+    try:
+        print(size_crop/contour, zone[no_area] / diviser[no_area], size_crop)
+    except:pass
+
+
+
+    #if  diviser[no_area] > 0 and (size_crop/contour) > zone[no_area] / diviser[no_area] + nb:
+    if  diviser[no_area] > 0 and (size_crop/contour) > nb * size_crop:
         print(msg)
         display(area, landmarks[no_area], frame)
         increment = True
@@ -130,8 +137,8 @@ AREA_LANDMARKS_1 = []
 ZONE = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ZONE_INCREMENT = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-NUMBER_MSG = [("joue gauche", 1), ("menton", 2), ("entre oeil", 15000),
-              ("chin 1", 10), ("chin2", 10), ("joue droite", 1), ("angel finguer", 2),
+NUMBER_MSG = [("joue gauche", 0.00146), ("menton", 0.007), ("entre oeil", 15000),
+              ("chin 1", 10), ("chin2", 10), ("joue droite", 0.0014), ("angel finguer", 2),
               ("mouse", 15), ("", 15000), ("", 15000)]
 
 
@@ -148,8 +155,8 @@ def face_area(frame, landmarks, head_box):
               "angel_finger":[31, 49, 53, 35], "mouse":(48, 50, 52, 54, 56, 58), "leftEye":(1, 17, 21, 28),
                "rightEye":(22, 26, 15, 28)}
 
-    #noze_area":[41, 46, 54, 48]
-    #mouse":(48, 50, 52, 54, 56, 58)
+    #noze_area:[41, 46, 54, 48]
+    #mouse:(48, 50, 52, 54, 56, 58)
     areas2 = {"onEye1":[17, 22], "onEye2":[22, 27]}
 
 
@@ -175,13 +182,13 @@ def face_area(frame, landmarks, head_box):
         cropMask = [make_mask_area(np.array(AREA_LANDMARKS_1[-1][n]), th2, frame)
                                 for n in range(10)]
 
-        [(zone_detected(cropMask, frame, ZONE_INCREMENT, ZONE, AREA_LANDMARKS_1[-1],
-                        areas[k], NUMBER_MSG[nb][0], NUMBER_MSG[nb][1], nb)) for nb, k in enumerate(areas)]
+##        [(zone_detected(cropMask, frame, ZONE_INCREMENT, ZONE, AREA_LANDMARKS_1[-1],
+##                        areas[k], NUMBER_MSG[nb][0], NUMBER_MSG[nb][1], nb)) for nb, k in enumerate(areas)]
 
 
-
-##        zone_detected(cropMask[5], frame, ZONE_INCREMENT, 1, ZONE,
-##                      AREA_LANDMARKS_1[-1], areas["cheek1"], "joue droite", 5)
+        cv2.imshow("daz", cropMask[0])
+        zone_detected(cropMask, frame, ZONE_INCREMENT, ZONE,
+                      AREA_LANDMARKS_1[-1], areas["cheek2"], NUMBER_MSG[0][0], NUMBER_MSG[0][1], 0)
 
 
 
@@ -192,12 +199,25 @@ def face_area(frame, landmarks, head_box):
             cropMask = [make_contour_NONE(i, frame) for i in AREA_LANDMARKS_1[-1]]
             cropMask = [make_mask_area(np.array(AREA_LANDMARKS_1[-1][n]), th2, frame)
                         for n in range(10)]
+##
+##            [(zone_detected(cropMask, frame, ZONE_INCREMENT, ZONE, AREA_LANDMARKS_1[-1],
+##                            areas[k], NUMBER_MSG[nb][0], NUMBER_MSG[nb][1], nb)) for nb, k in enumerate(areas)]
 
-            [(zone_detected(cropMask, frame, ZONE_INCREMENT, ZONE, AREA_LANDMARKS_1[-1],
-                            areas[k], NUMBER_MSG[nb][0], NUMBER_MSG[nb][1], nb)) for nb, k in enumerate(areas)]
-
-
-
+            if cropMask != []:
+                cv2.imshow("daz", cropMask[0])
+                zone_detected(cropMask, frame, ZONE_INCREMENT, ZONE,
+                              AREA_LANDMARKS_1[-1], areas["cheek2"],
+                              NUMBER_MSG[0][0], NUMBER_MSG[0][1], 0)
 
 
     print("")
+
+
+
+
+
+
+
+
+
+
