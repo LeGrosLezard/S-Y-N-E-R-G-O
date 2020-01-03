@@ -17,6 +17,7 @@ def make_contour_by_range(area, landmarks, frame):
     return area.tolist()
 
 
+
 def make_contour_NONE(points, frame):
     area = np.array([points])
     cv2.drawContours(frame, [area], -1, (0, 0, 255), 1)
@@ -31,6 +32,11 @@ def make_contour_NONE2(points, copy):
 def make_contour_by_range_NONE(points, color, frame):
     area = np.array([points])
     cv2.drawContours(frame, [area], 0, color, 1)
+
+
+def display(area, landmarks, frame):
+    area = np.array([(landmarks.part(n).x, landmarks.part(n).y) for n in area])
+    cv2.fillPoly(frame, [area], (255, 0, 0))
 
 
 def make_mask_area(area, gray, frame):
@@ -111,8 +117,8 @@ RECTANGLE = []
 
 
 ZONE = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-
-def face_area(frame, landmarks, subtractor, head_box):
+ZONE_INCREMENT = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+def face_area(frame, landmarks, head_box):
 
 
 
@@ -217,13 +223,43 @@ def face_area(frame, landmarks, subtractor, head_box):
 
 
 
+    def recuperate_intra_face_points(landmarks, img):
+        """Recuperate all coordiantes of landmarks (faces points).
+        Recuperate convex points (exterior of face) and triangle
+        points (area of the interior of the face)."""
+
+        #points of face
+        points = [(landmarks.part(n).x, landmarks.part(n).y) for n in range(0, 68)]
+
+        #Convex points (contour of face)
+        convexhull = cv2.convexHull(np.array(points))
+
+        #Head points
+        head = cv2.boundingRect(convexhull)
+
+        return head, convexhull
+
+    def mask_head(gray, img, copy, convexhull):
+        mask = np.zeros_like(gray)
+        cv2.polylines(copy, [convexhull], True, (0, 0, 255), 1)
+        cv2.fillConvexPoly(mask, convexhull, 255)
+
+        return cv2.bitwise_and(copy, copy, mask=mask)
 
 
 
 
+    copy = frame.copy()
+
+    head, convexhull = recuperate_intra_face_points(landmarks, frame)
+    mask = mask_head(gray, frame, copy, convexhull)
+
+    cv2.imshow("mask", mask)
 
     gray = cv2.adaptiveThreshold(gray,255,cv2.ADAPTIVE_THRESH_MEAN_C,\
-                cv2.THRESH_BINARY,15,2)
+                cv2.THRESH_BINARY,21,6)
+
+    cv2.imshow("gray", gray)
 
 
 
@@ -235,20 +271,54 @@ def face_area(frame, landmarks, subtractor, head_box):
         cropMask = [make_mask_area(np.array(AREA_LANDMARKS_1[-1][n]), gray, frame)
                                 for n in range(10)]
 
-        cv2.imshow("nose", cropMask[6])
-        cv2.imshow("mouse", cropMask[7])
-        cv2.imshow("mouse", cropMask[8])
-        cv2.imshow("mouse", cropMask[9])
 
 
 
-##        a, b = recuperate_area_zone(cropMask[5], frame)
-##        if ZONE[-1] > 0:
-##            print(b/a, ZONE[5] / ZONE[-1])
-##            if b/a > ZONE[5] / ZONE[-1] + 1:
-##                print("joue droite")
-##        ZONE[5] += b/a
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##        cv2.imshow("nose", cropMask[6])
+##        cv2.imshow("mouse", cropMask[7])
+##        cv2.imshow("mouse", cropMask[8])
+##        cv2.imshow("mouse", cropMask[9])
+
+##        try:
+##            ok = False
+##            a, b = recuperate_area_zone(cropMask[5], frame)
+##            print(a, b)
+##            if  ZONE_INCREMENT[5] > 0:
+##                print(b/a, ZONE[5] /  ZONE_INCREMENT[5])
+##                if b/a > ZONE[5] /  ZONE_INCREMENT[5] + 1:
+##                    print("joue droite")
+##                    display(areas["cheek1"], landmarks, frame)
+##                    ok = True
 ##
+##            if ok is False:
+##                ZONE[5] += b/a
+##                ZONE_INCREMENT[5] += 1
+##
+##        except:pass
+
+
+
+
+
+
+
+
+
+
 ##        a, b = recuperate_area_zone(cropMask[0], frame)
 ##        if ZONE[-1] > 0:
 ##            if b/a > ZONE[0] / ZONE[-1] + 1:
@@ -301,41 +371,59 @@ def face_area(frame, landmarks, subtractor, head_box):
 
 
 
-        a, b = recuperate_area_zone(cropMask[7], frame)
-
-        if ZONE[-1] > 0:
-            print(b/a, ZONE[7] / ZONE[-1])
-            if b/a > ZONE[7] / ZONE[-1] + 15:
-                print("mouse")
-
-        ZONE[7] += b/a
-
-
+##        a, b = recuperate_area_zone(cropMask[7], frame)
+##
+##        if ZONE[-1] > 0:
+##            print(b/a, ZONE[7] / ZONE[-1])
+##            if b/a > ZONE[7] / ZONE[-1] + 15:
+##                print("mouse")
+##
+##        ZONE[7] += b/a
 
 
 
 
 
-        ZONE[-1] += 1
+
+
+        
 
         
         
 
 
     else:
-        cropMask = [make_contour_NONE(i, frame) for i in AREA_LANDMARKS_1[-1]]
-        cropMask = [make_mask_area(np.array(AREA_LANDMARKS_1[-1][n]), gray, frame)
-                    for n in range(10)]
 
-##        a, b = recuperate_area_zone(cropMask[5], frame)
-##        if ZONE[-1] > 0:
-##            print(b/a, ZONE[5] / ZONE[-1])
-##            if b/a > ZONE[5] / ZONE[-1] + 1:
-##                print("joue droite")
-##        ZONE[5] += b/a
+        if len(AREA_LANDMARKS_1) > 0:
+
+            cropMask = [make_contour_NONE(i, frame) for i in AREA_LANDMARKS_1[-1]]
+            cropMask = [make_mask_area(np.array(AREA_LANDMARKS_1[-1][n]), gray, frame)
+                        for n in range(10)]
+
+
+##            try:
+##                ok = False
+##                a, b = recuperate_area_zone(cropMask[5], frame)
+##                if  ZONE_INCREMENT[5] > 0:
+##                    print(b/a, ZONE[5] /  ZONE_INCREMENT[5])
+##                    if b/a > ZONE[5] /  ZONE_INCREMENT[5] + 1:
+##                        print("joue droite")
+##                        display(areas["cheek1"], landmarks, frame)
+##                        ok = True
 ##
 ##
+##                if ok is False:
+##                    ZONE[5] += b/a
+##                    ZONE_INCREMENT[5] += 1
+##                        
 ##
+##            except:pass
+
+
+
+
+
+
 ##
 ##        a, b = recuperate_area_zone(cropMask[0], frame)
 ##        if ZONE[-1] > 0:
@@ -385,35 +473,21 @@ def face_area(frame, landmarks, subtractor, head_box):
 
 
 
-        a, b = recuperate_area_zone(cropMask[7], frame)
-
-        if ZONE[-1] > 0:
-            print(b/a, ZONE[7] / ZONE[-1])
-            if b/a > ZONE[7] / ZONE[-1] + 15:
-                print("if mouse close and chin active")
-
-        ZONE[7] += b/a
-
-
+##        a, b = recuperate_area_zone(cropMask[7], frame)
+##
+##        if ZONE[-1] > 0:
+##            print(b/a, ZONE[7] / ZONE[-1])
+##            if b/a > ZONE[7] / ZONE[-1] + 15:
+##                print("if mouse close and chin active")
+##
+##        ZONE[7] += b/a
 
 
 
 
-        ZONE[-1] += 1
+
 
 
 
 
     print("")
-
-
-
-
-
-
-
-
-
-
-
-
