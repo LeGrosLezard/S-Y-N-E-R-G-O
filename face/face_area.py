@@ -130,9 +130,12 @@ def face_area(frame, landmarks, subtractor, head_box):
 
     areas =  { "cheek2":[54, 13, 15, 28], "chin":[58, 56, 9, 7], "beet_eyes" :[21, 22, 28],
                "chin1":[58, 7, 3, 48], "chin2": [56, 54, 13, 9], "cheek1": [48, 3, 1, 28],
-               "noze_area":[28, 48, 54], "mouse":(48, 50, 52, 54, 56, 58), "leftEye":(1, 17, 21, 28),
+              "angel_finger":[31, 49, 53, 35], "mouse":(48, 50, 52, 54, 56, 58), "leftEye":(1, 17, 21, 28),
                "rightEye":(22, 26, 15, 28)}
 
+
+    # "noze_area":[41, 46, 54, 48] a faire a la main
+    #"mouse":(48, 50, 52, 54, 56, 58) rectangle
     areas2 = {"onEye1":[17, 22], "onEye2":[22, 27]}
 
     gray = cv2.cvtColor(frame,cv2.COLOR_RGB2GRAY)
@@ -191,11 +194,11 @@ def face_area(frame, landmarks, subtractor, head_box):
     if landmarks is not None:
         pos_noze = (landmarks.part(30).x, landmarks.part(30).y)
         REPEAR.append(pos_noze)
-        cv2.circle(frame, pos_noze, 2, (255, 0, 0), 2)
+        #cv2.circle(frame, pos_noze, 2, (255, 0, 0), 2)
         #print(pos_noze)
 
-    else:
-        cv2.circle(frame, REPEAR[-1], 2, (255, 0, 0), 2)
+##    else:
+
 ##        for i in REPEAR:
 ##            print(i)
         #cv2.circle(frame, REPEAR, 2, (255, 0, 0), 2)
@@ -232,18 +235,85 @@ def face_area(frame, landmarks, subtractor, head_box):
         cropMask = [make_mask_area(np.array(AREA_LANDMARKS_1[-1][n]), gray, frame)
                                 for n in range(10)]
 
-        a, b = recuperate_area_zone(cropMask[5], frame)
-        if ZONE[-1] > 0:
-            print(b/a, ZONE[5] / ZONE[-1])
-            if b/a > ZONE[5] / ZONE[-1] + 1:
-                print("joue droite")
-        ZONE[5] += b/a
+        cv2.imshow("nose", cropMask[6])
+        cv2.imshow("mouse", cropMask[7])
+        cv2.imshow("mouse", cropMask[8])
+        cv2.imshow("mouse", cropMask[9])
 
-        a, b = recuperate_area_zone(cropMask[0], frame)
+
+
+##        a, b = recuperate_area_zone(cropMask[5], frame)
+##        if ZONE[-1] > 0:
+##            print(b/a, ZONE[5] / ZONE[-1])
+##            if b/a > ZONE[5] / ZONE[-1] + 1:
+##                print("joue droite")
+##        ZONE[5] += b/a
+##
+##        a, b = recuperate_area_zone(cropMask[0], frame)
+##        if ZONE[-1] > 0:
+##            if b/a > ZONE[0] / ZONE[-1] + 1:
+##                print("joue gauche")
+##        ZONE[0] += b/a
+
+
+##        a, b = recuperate_area_zone(cropMask[1], frame)
+##
+##        if ZONE[-1] > 0:
+##            print(b/a, ZONE[1] / ZONE[-1])
+##            if b/a > ZONE[1] / ZONE[-1] + 1:
+##                print("menton")
+##
+##        ZONE[1] += b/a
+
+
+
+
+##        a, b = recuperate_area_zone(cropMask[3], frame)
+##
+##        if ZONE[-1] > 0:
+##            print(b/a, ZONE[3] / ZONE[-1])
+##            if b/a > ZONE[3] / ZONE[-1] + 10:
+##                print("chin1")
+##
+##        ZONE[3] += b/a
+##
+##
+##        a, b = recuperate_area_zone(cropMask[4], frame)
+##
+##        if ZONE[-1] > 0:
+##            print(b/a, ZONE[4] / ZONE[-1])
+##            if b/a > ZONE[4] / ZONE[-1] + 10:
+##                print("chin2")
+##
+##        ZONE[4] += b/a
+
+
+
+
+##        a, b = recuperate_area_zone(cropMask[6], frame)
+##
+##        if ZONE[-1] > 0:
+##            print(b/a, ZONE[6] / ZONE[-1])
+##            if b/a > ZONE[6] / ZONE[-1] + 2:
+##                print("angel_finger")
+##
+##        ZONE[6] += b/a
+
+
+
+        a, b = recuperate_area_zone(cropMask[7], frame)
+
         if ZONE[-1] > 0:
-            if b/a > ZONE[0] / ZONE[-1] + 1:
-                print("joue gauche")
-        ZONE[0] += b/a
+            print(b/a, ZONE[7] / ZONE[-1])
+            if b/a > ZONE[7] / ZONE[-1] + 15:
+                print("mouse")
+
+        ZONE[7] += b/a
+
+
+
+
+
 
 
         ZONE[-1] += 1
@@ -257,26 +327,72 @@ def face_area(frame, landmarks, subtractor, head_box):
         cropMask = [make_mask_area(np.array(AREA_LANDMARKS_1[-1][n]), gray, frame)
                     for n in range(10)]
 
-        a, b = recuperate_area_zone(cropMask[5], frame)
+##        a, b = recuperate_area_zone(cropMask[5], frame)
+##        if ZONE[-1] > 0:
+##            print(b/a, ZONE[5] / ZONE[-1])
+##            if b/a > ZONE[5] / ZONE[-1] + 1:
+##                print("joue droite")
+##        ZONE[5] += b/a
+##
+##
+##
+##
+##        a, b = recuperate_area_zone(cropMask[0], frame)
+##        if ZONE[-1] > 0:
+##            if b/a > ZONE[0] / ZONE[-1] + 1:
+##                print("joue gauche")
+##        ZONE[0] += b/a
+
+
+##        a, b = recuperate_area_zone(cropMask[1], frame)
+##        if ZONE[-1] > 0:
+##            print(b/a, ZONE[1] / ZONE[-1])
+##            if b/a > ZONE[1] / ZONE[-1] + 1:
+##                print("menton")
+##        ZONE[1] += b/a
+
+
+
+##        a, b = recuperate_area_zone(cropMask[3], frame)
+##
+##        if ZONE[-1] > 0:
+##            print(b/a, ZONE[3] / ZONE[-1])
+##            if b/a > ZONE[3] / ZONE[-1] + 10:
+##                print("chin1")
+##
+##        ZONE[3] += b/a
+##
+##
+##        a, b = recuperate_area_zone(cropMask[4], frame)
+##
+##        if ZONE[-1] > 0:
+##            print(b/a, ZONE[4] / ZONE[-1])
+##            if b/a > ZONE[4] / ZONE[-1] + 10:
+##                print("chin2")
+##
+##        ZONE[4] += b/a
+
+##
+##        a, b = recuperate_area_zone(cropMask[6], frame)
+##
+##        if ZONE[-1] > 0:
+##            print(b/a, ZONE[6] / ZONE[-1])
+##            if b/a > ZONE[6] / ZONE[-1] + 2:
+##                print("angel_finger")
+##
+##        ZONE[6] += b/a
+
+
+
+
+        a, b = recuperate_area_zone(cropMask[7], frame)
+
         if ZONE[-1] > 0:
-            print(b/a, ZONE[5] / ZONE[-1])
-            if b/a > ZONE[5] / ZONE[-1] + 1:
-                print("joue droite")
-        ZONE[5] += b/a
+            print(b/a, ZONE[7] / ZONE[-1])
+            if b/a > ZONE[7] / ZONE[-1] + 15:
+                print("if mouse close and chin active")
 
-
-
-
-        a, b = recuperate_area_zone(cropMask[0], frame)
-        if ZONE[-1] > 0:
-            if b/a > ZONE[0] / ZONE[-1] + 1:
-                print("joue gauche")
-        ZONE[0] += b/a
-
-
-
-
-
+        ZONE[7] += b/a
 
 
 
