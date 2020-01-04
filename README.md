@@ -1,6 +1,6 @@
 # S-Y-N-E-R-G-O
 
-- essayer js
+trouver mais j'y arrive pas et ca commence a me courir la 
 
 -             pp = cv2.adaptiveThreshold(pp,255,cv2.ADAPTIVE_THRESH_MEAN_C,\
                                         cv2.THRESH_BINARY,11,2) pour les rides
