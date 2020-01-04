@@ -109,13 +109,14 @@ def zone_detected(mask, frame, diviser, zone, landmarks, area, msg, nb, no_area)
     contour, size_crop = recuperate_area_zone(mask[no_area], frame)
 
     try:
-        print(contour, size_crop/contour, zone[no_area] / diviser[no_area], size_crop)
+        print(size_crop/contour, zone[no_area] / diviser[no_area])
     except:pass
 
 
 
     #if  diviser[no_area] > 0 and (size_crop/contour) > zone[no_area] / diviser[no_area] + nb:
-    if  diviser[no_area] > 0 and contour > 0 and (size_crop/contour) > nb * size_crop:
+    if  diviser[no_area] > 0 and contour > 0 and\
+       int(size_crop/contour) > int(zone[no_area] / diviser[no_area]) + 1:
         print(msg)
         display(area, landmarks[no_area], frame)
         increment = True
@@ -138,7 +139,7 @@ ZONE = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ZONE_INCREMENT = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 NUMBER_MSG = [("joue gauche", 0.00146), ("menton", 0.007), ("entre oeil",0.009),
-              ("chin 1", 0.004), ("chin2", 10), ("joue droite", 0.0014), ("angel finguer", 2),
+              ("chin 1", 0.004), ("chin2", 10), ("joue droite", 2), ("angel finguer", 2),
               ("mouse", 15), ("", 15000), ("", 15000)]
 
 
@@ -162,21 +163,15 @@ def face_area(frame, landmarks, head_box):
     areas2 = {"onEye1":[17, 22], "onEye2":[22, 27]}
 
 
+    blur = cv2.bilateralFilter (frame, 25, 65, 65)
+    gray = cv2.cvtColor(blur,cv2.COLOR_RGB2GRAY)
 
-
-
-    gray = cv2.cvtColor(frame,cv2.COLOR_RGB2GRAY)
 
     th2 = cv2.adaptiveThreshold(gray,255,cv2.ADAPTIVE_THRESH_MEAN_C,\
-                                cv2.THRESH_BINARY,31,6)
+                                cv2.THRESH_BINARY,7,2)
 
 
-
-
-
-
-
-
+    cv2.imshow("th2", th2)
 
 
 
@@ -191,19 +186,19 @@ def face_area(frame, landmarks, head_box):
 
         
 
+##
+##        [(zone_detected(cropMask, frame, ZONE_INCREMENT, ZONE, AREA_LANDMARKS_1[-1],
+##                        areas[k], NUMBER_MSG[nb][0], NUMBER_MSG[nb][1], nb)) for nb, k in enumerate(areas)]
 
-        [(zone_detected(cropMask, frame, ZONE_INCREMENT, ZONE, AREA_LANDMARKS_1[-1],
-                        areas[k], NUMBER_MSG[nb][0], NUMBER_MSG[nb][1], nb)) for nb, k in enumerate(areas)]
 
 
-
-        a = 4
+        a = 1
         cv2.imshow("daz", cropMask[a])
         zone_detected(cropMask, frame, ZONE_INCREMENT, ZONE,
-                      AREA_LANDMARKS_1[-1], areas["chin2"], NUMBER_MSG[a][0], NUMBER_MSG[a][1], a)
+                      AREA_LANDMARKS_1[-1], areas["cheek1"], NUMBER_MSG[a][0], NUMBER_MSG[a][1], a)
 
-
-
+##
+##
     else:
 
         if len(AREA_LANDMARKS_1) > 0:
@@ -216,15 +211,15 @@ def face_area(frame, landmarks, head_box):
 
 
 
-            [(zone_detected(cropMask, frame, ZONE_INCREMENT, ZONE, AREA_LANDMARKS_1[-1],
-                            areas[k], NUMBER_MSG[nb][0], NUMBER_MSG[nb][1], nb)) for nb, k in enumerate(areas)]
+##            [(zone_detected(cropMask, frame, ZONE_INCREMENT, ZONE, AREA_LANDMARKS_1[-1],
+##                            areas[k], NUMBER_MSG[nb][0], NUMBER_MSG[nb][1], nb)) for nb, k in enumerate(areas)]
 
             if cropMask != []:
 
-                a = 4
+                a = 1
                 cv2.imshow("daz", cropMask[a])
                 zone_detected(cropMask, frame, ZONE_INCREMENT, ZONE,
-                              AREA_LANDMARKS_1[-1], areas["chin2"],
+                              AREA_LANDMARKS_1[-1], areas["cheek1"],
                               NUMBER_MSG[a][0], NUMBER_MSG[a][1], a)
 
 
