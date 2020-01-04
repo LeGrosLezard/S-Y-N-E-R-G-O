@@ -138,8 +138,8 @@ AREA_LANDMARKS_1 = []
 ZONE = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ZONE_INCREMENT = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-NUMBER_MSG = [("joue gauche", 0.5), ("menton", 1), ("entre oeil",1),
-              ("chin 1", 1), ("chin2", 1), ("joue droite", 0.5), ("angel finguer", 1),
+NUMBER_MSG = [("joue gauche", 0.65), ("menton", 1), ("entre oeil",1.2),
+              ("chin 1", 2), ("chin2", 2), ("joue droite", 0.65), ("angel finguer", 1),
               ("mouse", 30), ("oeil gauche", 2), ("oeil droit", 2)]
 
 
@@ -153,7 +153,7 @@ def face_area(frame, landmarks, head_box):
     global ZONE
 
 
-    areas =  { "cheek2":[54, 13, 15, 28], "chin":[59, 58, 57, 56, 55, 10,  9, 8, 7, 6], "beet_eyes" :[20, 23, 42, 39],
+    areas =  { "cheek2":[54, 13, 15, 28], "chin":[58, 57, 56, 10,  9, 8, 7, 6], "beet_eyes" :[20, 23, 42, 39],
                "chin1":[58, 7, 6, 5, 4, 3, 48, 59], "chin2": [56, 55, 54, 13, 12, 11 ,10, 9], "cheek1": [48, 3, 1, 28],
               "angel_finger":[31, 49, 53, 35], "mouse":(48, 50, 52, 54, 56, 58), "leftEye":(1, 17, 21, 28),
                "rightEye":(22, 26, 15, 28)}
@@ -163,19 +163,22 @@ def face_area(frame, landmarks, head_box):
     areas2 = {"onEye1":[17, 22], "onEye2":[22, 27]}
 
 
-    blur = cv2.bilateralFilter (frame, 15, 65, 65)
+    blur = cv2.bilateralFilter (frame, 25, 75, 75)
     gray = cv2.cvtColor(blur,cv2.COLOR_RGB2GRAY)
 
     
     th2 = cv2.adaptiveThreshold(gray,255,cv2.ADAPTIVE_THRESH_MEAN_C,\
-                                cv2.THRESH_BINARY,7,4)
+                                cv2.THRESH_BINARY,11,2)
+
+
+    
 
 
 
     cv2.imshow("th2", th2)
 
 
-
+    
     if landmarks is not None:
 
         AREA_LANDMARKS_1.append([make_contour(areas[k], landmarks, frame)
@@ -198,8 +201,7 @@ def face_area(frame, landmarks, head_box):
         zone_detected(cropMask, frame, ZONE_INCREMENT, ZONE,
                       AREA_LANDMARKS_1[-1], areas["angel_finger"], NUMBER_MSG[a][0], NUMBER_MSG[a][1], a)
 
-##
-##
+
     else:
 
         if len(AREA_LANDMARKS_1) > 0:
