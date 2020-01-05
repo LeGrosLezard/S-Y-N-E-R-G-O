@@ -1,9 +1,21 @@
 # S-Y-N-E-R-G-O
 
-faut faire les trucks qui disent si la tete se tourne ne pas faire, si une zone se repete (ex cheveux sur sourciles) desactivé
-si un zone a cause de l'éclairage comme le nez aussi, reinitialiser si changgement de background puis fallait mettre un subtractor aussi mais en reduissant les ombres on reduit le contour de la main donc pfff pas grave; on peut faire un countnonzero sinon
 
-si on detecte une main pres du visage alors activé le truk touché, sinon essaie de mieux faire pcque la... sinon essayer de hyper le truk sur facebook groupe avec une video youtube comme ca peut etre qu'un mec fera un truk mieux avec
+pour les main des fois on les detect pas mais pas grave,
+
+on recupere le plus grand contour (des fois la main contre le cadre)
+
+la cadre trop grand des fois y'a la figure
+
+on se base sur la couleur donc si un objet juste a coté...
+
+recuperer un model de threshold sans detail en paté, le signe rond ok contre poingt => différenciation dans secrette algo...
+
+
+<br><br><br><br><br><br><br><br><br>
+
+
+faire les truks du mouvement du visage
 
 -             pp = cv2.adaptiveThreshold(pp,255,cv2.ADAPTIVE_THRESH_MEAN_C,\
                                         cv2.THRESH_BINARY,11,2) pour les rides
