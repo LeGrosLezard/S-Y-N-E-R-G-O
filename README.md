@@ -3,7 +3,7 @@
 faut faire les trucks qui disent si la tete se tourne ne pas faire, si une zone se repete (ex cheveux sur sourciles) desactivé
 si un zone a cause de l'éclairage comme le nez aussi
 
-si on detecte une main pres du visage alors activé le truk touché, sinon essaie de mieux faire pcque la... sinon essayer de hyper le truk comme ca peut etre qu'un mec fera un truk avec
+si on detecte une main pres du visage alors activé le truk touché, sinon essaie de mieux faire pcque la... sinon essayer de hyper le truk sur facebook groupe avec une video youtube comme ca peut etre qu'un mec fera un truk avec
 
 -             pp = cv2.adaptiveThreshold(pp,255,cv2.ADAPTIVE_THRESH_MEAN_C,\
                                         cv2.THRESH_BINARY,11,2) pour les rides
