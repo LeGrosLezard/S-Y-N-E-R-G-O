@@ -11,6 +11,7 @@ on se base sur la couleur donc si un objet juste a coté...
 
 recuperer un model de threshold sans detail en paté, le signe rond ok contre poingt => différenciation dans secrette algo...
 
+et ne marche pas sur ma cam
 
 <br><br><br><br><br><br><br><br><br>
 
