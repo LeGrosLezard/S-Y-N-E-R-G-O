@@ -77,12 +77,16 @@ def head_hand_distance_possibility(head_box, frame):
 
         cv2.circle(frame, (center_x, center_y), 1, (0, 0, 255), 1)
 
+        #hight head to cm
         head = (y+h) / 37.79527559055
+        #ratio 30 mean head / current head
         head = 30 / head
 
-        arm = 64 / head
+        #64 + 10 approx arm / ratio head
+        arm = (64 + 10) / head
+        #arm to pixel
         arm = int(arm * 37.79527559055)
-
+        #region arm possible
         cv2.circle(frame, (center_x, center_y), arm, (0, 0, 255), 1)
 
 
