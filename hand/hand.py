@@ -106,11 +106,22 @@ def hands_detections(scores, boxes, frame):
     return detections
 
 
+def make_line(thresh):
+    """We make line for detect more than one area
+    with border, on eyelashes is paste to the border"""
+
+    margin = 2
+
+    cv2.line(thresh, (0, 0), (0, thresh.shape[0]), (255, 255, 255), margin)
+    cv2.line(thresh, (0, 0), (thresh.shape[1], 0), (255, 255, 255), margin)
+    cv2.line(thresh, (thresh.shape[1], 0), (thresh.shape[1], thresh.shape[0]), (255, 255, 255), margin)
+    cv2.line(thresh, (0,  thresh.shape[0]), (thresh.shape[1], thresh.shape[0]), (255, 255, 255), margin)
+
 
 
 def skin_detector(region, frame):
 
-    nb = 35
+    nb = 30
 
     crop = frame[region[1] - nb:region[3] + nb, region[0] - nb:region[2] + nb]
 
@@ -130,12 +141,16 @@ def skin_detector(region, frame):
     kernel = np.ones((3,3),np.uint8)
     opening = cv2.morphologyEx(thresh,cv2.MORPH_OPEN,kernel, iterations = 1)
 
+    make_line(opening)
+    cv2.imshow("opening", opening)
 
     contours = cv2.findContours(opening, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)[0]
     contours = sorted(contours, key=cv2.contourArea)
 
+    print(len(contours))
+
     cv2.fillPoly(crop, [contours[-2]], (79, 220, 25))
-    cv2.drawContours(crop, [contours[-2]], -1 , (0, 0, 0), 3)
+    cv2.drawContours(crop, [contours[-2]], -1 , (0, 0, 0), 1)
 
     return opening
 
@@ -151,21 +166,53 @@ def hand(frame, detection_graph, sess, head_box):
 
     #head_hand_distance_possibility(head_box, frame)
 
-
-
     frameRGB = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     boxes, scores = detect_objects(frameRGB, detection_graph, sess)
-
 
     detections = hands_detections(scores, boxes, frame)
 
     for nb, hand in enumerate(detections):
 
-
-        crop = skin_detector(hand, frame)
-        cv2.imshow(str(nb), crop)
+        try:
+            crop = skin_detector(hand, frame)
+            cv2.imshow(str(nb), crop)
+        except:pass
 
         #cv2.rectangle(frame, (hand[0], hand[1]), (hand[2], hand[3]), (79, 220, 25), 4)
-
         #hand_possibility(hand, head_box, frame)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
