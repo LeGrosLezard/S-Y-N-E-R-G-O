@@ -2,19 +2,13 @@ import tensorflow as tf
 from numpy import expand_dims, squeeze
 import numpy as np
 import cv2
+import imutils
 
 import cv2
 import numpy as np
 from matplotlib import pyplot as plt
 
-from sys import exit
-from scipy import ndimage as ndi
-from skimage.morphology import watershed, disk
-from skimage import data
-from skimage.io import imread
-from skimage.filters import rank
-from skimage.color import rgb2gray
-from skimage.util import img_as_ubyte
+import math
 
 def head_hand_distance_possibility(head_box, frame):
 
@@ -121,7 +115,7 @@ def make_line(thresh):
 
 def skin_detector(region, frame):
 
-    nb = 30
+    nb = 35
 
     crop = frame[region[1] - nb:region[3] + nb, region[0] - nb:region[2] + nb]
 
@@ -138,22 +132,31 @@ def skin_detector(region, frame):
     gray = cv2.cvtColor(skinYCrCb, cv2.COLOR_BGR2GRAY)
     ret, thresh = cv2.threshold(gray,0,255,cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
 
+
     kernel = np.ones((3,3),np.uint8)
     opening = cv2.morphologyEx(thresh,cv2.MORPH_OPEN,kernel, iterations = 1)
 
     make_line(opening)
-    cv2.imshow("opening", opening)
 
     contours = cv2.findContours(opening, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)[0]
     contours = sorted(contours, key=cv2.contourArea)
 
-    print(len(contours))
-
     cv2.fillPoly(crop, [contours[-2]], (79, 220, 25))
     cv2.drawContours(crop, [contours[-2]], -1 , (0, 0, 0), 1)
 
-    return opening
+    hull = cv2.convexHull(contours[-2])
+    cv2.drawContours(crop, [hull], -1 , (0, 255, 0), 1)
 
+    M = cv2.moments(contours[-2])
+    cX = int(M["m10"] / M["m00"])
+    cY = int(M["m01"] / M["m00"])
+
+
+    cv2.circle(crop, (cX, cY), 1, (0, 0, 255), 2)
+
+
+
+    return opening, crop
 
 
 
@@ -173,13 +176,25 @@ def hand(frame, detection_graph, sess, head_box):
 
     for nb, hand in enumerate(detections):
 
-        try:
-            crop = skin_detector(hand, frame)
-            cv2.imshow(str(nb), crop)
-        except:pass
+        crop_thresh, crop_image = skin_detector(hand, frame)
 
         #cv2.rectangle(frame, (hand[0], hand[1]), (hand[2], hand[3]), (79, 220, 25), 4)
         #hand_possibility(hand, head_box, frame)
+
+        cv2.imshow(str(nb), crop_thresh)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
