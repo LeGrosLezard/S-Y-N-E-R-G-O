@@ -117,7 +117,9 @@ def skin_detector(region, frame):
 
     nb = 35
 
+
     crop = frame[region[1] - nb:region[3] + nb, region[0] - nb:region[2] + nb]
+    crop_convex = crop.copy()
 
     min_YCrCb = np.array([0,140,85],np.uint8)
     max_YCrCb = np.array([240,180,130],np.uint8)
@@ -144,16 +146,31 @@ def skin_detector(region, frame):
     cv2.fillPoly(crop, [contours[-2]], (79, 220, 25))
     cv2.drawContours(crop, [contours[-2]], -1 , (0, 0, 0), 1)
 
-    hull = cv2.convexHull(contours[-2])
-    cv2.drawContours(crop, [hull], -1 , (0, 255, 0), 1)
 
+
+
+    acc = 0.02 * cv2.arcLength(contours[-2], True)
+    approx = cv2.approxPolyDP(contours[-2], acc, True)
+
+    hull = cv2.convexHull(approx, returnPoints=False)
+    hull_draw = cv2.convexHull(approx)
+
+    cv2.drawContours(crop_convex, [hull_draw], -1 , (255, 0, 0), 1)
+    cv2.drawContours(crop_convex, [approx], -1 , (0, 0, 255), 1)
+
+
+
+
+
+    #skeletton
     M = cv2.moments(contours[-2])
     cX = int(M["m10"] / M["m00"])
     cY = int(M["m01"] / M["m00"])
 
 
-    cv2.circle(crop, (cX, cY), 1, (0, 0, 255), 2)
+    cv2.circle(crop_convex, (cX, cY), 1, (0, 0, 255), 2)
 
+    cv2.imshow("crop_convex", crop_convex)
 
 
     return opening, crop
@@ -181,7 +198,7 @@ def hand(frame, detection_graph, sess, head_box):
         #cv2.rectangle(frame, (hand[0], hand[1]), (hand[2], hand[3]), (79, 220, 25), 4)
         #hand_possibility(hand, head_box, frame)
 
-        cv2.imshow(str(nb), crop_thresh)
+        #cv2.imshow(str(nb), crop_thresh)
 
 
 
