@@ -112,14 +112,12 @@ def make_line(thresh, margin):
     cv2.line(thresh, (0,  thresh.shape[0]), (thresh.shape[1], thresh.shape[0]), (255, 255, 255), margin)
 
 
-
-
 def skin_detector(region, frame):
 
-    nb = 35
+    size_crop = 35
 
-    crop = frame[region[1] - nb:region[3] + nb, region[0] - nb:region[2] + nb]
-    crop_convex = crop.copy()
+    crop = frame[region[1] - size_crop:region[3] + size_crop, region[0] - size_crop:region[2] + size_crop]
+    copy = crop.copy()
 
     #crop = cv2.blur(crop, (5, 5))
 
@@ -129,113 +127,91 @@ def skin_detector(region, frame):
     skinRegionYCrCb = cv2.inRange(imageYCrCb,min_YCrCb,max_YCrCb)
 
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
-
     skinMask = cv2.dilate(skinRegionYCrCb, kernel, iterations = 2)
     skinMask = cv2.morphologyEx(skinMask, cv2.MORPH_CLOSE, kernel)
 
     skinYCrCb = cv2.bitwise_and(crop, crop, mask = skinMask)
 
+    return skinYCrCb, crop, copy
+
+
+def make_contours(gray):
+
+    return [sorted(cv2.findContours(gray, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)[0],
+                       key=cv2.contourArea)][0]
+
+def del_fill_contours(last_contour, contours, gray, color):
+
+    [cv2.fillPoly(gray, [cv2.convexHull(cnts)], color) for nb, cnts in enumerate(contours)
+     if nb < len(contours) - last_contour]
+
+
+
+def hand_treatment(skinYCrCb, crop):
 
     gray = cv2.cvtColor(skinYCrCb, cv2.COLOR_BGR2GRAY)
-    contours = cv2.findContours(gray, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)[0]
-    contours = sorted(contours, key=cv2.contourArea)
 
-    for nb, cnts in enumerate(contours):
-        if nb < len(contours) - 1:
-            hull = cv2.convexHull(cnts)
-            cv2.drawContours(skinYCrCb, [hull], -1, (0, 0, 255), 1)
-            cv2.fillPoly(skinYCrCb, [hull], (0, 0, 0))
+    #delete noise around hand
+    contours = make_contours(gray)
+    del_fill_contours(1, contours, skinYCrCb, (0, 0, 0) )
 
 
-
+    #Make otsu threshold
     gray = cv2.cvtColor(skinYCrCb, cv2.COLOR_BGR2GRAY)
-
     ret, thresh = cv2.threshold(gray,0,255,cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
     make_line(thresh, 5)
 
-    contours = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)[0]
-    contours = sorted(contours, key=cv2.contourArea)
-
-    for nb, cnts in enumerate(contours):
-        if nb <  len(contours) - 2:
-            cv2.fillPoly(thresh, [cnts], (255, 255, 255))
+    #Delete noise around hand on threshold
+    contours = make_contours(thresh)
+    del_fill_contours(2, contours, thresh, (255, 255, 255) )
 
 
-    cv2.imshow("thresh", thresh)
+    #Filled hole on hand
+    contours = make_contours(thresh)
+    del_fill_contours(2, contours, thresh, (0, 0, 0) )
 
-    contours = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)[0]
-    contours = sorted(contours, key=cv2.contourArea)
-    for nb, cnts in enumerate(contours):
-        if nb <  len(contours) - 2:
-            cv2.fillPoly(thresh, [cnts], (0, 0, 0))
-
-
+    #Close the hand
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3,3))
     morph_img = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
 
-    contours = cv2.findContours(morph_img, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)[0]
-    contours = sorted(contours, key=cv2.contourArea)
-    for nb, cnts in enumerate(contours):
-        if nb <  len(contours) - 2:
-            cv2.fillPoly(morph_img, [cnts], (255, 255, 255))
+    #delete final little noise cut
+    contours = make_contours(morph_img)
+    del_fill_contours(2, contours, morph_img, (255, 255, 255) )
 
+    #refinement hand contours
+    contours = make_contours(morph_img)
+    [cv2.drawContours(morph_img, [i], -1 , (255, 255, 255), 1) for i in contours]
 
-    contours = cv2.findContours(morph_img, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)[0]
-    contours = sorted(contours, key=cv2.contourArea)
+    #cv2.imshow("morph_img", morph_img)
+    cv2.fillPoly(crop, [contours[-2]], (79, 220, 25))
+    cv2.drawContours(crop, [contours[-2]], -1 , (0, 0, 0), 1)
 
-    [cv2.drawContours(morph_img, [i], -1 , (255, 255, 255), 2) for i in contours]
-
-
-    cv2.imshow("morph_img", morph_img)
-
-
+    return contours
 
 
 
+def hull(contours, crop):
 
 
-##
-##
-##
-##
-##
-##
-##
-##
-##    kernel = np.ones((3,3),np.uint8)
-##    opening = cv2.morphologyEx(thresh,cv2.MORPH_OPEN,kernel, iterations = 1)
-##
-##    make_line(opening)
-##
-##    contours = cv2.findContours(opening, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)[0]
-##    contours = sorted(contours, key=cv2.contourArea)
-##
-##    cv2.fillPoly(crop, [contours[-2]], (79, 220, 25))
-##    cv2.drawContours(crop, [contours[-2]], -1 , (0, 0, 0), 1)
-##
-##
-##
-##    acc = 0.02 * cv2.arcLength(contours[-2], True)
-##    approx = cv2.approxPolyDP(contours[-2], acc, True)
-##
-##    hull = cv2.convexHull(approx, returnPoints=False)
-##    hull_draw = cv2.convexHull(approx)
-##
-##    cv2.drawContours(crop_convex, [hull_draw], -1 , (255, 0, 0), 1)
-##    cv2.drawContours(crop_convex, [approx], -1 , (0, 0, 255), 1)
-##
-##
-##    cv2.imshow("crop_convex", crop_convex)
-##
-##
-##
-##    M = cv2.moments(contours[-2])
-##    cX = int(M["m10"] / M["m00"])
-##    cY = int(M["m01"] / M["m00"])
-##
-##
-##    cv2.circle(crop_convex, (cX, cY), 1, (0, 0, 255), 2)
-##
+    acc = 0.02 * cv2.arcLength(contours[-2], True)
+    approx = cv2.approxPolyDP(contours[-2], acc, True)
+
+    hull = cv2.convexHull(approx, returnPoints=False)
+    hull_draw = cv2.convexHull(approx)
+
+    cv2.drawContours(crop, [hull_draw], -1 , (255, 0, 0), 1)
+    cv2.drawContours(crop, [approx], -1 , (0, 0, 255), 1)
+
+
+    cv2.imshow("crop_convex", crop)
+
+    M = cv2.moments(contours[-2])
+    cX = int(M["m10"] / M["m00"])
+    cY = int(M["m01"] / M["m00"])
+
+
+    cv2.circle(crop, (cX, cY), 1, (0, 0, 255), 2)
+
 
 
 
@@ -258,7 +234,14 @@ def hand(frame, detection_graph, sess, head_box):
 
     for nb, hand in enumerate(detections):
 
-        skin_detector(hand, frame)
+        skinYCrCb, crop, copy = skin_detector(hand, frame)
+        contours = hand_treatment(skinYCrCb, crop)
+
+        #contour from morph_img
+        hull(contours, copy)
+
+
+
 
         #cv2.rectangle(frame, (hand[0], hand[1]), (hand[2], hand[3]), (79, 220, 25), 4)
         #hand_possibility(hand, head_box, frame)
