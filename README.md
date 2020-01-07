@@ -1,5 +1,12 @@
 # S-Y-N-E-R-G-O
 
+- dire main en haut main en bas
+
+- si main droite/gauche pouce
+
+- localisé les doigt a peu pres
+
+- les espacements et on verra
 
 
 
