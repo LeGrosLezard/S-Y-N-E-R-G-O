@@ -112,12 +112,12 @@ def make_line(thresh, margin):
     cv2.line(thresh, (0,  thresh.shape[0]), (thresh.shape[1], thresh.shape[0]), (255, 255, 255), margin)
 
 
-def skin_detector(region, frame):
+def skin_detector(region, frame, frame_copy):
 
     size_crop = 35
 
     crop = frame[region[1] - size_crop:region[3] + size_crop, region[0] - size_crop:region[2] + size_crop]
-    copy = crop.copy()
+    copy = frame_copy[region[1] - size_crop:region[3] + size_crop, region[0] - size_crop:region[2] + size_crop]
 
     #crop = cv2.blur(crop, (5, 5))
 
@@ -169,6 +169,8 @@ def hand_treatment(skinYCrCb, crop):
     #Filled hole on hand
     contours = make_contours(thresh)
     del_fill_contours(2, contours, thresh, (0, 0, 0) )
+    #contours = make_contours(thresh)
+
 
     #Close the hand
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3,3))
@@ -193,24 +195,85 @@ def hand_treatment(skinYCrCb, crop):
 def hull(contours, crop):
 
 
-    acc = 0.02 * cv2.arcLength(contours[-2], True)
+    acc = 0.01 * cv2.arcLength(contours[-2], True)
     approx = cv2.approxPolyDP(contours[-2], acc, True)
 
     hull = cv2.convexHull(approx, returnPoints=False)
     hull_draw = cv2.convexHull(approx)
 
-    cv2.drawContours(crop, [hull_draw], -1 , (255, 0, 0), 1)
-    cv2.drawContours(crop, [approx], -1 , (0, 0, 255), 1)
+    #cv2.drawContours(crop, [hull_draw], -1 , (255, 0, 0), 1)
+    #cv2.drawContours(crop, [approx], -1 , (0, 0, 255), 1)
 
 
-    cv2.imshow("crop_convex", crop)
-
-    M = cv2.moments(contours[-2])
-    cX = int(M["m10"] / M["m00"])
-    cY = int(M["m01"] / M["m00"])
+    (x,y), radius = cv2.minEnclosingCircle(contours[-2])
+    center = (int(x),int(y))
+    #cv2.circle(crop , center, int(radius), (255, 255, 255), 1)
 
 
-    cv2.circle(crop, (cX, cY), 1, (0, 0, 255), 2)
+
+    res = approx
+    defects=cv2.convexityDefects(res, hull)
+
+    cnt = 0
+    for i in range(defects.shape[0]):  
+        s, e, f, d = defects[i][0]
+        start = tuple(res[s][0])
+        end = tuple(res[e][0])
+        far = tuple(res[f][0])
+
+        copy = crop.copy()
+
+
+        cv2.circle(copy, start, 5, [0, 0, 255], -1)
+        cv2.circle(copy, far, 5, [211, 84, 0], -1)
+        cv2.circle(copy, end, 5, [0, 255, 0], -1)
+
+
+        cv2.circle(crop, start, 5, [0, 0, 255], -1)
+        #cv2.circle(crop, far, 5, [211, 84, 0], -1)
+        #cv2.circle(crop, end, 5, [0, 255, 0], -1)
+
+
+        a = math.sqrt((end[0] - start[0]) ** 2 + (end[1] - start[1]) ** 2)
+        b = math.sqrt((far[0] - start[0]) ** 2 + (far[1] - start[1]) ** 2)
+        c = math.sqrt((end[0] - far[0]) ** 2 + (end[1] - far[1]) ** 2)
+        angle = math.acos((b ** 2 + c ** 2 - a ** 2) / (2 * b * c))  
+        if angle <= math.pi / 2:  
+            cnt += 1
+            cv2.circle(crop, start, 5, [0, 0, 0], -1)
+            cv2.line(crop, center, start, (255, 255, 255), 2)
+
+        if angle > math.pi / 2:  
+            cnt += 1
+            cv2.circle(crop, start, 5, [255, 255, 255], -1)
+            cv2.line(crop, center, start, (50, 240, 100), 2)
+
+
+        cv2.imshow("copy", copy)
+        cv2.imshow("crop", crop)
+        cv2.waitKey(0)
+
+
+
+
+    #donc si plus de pts en haut == doigt
+    #pts le plus bas == poigné
+    #et inversement
+
+    #des fois on ne detecte pas de pts en bas..
+
+
+
+
+        
+
+    
+
+
+
+
+
+
 
 
 
@@ -224,6 +287,7 @@ def hull(contours, crop):
 
 def hand(frame, detection_graph, sess, head_box):
 
+    frame_copy = frame.copy()
 
     #head_hand_distance_possibility(head_box, frame)
 
@@ -234,13 +298,13 @@ def hand(frame, detection_graph, sess, head_box):
 
     for nb, hand in enumerate(detections):
 
-        skinYCrCb, crop, copy = skin_detector(hand, frame)
+        skinYCrCb, crop, copy = skin_detector(hand, frame, frame_copy)
         contours = hand_treatment(skinYCrCb, crop)
 
         #contour from morph_img
         hull(contours, copy)
 
-
+    
 
 
         #cv2.rectangle(frame, (hand[0], hand[1]), (hand[2], hand[3]), (79, 220, 25), 4)
@@ -250,7 +314,7 @@ def hand(frame, detection_graph, sess, head_box):
 
 
 
-
+    #cv2.imshow("crop_convex", frame_copy)
 
 
 
