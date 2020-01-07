@@ -1,5 +1,7 @@
 # S-Y-N-E-R-G-O
 
+- localiser le poigné aussi
+
 - dire main en haut main en bas
 
 - si main droite/gauche pouce
