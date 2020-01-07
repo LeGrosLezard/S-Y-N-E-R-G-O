@@ -8,7 +8,7 @@
 
 - les espacements et on verra
 
-
+- le mec peut faire des rotations attention
 
 <br><br><br><br><br><br><br><br><br>
 
