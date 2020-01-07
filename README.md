@@ -16,6 +16,8 @@
 
 - et par chance trouver un model en rappport avec mon truk
 
+(smoothing et convolution tu sais faire gros beta)
+
 <br><br><br><br><br><br><br><br><br>
 
 
