@@ -1,17 +1,7 @@
 # S-Y-N-E-R-G-O
 
 
-pour les main des fois on les detect pas mais pas grave,
 
-on recupere le plus grand contour (des fois la main contre le cadre)
-
-la cadre trop grand des fois y'a la figure
-
-on se base sur la couleur donc si un objet juste a coté...
-
-recuperer un model de threshold sans detail en paté, le signe rond ok contre poingt => différenciation dans secrette algo...
-
-et ne marche pas sur ma cam
 
 <br><br><br><br><br><br><br><br><br>
 
