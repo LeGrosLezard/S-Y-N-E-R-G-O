@@ -1,5 +1,7 @@
 # S-Y-N-E-R-G-O
 
+- améliorer les contours pour qu'ils soient tout droit
+
 - localiser le poigné aussi
 
 - dire main en haut main en bas
