@@ -1,22 +1,16 @@
 # S-Y-N-E-R-G-O
 
-- améliorer les contours pour qu'ils soient tout droit
-
-- localiser le poigné aussi
+- localiser le poigné / main
 
 - dire main en haut main en bas
 
 - si main droite/gauche pouce
 
-- localisé les doigt a peu pres
-
-- les espacements et on verra
-
-- le mec peut faire des rotations attention
+- les espacements entre doigt
 
 - et par chance trouver un model en rappport avec mon truk
 
-(smoothing et convolution tu sais faire gros beta)
+
 
 <br><br><br><br><br><br><br><br><br>
 
