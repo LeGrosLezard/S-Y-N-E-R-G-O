@@ -12,6 +12,8 @@
 
 - le mec peut faire des rotations attention
 
+- et par chance trouver un model en rappport avec mon truk
+
 <br><br><br><br><br><br><br><br><br>
 
 
