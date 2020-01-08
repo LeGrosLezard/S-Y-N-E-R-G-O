@@ -149,6 +149,9 @@ def del_fill_contours(last_contour, contours, gray, color):
 
 def hand_treatment(skinYCrCb, crop):
 
+    copy = crop.copy()
+
+
     gray = cv2.cvtColor(skinYCrCb, cv2.COLOR_BGR2GRAY)
 
     #delete noise around hand
@@ -182,35 +185,66 @@ def hand_treatment(skinYCrCb, crop):
 
     #refinement hand contours
     contours = make_contours(morph_img)
-    [cv2.drawContours(morph_img, [i], -1 , (255, 255, 255), 1) for i in contours]
+    [cv2.drawContours(morph_img, [i], 0 , (255, 255, 255), 2) for i in contours]
 
     #cv2.imshow("morph_img", morph_img)
-    cv2.fillPoly(crop, [contours[-2]], (79, 220, 25))
-    cv2.drawContours(crop, [contours[-2]], -1 , (0, 0, 0), 1)
 
+
+    cv2.fillPoly(crop, [contours[-2]], (79, 220, 25))
+    cv2.drawContours(crop, [contours[-2]], -1 , (0, 0, 0), 2)
+
+    contours = make_contours(morph_img)
+    
     return contours
 
 
 
 def hull(contours, crop):
 
+##  
+##    gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
+##
+##    mask = np.zeros_like(gray)
+##
+##    cv2.fillPoly(mask, [contours[-2]], 255)
+##    crop = cv2.bitwise_and(crop, crop, mask=mask)
 
-    acc = 0.01 * cv2.arcLength(contours[-2], True)
+
+
+##    M = cv2.moments(contours[-2])
+##    cX = int(M["m10"] / M["m00"])
+##    cY = int(M["m01"] / M["m00"])
+## 
+##    cv2.circle(crop , (cX, cY), 2, (0, 0, 255), 2)
+##    cv2.imshow("crop", crop)
+
+
+
+##    (x,y), radius = cv2.minEnclosingCircle(contours[-2])
+##    center = (int(x),int(y))
+##    cv2.circle(crop , center, int(radius), (255, 255, 255), 1)
+##
+##    cv2.imshow("crop", crop)
+
+
+
+    acc = 0.02 * cv2.arcLength(contours[-2], True)
     approx = cv2.approxPolyDP(contours[-2], acc, True)
 
     hull = cv2.convexHull(approx, returnPoints=False)
     hull_draw = cv2.convexHull(approx)
 
-    #cv2.drawContours(crop, [hull_draw], -1 , (255, 0, 0), 1)
-    #cv2.drawContours(crop, [approx], -1 , (0, 0, 255), 1)
+    cv2.drawContours(crop, [hull_draw], -1 , (255, 0, 0), 2)
+    cv2.drawContours(crop, [approx], -1 , (0, 0, 255), 2)
 
-
-    (x,y), radius = cv2.minEnclosingCircle(contours[-2])
-    center = (int(x),int(y))
-    #cv2.circle(crop , center, int(radius), (255, 255, 255), 1)
+    cv2.imshow("crop", crop)
 
 
 
+
+
+##    copy = crop.copy()
+##
     res = approx
     defects=cv2.convexityDefects(res, hull)
 
@@ -220,47 +254,43 @@ def hull(contours, crop):
         start = tuple(res[s][0])
         end = tuple(res[e][0])
         far = tuple(res[f][0])
-
-        copy = crop.copy()
-
-
-        cv2.circle(copy, start, 5, [0, 0, 255], -1)
-        cv2.circle(copy, far, 5, [211, 84, 0], -1)
-        cv2.circle(copy, end, 5, [0, 255, 0], -1)
+##
+##
+##
+##
+##        cv2.circle(copy, start, 5, [0, 255, 0], -1)
+        #cv2.circle(copy, far, 5, [211, 84, 0], -1)
+        #cv2.circle(copy, end, 5, [0, 255, 0], -1)
 
 
         cv2.circle(crop, start, 5, [0, 0, 255], -1)
-        #cv2.circle(crop, far, 5, [211, 84, 0], -1)
-        #cv2.circle(crop, end, 5, [0, 255, 0], -1)
+        cv2.circle(crop, far, 5, [211, 84, 0], -1)
+        cv2.circle(crop, end, 5, [0, 255, 0], -1)
+##
+##
+##        a = math.sqrt((end[0] - start[0]) ** 2 + (end[1] - start[1]) ** 2)
+##        b = math.sqrt((far[0] - start[0]) ** 2 + (far[1] - start[1]) ** 2)
+##        c = math.sqrt((end[0] - far[0]) ** 2 + (end[1] - far[1]) ** 2)
+##        angle = math.acos((b ** 2 + c ** 2 - a ** 2) / (2 * b * c))  
+##        if angle <= math.pi / 2:  
+##            cnt += 1
+##            cv2.circle(crop, start, 5, [0, 0, 0], -1)
+##            cv2.line(crop, center, start, (255, 255, 255), 2)
+##
+##        if angle > math.pi / 2:  
+##            cnt += 1
+##            cv2.circle(crop, start, 5, [255, 255, 255], -1)
+##            cv2.line(crop, center, start, (50, 240, 100), 2)
+##
+##
+
+    cv2.imshow("crop", crop)
+
+##    cv2.imshow("copy", copy)
+
+##    cv2.imshow("crop_pts", copy)
 
 
-        a = math.sqrt((end[0] - start[0]) ** 2 + (end[1] - start[1]) ** 2)
-        b = math.sqrt((far[0] - start[0]) ** 2 + (far[1] - start[1]) ** 2)
-        c = math.sqrt((end[0] - far[0]) ** 2 + (end[1] - far[1]) ** 2)
-        angle = math.acos((b ** 2 + c ** 2 - a ** 2) / (2 * b * c))  
-        if angle <= math.pi / 2:  
-            cnt += 1
-            cv2.circle(crop, start, 5, [0, 0, 0], -1)
-            cv2.line(crop, center, start, (255, 255, 255), 2)
-
-        if angle > math.pi / 2:  
-            cnt += 1
-            cv2.circle(crop, start, 5, [255, 255, 255], -1)
-            cv2.line(crop, center, start, (50, 240, 100), 2)
-
-
-        cv2.imshow("copy", copy)
-        cv2.imshow("crop", crop)
-        cv2.waitKey(0)
-
-
-
-
-    #donc si plus de pts en haut == doigt
-    #pts le plus bas == poigné
-    #et inversement
-
-    #des fois on ne detecte pas de pts en bas..
 
 
 
