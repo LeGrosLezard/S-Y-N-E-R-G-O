@@ -2,7 +2,7 @@
 
 - localiser le poigné / main
 
-- dire main en haut main en bas
+- dire main doigt a gauche, a droite, en haut d/g en bas d/g
 
 - si main droite/gauche pouce
 
