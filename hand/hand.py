@@ -211,12 +211,12 @@ def hull(contours, crop):
 
 
 
-##    M = cv2.moments(contours[-2])
-##    cX = int(M["m10"] / M["m00"])
-##    cY = int(M["m01"] / M["m00"])
-## 
-##    cv2.circle(crop , (cX, cY), 2, (0, 0, 255), 2)
-##    cv2.imshow("crop", crop)
+    M = cv2.moments(contours[-2])
+    cX = int(M["m10"] / M["m00"])
+    cY = int(M["m01"] / M["m00"])
+ 
+    cv2.circle(crop , (cX, cY), 2, (0, 0, 255), 2)
+    cv2.imshow("crop", crop)
 
 
 
@@ -237,11 +237,10 @@ def hull(contours, crop):
     cv2.drawContours(crop, [hull_draw], -1 , (255, 0, 0), 2)
     cv2.drawContours(crop, [approx], -1 , (0, 0, 255), 2)
 
-    cv2.imshow("crop", crop)
+    
 
 
-
-
+    liste_pts = []
 
 ##    copy = crop.copy()
 ##
@@ -254,18 +253,76 @@ def hull(contours, crop):
         start = tuple(res[s][0])
         end = tuple(res[e][0])
         far = tuple(res[f][0])
-##
-##
-##
-##
-##        cv2.circle(copy, start, 5, [0, 255, 0], -1)
-        #cv2.circle(copy, far, 5, [211, 84, 0], -1)
-        #cv2.circle(copy, end, 5, [0, 255, 0], -1)
-
 
         cv2.circle(crop, start, 5, [0, 0, 255], -1)
-        cv2.circle(crop, far, 5, [211, 84, 0], -1)
-        cv2.circle(crop, end, 5, [0, 255, 0], -1)
+        liste_pts.append(res[s][0])
+
+
+    neg_top = 0
+    pos_top = 0
+
+    neg_x = 0
+    pos_x = 0
+
+    neg_ext_x = 0
+    pos_ext_x = 0
+    pts = 0
+    for i in liste_pts:
+        print(i, cX, cY)
+
+        if i[1] - cY < 0:
+            neg_top += 1
+        else:
+            pos_top += 1
+
+        if i[0] - cX < 0:
+            neg_x += 1
+        else:
+            pos_x += 1
+
+##        if i[0] < cX - 30:
+##            neg_ext_x += 1
+##
+##        elif i[0] > cX + 30:
+##            pos_ext_x += 1
+##
+##        pts += 1
+
+
+    out = ""
+    if neg_top > pos_top: out += "haut "
+    else: out += "bas "
+
+##    if neg_ext_x > pts - 2: out += "gauche "
+##    elif pos_ext_x > pts - 2: out += "droite "
+
+    if pos_ext_x > pos_x: out += "droite"
+    else: out += "gauche"
+
+    print(out)
+
+
+
+
+    
+    cv2.imshow("crop", crop)
+    cv2.waitKey(0)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        #cv2.circle(crop, far, 5, [211, 84, 0], -1)
+        #cv2.circle(crop, end, 5, [0, 255, 0], -1)
 ##
 ##
 ##        a = math.sqrt((end[0] - start[0]) ** 2 + (end[1] - start[1]) ** 2)
@@ -284,7 +341,22 @@ def hull(contours, crop):
 ##
 ##
 
-    cv2.imshow("crop", crop)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ##    cv2.imshow("copy", copy)
 
