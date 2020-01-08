@@ -1,16 +1,20 @@
 # S-Y-N-E-R-G-O
 
-- localiser le poigné / main
+- les mouvements avnt mtn
 
-- dire main doigt a gauche, a droite, en haut d/g en bas d/g
+- le pouce
 
-- si main droite/gauche pouce
+- le doigt le plus haut
 
-- les espacements entre doigt
+- les espacements entre les doigts
 
-- avec edges on a les phalanges mais aussi pleins d'autres trucks (on peut avoir les ongles aussi)
+- les espacements entre les points
 
+- main haut bas droite gauche
 
+- les mains qui se reunissent et la chai pas
+
+- j'ai compris que les lignes bizzard du style conv2D et tout sté ca de l'ia bah ca a l'air dur 
 
 <br><br><br><br><br><br><br><br><br>
 
