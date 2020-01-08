@@ -86,6 +86,8 @@ def load_inference_graph(path_to_ckpt):
 
 
 
+
+
 def detect_objects(image_np, detection_graph, sess):
 
 
@@ -210,308 +212,85 @@ def hand_treatment(skinYCrCb, crop):
     
     return contours
 
-def seg(crop):
 
-    gray = rgb2gray(crop)
-    image = img_as_ubyte(gray)
-    markers = rank.gradient(image, disk(5)) < 20
-    markers = ndi.label(markers)[0]
-    gradient = rank.gradient(image, disk(2))
-
-    labels = watershed(gradient, markers)
-
-
-    fig = plt.figure()
-    fig.set_size_inches(1, 1, forward=False)
-    axes = plt.Axes(fig, [0., 0., 1., 1.])
-    axes.set_axis_off()
-    fig.add_axes(axes)
-
-
-    axes.imshow(image, cmap=plt.cm.gray, interpolation="nearest")
-
-    axes.imshow(labels, cmap=plt.cm.get_cmap("Spectral"), interpolation ="nearest",
-                 alpha=100)
-
-
-    plt.axis("off")
-
-
-    fig.canvas.draw()
-
-    img = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8,
-            sep='')
-    img  = img.reshape(fig.canvas.get_width_height()[::-1] + (3,))
-
-    img = cv2.resize(img, (300, 300))
-    cv2.imshow("plot",img)
-
-
-
-def pos_hand(liste_pts, hull_draw, cX, cY):
-
-
-    Rx, Ry, Rw, Rh = cv2.boundingRect(hull_draw)
-
-    neg_top = 0
-    pos_top = 0
-
-    neg_x = 0
-    pos_x = 0
-
-    neg_ext_x = 0
-    pos_ext_x = 0
-    pts = 0
-    for i in liste_pts:
-        if i[0] < cX - 20 and i[1] + 30 >= cY >= i[1] - 30:
-            neg_ext_x += 1
-        elif i[0] > cX + 20 and i[1] + 30 >= cY >= i[1] - 30:
-            pos_ext_x += 1
-        if i[1] - cY < 0: neg_top += 1
-        elif i[1] - cY > 0: pos_top += 1
-        if i[0] - cX < 0: neg_x += 1
-        elif i[0] - cX > 0:pos_x += 1
-
-        pts += 1
-
-
-
-    out = ""
-
-    if neg_ext_x >= pts - 1:
-        out += "droite "
-        if neg_top > pos_top: out += "haut"
-        elif neg_top < pos_top: out += "bas"
-
-    elif pos_ext_x >= pts - 1:
-        out += "gauche "
-        if neg_top > pos_top: out += "haut"
-        elif neg_top < pos_top: out += "bas"
-
- 
-    elif neg_top > pos_top:
-        out += "haut "
-        if pos_ext_x > pos_x: out += "droite"
-        elif pos_ext_x < pos_x: out += "gauche"
-
-    elif neg_top < pos_top:
-        out += "bas "
-        if pos_ext_x > pos_x: out += "droite"
-        elif pos_ext_x < pos_x: out += "gauche"
-
-    print(out)
-    return out
-
-def hull2(contours, crop):
-
-    acc = 0.01 * cv2.arcLength(contours[-2], True)
-    approx = cv2.approxPolyDP(contours[-2], acc, True)
-
-    hull = cv2.convexHull(approx, returnPoints=False)
-    hull_draw = cv2.convexHull(approx)
-
-    cv2.drawContours(crop, [hull_draw], -1 , (255, 0, 0), 2)
-    cv2.drawContours(crop, [approx], -1 , (0, 0, 255), 2)
-
-
-
-    liste_pts = []
-    res = approx
-    defects=cv2.convexityDefects(res, hull)
-
-    cnt = 0
-    for i in range(defects.shape[0]):  
-        s, e, f, d = defects[i][0]
-        start = tuple(res[s][0])
-        end = tuple(res[e][0])
-        far = tuple(res[f][0])
-
-        #cv2.circle(crop, start, 5, [0, 0, 255], -1)
-        #cv2.circle(crop, far, 5, [211, 84, 0], -1)
-        cv2.circle(crop, end, 5, [0, 255, 0], -1)
-
-
-
-    cv2.imshow("crop2", crop)
-
-
-
-
-
-def hull(contours, crop):
-
+def make_bitwise(contours, crop):
 
     gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
     mask = np.zeros_like(gray)
     cv2.fillPoly(mask, [contours[-2]], 255)
     crop = cv2.bitwise_and(crop, crop, mask=mask)
 
-    copy = crop.copy()
-    hull2(contours, copy)
+    x, y, w, h = cv2.boundingRect(contours[-2])
 
+    return crop
 
 
+def hand_skelettor(crop, protoFile, weightsFile):
 
+    t = time.time()
 
-    M = cv2.moments(contours[-2])
-    cX = int(M["m10"] / M["m00"])
-    cY = int(M["m01"] / M["m00"])
- 
-    cv2.circle(crop , (cX, cY), 2, (0, 0, 255), 2)
+    net = cv2.dnn.readNetFromCaffe(protoFile, weightsFile)
 
+    threshold = 0.1
+    POSE_PAIRS = [ [0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],[0,9],[9,10],[10,11],
+                   [11,12],[0,13],[13,14],[14,15],[15,16],[0,17],[17,18],[18,19],[19,20] ]
 
-
-    acc = 0.025 * cv2.arcLength(contours[-2], True)
-    approx = cv2.approxPolyDP(contours[-2], acc, True)
-
-    hull = cv2.convexHull(approx, returnPoints=False)
-    hull_draw = cv2.convexHull(approx)
-
-    
-    cv2.drawContours(crop, [approx], -1 , (0, 0, 255), 2)
-    cv2.drawContours(crop, [hull_draw], -1 , (255, 0, 0), 2)
-
-
-
-    liste_pts = []
-    res = approx
-    defects=cv2.convexityDefects(res, hull)
-
-    cnt = 0
-    for i in range(defects.shape[0]):  
-        s, e, f, d = defects[i][0]
-        start = tuple(res[s][0])
-        end = tuple(res[e][0])
-        far = tuple(res[f][0])
-
-        cv2.circle(crop, start, 5, [0, 0, 255], -1)
-        cv2.circle(crop, far, 5, [211, 84, 0], -1)
-        #cv2.circle(crop, end, 5, [0, 255, 0], -1)
-
-        liste_pts.append(res[s][0])
-
-
-    pos = pos_hand(liste_pts, hull_draw, cX, cY)
-    print(pos)
-
-    cv2.imshow("cropaaa", crop)
-
-
-
-    if pos == "haut gauche":
-        j = cY
-        cont = True
-        while cont:
-            if crop[cX, j][0] == 255 and crop[cX, j][1] == 0 and crop[cX, j][2] == 0:
-                cont = False
-            else:
-                j += 1
-
-        cv2.line(crop, (cX, cY), (cX - 10, j), (0, 255, 0), 3)
-
-    elif pos == "bas gauche":
-        pass
-
-    elif pos == "haut droit":
-        pass
-    elif pos == "haut droit":
-        pass
-
-    elif pos == "droit haut":
-        pass
-    elif pos == "droit bas":
-        pass
-    
-    elif pos == "gauche haut":
-        pass
-    elif pos == "gauche bas":
-        pass
-
-    elif pos == "haut ":
-
-
-        j = cY
-        cont = True
-        while cont:
- 
-            if crop[cX, j][0] == 255 and crop[cX, j][1] == 0 and crop[cX, j][2] == 0:
-                cont = False
-            else:
-                j += 1
-
-        cv2.line(crop, (cX, cY), (cX, j), (0, 255, 0), 3)
-    elif pos == "bas ":pass
-
-
-
-
-
-
-    #un autre approx, opposé doigt = paume ou poigné.
-
-    #test extrémité
-    #POUCE CENTRE ANGLE TRES GROS
-
-
-
-
-
-
-
-    
-    cv2.imshow("crop", crop)
-    cv2.waitKey(0)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-
+    crop_copy = crop.copy()
     
 
+    frameHeight, frameWidth = crop.shape[:2]
+    aspect_ratio = frameWidth/frameHeight
+
+    inHeight = 250
+    inWidth = int(((aspect_ratio*inHeight)*8)//8)
+
+    inpBlob = cv2.dnn.blobFromImage(crop, 1.0/500, (inWidth, inHeight),
+                                    (0, 0, 0), swapRB=False, crop=False)
+
+    net.setInput(inpBlob)
+    output = net.forward()
+
+    points = []      
+    for i in range(22):
+        # confidence map of corresponding body's part.
+        probMap = output[0, i, :, :]
+        probMap = cv2.resize(probMap, (frameWidth, frameHeight))
+
+        # Find global maxima of the probMap.
+        minVal, prob, minLoc, point = cv2.minMaxLoc(probMap)
+
+        if prob > threshold :
+            points.append((int(point[0]), int(point[1])))
+        else :
+            points.append(None)
 
 
+    skeletton = [(nb) for nb, pair in enumerate(POSE_PAIRS) if points[pair[0]] and points[pair[1]]]
 
 
+    # Draw Skeleton
+    skeletton = []
+    for nb, pair in enumerate(POSE_PAIRS):
+        partA = pair[0]
+        partB = pair[1]
+
+        if points[partA] and points[partB]:
+            cv2.line(crop, points[partA], points[partB], (0, 255, 255), 2)
+            cv2.circle(crop, points[partA], 4, (0, 0, 255), thickness=-1, lineType=cv2.FILLED)
+            cv2.circle(crop, points[partB], 4, (0, 0, 255), thickness=-1, lineType=cv2.FILLED)
+
+            skeletton.append(nb)
+
+    cv2.imshow("skel", crop)
 
 
+    print("time taken by network : {:.3f}".format(time.time() - t))
+
+    return skeletton
 
 
-
-
-
-
-
-
+def treat_skeletton_points(skeletton):
+    pass
 
 
 def hand(frame, detection_graph, sess, head_box):
@@ -528,18 +307,24 @@ def hand(frame, detection_graph, sess, head_box):
     for nb, hand in enumerate(detections):
 
         skinYCrCb, crop, copy = skin_detector(hand, frame, frame_copy)
+        copy = crop.copy()
+
         contours = hand_treatment(skinYCrCb, crop)
-
-        #contour from morph_img
-        hull(contours, copy)
-
-    
+        copy = make_bitwise(contours, copy)
 
 
-        #cv2.rectangle(frame, (hand[0], hand[1]), (hand[2], hand[3]), (79, 220, 25), 4)
-        #hand_possibility(hand, head_box, frame)
+        protoFile = r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\handa\models\pose_deploy.prototxt"
+        weightsFile = r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\handa\models\pose_iter_102000.caffemodel"
 
-        #cv2.imshow(str(nb), crop_thresh)
+        points = hand_skelettor(copy, protoFile, weightsFile)
+        treat_skeletton_points(points)
+
+        
+        cv2.imshow("crop", crop)
+        cv2.waitKey(0)
+
+
+
 
 
 
