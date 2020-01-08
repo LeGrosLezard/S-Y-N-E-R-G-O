@@ -8,7 +8,7 @@
 
 - les espacements entre doigt
 
-- avec edges on a les phalanges mais aussi pleins d'autres trucks
+- avec edges on a les phalanges mais aussi pleins d'autres trucks (on peut avoir les ongles aussi)
 
 
 
