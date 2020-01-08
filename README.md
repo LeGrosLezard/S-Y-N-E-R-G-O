@@ -8,7 +8,7 @@
 
 - les espacements entre doigt
 
-- et par chance trouver un model en rappport avec mon truk
+- avec edges on a les phalanges mais aussi pleins d'autres trucks
 
 
 
