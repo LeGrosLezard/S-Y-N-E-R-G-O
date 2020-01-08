@@ -9,6 +9,8 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 import math
+import time
+import torch
 
 def head_hand_distance_possibility(head_box, frame):
 
@@ -201,13 +203,103 @@ def hand_treatment(skinYCrCb, crop):
 
 def hull(contours, crop):
 
-##  
-##    gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
+
+
+    gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
+    mask = np.zeros_like(gray)
+    cv2.fillPoly(mask, [contours[-2]], 255)
+    crop = cv2.bitwise_and(crop, crop, mask=mask)
+
+    #hand_estimation = Hand('hand_pose_model.pth')
+
+
+
+
 ##
-##    mask = np.zeros_like(gray)
 ##
-##    cv2.fillPoly(mask, [contours[-2]], 255)
-##    crop = cv2.bitwise_and(crop, crop, mask=mask)
+##
+##    protoFile = r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\handa\models\pose_deploy.prototxt"
+##    weightsFile = r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\handa\models\pose_iter_102000.caffemodel"
+##    nPoints = 22
+##    POSE_PAIRS = [ [0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],[0,9],[9,10],[10,11],
+##                   [11,12],[0,13],[13,14],[14,15],[15,16],[0,17],[17,18],[18,19],[19,20] ]
+##
+##
+##    net = cv2.dnn.readNetFromCaffe(protoFile, weightsFile)
+##
+##
+##    frame = crop
+##    frame_copy = frame.copy()
+##
+##    frameWidth = int(frame.shape[1])
+##    frameHeight = int(frame.shape[0])
+##
+##
+##    frameCopy = frame.copy()
+##
+##
+##    aspect_ratio = frameWidth/frameHeight
+##    threshold = 0.1
+##
+##
+##    t = time.time()
+##    # input image dimensions for the network
+##
+##    inHeight = 250
+##    inWidth = int(((aspect_ratio*inHeight)*8)//8)
+##
+##
+##    inpBlob = cv2.dnn.blobFromImage(frame, 1.0/500, (inWidth, inHeight), (0, 0, 0), swapRB=False, crop=False)
+##
+##    net.setInput(inpBlob)
+##
+##    output = net.forward()
+##    print("time taken by network : {:.3f}".format(time.time() - t))
+##
+##    points = []
+##
+##    for i in range(nPoints):
+##        # confidence map of corresponding body's part.
+##        probMap = output[0, i, :, :]
+##        probMap = cv2.resize(probMap, (frameWidth, frameHeight))
+##
+##        # Find global maxima of the probMap.
+##        minVal, prob, minLoc, point = cv2.minMaxLoc(probMap)
+##
+##        if prob > threshold :
+##            cv2.circle(frameCopy, (int(point[0]), int(point[1])), 5, (0, 255, 255),
+##                       thickness=-1, lineType=cv2.FILLED)
+##            #cv2.putText(frameCopy, "{}".format(i), (int(point[0]), int(point[1])),
+##            #            cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 1, lineType=cv2.LINE_AA)
+##
+##            # Add the point to the list if the probability is greater than the threshold
+##            points.append((int(point[0]), int(point[1])))
+##        else :
+##            points.append(None)
+##
+##    # Draw Skeleton
+##    for pair in POSE_PAIRS:
+##        partA = pair[0]
+##        partB = pair[1]
+##
+##        if points[partA] and points[partB]:
+##            cv2.line(frame, points[partA], points[partB], (0, 255, 255), 2)
+##            #cv2.circle(frame, points[partA], 5, (0, 0, 255), thickness=-1, lineType=cv2.FILLED)
+##            #cv2.circle(frame, points[partB], 5, (0, 0, 255), thickness=-1, lineType=cv2.FILLED)
+##
+##
+##
+##    cv2.imshow("frame", frame)
+##    cv2.imshow("frameCopy", frameCopy)
+##
+
+
+
+
+
+
+
+
 
 
 
@@ -216,19 +308,19 @@ def hull(contours, crop):
     cY = int(M["m01"] / M["m00"])
  
     cv2.circle(crop , (cX, cY), 2, (0, 0, 255), 2)
-    cv2.imshow("crop", crop)
-
-
-
-##    (x,y), radius = cv2.minEnclosingCircle(contours[-2])
-##    center = (int(x),int(y))
-##    cv2.circle(crop , center, int(radius), (255, 255, 255), 1)
-##
 ##    cv2.imshow("crop", crop)
-
-
-
-    acc = 0.02 * cv2.arcLength(contours[-2], True)
+##
+##
+##
+####    (x,y), radius = cv2.minEnclosingCircle(contours[-2])
+####    center = (int(x),int(y))
+####    cv2.circle(crop , center, int(radius), (255, 255, 255), 1)
+####
+####    cv2.imshow("crop", crop)
+##
+##
+##
+    acc = 0.025 * cv2.arcLength(contours[-2], True)
     approx = cv2.approxPolyDP(contours[-2], acc, True)
 
     hull = cv2.convexHull(approx, returnPoints=False)
@@ -237,7 +329,13 @@ def hull(contours, crop):
     cv2.drawContours(crop, [hull_draw], -1 , (255, 0, 0), 2)
     cv2.drawContours(crop, [approx], -1 , (0, 0, 255), 2)
 
-    
+
+
+
+
+
+
+
 
 
     liste_pts = []
@@ -255,8 +353,36 @@ def hull(contours, crop):
         far = tuple(res[f][0])
 
         cv2.circle(crop, start, 5, [0, 0, 255], -1)
+        cv2.circle(crop, far, 5, [211, 84, 0], -1)
+        #cv2.circle(crop, end, 5, [0, 255, 0], -1)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         liste_pts.append(res[s][0])
 
+
+
+    Rx, Ry, Rw, Rh = cv2.boundingRect(hull_draw)
 
     neg_top = 0
     pos_top = 0
@@ -268,36 +394,50 @@ def hull(contours, crop):
     pos_ext_x = 0
     pts = 0
     for i in liste_pts:
-        print(i, cX, cY)
 
+        if i[0] < cX - 20 and i[1] + 30 >= cY >= i[1] - 30:
+            neg_ext_x += 1
+        elif i[0] > cX + 20 and i[1] + 30 >= cY >= i[1] - 30:
+            pos_ext_x += 1
+   
         if i[1] - cY < 0:
             neg_top += 1
-        else:
+        elif i[1] - cY > 0:
             pos_top += 1
 
         if i[0] - cX < 0:
             neg_x += 1
-        else:
+        elif i[0] - cX > 0:
             pos_x += 1
 
-##        if i[0] < cX - 30:
-##            neg_ext_x += 1
-##
-##        elif i[0] > cX + 30:
-##            pos_ext_x += 1
-##
-##        pts += 1
+        pts += 1
+
 
 
     out = ""
-    if neg_top > pos_top: out += "haut "
-    else: out += "bas "
 
-##    if neg_ext_x > pts - 2: out += "gauche "
-##    elif pos_ext_x > pts - 2: out += "droite "
+    if neg_ext_x >= pts - 1:
+        out += "droite "
+        if neg_top > pos_top: out += "haut"
+        elif neg_top < pos_top: out += "bas"
 
-    if pos_ext_x > pos_x: out += "droite"
-    else: out += "gauche"
+    elif pos_ext_x >= pts - 1:
+        out += "gauche "
+        if neg_top > pos_top: out += "haut"
+        elif neg_top < pos_top: out += "bas"
+
+ 
+    elif neg_top > pos_top:
+        out += "haut "
+        if pos_ext_x > pos_x: out += "droite"
+        elif pos_ext_x < pos_x: out += "gauche"
+
+    elif neg_top < pos_top:
+        out += "bas "
+        if pos_ext_x > pos_x: out += "droite"
+        elif pos_ext_x < pos_x: out += "gauche"
+
+
 
     print(out)
 
@@ -321,25 +461,6 @@ def hull(contours, crop):
 
 
 
-        #cv2.circle(crop, far, 5, [211, 84, 0], -1)
-        #cv2.circle(crop, end, 5, [0, 255, 0], -1)
-##
-##
-##        a = math.sqrt((end[0] - start[0]) ** 2 + (end[1] - start[1]) ** 2)
-##        b = math.sqrt((far[0] - start[0]) ** 2 + (far[1] - start[1]) ** 2)
-##        c = math.sqrt((end[0] - far[0]) ** 2 + (end[1] - far[1]) ** 2)
-##        angle = math.acos((b ** 2 + c ** 2 - a ** 2) / (2 * b * c))  
-##        if angle <= math.pi / 2:  
-##            cnt += 1
-##            cv2.circle(crop, start, 5, [0, 0, 0], -1)
-##            cv2.line(crop, center, start, (255, 255, 255), 2)
-##
-##        if angle > math.pi / 2:  
-##            cnt += 1
-##            cv2.circle(crop, start, 5, [255, 255, 255], -1)
-##            cv2.line(crop, center, start, (50, 240, 100), 2)
-##
-##
 
 
 
