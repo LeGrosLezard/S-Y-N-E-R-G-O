@@ -10,7 +10,18 @@ from matplotlib import pyplot as plt
 
 import math
 import time
-import torch
+
+
+
+from sys import exit
+from scipy import ndimage as ndi
+from skimage.morphology import watershed, disk
+from skimage import data
+from skimage.io import imread
+from skimage.filters import rank
+from skimage.color import rgb2gray
+from skimage.util import img_as_ubyte
+
 
 def head_hand_distance_possibility(head_box, frame):
 
@@ -199,187 +210,45 @@ def hand_treatment(skinYCrCb, crop):
     
     return contours
 
+def seg(crop):
+
+    gray = rgb2gray(crop)
+    image = img_as_ubyte(gray)
+    markers = rank.gradient(image, disk(5)) < 20
+    markers = ndi.label(markers)[0]
+    gradient = rank.gradient(image, disk(2))
+
+    labels = watershed(gradient, markers)
 
 
-def hull(contours, crop):
+    fig = plt.figure()
+    fig.set_size_inches(1, 1, forward=False)
+    axes = plt.Axes(fig, [0., 0., 1., 1.])
+    axes.set_axis_off()
+    fig.add_axes(axes)
 
 
+    axes.imshow(image, cmap=plt.cm.gray, interpolation="nearest")
 
-    gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
-    mask = np.zeros_like(gray)
-    cv2.fillPoly(mask, [contours[-2]], 255)
-    crop = cv2.bitwise_and(crop, crop, mask=mask)
-
-    #hand_estimation = Hand('hand_pose_model.pth')
+    axes.imshow(labels, cmap=plt.cm.get_cmap("Spectral"), interpolation ="nearest",
+                 alpha=100)
 
 
+    plt.axis("off")
 
 
-##
-##
-##
-##    protoFile = r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\handa\models\pose_deploy.prototxt"
-##    weightsFile = r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\handa\models\pose_iter_102000.caffemodel"
-##    nPoints = 22
-##    POSE_PAIRS = [ [0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],[0,9],[9,10],[10,11],
-##                   [11,12],[0,13],[13,14],[14,15],[15,16],[0,17],[17,18],[18,19],[19,20] ]
-##
-##
-##    net = cv2.dnn.readNetFromCaffe(protoFile, weightsFile)
-##
-##
-##    frame = crop
-##    frame_copy = frame.copy()
-##
-##    frameWidth = int(frame.shape[1])
-##    frameHeight = int(frame.shape[0])
-##
-##
-##    frameCopy = frame.copy()
-##
-##
-##    aspect_ratio = frameWidth/frameHeight
-##    threshold = 0.1
-##
-##
-##    t = time.time()
-##    # input image dimensions for the network
-##
-##    inHeight = 250
-##    inWidth = int(((aspect_ratio*inHeight)*8)//8)
-##
-##
-##    inpBlob = cv2.dnn.blobFromImage(frame, 1.0/500, (inWidth, inHeight), (0, 0, 0), swapRB=False, crop=False)
-##
-##    net.setInput(inpBlob)
-##
-##    output = net.forward()
-##    print("time taken by network : {:.3f}".format(time.time() - t))
-##
-##    points = []
-##
-##    for i in range(nPoints):
-##        # confidence map of corresponding body's part.
-##        probMap = output[0, i, :, :]
-##        probMap = cv2.resize(probMap, (frameWidth, frameHeight))
-##
-##        # Find global maxima of the probMap.
-##        minVal, prob, minLoc, point = cv2.minMaxLoc(probMap)
-##
-##        if prob > threshold :
-##            cv2.circle(frameCopy, (int(point[0]), int(point[1])), 5, (0, 255, 255),
-##                       thickness=-1, lineType=cv2.FILLED)
-##            #cv2.putText(frameCopy, "{}".format(i), (int(point[0]), int(point[1])),
-##            #            cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 1, lineType=cv2.LINE_AA)
-##
-##            # Add the point to the list if the probability is greater than the threshold
-##            points.append((int(point[0]), int(point[1])))
-##        else :
-##            points.append(None)
-##
-##    # Draw Skeleton
-##    for pair in POSE_PAIRS:
-##        partA = pair[0]
-##        partB = pair[1]
-##
-##        if points[partA] and points[partB]:
-##            cv2.line(frame, points[partA], points[partB], (0, 255, 255), 2)
-##            #cv2.circle(frame, points[partA], 5, (0, 0, 255), thickness=-1, lineType=cv2.FILLED)
-##            #cv2.circle(frame, points[partB], 5, (0, 0, 255), thickness=-1, lineType=cv2.FILLED)
-##
-##
-##
-##    cv2.imshow("frame", frame)
-##    cv2.imshow("frameCopy", frameCopy)
-##
+    fig.canvas.draw()
+
+    img = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8,
+            sep='')
+    img  = img.reshape(fig.canvas.get_width_height()[::-1] + (3,))
+
+    img = cv2.resize(img, (300, 300))
+    cv2.imshow("plot",img)
 
 
 
-
-
-
-
-
-
-
-
-    M = cv2.moments(contours[-2])
-    cX = int(M["m10"] / M["m00"])
-    cY = int(M["m01"] / M["m00"])
- 
-    cv2.circle(crop , (cX, cY), 2, (0, 0, 255), 2)
-##    cv2.imshow("crop", crop)
-##
-##
-##
-####    (x,y), radius = cv2.minEnclosingCircle(contours[-2])
-####    center = (int(x),int(y))
-####    cv2.circle(crop , center, int(radius), (255, 255, 255), 1)
-####
-####    cv2.imshow("crop", crop)
-##
-##
-##
-    acc = 0.025 * cv2.arcLength(contours[-2], True)
-    approx = cv2.approxPolyDP(contours[-2], acc, True)
-
-    hull = cv2.convexHull(approx, returnPoints=False)
-    hull_draw = cv2.convexHull(approx)
-
-    cv2.drawContours(crop, [hull_draw], -1 , (255, 0, 0), 2)
-    cv2.drawContours(crop, [approx], -1 , (0, 0, 255), 2)
-
-
-
-
-
-
-
-
-
-
-    liste_pts = []
-
-##    copy = crop.copy()
-##
-    res = approx
-    defects=cv2.convexityDefects(res, hull)
-
-    cnt = 0
-    for i in range(defects.shape[0]):  
-        s, e, f, d = defects[i][0]
-        start = tuple(res[s][0])
-        end = tuple(res[e][0])
-        far = tuple(res[f][0])
-
-        cv2.circle(crop, start, 5, [0, 0, 255], -1)
-        cv2.circle(crop, far, 5, [211, 84, 0], -1)
-        #cv2.circle(crop, end, 5, [0, 255, 0], -1)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        liste_pts.append(res[s][0])
-
+def pos_hand(liste_pts, hull_draw, cX, cY):
 
 
     Rx, Ry, Rw, Rh = cv2.boundingRect(hull_draw)
@@ -394,21 +263,14 @@ def hull(contours, crop):
     pos_ext_x = 0
     pts = 0
     for i in liste_pts:
-
         if i[0] < cX - 20 and i[1] + 30 >= cY >= i[1] - 30:
             neg_ext_x += 1
         elif i[0] > cX + 20 and i[1] + 30 >= cY >= i[1] - 30:
             pos_ext_x += 1
-   
-        if i[1] - cY < 0:
-            neg_top += 1
-        elif i[1] - cY > 0:
-            pos_top += 1
-
-        if i[0] - cX < 0:
-            neg_x += 1
-        elif i[0] - cX > 0:
-            pos_x += 1
+        if i[1] - cY < 0: neg_top += 1
+        elif i[1] - cY > 0: pos_top += 1
+        if i[0] - cX < 0: neg_x += 1
+        elif i[0] - cX > 0:pos_x += 1
 
         pts += 1
 
@@ -437,9 +299,161 @@ def hull(contours, crop):
         if pos_ext_x > pos_x: out += "droite"
         elif pos_ext_x < pos_x: out += "gauche"
 
-
-
     print(out)
+    return out
+
+def hull2(contours, crop):
+
+    acc = 0.01 * cv2.arcLength(contours[-2], True)
+    approx = cv2.approxPolyDP(contours[-2], acc, True)
+
+    hull = cv2.convexHull(approx, returnPoints=False)
+    hull_draw = cv2.convexHull(approx)
+
+    cv2.drawContours(crop, [hull_draw], -1 , (255, 0, 0), 2)
+    cv2.drawContours(crop, [approx], -1 , (0, 0, 255), 2)
+
+
+
+    liste_pts = []
+    res = approx
+    defects=cv2.convexityDefects(res, hull)
+
+    cnt = 0
+    for i in range(defects.shape[0]):  
+        s, e, f, d = defects[i][0]
+        start = tuple(res[s][0])
+        end = tuple(res[e][0])
+        far = tuple(res[f][0])
+
+        #cv2.circle(crop, start, 5, [0, 0, 255], -1)
+        #cv2.circle(crop, far, 5, [211, 84, 0], -1)
+        cv2.circle(crop, end, 5, [0, 255, 0], -1)
+
+
+
+    cv2.imshow("crop2", crop)
+
+
+
+
+
+def hull(contours, crop):
+
+
+    gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
+    mask = np.zeros_like(gray)
+    cv2.fillPoly(mask, [contours[-2]], 255)
+    crop = cv2.bitwise_and(crop, crop, mask=mask)
+
+    copy = crop.copy()
+    hull2(contours, copy)
+
+
+
+
+
+    M = cv2.moments(contours[-2])
+    cX = int(M["m10"] / M["m00"])
+    cY = int(M["m01"] / M["m00"])
+ 
+    cv2.circle(crop , (cX, cY), 2, (0, 0, 255), 2)
+
+
+
+    acc = 0.025 * cv2.arcLength(contours[-2], True)
+    approx = cv2.approxPolyDP(contours[-2], acc, True)
+
+    hull = cv2.convexHull(approx, returnPoints=False)
+    hull_draw = cv2.convexHull(approx)
+
+    
+    cv2.drawContours(crop, [approx], -1 , (0, 0, 255), 2)
+    cv2.drawContours(crop, [hull_draw], -1 , (255, 0, 0), 2)
+
+
+
+    liste_pts = []
+    res = approx
+    defects=cv2.convexityDefects(res, hull)
+
+    cnt = 0
+    for i in range(defects.shape[0]):  
+        s, e, f, d = defects[i][0]
+        start = tuple(res[s][0])
+        end = tuple(res[e][0])
+        far = tuple(res[f][0])
+
+        cv2.circle(crop, start, 5, [0, 0, 255], -1)
+        cv2.circle(crop, far, 5, [211, 84, 0], -1)
+        #cv2.circle(crop, end, 5, [0, 255, 0], -1)
+
+        liste_pts.append(res[s][0])
+
+
+    pos = pos_hand(liste_pts, hull_draw, cX, cY)
+    print(pos)
+
+    cv2.imshow("cropaaa", crop)
+
+
+
+    if pos == "haut gauche":
+        j = cY
+        cont = True
+        while cont:
+            if crop[cX, j][0] == 255 and crop[cX, j][1] == 0 and crop[cX, j][2] == 0:
+                cont = False
+            else:
+                j += 1
+
+        cv2.line(crop, (cX, cY), (cX - 10, j), (0, 255, 0), 3)
+
+    elif pos == "bas gauche":
+        pass
+
+    elif pos == "haut droit":
+        pass
+    elif pos == "haut droit":
+        pass
+
+    elif pos == "droit haut":
+        pass
+    elif pos == "droit bas":
+        pass
+    
+    elif pos == "gauche haut":
+        pass
+    elif pos == "gauche bas":
+        pass
+
+    elif pos == "haut ":
+
+
+        j = cY
+        cont = True
+        while cont:
+ 
+            if crop[cX, j][0] == 255 and crop[cX, j][1] == 0 and crop[cX, j][2] == 0:
+                cont = False
+            else:
+                j += 1
+
+        cv2.line(crop, (cX, cY), (cX, j), (0, 255, 0), 3)
+    elif pos == "bas ":pass
+
+
+
+
+
+
+    #un autre approx, opposé doigt = paume ou poigné.
+
+    #test extrémité
+    #POUCE CENTRE ANGLE TRES GROS
+
+
+
 
 
 
@@ -474,14 +488,6 @@ def hull(contours, crop):
 
 
 
-
-
-
-
-
-##    cv2.imshow("copy", copy)
-
-##    cv2.imshow("crop_pts", copy)
 
 
 
