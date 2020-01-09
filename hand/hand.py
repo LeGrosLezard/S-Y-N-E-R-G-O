@@ -29,7 +29,7 @@ def head_hand_distance_possibility(head_box, frame):
     if head_box != None:
 
         x, y, w, h = head_box
-        cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 0, 255), 1)
+        #cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 0, 255), 1)
 
         center_x = int(x+w / 2)
         center_y = int(y+h * 2)
@@ -220,7 +220,7 @@ def make_bitwise(contours, crop):
 
     x, y, w, h = cv2.boundingRect(contours[-2])
 
-    cv2.rectangle(crop, (x, y), (x+w, y+h), (255, 0, 0), 2)
+    #cv2.rectangle(crop, (x, y), (x+w, y+h), (255, 0, 0), 2)
 
     rectangle = (x, y, w, h)
 
@@ -233,17 +233,17 @@ def hand_skelettor(crop, protoFile, weightsFile):
 
     net = cv2.dnn.readNetFromCaffe(protoFile, weightsFile)
 
-    threshold = 0.1
+    threshold = 0.2
     POSE_PAIRS = [ [0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],[0,9],[9,10],[10,11],
                    [11,12],[0,13],[13,14],[14,15],[15,16],[0,17],[17,18],[18,19],[19,20] ]
 
     crop_copy = crop.copy()
-    
+
 
     frameHeight, frameWidth = crop.shape[:2]
     aspect_ratio = frameWidth/frameHeight
 
-    inHeight = 360
+    inHeight = 368
     inWidth = int(((aspect_ratio*inHeight)*8)//8)
 
     inpBlob = cv2.dnn.blobFromImage(crop, 1.0/255, (inWidth, inHeight),
@@ -288,6 +288,7 @@ def hand_skelettor(crop, protoFile, weightsFile):
 
     print("time taken by network : {:.3f}".format(time.time() - t))
     cv2.imshow("complete", crop_copy)
+    cv2.waitKey(0)
     return skeletton, position, finger
 
 
@@ -295,8 +296,6 @@ def hand_skelettor(crop, protoFile, weightsFile):
 def draw(finger, position, crop, color):
     finger = [j for i in position for j in i]
     [cv2.circle(crop, pts, 2, color, -1) for pts in finger]
-
-
 
 
 
@@ -321,20 +320,7 @@ def hand_location(pos, finger, mid):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-def hand_position(hand_loc, palm0, palm, rectangle, crop):
+def palm_analyse(hand_loc, palm0, palm, rectangle, crop):
     """ICI main deplier ou pas"""
     copy = crop.copy()
 
@@ -358,10 +344,8 @@ def hand_position(hand_loc, palm0, palm, rectangle, crop):
     #print(w*h)
 
 
-
-    cv2.imshow("palm1", copy)
-    cv2.waitKey(0)
-
+    #cv2.imshow("palm1", copy)
+    #cv2.waitKey(0)
 
 
 
@@ -370,44 +354,20 @@ def hand_position(hand_loc, palm0, palm, rectangle, crop):
 
 
 
-def fingers_position():
-    """ICI doigts deplier ou pas"""
-    pass
+
 
 
 
 def thumb_analyse(thumb, palm, index, rectangle, crop):
 
     copy = crop.copy()
-
-
     cv2.circle(copy, palm, 2, (255, 255, 255), 2)
 
     thumb = [j for i in thumb for j in i]
     [cv2.circle(copy, pts, 2, (0, 0, 255), 2) for pts in thumb]
 
-    index = [j for i in index for j in i]
-    [cv2.circle(copy, pts, 2, (255, 0, 0), 2) for pts in index]
-
-
-
-
-
-
-##    if finger[3] == 3:
-##        #recup palm thumb distances
-##        x_thumb, y_thumb = palm[0] - pos[0], palm[1] - pos[1]
-
-
-
     cv2.imshow("thumb", copy)
     cv2.waitKey(0)
-
-    print(hand)
-    return hand
-
-
-
 
 
 
@@ -415,29 +375,79 @@ def index_analyse(index, palm, rectangle, crop):
 
     print(rectangle)
 
-    index = [j for i in index for j in i]
-    [cv2.circle(crop, pts, 2, (255, 0, 0), -1) for pts in index]
+    copy = crop.copy()
+    length = 0
+    try:
+        cv2.circle(copy, palm, 2, (255, 255, 255), 2)
 
+        
+        cv2.circle(copy, index[0][0], 2, (255, 0, 0), 2)
+        cv2.circle(copy, index[1][0], 2, (0, 255, 0), 2)
+        cv2.circle(copy, index[2][0], 2, (0, 0, 0), 2)
+        cv2.circle(copy, index[2][1], 2, (0, 0, 255), 2)
+
+
+
+        phax1 = dist.euclidean(index[0][0], index[0][1])
+        cv2.line(copy, index[0][0], index[0][1], (0,0,0), 1)
+        length += phax1
+        print(phax1)
+        phax2 = dist.euclidean(index[1][0], index[1][1])
+        length += phax2
+        print(phax2)
+        phax3 = dist.euclidean(index[2][0], index[2][1])
+        length += phax3
+        print(phax3)
+
+
+    except:pass
+
+    print(length)
+    cv2.imshow("index", copy)
+    cv2.waitKey(0)
+
+
+    
+
+
+
+
+def major_analyse(major, palm, rectangle, crop):
+
+    copy = crop.copy()
     cv2.circle(copy, palm, 2, (255, 255, 255), 2)
 
-    a = palm[1] - index[-1][1][0]
-    print(a)
+    major = [j for i in major for j in i]
+    [cv2.circle(copy, pts, 2, (0, 0, 255), 2) for pts in major]
+
+    cv2.imshow("major", copy)
+    cv2.waitKey(0)
 
 
 
 
 
-def annular_analyse(position, rectangle, crop):
-    annular = [j for i in position for j in i]
-    [cv2.circle(crop, pts, 2, (255, 0, 0), -1) for pts in annular]
+def annular_analyse(annular, rectangle, crop):
+    copy = crop.copy()
+    cv2.circle(copy, palm, 2, (255, 255, 255), 2)
 
-def major_analyse(position, rectangle, crop):
-    major = [j for i in position for j in i]
-    [cv2.circle(crop, pts, 2, (255, 0, 255), -1) for pts in major]
+    index = [j for i in index for j in i]
+    [cv2.circle(copy, pts, 2, (0, 0, 255), 2) for pts in index]
+
+    cv2.imshow("index", copy)
+    cv2.waitKey(0)
+
+
 
 def auricular_analyse(position, rectangle, crop):
-    auricular = [j for i in position for j in i]
-    [cv2.circle(crop, pts, 2, (0, 255, 255), -1) for pts in auricular]
+    copy = crop.copy()
+    cv2.circle(copy, palm, 2, (255, 255, 255), 2)
+
+    index = [j for i in index for j in i]
+    [cv2.circle(copy, pts, 2, (0, 0, 255), 2) for pts in index]
+
+    cv2.imshow("index", copy)
+    cv2.waitKey(0)
         
 
 
@@ -450,32 +460,42 @@ def treat_skeletton_points(skeletton, position, finger, rectangle, crop):
     x, y, w, h = rectangle
     mid = int((x+w) / 2), int((y+h) / 2)
 
-    palm0 =  position[0][0]
 
-    palm = [[position[5][0], position[9][0], position[13][0],
-            position[17][0], position[0][0], position[0][1], position[1][1]],
-            [position[5][0], position[9][0], position[13][0],
-            position[17][0], position[1][1], position[0][1], position[0][0]]]
+    palm_center =  position[0][0]
+
+    try:
+        palm = [[position[5][0], position[9][0], position[13][0],
+                position[17][0], position[0][0], position[0][1], position[1][1]],
+                [position[5][0], position[9][0], position[13][0],
+                position[17][0], position[1][1], position[0][1], position[0][0]]]
+
+    except IndexError:
+        fings = set([i for i in range(20)])
+        finger_ = set(finger)
+        no_finger = [fing for fing in fings if not(fing in finger_)]
+        print(no_finger)
+        print("no palm !!!! rutn or reply")
 
 
     thumb = position[1:4]
-    index = position[6:8]
-    major = position[10:12]
-    annular = position[14:16]
-    auricular = position[18:20]
+    index = position[5:8]
+    major = position[9:12]
+    annular = position[13:16]
+    auricular = position[17:20]
 
 
     position_hand = paume(position[0][0], mid, finger)
     hand_loc = hand_location(thumb[-1], finger, mid)
-    hand_position(hand_loc, palm0, palm, rectangle, crop)
+    #palm_analyse(hand_loc, palm0, palm, rectangle, crop)
 
 
-#    thumb_analyse(thumb, palm, index, rectangle, crop)
-#    index_analyse(index, rectangle, crop)
+    thumb_analyse(thumb, palm_center, index, rectangle, crop)
+    index_analyse(index, palm_center, rectangle, crop)
+
+    major_analyse(major, palm_center, rectangle, crop)
 
 
-##
-##    major_analyse(major, rectangle, crop)
+
 ##    annular_analyse(annular, rectangle, crop)
 ##    auricular_analyse(auricular, rectangle, crop)
 
@@ -493,14 +513,16 @@ def treat_skeletton_points(skeletton, position, finger, rectangle, crop):
 
 
 
+def save(crop, C):
+    cv2.imwrite(r"C:\Users\jeanbaptiste\Desktop\hand_picture\a" + str(C) + ".jpg", crop)
+    C += 1
+    return C
 
 
-
-
-
+C = 0
 
 def hand(frame, detection_graph, sess, head_box):
-
+    global C
     frame_copy = frame.copy()
 
     #head_hand_distance_possibility(head_box, frame)
@@ -518,19 +540,14 @@ def hand(frame, detection_graph, sess, head_box):
         contours = hand_treatment(skinYCrCb, crop)
         copy, rectangle = make_bitwise(contours, copy)
 
+        C = save(copy, C)
+
 
         protoFile = r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\handa\models\pose_deploy.prototxt"
         weightsFile = r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\handa\models\pose_iter_102000.caffemodel"
 
-        points, position, finger = hand_skelettor(copy, protoFile, weightsFile)
-        treat_skeletton_points(points, position, finger, rectangle, crop)
-
-        
-
-
-
-
-
+        #points, position, finger = hand_skelettor(copy, protoFile, weightsFile)
+        #treat_skeletton_points(points, position, finger, rectangle, crop)
 
 
     #cv2.imshow("crop_convex", frame_copy)
@@ -541,29 +558,31 @@ def hand(frame, detection_graph, sess, head_box):
 
 
 
+if __name__ == "__main__":
+    
+
+    IM = 387
+    IM = 601
 
 
+    image = r"C:\Users\jeanbaptiste\Desktop\hand_picture\a{}.jpg".format(str(IM))
+
+    img = cv2.imread(image)
+    copy_img = img.copy()
+
+    protoFile = r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\handa\models\pose_deploy.prototxt"
+    weightsFile = r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\handa\models\pose_iter_102000.caffemodel"
 
 
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    contours = [sorted(cv2.findContours(gray, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)[0],
+                                        key=cv2.contourArea)][0]
+
+    rectangle = cv2.boundingRect(contours[0])
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    points, position, finger = hand_skelettor(copy_img, protoFile, weightsFile)
+    treat_skeletton_points(points, position, finger, rectangle, img)
 
 
 
