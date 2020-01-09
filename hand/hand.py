@@ -119,9 +119,6 @@ def hands_detections(scores, boxes, frame):
 def make_line(thresh, margin):
     """We make line for detect more than one area
     with border, on eyelashes is paste to the border"""
-
-
-
     cv2.line(thresh, (0, 0), (0, thresh.shape[0]), (255, 255, 255), margin)
     cv2.line(thresh, (0, 0), (thresh.shape[1], 0), (255, 255, 255), margin)
     cv2.line(thresh, (thresh.shape[1], 0), (thresh.shape[1], thresh.shape[0]), (255, 255, 255), margin)
@@ -201,7 +198,7 @@ def hand_treatment(skinYCrCb, crop):
 ##
 ##    #refinement hand contours
 ##    contours = make_contours(morph_img)
-##    [cv2.drawContours(morph_img, [i], 0 , (255, 255, 255), 2) for i in contours]
+##    [ for i in contours]
 ##
 ##    #cv2.imshow("morph_img", morph_img)
 ##
@@ -323,26 +320,61 @@ def hand_location(pos, finger, mid):
         return hand
 
 
-def hand_position(palm0, palm1, rectangle, crop):
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def hand_position(hand_loc, palm0, palm, rectangle, crop):
     """ICI main deplier ou pas"""
     copy = crop.copy()
-    x ,y ,w, h = rectangle
-    print(h)
 
-    cv2.circle(copy, palm0, 2, (255, 255, 255), -1)
-    [cv2.circle(copy, pts, 2, (0, 0, 0), -1) for pts in palm1]
+    x, y, w, h = rectangle
 
-    for i in palm1:
-        distance = palm0[1] - i[1]
-        print(distance)
+    if hand_loc == "main droite": area = palm[0]
+    else:area = palm[1]
 
-    cv2.imshow("phalanx1", copy)
+    palm_area = np.array([(pts[0], pts[1]) for pts in area])
+    cv2.drawContours(copy, [palm_area], 0, (0, 255, 0), 1)
+
+    cv2.circle(copy, palm0, 2, (255, 255, 255), 1)
+    [cv2.circle(copy, pts, 2, (0, 0, 0), 1) for pts in area]
+
+    for pts in area:
+        distance = dist.euclidean(palm0, pts)
+        #print(distance)
+
+    area = cv2.contourArea(palm_area)
+    #print(area)
+    #print(w*h)
+
+
+
+    cv2.imshow("palm1", copy)
     cv2.waitKey(0)
+
+
+
+
+
+
+
 
 
 def fingers_position():
     """ICI doigts deplier ou pas"""
     pass
+
+
 
 def thumb_analyse(thumb, palm, index, rectangle, crop):
 
@@ -419,7 +451,12 @@ def treat_skeletton_points(skeletton, position, finger, rectangle, crop):
     mid = int((x+w) / 2), int((y+h) / 2)
 
     palm0 =  position[0][0]
-    palm1 = [position[5][0], position[9][0], position[13][0], position[17][0]]
+
+    palm = [[position[5][0], position[9][0], position[13][0],
+            position[17][0], position[0][0], position[0][1], position[1][1]],
+            [position[5][0], position[9][0], position[13][0],
+            position[17][0], position[1][1], position[0][1], position[0][0]]]
+
 
     thumb = position[1:4]
     index = position[6:8]
@@ -429,8 +466,8 @@ def treat_skeletton_points(skeletton, position, finger, rectangle, crop):
 
 
     position_hand = paume(position[0][0], mid, finger)
-    hand_location(thumb[-1], finger, mid)
-    hand_position(palm0, palm1, rectangle, crop)
+    hand_loc = hand_location(thumb[-1], finger, mid)
+    hand_position(hand_loc, palm0, palm, rectangle, crop)
 
 
 #    thumb_analyse(thumb, palm, index, rectangle, crop)
