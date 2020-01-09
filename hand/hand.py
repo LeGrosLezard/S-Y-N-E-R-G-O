@@ -24,31 +24,6 @@ from skimage.color import rgb2gray
 from skimage.util import img_as_ubyte
 
 
-def head_hand_distance_possibility(head_box, frame):
-
-    if head_box != None:
-
-        x, y, w, h = head_box
-        #cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 0, 255), 1)
-
-        center_x = int(x+w / 2)
-        center_y = int(y+h * 2)
-
-        cv2.circle(frame, (center_x, center_y), 1, (0, 0, 255), 1)
-
-        #hight head to cm
-        head = (y+h) / 37.79527559055
-        #ratio 30 mean head / current head
-        head = 30 / head
-
-        #64 + 10 approx arm / ratio head
-        arm = (64 + 10) / head
-        #arm to pixel
-        arm = int(arm * 37.79527559055)
-        #region arm possible
-        cv2.circle(frame, (center_x, center_y), arm, (0, 0, 255), 1)
-
-
 
 def hand_possibility(hand, head, frame):
 
@@ -184,30 +159,7 @@ def hand_treatment(skinYCrCb, crop):
 
     #Filled hole on hand
     contours = make_contours(thresh)
-##    del_fill_contours(2, contours, thresh, (0, 0, 0) )
-##    #contours = make_contours(thresh)
-##
-##
-##    #Close the hand
-##    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3,3))
-##    morph_img = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
-##
-##    #delete final little noise cut
-##    contours = make_contours(morph_img)
-##    del_fill_contours(2, contours, morph_img, (255, 255, 255) )
-##
-##    #refinement hand contours
-##    contours = make_contours(morph_img)
-##    [ for i in contours]
-##
-##    #cv2.imshow("morph_img", morph_img)
-##
-##
-##    cv2.fillPoly(crop, [contours[-2]], (79, 220, 25))
-##    cv2.drawContours(crop, [contours[-2]], -1 , (0, 0, 0), 2)
-##
-##    contours = make_contours(morph_img)
-    
+
     return contours
 
 
@@ -650,7 +602,7 @@ if __name__ == "__main__":
     
 
     IM = 435
-    IM = 531
+    IM = 259
 
 
     image = r"C:\Users\jeanbaptiste\Desktop\hand_picture\a{}.jpg".format(str(IM))
