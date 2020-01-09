@@ -12,6 +12,7 @@ import math
 import time
 
 
+from scipy.spatial import distance as dist
 
 from sys import exit
 from scipy import ndimage as ndi
@@ -186,29 +187,29 @@ def hand_treatment(skinYCrCb, crop):
 
     #Filled hole on hand
     contours = make_contours(thresh)
-    del_fill_contours(2, contours, thresh, (0, 0, 0) )
-    #contours = make_contours(thresh)
-
-
-    #Close the hand
-    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3,3))
-    morph_img = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
-
-    #delete final little noise cut
-    contours = make_contours(morph_img)
-    del_fill_contours(2, contours, morph_img, (255, 255, 255) )
-
-    #refinement hand contours
-    contours = make_contours(morph_img)
-    [cv2.drawContours(morph_img, [i], 0 , (255, 255, 255), 2) for i in contours]
-
-    #cv2.imshow("morph_img", morph_img)
-
-
-    cv2.fillPoly(crop, [contours[-2]], (79, 220, 25))
-    cv2.drawContours(crop, [contours[-2]], -1 , (0, 0, 0), 2)
-
-    contours = make_contours(morph_img)
+##    del_fill_contours(2, contours, thresh, (0, 0, 0) )
+##    #contours = make_contours(thresh)
+##
+##
+##    #Close the hand
+##    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3,3))
+##    morph_img = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
+##
+##    #delete final little noise cut
+##    contours = make_contours(morph_img)
+##    del_fill_contours(2, contours, morph_img, (255, 255, 255) )
+##
+##    #refinement hand contours
+##    contours = make_contours(morph_img)
+##    [cv2.drawContours(morph_img, [i], 0 , (255, 255, 255), 2) for i in contours]
+##
+##    #cv2.imshow("morph_img", morph_img)
+##
+##
+##    cv2.fillPoly(crop, [contours[-2]], (79, 220, 25))
+##    cv2.drawContours(crop, [contours[-2]], -1 , (0, 0, 0), 2)
+##
+##    contours = make_contours(morph_img)
     
     return contours
 
@@ -222,7 +223,11 @@ def make_bitwise(contours, crop):
 
     x, y, w, h = cv2.boundingRect(contours[-2])
 
-    return crop
+    cv2.rectangle(crop, (x, y), (x+w, y+h), (255, 0, 0), 2)
+
+    rectangle = (x, y, w, h)
+
+    return crop, rectangle
 
 
 def hand_skelettor(crop, protoFile, weightsFile):
@@ -241,16 +246,16 @@ def hand_skelettor(crop, protoFile, weightsFile):
     frameHeight, frameWidth = crop.shape[:2]
     aspect_ratio = frameWidth/frameHeight
 
-    inHeight = 250
+    inHeight = 360
     inWidth = int(((aspect_ratio*inHeight)*8)//8)
 
-    inpBlob = cv2.dnn.blobFromImage(crop, 1.0/500, (inWidth, inHeight),
+    inpBlob = cv2.dnn.blobFromImage(crop, 1.0/255, (inWidth, inHeight),
                                     (0, 0, 0), swapRB=False, crop=False)
 
     net.setInput(inpBlob)
     output = net.forward()
 
-    points = []      
+    points = []
     for i in range(22):
         # confidence map of corresponding body's part.
         probMap = output[0, i, :, :]
@@ -265,32 +270,196 @@ def hand_skelettor(crop, protoFile, weightsFile):
             points.append(None)
 
 
-    skeletton = [(nb) for nb, pair in enumerate(POSE_PAIRS) if points[pair[0]] and points[pair[1]]]
-
 
     # Draw Skeleton
     skeletton = []
+    finger = []
+    position = []
+
     for nb, pair in enumerate(POSE_PAIRS):
         partA = pair[0]
         partB = pair[1]
 
         if points[partA] and points[partB]:
-            cv2.line(crop, points[partA], points[partB], (0, 255, 255), 2)
-            cv2.circle(crop, points[partA], 4, (0, 0, 255), thickness=-1, lineType=cv2.FILLED)
-            cv2.circle(crop, points[partB], 4, (0, 0, 255), thickness=-1, lineType=cv2.FILLED)
-
-            skeletton.append(nb)
-
-    cv2.imshow("skel", crop)
+            cv2.line(crop_copy, points[partA], points[partB], (0, 255, 255), 2)
+            cv2.circle(crop_copy, points[partA], 4, (0, 0, 255), thickness=-1, lineType=cv2.FILLED)
+            cv2.circle(crop_copy, points[partB], 4, (0, 0, 255), thickness=-1, lineType=cv2.FILLED)
+            skeletton.append(pair)
+            finger.append(nb)
+            position.append((points[partA], points[partB]))
 
 
     print("time taken by network : {:.3f}".format(time.time() - t))
+    cv2.imshow("complete", crop_copy)
+    return skeletton, position, finger
 
-    return skeletton
 
 
-def treat_skeletton_points(skeletton):
+def draw(finger, position, crop, color):
+    finger = [j for i in position for j in i]
+    [cv2.circle(crop, pts, 2, color, -1) for pts in finger]
+
+
+
+
+
+def paume(pos, mid, finger):
+    if finger[0] == 0:
+        position_hand = ""
+        if pos[1] > mid[0]: position_hand = "main vers haut"
+        if pos[1] < mid[1]: position_hand = "main vers bas"
+        print(position_hand)
+        return position_hand
+
+
+def hand_location(pos, finger, mid):
+
+    hand = ""
+    if finger[3] == 3:
+        #recup hand location
+        if pos[1][0] > mid[0]: hand = "main droite"
+        if pos[1][0] < mid[1]: hand = "main gauche"
+        print(hand)
+        return hand
+
+
+def hand_position(palm0, palm1, rectangle, crop):
+    """ICI main deplier ou pas"""
+    copy = crop.copy()
+    x ,y ,w, h = rectangle
+    print(h)
+
+    cv2.circle(copy, palm0, 2, (255, 255, 255), -1)
+    [cv2.circle(copy, pts, 2, (0, 0, 0), -1) for pts in palm1]
+
+    for i in palm1:
+        distance = palm0[1] - i[1]
+        print(distance)
+
+    cv2.imshow("phalanx1", copy)
+    cv2.waitKey(0)
+
+
+def fingers_position():
+    """ICI doigts deplier ou pas"""
     pass
+
+def thumb_analyse(thumb, palm, index, rectangle, crop):
+
+    copy = crop.copy()
+
+
+    cv2.circle(copy, palm, 2, (255, 255, 255), 2)
+
+    thumb = [j for i in thumb for j in i]
+    [cv2.circle(copy, pts, 2, (0, 0, 255), 2) for pts in thumb]
+
+    index = [j for i in index for j in i]
+    [cv2.circle(copy, pts, 2, (255, 0, 0), 2) for pts in index]
+
+
+
+
+
+
+##    if finger[3] == 3:
+##        #recup palm thumb distances
+##        x_thumb, y_thumb = palm[0] - pos[0], palm[1] - pos[1]
+
+
+
+    cv2.imshow("thumb", copy)
+    cv2.waitKey(0)
+
+    print(hand)
+    return hand
+
+
+
+
+
+
+def index_analyse(index, palm, rectangle, crop):
+
+    print(rectangle)
+
+    index = [j for i in index for j in i]
+    [cv2.circle(crop, pts, 2, (255, 0, 0), -1) for pts in index]
+
+    cv2.circle(copy, palm, 2, (255, 255, 255), 2)
+
+    a = palm[1] - index[-1][1][0]
+    print(a)
+
+
+
+
+
+def annular_analyse(position, rectangle, crop):
+    annular = [j for i in position for j in i]
+    [cv2.circle(crop, pts, 2, (255, 0, 0), -1) for pts in annular]
+
+def major_analyse(position, rectangle, crop):
+    major = [j for i in position for j in i]
+    [cv2.circle(crop, pts, 2, (255, 0, 255), -1) for pts in major]
+
+def auricular_analyse(position, rectangle, crop):
+    auricular = [j for i in position for j in i]
+    [cv2.circle(crop, pts, 2, (0, 255, 255), -1) for pts in auricular]
+        
+
+
+
+
+
+def treat_skeletton_points(skeletton, position, finger, rectangle, crop):
+
+
+    x, y, w, h = rectangle
+    mid = int((x+w) / 2), int((y+h) / 2)
+
+    palm0 =  position[0][0]
+    palm1 = [position[5][0], position[9][0], position[13][0], position[17][0]]
+
+    thumb = position[1:4]
+    index = position[6:8]
+    major = position[10:12]
+    annular = position[14:16]
+    auricular = position[18:20]
+
+
+    position_hand = paume(position[0][0], mid, finger)
+    hand_location(thumb[-1], finger, mid)
+    hand_position(palm0, palm1, rectangle, crop)
+
+
+#    thumb_analyse(thumb, palm, index, rectangle, crop)
+#    index_analyse(index, rectangle, crop)
+
+
+##
+##    major_analyse(major, rectangle, crop)
+##    annular_analyse(annular, rectangle, crop)
+##    auricular_analyse(auricular, rectangle, crop)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def hand(frame, detection_graph, sess, head_box):
@@ -310,18 +479,17 @@ def hand(frame, detection_graph, sess, head_box):
         copy = crop.copy()
 
         contours = hand_treatment(skinYCrCb, crop)
-        copy = make_bitwise(contours, copy)
+        copy, rectangle = make_bitwise(contours, copy)
 
 
         protoFile = r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\handa\models\pose_deploy.prototxt"
         weightsFile = r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\handa\models\pose_iter_102000.caffemodel"
 
-        points = hand_skelettor(copy, protoFile, weightsFile)
-        treat_skeletton_points(points)
+        points, position, finger = hand_skelettor(copy, protoFile, weightsFile)
+        treat_skeletton_points(points, position, finger, rectangle, crop)
 
         
-        cv2.imshow("crop", crop)
-        cv2.waitKey(0)
+
 
 
 
