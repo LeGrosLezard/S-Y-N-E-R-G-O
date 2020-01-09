@@ -321,37 +321,42 @@ def hand_location(pos, finger, mid):
 
 
 
-def palm_analyse(hand_loc, palm0, palm, rectangle, crop):
+def palm_analyse(hand_loc, palm_center, palm, rectangle, crop, no_fng_fnd):
     """ICI main deplier ou pas"""
     copy = crop.copy()
 
-    x, y, w, h = rectangle
+    if no_fng_fnd is False:
+        print("paume de la main")
+        x, y, w, h = rectangle
 
-    if hand_loc == "main droite": area = palm[0]
-    else:area = palm[1]
+        if hand_loc == "main droite": area = palm[0]
+        else:area = palm[1]
 
-    palm_area = np.array([(pts[0], pts[1]) for pts in area])
-    cv2.drawContours(copy, [palm_area], 0, (0, 255, 0), 1)
+        palm_area = np.array([(pts[0], pts[1]) for pts in area])
+        cv2.drawContours(copy, [palm_area], 0, (0, 255, 0), 1)
 
-    cv2.circle(copy, palm0, 2, (255, 255, 255), 1)
-    [cv2.circle(copy, pts, 2, (0, 0, 0), 1) for pts in area]
+        cv2.circle(copy, palm_center, 2, (255, 255, 255), 1)
+        [cv2.circle(copy, pts, 2, (0, 0, 0), 1) for pts in area]
 
-    for pts in area:
-        distance = dist.euclidean(palm0, pts)
-        #print(distance)
+        for pts in area:
+            distance = dist.euclidean(palm_center, pts)
+            #print(distance)
 
-    area = cv2.contourArea(palm_area)
-    #print(area)
-    #print(w*h)
+        area = cv2.contourArea(palm_area)
+        print(area)
+        print(w*h)
+        print("")
 
-
-    #cv2.imshow("palm1", copy)
-    #cv2.waitKey(0)
-
-
+        cv2.imshow("palm1", copy)
+        cv2.waitKey(0)
 
 
+def doigt_plié(pha, phax):
+    print(phax)
+    if phax < 10:
+        print(pha + " pliée")
 
+    print("")
 
 
 
@@ -376,6 +381,10 @@ def thumb_analyse(thumb, palm, index, rectangle, crop):
 
 def index_analyse(index, palm, rectangle, crop):
 
+    print("")
+    print("index")
+    
+
     print(rectangle)
     x, y, w, h = rectangle
 
@@ -398,18 +407,18 @@ def index_analyse(index, palm, rectangle, crop):
         phax1 = dist.euclidean(index[0][0], index[0][1])
         cv2.line(copy, index[0][0], index[0][1], (0,0,0), 1)
         length += phax1
-        print(phax1)
+        doigt_plié("phalange 1", phax1)
+
 
         phax2 = dist.euclidean(index[1][0], index[1][1])
         cv2.line(copy, index[1][0], index[1][1], (0,0,0), 1)
         length += phax2
-        print(phax2)
+        doigt_plié("phalange 2", phax2)
 
         phax3 = dist.euclidean(index[2][0], index[2][1])
         cv2.line(copy, index[2][0], index[2][1], (0,0,0), 1)
         length += phax3
-        print(phax3)
-
+        doigt_plié("phalange 3", phax3)
 
 
 
@@ -430,6 +439,11 @@ def index_analyse(index, palm, rectangle, crop):
 
 
 
+
+#TODO
+    #detecter pouce et annulaire
+    #si pouce auriculaire .. index => auri -> index - > pliéq
+    #changement de perspective doigt plus long -> penché vers torse et versa #531
 
 
 
@@ -455,8 +469,34 @@ def major_analyse(major, palm, rectangle, crop):
     copy = crop.copy()
     cv2.circle(copy, palm, 2, (255, 255, 255), 2)
 
-    major = [j for i in major for j in i]
-    [cv2.circle(copy, pts, 2, (0, 0, 255), 2) for pts in major]
+
+    cv2.circle(copy, major[0][0], 2, (255, 0, 0), 2)
+    cv2.circle(copy, major[1][0], 2, (0, 255, 0), 2)
+    cv2.circle(copy, major[2][0], 2, (0, 0, 0), 2)
+    cv2.circle(copy, major[2][1], 2, (0, 0, 255), 2)
+
+    print("")
+    print("major")
+
+    length = 0
+
+    phax1 = dist.euclidean(major[0][0], major[0][1])
+    cv2.line(copy, major[0][0], major[0][1], (0,0,0), 1)
+    length += phax1
+    doigt_plié("phalange 1", phax1)
+
+    phax2 = dist.euclidean(major[1][0], major[1][1])
+    cv2.line(copy, major[1][0], major[1][1], (0,0,0), 1)
+    length += phax2
+    doigt_plié("phalange 2",phax2)
+
+    phax3 = dist.euclidean(major[2][0], major[2][1])
+    cv2.line(copy, major[2][0], major[2][1], (0,0,0), 1)
+    length += phax3
+
+    doigt_plié("phalange 3", phax3)
+
+
 
     cv2.imshow("major", copy)
     cv2.waitKey(0)
@@ -493,40 +533,40 @@ def auricular_analyse(auricular, palm, rectangle, crop):
 
 
 
+def no_finger_found(finger):
+    out = ""
+    fings = set([i for i in range(20)])
+    finger_ = set(finger)
+    
+    no_finger = [fing for fing in fings if not(fing in finger_)]
+
+    print("")
+    print("")
+
+    print(len(no_finger), no_finger)
+    if len(no_finger) > 0 and no_finger[0] == 0:
+        print("reply or turn \n")
+        out = True
+    #toujours pas le 0 et 1 :
+    if len(no_finger) > 0 and no_finger[0] == 0 and no_finger[1] == 1:
+        print("reply or turn 2 \n")
+        out = True
+    return out
+
+
 def treat_skeletton_points(skeletton, position, finger, rectangle, crop):
 
 
     x, y, w, h = rectangle
     mid = int((x+w) / 2), int((y+h) / 2)
 
+    no_fng_fnd = no_finger_found(finger)
 
-    try:
-        palm_center =  position[0][0]
-        palm = [[position[5][0], position[9][0], position[13][0],
-                position[17][0], position[0][0], position[0][1], position[1][1]],
-                [position[5][0], position[9][0], position[13][0],
-                position[17][0], position[1][1], position[0][1], position[0][0]]]
-
-    except IndexError:
-        fings = set([i for i in range(20)])
-        finger_ = set(finger)
-        
-        no_finger = [fing for fing in fings if not(fing in finger_)]
-
-        print("")
-        print("")
-
-        print(no_finger)
-        print("no palm !!!! turn or reply")
-
-    if len(finger) < 10:
-        fings = set([i for i in range(20)])
-        finger_ = set(finger)
-        
-        no_finger = [fing for fing in fings if not(fing in finger_)]
-        print(no_finger)
-
-
+    palm_center =  position[0][0]
+    palm = [[position[5][0], position[9][0], position[13][0],
+            position[17][0], position[0][0], position[0][1], position[1][1]],
+            [position[5][0], position[9][0], position[13][0],
+            position[17][0], position[1][1], position[0][1], position[0][0]]]
 
     thumb = position[1:4]
     index = position[5:8]
@@ -537,7 +577,7 @@ def treat_skeletton_points(skeletton, position, finger, rectangle, crop):
 
     position_hand = paume(position[0][0], mid, finger)
     hand_loc = hand_location(thumb[-1], finger, mid)
-    #palm_analyse(hand_loc, palm0, palm, rectangle, crop)
+    palm_analyse(hand_loc, palm_center, palm, rectangle, crop, no_fng_fnd)
 
 
     thumb_analyse(thumb, palm_center, index, rectangle, crop)
@@ -549,9 +589,6 @@ def treat_skeletton_points(skeletton, position, finger, rectangle, crop):
 
     #annular_analyse(annular, palm_center, rectangle, crop)
     #auricular_analyse(auricular, palm_center, rectangle, crop)
-
-
-
 
 
 
@@ -612,11 +649,12 @@ def hand(frame, detection_graph, sess, head_box):
 if __name__ == "__main__":
     
 
-    IM = 387
-    IM = 301
+    IM = 435
+    IM = 531
 
 
     image = r"C:\Users\jeanbaptiste\Desktop\hand_picture\a{}.jpg".format(str(IM))
+    #image = r"C:\Users\jeanbaptiste\Desktop\hand_picture\{}.jpg".format(str(IM))
 
     img = cv2.imread(image)
     copy_img = img.copy()
@@ -628,7 +666,7 @@ if __name__ == "__main__":
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     contours = [sorted(cv2.findContours(gray, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)[0],
                                         key=cv2.contourArea)][0]
-    print(len(contours))
+
 
 
     copy = img.copy()
