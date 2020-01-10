@@ -185,6 +185,7 @@ def hand_skelettor(crop, protoFile, weightsFile):
 
     net = cv2.dnn.readNetFromCaffe(protoFile, weightsFile)
 
+    #0.25 -> 259
     threshold = 0.1
     POSE_PAIRS = [ [0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],[0,9],[9,10],[10,11],
                    [11,12],[0,13],[13,14],[14,15],[15,16],[0,17],[17,18],[18,19],[19,20] ]
@@ -205,6 +206,7 @@ def hand_skelettor(crop, protoFile, weightsFile):
     output = net.forward()
 
     points = []
+    proba = []
     for i in range(22):
         # confidence map of corresponding body's part.
         probMap = output[0, i, :, :]
@@ -215,6 +217,7 @@ def hand_skelettor(crop, protoFile, weightsFile):
 
         if prob > threshold :
             points.append((int(point[0]), int(point[1])))
+            proba.append(prob)
         else :
             points.append(None)
 
@@ -242,7 +245,7 @@ def hand_skelettor(crop, protoFile, weightsFile):
     print("time taken by network : {:.3f}".format(time.time() - t))
     cv2.imshow("complete", crop_copy)
     cv2.waitKey(0)
-    return skeletton, position, finger
+    return skeletton, position, finger, proba
 
 
 
@@ -303,13 +306,29 @@ def palm_analyse(hand_loc, palm_center, palm, rectangle, crop, no_fng_fnd):
         cv2.waitKey(0)
 
 
-def doigt_plié(pha, phax):
+
+def phalange_plié(pha, phax):
     print(phax)
     if phax < 10:
         print(pha + " pliée")
 
-    print("")
 
+def doigts_plié(points, crop):
+
+    copy = crop.copy()
+
+    cv2.line(copy, points[0], points[1], (0, 0, 255), 2)
+    cv2.line(copy, points[1], points[3], (0, 0, 255), 2)
+    cv2.line(copy, points[3], points[0], (0, 0, 255), 2)
+
+    if points[0][0] > points[3][0]:
+        print("plié vers gauche")
+    else:
+        print("plié vers droite") 
+
+
+    cv2.imshow("angle doigt plié", copy)
+    cv2.waitKey(0)
 
 
 
@@ -345,48 +364,35 @@ def index_analyse(index, palm, rectangle, crop):
     cv2.rectangle(copy, (x, y), (x+w, y+h), (0, 0, 255), 1)
 
     length = 0
-    try:
-        cv2.circle(copy, palm, 2, (255, 255, 255), 2)
 
-        
-        cv2.circle(copy, index[0][0], 2, (255, 0, 0), 2)
-        cv2.circle(copy, index[1][0], 2, (0, 255, 0), 2)
-        cv2.circle(copy, index[2][0], 2, (0, 0, 0), 2)
-        cv2.circle(copy, index[2][1], 2, (0, 0, 255), 2)
+    cv2.circle(copy, palm, 2, (255, 255, 255), 2)
 
+    
+    cv2.circle(copy, index[0][0], 2, (255, 0, 0), 2)
+    cv2.circle(copy, index[1][0], 2, (0, 255, 0), 2)
+    cv2.circle(copy, index[2][0], 2, (0, 0, 0), 2)
+    cv2.circle(copy, index[2][1], 2, (0, 0, 255), 2)
 
-
-        phax1 = dist.euclidean(index[0][0], index[0][1])
-        cv2.line(copy, index[0][0], index[0][1], (0,0,0), 1)
-        length += phax1
-        doigt_plié("phalange 1", phax1)
-
-
-        phax2 = dist.euclidean(index[1][0], index[1][1])
-        cv2.line(copy, index[1][0], index[1][1], (0,0,0), 1)
-        length += phax2
-        doigt_plié("phalange 2", phax2)
-
-        phax3 = dist.euclidean(index[2][0], index[2][1])
-        cv2.line(copy, index[2][0], index[2][1], (0,0,0), 1)
-        length += phax3
-        doigt_plié("phalange 3", phax3)
+    doigts_plié([index[0][0], index[1][0], index[2][0], index[2][1]], crop)
 
 
 
-##        (, , 137, 112)
-##        26.076809620810597
-##        14.866068747318506
-##        14.317821063276353
-##        55.260699431405456
-##
-##
-##
-##        (, , 97, 113)
-##        24.20743687382041
-##        17.69180601295413
-##        13.45362404707371
-##        55.352866933848254
+    phax1 = dist.euclidean(index[0][0], index[0][1])
+    cv2.line(copy, index[0][0], index[0][1], (0,0,0), 1)
+    length += phax1
+    phalange_plié("phalange 1", phax1)
+
+
+    phax2 = dist.euclidean(index[1][0], index[1][1])
+    cv2.line(copy, index[1][0], index[1][1], (0,0,0), 1)
+    length += phax2
+    phalange_plié("phalange 2", phax2)
+
+    phax3 = dist.euclidean(index[2][0], index[2][1])
+    cv2.line(copy, index[2][0], index[2][1], (0,0,0), 1)
+    length += phax3
+    phalange_plié("phalange 3", phax3)
+
 
 
 
@@ -396,15 +402,15 @@ def index_analyse(index, palm, rectangle, crop):
     #detecter pouce et annulaire
     #si pouce auriculaire .. index => auri -> index - > pliéq
     #changement de perspective doigt plus long -> penché vers torse et versa #531
+    #angle entre debut doigt et fin ex 259 doigt coté face
+    #angle 261
+    #pouce via index via majeur ect ex pouce rond index -> 261
+    #plusieurs main pouce rond, ok, rien et circularité genre ca tourne rond
 
 
 
 
 
-
-
-
-    except:pass
 
     print(length)
     cv2.imshow("index", copy)
@@ -430,23 +436,26 @@ def major_analyse(major, palm, rectangle, crop):
     print("")
     print("major")
 
+    doigts_plié([major[0][0], major[1][0], major[2][0], major[2][1]], crop)
+
+
     length = 0
 
     phax1 = dist.euclidean(major[0][0], major[0][1])
     cv2.line(copy, major[0][0], major[0][1], (0,0,0), 1)
     length += phax1
-    doigt_plié("phalange 1", phax1)
+    phalange_plié("phalange 1", phax1)
 
     phax2 = dist.euclidean(major[1][0], major[1][1])
     cv2.line(copy, major[1][0], major[1][1], (0,0,0), 1)
     length += phax2
-    doigt_plié("phalange 2",phax2)
+    phalange_plié("phalange 2",phax2)
 
     phax3 = dist.euclidean(major[2][0], major[2][1])
     cv2.line(copy, major[2][0], major[2][1], (0,0,0), 1)
     length += phax3
 
-    doigt_plié("phalange 3", phax3)
+    phalange_plié("phalange 3", phax3)
 
 
 
@@ -482,6 +491,10 @@ def auricular_analyse(auricular, palm, rectangle, crop):
         
 
 
+def sign(pouce, index):
+    if abs(pouce[-1][1][0] - index[-1][1][0]) <= 10 and\
+       abs(pouce[-1][1][1] - index[-1][1][1]) <= 10:
+        print("index pouce rond")
 
 
 
@@ -506,9 +519,15 @@ def no_finger_found(finger):
     return out
 
 
-def treat_skeletton_points(skeletton, position, finger, rectangle, crop):
+def finger_proba(proba):
+    for i in proba:
+        print(i)
+    print("")
 
 
+def treat_skeletton_points(skeletton, position, finger, proba, rectangle, crop):
+
+    finger_proba(proba)
     x, y, w, h = rectangle
     mid = int((x+w) / 2), int((y+h) / 2)
 
@@ -526,6 +545,8 @@ def treat_skeletton_points(skeletton, position, finger, rectangle, crop):
     annular = position[13:16]
     auricular = position[17:20]
 
+    sign(thumb, index)
+
 
     position_hand = paume(position[0][0], mid, finger)
     hand_loc = hand_location(thumb[-1], finger, mid)
@@ -536,8 +557,6 @@ def treat_skeletton_points(skeletton, position, finger, rectangle, crop):
     index_analyse(index, palm_center, rectangle, crop)
 
     major_analyse(major, palm_center, rectangle, crop)
-
-
 
     #annular_analyse(annular, palm_center, rectangle, crop)
     #auricular_analyse(auricular, palm_center, rectangle, crop)
@@ -601,8 +620,8 @@ def hand(frame, detection_graph, sess, head_box):
 if __name__ == "__main__":
     
 
-    IM = 435
-    IM = 259
+
+    IM = 261
 
 
     image = r"C:\Users\jeanbaptiste\Desktop\hand_picture\a{}.jpg".format(str(IM))
@@ -626,8 +645,8 @@ if __name__ == "__main__":
 
 
 
-    points, position, finger = hand_skelettor(copy_img, protoFile, weightsFile)
-    treat_skeletton_points(points, position, finger, rectangle, img)
+    points, position, finger, proba = hand_skelettor(copy_img, protoFile, weightsFile)
+    treat_skeletton_points(points, position, finger, proba, rectangle, img)
 
 
 
