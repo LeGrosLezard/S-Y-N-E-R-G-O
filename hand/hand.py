@@ -321,9 +321,9 @@ def doigts_plié(points, crop):
     cv2.line(copy, points[1], points[3], (0, 0, 255), 2)
     cv2.line(copy, points[3], points[0], (0, 0, 255), 2)
 
-    if points[0][0] > points[3][0]:
+    if points[0][0] >= points[3][0] + 10 and points[3][1] + 5 >= points[1][1]:
         print("plié vers gauche")
-    else:
+    if points[0][0] <= points[3][0] - 10 and points[3][1] + 5 >= points[1][1]:
         print("plié vers droite") 
 
 
