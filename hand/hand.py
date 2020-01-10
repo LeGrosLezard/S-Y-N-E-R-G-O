@@ -578,6 +578,57 @@ def finger_proba(proba):
     print("")
 
 
+
+def reorganize_finger(fingers, hand_loc):
+
+
+    print("reorganize fingers")
+
+    to_sort = (fingers[0][-1][1][0], fingers[1][-1][1][0],
+               fingers[2][-1][1][0], fingers[3][-1][1][0],
+               fingers[4][-1][1][0]) 
+
+    sort = sorted(to_sort)
+
+    finger_sorted = []
+    for i in sort:
+        for j in fingers:
+            if i == j[-1][1][0]:
+                finger_sorted.append(j)
+
+
+
+
+    #droite
+    if hand_loc == "main droite":
+        thumb = finger_sorted[-1]
+        index = finger_sorted[-2]
+        major = finger_sorted[-3]
+        annular = finger_sorted[-4]
+        auricular = finger_sorted[-5]
+  
+    #gauche
+    if hand_loc == "main gauche":
+        thumb = finger_sorted[0]
+        index = finger_sorted[1]
+        major = finger_sorted[2]
+        annular = finger_sorted[3]
+        auricular = finger_sorted[4]
+
+
+    print("")
+    return thumb, index, major, annular, auricular
+
+
+
+
+
+
+
+
+
+
+
 def treat_skeletton_points(skeletton, position, finger, proba, rectangle, crop):
 
     finger_proba(proba)
@@ -598,21 +649,28 @@ def treat_skeletton_points(skeletton, position, finger, proba, rectangle, crop):
     annular = position[13:16]
     auricular = position[17:20]
 
-    sign(thumb, index)
 
 
     position_hand = paume(position[0][0], mid, finger)
     hand_loc = hand_location(thumb[-1], finger, mid)
     palm_analyse(hand_loc, palm_center, palm, rectangle, crop, no_fng_fnd)
 
+    try:
+        thumb, index, major, annular, auricular =\
+        reorganize_finger([thumb, index, major, annular, auricular], hand_loc)
+    except:
+        print("ICI a voir en cas de pas tous les doigts")
+
+
+    sign(thumb, index)
 
     thumb_analyse(thumb, palm_center, index, rectangle, crop)
     index_analyse(index, palm_center, rectangle, crop)
 
-    major_analyse(major, palm_center, rectangle, crop)
+    #major_analyse(major, palm_center, rectangle, crop)
 
-    annular_analyse(annular, palm_center, rectangle, crop)
-    auricular_analyse(auricular, palm_center, rectangle, crop)
+    #annular_analyse(annular, palm_center, rectangle, crop)
+    #auricular_analyse(auricular, palm_center, rectangle, crop)
 
 
 
@@ -673,8 +731,8 @@ def hand(frame, detection_graph, sess, head_box):
 if __name__ == "__main__":
     
 
-
     IM = 261
+    #IM = 9
 
 
     image = r"C:\Users\jeanbaptiste\Desktop\hand_picture\a{}.jpg".format(str(IM))
@@ -705,7 +763,15 @@ if __name__ == "__main__":
 
 
 
-
+#TODO
+    #detecter pouce et annulaire
+    #si pouce auriculaire .. index => auri -> index - > pliéq
+    #changement de perspective doigt plus long -> penché vers torse et versa #531
+    #angle entre debut doigt et fin ex 259 doigt coté face
+    #angle 261
+    #pouce via index via majeur ect ex pouce rond index -> 261
+    #plusieurs main pouce rond, ok, rien et circularité genre ca tourne rond
+    #verifier hnad reoganization si pas tous les doigts
 
 
 
