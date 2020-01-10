@@ -323,6 +323,9 @@ def doigts_plié(points, crop):
     cv2.waitKey(0)
 
 
+def analyse_space_fingers():
+    pass
+    #signe L
 
 
 
@@ -345,10 +348,10 @@ def thumb_analyse(thumb, palm, index, rectangle, crop):
     print("points:", len(thumb))
 
 
-
-
     cv2.imshow("thumb", copy)
     cv2.waitKey(0)
+
+
 
 
 
@@ -659,13 +662,13 @@ def treat_skeletton_points(skeletton, position, finger, proba, rectangle, crop):
         thumb, index, major, annular, auricular =\
         reorganize_finger([thumb, index, major, annular, auricular], hand_loc)
     except:
-        print("ICI a voir en cas de pas tous les doigts")
+        print("ICI a voir en cas de pas tous les doigts PAS POUCE")
 
 
     sign(thumb, index)
 
     thumb_analyse(thumb, palm_center, index, rectangle, crop)
-    index_analyse(index, palm_center, rectangle, crop)
+    #index_analyse(index, palm_center, rectangle, crop)
 
     #major_analyse(major, palm_center, rectangle, crop)
 
@@ -732,7 +735,7 @@ if __name__ == "__main__":
     
 
     IM = 261
-    #IM = 9
+    IM = 9
 
 
     image = r"C:\Users\jeanbaptiste\Desktop\hand_picture\a{}.jpg".format(str(IM))
@@ -771,7 +774,7 @@ if __name__ == "__main__":
     #angle 261
     #pouce via index via majeur ect ex pouce rond index -> 261
     #plusieurs main pouce rond, ok, rien et circularité genre ca tourne rond
-    #verifier hnad reoganization si pas tous les doigts
+    #verifier hnad reoganization si pas tous les doigts pas pouce
 
 
 
