@@ -285,6 +285,8 @@ def phalange(pha, phax, pts1, pts2):
     print("")
 
 
+
+
 def doigts_plié(points, crop):
 
     copy = crop.copy()
@@ -317,16 +319,67 @@ def doigts_plié(points, crop):
         print("plié vers gauche") 
 
 
-
-
     cv2.imshow("angle doigt plié", copy)
     cv2.waitKey(0)
 
 
-def analyse_space_fingers():
-    pass
-    #signe L
+def analyse_space_thumb_fingers(finger, finger2, palm, crop):
 
+    copy = crop.copy()
+
+
+    print(finger)
+    print(finger2)
+
+    cv2.line(copy, palm, finger[-1][1], (0,255,255), 1)
+    cv2.line(copy, finger[-1][1], finger2[-1][1], (0,255,255), 1)
+    cv2.line(copy, finger2[-1][1], palm, (0,255,255), 1)
+
+
+    cv2.circle(copy, palm, 2, (255, 255, 255), 2)
+    cv2.circle(copy, finger[-1][1], 2, (255, 255, 255), 2)
+    cv2.circle(copy, finger2[-1][1], 2, (255, 255, 255), 2)
+
+    ab = dist.euclidean(palm, finger[-1][1])
+    bc = dist.euclidean(finger[-1][1], finger2[-1][1])
+    ca = dist.euclidean(finger2[-1][1], palm)
+    print(ab, bc, ca)
+
+    font = cv2.FONT_HERSHEY_COMPLEX_SMALL
+
+    cv2.putText(copy, 'A', palm, font,  
+                       1, (255, 255, 255), 1, cv2.LINE_AA)
+    cv2.putText(copy, 'B', finger[-1][1], font,  
+                       1, (255, 255, 255), 1, cv2.LINE_AA)
+    cv2.putText(copy, 'C', finger2[-1][1], font,  
+                       1, (255, 255, 255), 1, cv2.LINE_AA)
+
+
+
+    #pouce plus haut qu'index
+    if finger[-1][1][1] + 5 < finger2[-1][1][1]:
+        print("iciiiiiiiiiii a faire")
+
+
+
+    #pouce plus bas index
+    elif finger2[-1][1][1] + 5 > finger2[-1][1][1]:
+
+        cb_2 = (ca**2) + (ab**2) - (bc**2)
+        cos = (2 * ca * ab)
+
+        angle = math.degrees(math.acos(cb_2 / cos))
+        print(angle)
+
+
+
+
+
+
+
+
+    cv2.imshow("analyse space", copy)
+    cv2.waitKey(0)
 
 
 
@@ -337,15 +390,24 @@ def thumb_analyse(thumb, palm, index, rectangle, crop):
     print("")
     print("pouce")
 
-    thumb = [j for i in thumb for j in i]
-    [cv2.circle(copy, pts, 2, (0, 0, 255), 2) for pts in thumb]
+    thumb_circle = [j for i in thumb for j in i]
+    [cv2.circle(copy, pts, 2, (0, 0, 255), 2) for pts in thumb_circle]
 
 
-    thumb = list(set(thumb))
-    for i in thumb:
+    thumb_pts = list(set(thumb))
+    for i in thumb_pts:
         if i == (0, 0):
-            thumb.remove(i)
-    print("points:", len(thumb))
+            thumb_pts.remove(i)
+    print("points:", len(thumb_pts))
+
+
+
+    analyse_space_thumb_fingers(thumb, index, palm, crop)
+
+
+
+
+
 
 
     cv2.imshow("thumb", copy)
@@ -555,7 +617,7 @@ def sign(pouce, index):
 
 
 def no_finger_found(finger):
-    out = ""
+    out = False
     fings = set([i for i in range(20)])
     finger_ = set(finger)
     
