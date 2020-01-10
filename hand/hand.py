@@ -207,54 +207,6 @@ def draw(finger, position, crop, color):
     finger = [j for i in position for j in i]
     [cv2.circle(crop, pts, 2, color, -1) for pts in finger]
 
-def paume(pos, mid, finger):
-    if len(finger) > 0 and finger[0] == 0:
-        position_hand = ""
-        if pos[1] > mid[0]: position_hand = "main vers haut"
-        if pos[1] < mid[1]: position_hand = "main vers bas"
-        print(position_hand)
-        return position_hand
-
-def hand_location(pos, finger, mid):
-
-    hand = ""
-    if len(finger) > 3 and finger[3] == 3:
-        #recup hand location
-        if pos[1][0] > mid[0]: hand = "main droite"
-        if pos[1][0] < mid[1]: hand = "main gauche"
-        print(hand)
-        return hand
-
-
-def palm_analyse(hand_loc, palm_center, palm, rectangle, crop, no_fng_fnd):
-    """ICI main deplier ou pas"""
-    copy = crop.copy()
-
-    if no_fng_fnd is False:
-        print("paume de la main")
-        x, y, w, h = rectangle
-
-        if hand_loc == "main droite": area = palm[0]
-        else:area = palm[1]
-
-        palm_area = np.array([(pts[0], pts[1]) for pts in area])
-        cv2.drawContours(copy, [palm_area], 0, (0, 255, 0), 1)
-
-        cv2.circle(copy, palm_center, 2, (255, 255, 255), 1)
-        [cv2.circle(copy, pts, 2, (0, 0, 0), 1) for pts in area]
-
-        for pts in area:
-            distance = dist.euclidean(palm_center, pts)
-            #print(distance)
-
-        area = cv2.contourArea(palm_area)
-        print(area)
-        print(w*h)
-        print("")
-
-        cv2.imshow("palm1", copy)
-        cv2.waitKey(0)
-
 
 def phalange(pha, phax, pts1, pts2):
 
@@ -367,7 +319,6 @@ def analyse_space_thumb_fingers(finger, finger2, palm, crop):
 
         cb_2 = (ca**2) + (ab**2) - (bc**2)
         cos = (2 * ca * ab)
-
         angle = math.degrees(math.acos(cb_2 / cos))
         print(angle)
 
@@ -647,8 +598,6 @@ def finger_proba(proba):
 def reorganize_finger(fingers, hand_loc):
 
 
-    print("reorganize fingers")
-
     to_sort = (fingers[0][-1][1][0], fingers[1][-1][1][0],
                fingers[2][-1][1][0], fingers[3][-1][1][0],
                fingers[4][-1][1][0]) 
@@ -662,36 +611,82 @@ def reorganize_finger(fingers, hand_loc):
                 finger_sorted.append(j)
 
 
-
-
-    #droite
     if hand_loc == "main droite":
         thumb = finger_sorted[-1]
         index = finger_sorted[-2]
         major = finger_sorted[-3]
         annular = finger_sorted[-4]
         auricular = finger_sorted[-5]
-  
-    #gauche
+        print("reorganize fingers done droite")
+
     if hand_loc == "main gauche":
         thumb = finger_sorted[0]
         index = finger_sorted[1]
         major = finger_sorted[2]
         annular = finger_sorted[3]
         auricular = finger_sorted[4]
+        print("reorganize fingers done gauche")
 
-
-    print("")
     return thumb, index, major, annular, auricular
 
 
+def palm_analyse(hand_loc, palm_center, palm, rectangle, crop, no_fng_fnd):
+
+    copy = crop.copy()
+    x, y, w, h = rectangle
+
+    if hand_loc == "main droite":
+        area = palm[0]
+    else:
+        area = palm[1]
 
 
+    palm_area = np.array([(pts[0], pts[1]) for pts in area if pts != (0, 0)])
+    cv2.drawContours(copy, [palm_area], 0, (0, 255, 0), 1)
+
+    cv2.circle(copy, palm_center, 2, (255, 255, 255), 1)
+    [cv2.circle(copy, pts, 2, (0, 0, 0), 1) for pts in area]
+
+    cv2.imshow("palm", copy)
+    cv2.waitKey(0)
 
 
+def hand_location(thumb, index, major, annular, auricular, crop):
 
+    hand = ""
+    copy = crop.copy()
 
+    end_fingers = [[j for i in index for j in i if j != (0, 0)],
+                   [j for i in major for j in i if j != (0, 0)],
+                   [j for i in annular for j in i if j != (0, 0)],
+                   [j for i in auricular for j in i if j != (0, 0)]]
 
+    [cv2.circle(copy, fingers[-1], 2, (255, 0, 0), 2) for fingers in end_fingers]
+    thumb = list(set([j for i in thumb for j in i if j != (0, 0)]))
+
+    end_fingers = [fingers[-1] for fingers in end_fingers]
+
+    left = 0
+    right = 0
+    for phax in thumb:
+        for fing in end_fingers:
+            if phax[0] < fing[0]:
+                left += 1
+            elif phax[0] > fing[0]:
+                right += 1
+
+    if left > right:
+        hand = "main droite"
+    elif right > left:
+        hand = "main gauche"
+    else:
+        print("probleme HAND LOCATION")
+
+    cv2.imshow("Hand", copy)
+    cv2.waitKey(0)
+
+    print(hand)
+    return hand
 
 
 def treat_skeletton_points(skeletton, position, finger, proba, rectangle, crop):
@@ -703,10 +698,12 @@ def treat_skeletton_points(skeletton, position, finger, proba, rectangle, crop):
     no_fng_fnd = no_finger_found(finger)
 
     palm_center =  position[0][0]
+
     palm = [[position[5][0], position[9][0], position[13][0],
-            position[17][0], position[0][0], position[0][1], position[1][1]],
+             position[17][0], position[0][1], position[1][1]],
+
             [position[5][0], position[9][0], position[13][0],
-            position[17][0], position[1][1], position[0][1], position[0][0]]]
+             position[17][0], position[0][1], position[1][1]]]
 
     thumb = position[1:4]
     index = position[5:8]
@@ -714,10 +711,7 @@ def treat_skeletton_points(skeletton, position, finger, proba, rectangle, crop):
     annular = position[13:16]
     auricular = position[17:20]
 
-
-
-    position_hand = paume(position[0][0], mid, finger)
-    hand_loc = hand_location(thumb[-1], finger, mid)
+    hand_loc = hand_location(thumb, index, major, annular, auricular, crop)
     palm_analyse(hand_loc, palm_center, palm, rectangle, crop, no_fng_fnd)
 
     try:
@@ -727,9 +721,7 @@ def treat_skeletton_points(skeletton, position, finger, proba, rectangle, crop):
         print("ICI a voir en cas de pas tous les doigts PAS POUCE")
 
 
-    sign(thumb, index)
-
-    thumb_analyse(thumb, palm_center, index, rectangle, crop)
+    #thumb_analyse(thumb, palm_center, index, rectangle, crop)
     #index_analyse(index, palm_center, rectangle, crop)
 
     #major_analyse(major, palm_center, rectangle, crop)
@@ -740,7 +732,7 @@ def treat_skeletton_points(skeletton, position, finger, proba, rectangle, crop):
 
 
 
-
+    sign(thumb, index)
 
 
 
@@ -797,7 +789,7 @@ if __name__ == "__main__":
     
 
     IM = 261
-    IM = 9
+    IM = 67
 
 
     image = r"C:\Users\jeanbaptiste\Desktop\hand_picture\a{}.jpg".format(str(IM))
