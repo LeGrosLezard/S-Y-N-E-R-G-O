@@ -567,27 +567,6 @@ def sign(pouce, index):
 
 
 
-def no_finger_found(finger):
-    out = False
-    fings = set([i for i in range(20)])
-    finger_ = set(finger)
-    
-    no_finger = [fing for fing in fings if not(fing in finger_)]
-
-    print("")
-    print("")
-
-    print(len(no_finger), no_finger)
-    if len(no_finger) > 0 and no_finger[0] == 0:
-        out = True
-    #toujours pas le 0 et 1 :
-    if len(no_finger) > 0 and no_finger[0] == 0 and no_finger[1] == 1:
-        out = True
-    return out
-
-
-
-
 
 
 def reorganize_finger(thumb, index, major, annular, auricular, hand_localisation, crop):
@@ -663,7 +642,7 @@ def reorganize_finger(thumb, index, major, annular, auricular, hand_localisation
 
 
 
-def palm_analyse(hand_localised, palm_center, palm, rectangle, crop, no_fng_fnd):
+def palm_analyse(hand_localised, palm_center, palm, rectangle, crop):
 
     copy = crop.copy()
 
@@ -722,13 +701,70 @@ def hand_location(thumb, index, major, annular, auricular, crop):
     return hand
 
 
+
+def reorganize_finger_position(thumb, index, major, annular, auricular, crop):
+    copy = crop.copy()
+
+    fingers = [ [j for i in thumb for j in i if j != (0, 0)],
+                [j for i in index for j in i if j != (0, 0)],
+                [j for i in major for j in i if j != (0, 0)],
+                [j for i in annular for j in i if j != (0, 0)],
+                [j for i in auricular for j in i if j != (0, 0)]]
+
+
+    #display
+    fingers = [list(set(i)) for i in fingers]
+    for i in fingers:
+        copy = crop.copy()
+        print(i)
+        for j in i:
+            cv2.circle(copy, j, 2, (0, 0, 255), 2)
+            cv2.imshow("copy", copy)
+            cv2.waitKey(0)
+
+    #on verifie chaques doigts et essayons de detecter un doigt détecter plusieurs fois
+    for i in range(len(fingers)):
+        if i + 1 < len(fingers):
+            print(fingers[i])
+            print(fingers[i+1])
+
+
+            for j in fingers[i]:
+                for k in fingers[i + 1]:
+                    if abs(j[0] - k[0]) < 10 and\
+                       abs(j[1] - k[1]) < 10:
+                        print("deux fois le meme doigt ?")
+
+
+    #MAIS avant la prochaine étape faut remettre les points dans un ordre croissant, décroissant
+        #MAIS on ne peut toujours pas savoir si la main et vers le bas ou vers le haut...
+                        #donc croissant miam
+
+
+
+
+    #on essais de voir si un pts de ce doigt et allé sur un autre doigt
+    for i in fingers:
+        print(i)
+        for j in range(len(i)):
+            if j + 1 < len(i):
+
+                a = dist.euclidean(i[j], i[j + 1])
+                print(a)
+
+        print("")
+
+    cv2.imshow("finger_verification", copy)
+    cv2.waitKey(0)
+
+
+
+
+
 def treat_skeletton_points(skeletton, position, finger, proba, rectangle, crop):
 
 
     x, y, w, h = rectangle
-    mid = int((x+w) / 2), int((y+h) / 2)
-
-    no_fng_fnd = no_finger_found(finger)
 
     palm_center =  position[0][0]
 
@@ -746,10 +782,14 @@ def treat_skeletton_points(skeletton, position, finger, proba, rectangle, crop):
 
 
     hand_localised = hand_location(thumb, index, major, annular, auricular, crop)
-    palm_analyse(hand_localised, palm_center, palm, rectangle, crop, no_fng_fnd)
+    #palm_analyse(hand_localised, palm_center, palm, rectangle, crop)
 
     thumb, index, major, annular, auricular =\
-    reorganize_finger(thumb, index, major, annular, auricular, hand_loc, crop)
+    reorganize_finger(thumb, index, major, annular, auricular, hand_localised, crop)
+
+    finger_verification(thumb, index, major, annular, auricular, crop)
+
+
 
 
 
