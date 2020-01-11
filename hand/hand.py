@@ -711,21 +711,22 @@ def reorganize_finger_position(thumb, index, major, annular, auricular, crop):
                 [j for i in annular for j in i if j != (0, 0)],
                 [j for i in auricular for j in i if j != (0, 0)]]
 
-
+    #remove doublon
     fingers = [list(set(i)) for i in fingers]
+    #sort tuple by 1 position
     data_sorted = [sorted(i, key=lambda tup: tup[1], reverse=True) for i in fingers]
 
     #display
     [cv2.circle(copy_init, j, 2, (0, 255, 0), 2) for i in fingers for j in i]
 
-
-
+    #verify all last finger point. if distance > 40 remove it (detection on other pts)
     for data in data_sorted:
         copy = crop.copy()
         for i in range(len(data)):
-            print(i)
+
             if i == 0:
                 cv2.circle(copy, data[i], 2, (0, 0, 255), 2)
+
             if i > 0:
                 distance_pts = dist.euclidean(data[i], data[i - 1])
                 print(distance_pts)
@@ -737,7 +738,7 @@ def reorganize_finger_position(thumb, index, major, annular, auricular, crop):
                 #cv2.imshow("copy", copy)
                 #cv2.waitKey(0)
 
-
+    #verify all fingers if 2 detections on one finger remove it
     for i in range(len(data_sorted)):
         same = 0
 
@@ -753,9 +754,6 @@ def reorganize_finger_position(thumb, index, major, annular, auricular, crop):
                 print("finger removed")
 
 
-
-
-
     #display
     [cv2.circle(copy, j, 2, (0, 255, 0), 2) for i in data_sorted for j in i]
 
@@ -763,6 +761,7 @@ def reorganize_finger_position(thumb, index, major, annular, auricular, crop):
     cv2.imshow("copy", copy)
     cv2.waitKey(0)
 
+    return data_sorted
 
 
 
@@ -779,22 +778,31 @@ def treat_skeletton_points(skeletton, position, finger, proba, rectangle, crop):
             [position[5][0], position[9][0], position[13][0],
              position[17][0], position[0][1], position[1][1]]]
 
+    #attribuate finger's to their initial detection
     thumb = position[1:4]
     index = position[5:8]
     major = position[9:12]
     annular = position[13:16]
     auricular = position[17:20]
 
-
+    #location of the thumb
     hand_localised = hand_location(thumb, index, major, annular, auricular, crop)
-    #palm_analyse(hand_localised, palm_center, palm, rectangle, crop)
+    #area of the palm
+    palm_analyse(hand_localised, palm_center, palm, rectangle, crop)
 
+    #attribuate by x axis fingers
     thumb, index, major, annular, auricular =\
     reorganize_finger(thumb, index, major, annular, auricular, hand_localised, crop)
 
-    reorganize_finger_position(thumb, index, major, annular, auricular, crop)
+    #delete false points finger detection
+    data_sorted = reorganize_finger_position(thumb, index, major, annular, auricular, crop)
 
-
+    #reattribuate points
+    thumb = data_sorted[0]
+    index = data_sorted[1]
+    major = data_sorted[2]
+    annular = data_sorted[3]
+    auricular = data_sorted[4]
 
 
 
@@ -867,7 +875,7 @@ if __name__ == "__main__":
 
     IM = 67 #g
     IM = 83 #d 186
-    IM = 27 #g area 538
+    #IM = 27 #g area 538
 
 
 
