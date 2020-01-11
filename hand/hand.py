@@ -4,7 +4,7 @@ import time
 
 import imutils
 import numpy as np
-import tensorflow as tf
+#import tensorflow as tf
 from matplotlib import pyplot as plt
 from numpy import expand_dims, squeeze
 
@@ -579,11 +579,9 @@ def no_finger_found(finger):
 
     print(len(no_finger), no_finger)
     if len(no_finger) > 0 and no_finger[0] == 0:
-        print("reply or turn or dont know yet \n")
         out = True
     #toujours pas le 0 et 1 :
     if len(no_finger) > 0 and no_finger[0] == 0 and no_finger[1] == 1:
-        print("reply or turn 2 or dont know yet \n")
         out = True
     return out
 
@@ -609,8 +607,8 @@ def reorganize_finger(thumb, index, major, annular, auricular, hand_localisation
     end_fingers = [fingers[-1] for fingers in end_fingers]
 
 
-    thumb_fingers_points = []
     repear_finger = []
+    thumb_fingers_points = []
     #on récupere la distance entre le pouce et les doigts
     #ensuite on va devoir sort les distance.
     #donc pour s'y retrouver on fait un repear_finger avec:
@@ -628,17 +626,18 @@ def reorganize_finger(thumb, index, major, annular, auricular, hand_localisation
     finger_sorted = [thumb]
     all_finger = [thumb, index, major, annular, auricular]
     #on compare les distances sorted avec le repaire.
-    #on compare le repaire avec les points du skelette.
     for i in thumb_fingers_points:
         for j in repear_finger:
             if i == j[0]:
-
+                #on compare le repaire avec les points du skelette.
                 for k in all_finger:
                     if j[1] == (k[-1][1]):
                         finger_sorted.append(k)
 
 
     #print(finger_sorted)
+
+
 ##    copy2 = crop.copy()
 ##    for i in finger_sorted:
 ##        for j in i:
@@ -649,21 +648,11 @@ def reorganize_finger(thumb, index, major, annular, auricular, hand_localisation
 ##        cv2.waitKey(0)
 
 
-    #pouce a gauche
-    if hand_localisation == "main droite":
-        thumb = finger_sorted[0]
-        index = finger_sorted[1]
-        major = finger_sorted[2]
-        annular = finger_sorted[3]
-        auricular = finger_sorted[4]
-
-    #pouce a droite
-    elif hand_localisation == "main gauche":
-        thumb = finger_sorted[-1]
-        index = finger_sorted[-2]
-        major = finger_sorted[-3]
-        annular = finger_sorted[-4]
-        auricular = finger_sorted[-5]
+    thumb = finger_sorted[0]
+    index = finger_sorted[1]
+    major = finger_sorted[2]
+    annular = finger_sorted[3]
+    auricular = finger_sorted[4]
 
 
     cv2.imshow("reorganisation", copy)
@@ -674,19 +663,19 @@ def reorganize_finger(thumb, index, major, annular, auricular, hand_localisation
 
 
 
-def palm_analyse(hand_loc, palm_center, palm, rectangle, crop, no_fng_fnd):
+def palm_analyse(hand_localised, palm_center, palm, rectangle, crop, no_fng_fnd):
 
     copy = crop.copy()
-    x, y, w, h = rectangle
 
-    if hand_loc == "main droite":
-        area = palm[0]
-    else:
-        area = palm[1]
-
+    if hand_localised == "pouce droite": area = palm[0]
+    else: area = palm[1]
 
     palm_area = np.array([(pts[0], pts[1]) for pts in area if pts != (0, 0)])
     cv2.drawContours(copy, [palm_area], 0, (0, 255, 0), 1)
+    palm_area = cv2.contourArea(palm_area)
+
+    if palm_area < 300: print("peut etre main non tournée paume et on peut definir la main", palm_area)
+    elif palm_area > 300: print("main tournée paume  et on peut definir la main", palm_area)
 
     cv2.circle(copy, palm_center, 2, (255, 255, 255), 1)
     [cv2.circle(copy, pts, 2, (0, 0, 0), 1) for pts in area]
@@ -705,24 +694,24 @@ def hand_location(thumb, index, major, annular, auricular, crop):
                    [j for i in annular for j in i if j != (0, 0)],
                    [j for i in auricular for j in i if j != (0, 0)]]
 
-    [cv2.circle(copy, fingers[-1], 2, (255, 0, 0), 2) for fingers in end_fingers]
-    thumb = list(set([j for i in thumb for j in i if j != (0, 0)]))
-
     end_fingers = [fingers[-1] for fingers in end_fingers]
+    [cv2.circle(copy, fingers, 2, (255, 0, 0), 2) for fingers in end_fingers]
+
+    thumb = [j for i in thumb for j in i if j != (0, 0)][-1]
+    cv2.circle(copy, thumb, 2, (0, 0, 255), 2)
 
     left = 0
     right = 0
-    for phax in thumb:
-        for fing in end_fingers:
-            if phax[0] < fing[0]:
-                left += 1
-            elif phax[0] > fing[0]:
-                right += 1
+    for fing in end_fingers:
+        if thumb[0] < fing[0]:
+            left += 1
+        elif thumb[0] > fing[0]:
+            right += 1
 
     if left > right:
-        hand = "main droite"
+        hand = "pouce gauche"
     elif right > left:
-        hand = "main gauche"
+        hand = "pouce droite"
     else:
         print("probleme HAND LOCATION")
 
@@ -755,9 +744,9 @@ def treat_skeletton_points(skeletton, position, finger, proba, rectangle, crop):
     annular = position[13:16]
     auricular = position[17:20]
 
-    hand_loc = hand_location(thumb, index, major, annular, auricular, crop)
-    palm_analyse(hand_loc, palm_center, palm, rectangle, crop, no_fng_fnd)
 
+    hand_localised = hand_location(thumb, index, major, annular, auricular, crop)
+    palm_analyse(hand_localised, palm_center, palm, rectangle, crop, no_fng_fnd)
 
     thumb, index, major, annular, auricular =\
     reorganize_finger(thumb, index, major, annular, auricular, hand_loc, crop)
@@ -765,7 +754,7 @@ def treat_skeletton_points(skeletton, position, finger, proba, rectangle, crop):
 
 
     #thumb_analyse(thumb, palm_center, index, rectangle, crop)
-    index_analyse(index, palm_center, rectangle, crop)
+    #index_analyse(index, palm_center, rectangle, crop)
 
     #major_analyse(major, palm_center, rectangle, crop)
 
@@ -831,8 +820,17 @@ def hand(frame, detection_graph, sess, head_box):
 if __name__ == "__main__":
     
 
-    IM = 261
-    IM = 67
+    IM = 67 #g
+    IM = 83 #d 186
+    IM = 27 #g area 538
+
+
+
+
+
+
+
+
 
 
     image = r"C:\Users\jeanbaptiste\Desktop\hand_picture\a{}.jpg".format(str(IM))
@@ -872,7 +870,7 @@ if __name__ == "__main__":
     #pouce via index via majeur ect ex pouce rond index -> 261
     #plusieurs main pouce rond, ok, rien et circularité genre ca tourne rond
     #verifier hnad reoganization si pas tous les doigts pas pouce
-
+    #main retourner du coup devient gauche -> droite et vis versa
 
 
 
