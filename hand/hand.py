@@ -605,16 +605,22 @@ def palm_analyse(hand_localised, palm_center, palm, rectangle, crop,
     cv2.imshow("palm", copy)
     cv2.waitKey(0)
 
+    """Here we need the function because we reorganize finger's
+    for reorganize finger in case they have a false detection
+    and phax are localised in a wrong order
+    we need to sort them, but sort them by y by x ? so we create a list with informations !"""
 
-
+    #recuperate all fingers
     fingers = [thumb, index, major, annular, auricular]
 
+    #recuperate first point (palm start finger)
     def finger_list(fingers):
-        return [list(set([j for i in fingers[1:] for j in i])), fingers[0][0]]
+        return [list(set([j for i in fingers[1:-1] for j in i])), fingers[0][0]]
 
+    #recuperate points beetween extremums points of the finger.
     fingers = [finger_list(fingers[nb]) for nb in range(5)]
 
-
+    #for each points compare them with the palm point and define finger position
     for i in fingers:
 
         top = 0; bot = 0; left = 0; right = 0
@@ -627,8 +633,8 @@ def palm_analyse(hand_localised, palm_center, palm, rectangle, crop,
             elif i[1][1] - j[1] < 0: top += 1
 
         pos = ["", ""]
-        if left > right: pos[0] = "gauche"
-        elif right > left:pos[0] = "droite"
+        if left > right: pos[0] = "droite"
+        elif right > left:pos[0] = "gauche"
 
         if top > bot:pos[1] = "bas"
         elif bot > top: pos[1] = "haut"
