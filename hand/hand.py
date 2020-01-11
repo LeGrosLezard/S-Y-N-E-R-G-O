@@ -358,34 +358,6 @@ def sign(pouce, index):
 
 
 
-
-
-
-
-def palm_analyse(hand_localised, palm_center, palm, rectangle, crop):
-    """Here we hope if area > threshold == palm
-                    else area < threshold == turn around hand
-        with that we can define localisation of the hand (right or left hand)"""
-
-    copy = crop.copy()
-
-    if hand_localised == "pouce droite": area = palm[0]
-    else: area = palm[1]
-
-    palm_area = np.array([(pts[0], pts[1]) for pts in area if pts != (0, 0)])
-    cv2.drawContours(copy, [palm_area], 0, (0, 255, 0), 1)
-    palm_area = cv2.contourArea(palm_area)
-
-    if palm_area < 300: print("peut etre main non tournée paume et on peut definir la main", palm_area)
-    elif palm_area > 300: print("main tournée paume  et on peut definir la main", palm_area)
-
-    cv2.circle(copy, palm_center, 2, (255, 255, 255), 1)
-    [cv2.circle(copy, pts, 2, (0, 0, 0), 1) for pts in area]
-
-    cv2.imshow("palm", copy)
-    cv2.waitKey(0)
-
-
 def hand_location(thumb, index, major, annular, auricular, crop):
     """Here we need to localise the thumb for have
     the hand position left or right hand.
@@ -498,7 +470,6 @@ def reorganize_finger_position(thumb, index, major, annular, auricular, crop):
     cv2.imshow("copy_init", copy_init)    
     cv2.imshow("copy", copy)
     cv2.waitKey(0)
-    cv2.destroyAllWindows()
 
     return data_sorted
 
@@ -540,8 +511,9 @@ def reorganize_finger(thumb, index, major, annular, auricular, hand_localisation
     #print(repear_finger)
 
     finger_sorted = [thumb]
-    all_finger = [thumb, index, major, annular, auricular]
 
+    #We need to remove None data from all finger for replace it
+    all_finger = [thumb, index, major, annular, auricular]
     for i in all_finger:
         for j in i:
             if j == ((0, 0), (0, 0)):
@@ -556,15 +528,14 @@ def reorganize_finger(thumb, index, major, annular, auricular, hand_localisation
                     if j[1] == (k[-1][1]):
                         finger_sorted.append(k)
 
-    copy2 = crop.copy()
-    for i in finger_sorted:
-        for j in i:
-            for k in j:
-                cv2.circle(copy2, k, 2, (255, 0, 0), 2)
-
-        cv2.imshow("reorg_finger", copy2)
-        cv2.waitKey(0)
-
+##    copy2 = crop.copy()
+##    for i in finger_sorted:
+##        for j in i:
+##            for k in j:
+##                cv2.circle(copy2, k, 2, (255, 0, 0), 2)
+##
+##        cv2.imshow("reorg_finger", copy2)
+##        cv2.waitKey(0)
 
     thumb = finger_sorted[0]
     index = finger_sorted[1]
@@ -598,13 +569,67 @@ def thumb_analyse(palm, thumb, index, crop):
         cv2.circle(copy, i, 2, (0, 0, 255), 2)
 
 
-
     #analyse_space_thumb_fingers(finger, finger2, palm, crop)
 
     cv2.imshow("thumb", copy)
     cv2.waitKey(0)
 
 
+def palm_analyse(hand_localised, palm_center, palm, rectangle, crop,
+                 thumb, index, major, annular, auricular):
+
+    """Here we hope if area > threshold == palm
+                    else area < threshold == turn around hand
+        with that we can define localisation of the hand (right or left hand)"""
+
+    copy = crop.copy()
+
+    if hand_localised == "pouce droite": area = palm[0]
+    else: area = palm[1]
+
+    palm_area_draw = np.array([(pts[0], pts[1]) for pts in area if pts != (0, 0)])
+    cv2.drawContours(copy, [palm_area_draw], 0, (0, 255, 0), 1)
+    palm_area = cv2.contourArea(palm_area_draw)
+
+    if palm_area < 300: print("peut etre main non tournée paume et on peut definir la main", palm_area)
+    elif palm_area > 300: print("main tournée paume  et on peut definir la main", palm_area)
+
+    cv2.circle(copy, palm_center, 2, (255, 255, 255), 1)
+    [cv2.circle(copy, pts, 2, (0, 0, 0), 1) for pts in area]
+
+
+    cv2.imshow("palm", copy)
+    cv2.waitKey(0)
+
+    print("MAIS SI ON A PAS LA PALM QUE FAIRE ??")
+    print("EN GROS LA FAUT DIRE PTS DOIGT EN HAUT EN BAS A DROITE OU A GAUCHE")
+    print("la moyenne ??? ou paume pts avec les doigts ? et ne pas pensé pas palm bonne chance jb du futur")
+    print("en gros, faut juste ensuite fractionner la grosse fonction en plus petite quoi")
+    print("bon app")
+
+    #palm_points
+    palm_points = [(pts[0], pts[1]) for pts in area if pts != (0, 0)]
+
+    #recuperate mid of finger's (not extremum points) for have
+    #the direction of the finger's by contribution to the palm
+    end_fingers = [[i for i in thumb[1:-1] if i != (0, 0)],
+                   [i for i in index[1:-1] if i != (0, 0)],
+                   [i for i in major[1:-1] if i != (0, 0)],
+                   [i for i in annular[1:-1] if i != (0, 0)],
+                   [i for i in auricular[1:-1] if i != (0, 0)]]
+
+    print(palm_points)
+    print(end_fingers)
+
+    [cv2.circle(copy, i, 2, (0, 0, 255), 2) for pts in end_fingers for i in pts]
+
+
+    
+
+
+    cv2.imshow("palm_orientation", copy)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
 
 
@@ -630,22 +655,25 @@ def treat_skeletton_points(skeletton, position, finger, proba, rectangle, crop):
 
     #location of the thumb
     hand_localised = hand_location(thumb, index, major, annular, auricular, crop)
-    #area of the palm
-    palm_analyse(hand_localised, palm_center, palm, rectangle, crop)
 
     #attribuate by x axis fingers
     thumb, index, major, annular, auricular =\
     reorganize_finger(thumb, index, major, annular, auricular, hand_localised, crop)
 
     #delete false points finger detection
-    data_sorted = reorganize_finger_position(thumb, index, major, annular, auricular, crop)
+    finger_sorted = reorganize_finger_position(thumb, index, major, annular, auricular, crop)
 
     #reattribuate points
-    thumb = data_sorted[0]
-    index = data_sorted[1]
-    major = data_sorted[2]
-    annular = data_sorted[3]
-    auricular = data_sorted[4]
+    thumb = finger_sorted[0]
+    index = finger_sorted[1]
+    major = finger_sorted[2]
+    annular = finger_sorted[3]
+    auricular = finger_sorted[4]
+
+
+    #area of the palm
+    palm_analyse(hand_localised, palm_center, palm, rectangle, crop,
+                 thumb, index, major, annular, auricular)
 
 
 
@@ -716,7 +744,7 @@ def hand(frame, detection_graph, sess, head_box):
 if __name__ == "__main__":
     
 
-    IM = 223
+    IM = 625
 
 
 
