@@ -325,251 +325,188 @@ def analyse_space_thumb_fingers(finger, finger2, palm, crop):
 
 
 
-
-
-
-
     cv2.imshow("analyse space", copy)
     cv2.waitKey(0)
 
 
 
-def thumb_analyse(thumb, palm, index, rectangle, crop):
-
-    copy = crop.copy()
-    cv2.circle(copy, palm, 2, (255, 255, 255), 2)
-    print("")
-    print("pouce")
-
-    thumb_circle = [j for i in thumb for j in i]
-    [cv2.circle(copy, pts, 2, (0, 0, 255), 2) for pts in thumb_circle]
 
 
-    thumb_pts = list(set(thumb))
-    for i in thumb_pts:
-        if i == (0, 0):
-            thumb_pts.remove(i)
-    print("points:", len(thumb_pts))
-
-
-
-    analyse_space_thumb_fingers(thumb, index, palm, crop)
-
-
-
-
-
-
-
-    cv2.imshow("thumb", copy)
-    cv2.waitKey(0)
-
-
-
-
-
-def index_analyse(index, palm, rectangle, crop):
+def index_analyse(thumb, index, major, crop):
 
     print("")
     print("index")
-    
-
-    print(rectangle)
-    x, y, w, h = rectangle
 
     copy = crop.copy()
-
-    cv2.rectangle(copy, (x, y), (x+w, y+h), (0, 0, 255), 1)
-
-    length = 0
-
-    cv2.circle(copy, palm, 2, (255, 255, 255), 2)
-
     
-    cv2.circle(copy, index[0][0], 2, (255, 0, 0), 2)
-    cv2.circle(copy, index[1][0], 2, (0, 255, 0), 2)
-    cv2.circle(copy, index[2][0], 2, (0, 0, 0), 2)
-    cv2.circle(copy, index[2][1], 2, (0, 0, 255), 2)
-
-    doigts_plié([index[0][0], index[1][0], index[2][0], index[2][1]], crop)
-
-
-
-    phax1 = dist.euclidean(index[0][0], index[0][1])
-    cv2.line(copy, index[0][0], index[0][1], (0,0,0), 1)
-    length += phax1
-    phalange("phalange 1", phax1, index[0][0], index[0][1])
-
-
-    phax2 = dist.euclidean(index[1][0], index[1][1])
-    cv2.line(copy, index[1][0], index[1][1], (0,0,0), 1)
-    length += phax2
-    phalange("phalange 2", phax2, index[1][0], index[1][1])
-
-    phax3 = dist.euclidean(index[2][0], index[2][1])
-    cv2.line(copy, index[2][0], index[2][1], (0,0,0), 1)
-    length += phax3
-    phalange("phalange 3", phax3, index[2][0], index[2][1])
-
-
-    print(length)
-
-
-
-    index = [j for i in index for j in i]
-    index = list(set(index))
-    for i in index:
-        if i == (0, 0):
-            index.remove(i)
-    print("points:", len(index))
-
-
 
 
     cv2.imshow("index", copy)
     cv2.waitKey(0)
-
-
     
-
-
-
-
-def major_analyse(major, palm, rectangle, crop):
-
-    print("")
-    print("major")
-
-
-    copy = crop.copy()
-    cv2.circle(copy, palm, 2, (255, 255, 255), 2)
-
-
-    cv2.circle(copy, major[0][0], 2, (255, 0, 0), 2)
-    cv2.circle(copy, major[1][0], 2, (0, 255, 0), 2)
-    cv2.circle(copy, major[2][0], 2, (0, 0, 0), 2)
-    cv2.circle(copy, major[2][1], 2, (0, 0, 255), 2)
-
-    doigts_plié([major[0][0], major[1][0], major[2][0], major[2][1]], crop)
-
-
-    length = 0
-
-    phax1 = dist.euclidean(major[0][0], major[0][1])
-    cv2.line(copy, major[0][0], major[0][1], (0,0,0), 1)
-    length += phax1
-    phalange("phalange 1", phax1, major[0][0], major[0][1])
-
-    phax2 = dist.euclidean(major[1][0], major[1][1])
-    cv2.line(copy, major[1][0], major[1][1], (0,0,0), 1)
-    length += phax2
-    phalange("phalange 2",phax2, major[1][0], major[1][1])
-
-    phax3 = dist.euclidean(major[2][0], major[2][1])
-    cv2.line(copy, major[2][0], major[2][1], (0,0,0), 1)
-    length += phax3
-
-    phalange("phalange 3", phax3, major[2][0], major[2][1])
-
-
-    major = [j for i in major for j in i]
-    major = list(set(major))
-    for i in major:
-        if i == (0, 0):
-            major.remove(i)
-    print("points:", len(major))
-
-
-
-    cv2.imshow("major", copy)
-    cv2.waitKey(0)
-
-
-
-
-
-def annular_analyse(annular, palm, rectangle, crop):
-
-    print("")
-    print("annular")
-    
-    copy = crop.copy()
-    cv2.circle(copy, palm, 2, (255, 255, 255), 2)
-
-
-    length = 0
-
-    phax1 = dist.euclidean(annular[0][0], annular[0][1])
-    cv2.line(copy, annular[0][0], annular[0][1], (0,0,0), 1)
-    length += phax1
-    phalange("phalange 1", phax1, annular[0][0], annular[0][1])
-
-    phax2 = dist.euclidean(annular[1][0], annular[1][1])
-    cv2.line(copy, annular[1][0], annular[1][1], (0,0,0), 1)
-    length += phax2
-    phalange("phalange 2",phax2, annular[1][0], annular[1][1])
-
-    phax3 = dist.euclidean(annular[2][0], annular[2][1])
-    cv2.line(copy, annular[2][0], annular[2][1], (0,0,0), 1)
-    length += phax3
-
-    phalange("phalange 3", phax3, annular[2][0], annular[2][1])
-
-
-
-
-    annular = [j for i in annular for j in i]
-    [cv2.circle(copy, pts, 2, (0, 0, 255), 2) for pts in annular]
-
-
-    annular = list(set(annular))
-    for i in annular:
-        if i == (0, 0):
-            annular.remove(i)
-    print("points:", len(annular))
-
-
-
-    cv2.imshow("annular", copy)
-    cv2.waitKey(0)
-    
-
-
-
-def auricular_analyse(auricular, palm, rectangle, crop):
-
-    print("")
-    print("auricular")
-    
-    copy = crop.copy()
-    cv2.circle(copy, palm, 2, (255, 255, 255), 2)
-
-    auricular = [j for i in auricular for j in i]
-    [cv2.circle(copy, pts, 2, (0, 0, 255), 2) for pts in auricular]
-
-    auricular = list(set(auricular))
-    for i in auricular:
-        if i == (0, 0):
-            auricular.remove(i)
-    print("points:", len(auricular))
-
-
-
-    cv2.imshow("auricular", copy)
-    cv2.waitKey(0)
-        
 
 
 def sign(pouce, index):
-    if abs(pouce[-1][1][0] - index[-1][1][0]) <= 10 and\
-       abs(pouce[-1][1][1] - index[-1][1][1]) <= 10:
-        print("index pouce rond")
+    try:
+        if abs(pouce[-1][1][0] - index[-1][1][0]) <= 10 and\
+           abs(pouce[-1][1][1] - index[-1][1][1]) <= 10:
+            print("index pouce rond")
+    except:
+        print("ERROR SIGN")
 
 
 
+
+
+
+
+
+
+def palm_analyse(hand_localised, palm_center, palm, rectangle, crop):
+    """Here we hope if area > threshold == palm
+                    else area < threshold == turn around hand
+        with that we can define localisation of the hand (right or left hand)"""
+
+    copy = crop.copy()
+
+    if hand_localised == "pouce droite": area = palm[0]
+    else: area = palm[1]
+
+    palm_area = np.array([(pts[0], pts[1]) for pts in area if pts != (0, 0)])
+    cv2.drawContours(copy, [palm_area], 0, (0, 255, 0), 1)
+    palm_area = cv2.contourArea(palm_area)
+
+    if palm_area < 300: print("peut etre main non tournée paume et on peut definir la main", palm_area)
+    elif palm_area > 300: print("main tournée paume  et on peut definir la main", palm_area)
+
+    cv2.circle(copy, palm_center, 2, (255, 255, 255), 1)
+    [cv2.circle(copy, pts, 2, (0, 0, 0), 1) for pts in area]
+
+    cv2.imshow("palm", copy)
+    cv2.waitKey(0)
+
+
+def hand_location(thumb, index, major, annular, auricular, crop):
+    """Here we need to localise the thumb for have
+    the hand position left or right hand.
+    But hand can turn around and we hope palm area'll can
+    give us that"""
+
+    hand = ""
+    copy = crop.copy()
+
+    #We recuperate all element from pair's points; if no detection we put (0, 0)
+    end_fingers = [[j for i in index for j in i if j != (0, 0)],
+                   [j for i in major for j in i if j != (0, 0)],
+                   [j for i in annular for j in i if j != (0, 0)],
+                   [j for i in auricular for j in i if j != (0, 0)]]
+
+    #recuperate last points of finger's (end of finger)
+    end_fingers = [fingers[-1] for fingers in end_fingers]
+    [cv2.circle(copy, fingers, 2, (255, 0, 0), 2) for fingers in end_fingers]
+
+    #recuperate thumb last point
+    thumb = [j for i in thumb for j in i if j != (0, 0)][-1]
+    cv2.circle(copy, thumb, 2, (0, 0, 255), 2)
+
+    #compare each last point finger to the thumb pts
+    left = 0
+    right = 0
+    #if thumb to left of points left += 1 right in opposite case
+    for fing in end_fingers:
+        if thumb[0] < fing[0]:
+            left += 1
+        elif thumb[0] > fing[0]:
+            right += 1
+
+    if left > right:
+        hand = "pouce gauche"
+    elif right > left:
+        hand = "pouce droite"
+    else:
+        print("probleme HAND LOCATION")
+
+    cv2.imshow("Hand", copy)
+    cv2.waitKey(0)
+
+    print(hand)
+    return hand
+
+
+
+def reorganize_finger_position(thumb, index, major, annular, auricular, crop):
+    """Sometimes we have false detection 2 times the same finger,
+    one point detected on an another point.
+    So we remove them"""
+    print("OUI MAIS PLIEE ENFAITE ICI FAUDRA FAIRE I>1     ")
+    #We recuperate all element from pair's points; if no detection we put (0, 0)
+    copy = crop.copy()
+    copy_init = crop.copy()
+    fingers = [ [j for i in thumb for j in i if j != (0, 0)],
+                [j for i in index for j in i if j != (0, 0)],
+                [j for i in major for j in i if j != (0, 0)],
+                [j for i in annular for j in i if j != (0, 0)],
+                [j for i in auricular for j in i if j != (0, 0)]]
+
+    #remove doublon
+    fingers = [list(set(i)) for i in fingers]
+    #sort tuple by 1 position
+    data_sorted = [sorted(i, key=lambda tup: tup[1], reverse=True) for i in fingers]
+
+    #display
+    [cv2.circle(copy_init, j, 2, (0, 255, 0), 2) for i in fingers for j in i]
+
+    #verify all last finger point. if distance > 40 remove it (detection on other pts)
+    for data in data_sorted:
+        copy = crop.copy()
+        for i in range(len(data)):
+
+            if i == 0:
+                cv2.circle(copy, data[i], 2, (0, 0, 255), 2)
+
+            if i > 0:
+                distance_pts = dist.euclidean(data[i], data[i - 1])
+
+                if distance_pts >= 40:
+                    print("point deleted")
+                    data.remove(data[i])
+                else:
+                    cv2.circle(copy, data[i], 2, (0, 0, 255), 2)
+                #cv2.imshow("copy", copy)
+                #cv2.waitKey(0)
+
+
+    #verify all fingers if 2 detections on one finger remove it
+    for i in range(len(data_sorted)):
+        same = 0
+
+        if i + 1 < len(data_sorted):
+            for j in data_sorted[i]:
+                for k in data_sorted[i + 1]:
+                    if abs(j[0] - k[0]) < 10 and\
+                       abs(j[1] - k[1]) < 10:
+                        same += 1
+
+            if same >= 6:
+                data_sorted.remove(data_sorted[i + 1])
+                print("finger removed")
+
+
+    #display
+    [cv2.circle(copy, j, 2, (0, 255, 0), 2) for i in data_sorted for j in i]
+
+    cv2.imshow("copy_init", copy_init)    
+    cv2.imshow("copy", copy)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+    return data_sorted
 
 
 def reorganize_finger(thumb, index, major, annular, auricular, hand_localisation, crop):
+    """Sometime finger's are detected in a different order like thumb annular index...
+    so we sort finger from the thumb and replace them      like thumb index ... annular
+    from distance beetween thum"""
 
     copy = crop.copy()
 
@@ -604,6 +541,12 @@ def reorganize_finger(thumb, index, major, annular, auricular, hand_localisation
 
     finger_sorted = [thumb]
     all_finger = [thumb, index, major, annular, auricular]
+
+    for i in all_finger:
+        for j in i:
+            if j == ((0, 0), (0, 0)):
+                i.remove(j)
+
     #on compare les distances sorted avec le repaire.
     for i in thumb_fingers_points:
         for j in repear_finger:
@@ -613,18 +556,14 @@ def reorganize_finger(thumb, index, major, annular, auricular, hand_localisation
                     if j[1] == (k[-1][1]):
                         finger_sorted.append(k)
 
+    copy2 = crop.copy()
+    for i in finger_sorted:
+        for j in i:
+            for k in j:
+                cv2.circle(copy2, k, 2, (255, 0, 0), 2)
 
-    #print(finger_sorted)
-
-
-##    copy2 = crop.copy()
-##    for i in finger_sorted:
-##        for j in i:
-##            for k in j:
-##                cv2.circle(copy2, k, 2, (255, 0, 0), 2)
-##
-##        cv2.imshow("copy2", copy2)
-##        cv2.waitKey(0)
+        cv2.imshow("reorg_finger", copy2)
+        cv2.waitKey(0)
 
 
     thumb = finger_sorted[0]
@@ -641,127 +580,31 @@ def reorganize_finger(thumb, index, major, annular, auricular, hand_localisation
 
 
 
+def orientation_finger(finger):
+    pass
 
-def palm_analyse(hand_localised, palm_center, palm, rectangle, crop):
+def thumb_analyse(palm, thumb, index, crop):
+
+    print("")
+    print("pouce")
 
     copy = crop.copy()
 
-    if hand_localised == "pouce droite": area = palm[0]
-    else: area = palm[1]
+    cv2.circle(copy, palm, 2, (0, 0, 255), 2)
+    print(palm)
 
-    palm_area = np.array([(pts[0], pts[1]) for pts in area if pts != (0, 0)])
-    cv2.drawContours(copy, [palm_area], 0, (0, 255, 0), 1)
-    palm_area = cv2.contourArea(palm_area)
+    print(thumb)
+    for i in thumb:
+        cv2.circle(copy, i, 2, (0, 0, 255), 2)
 
-    if palm_area < 300: print("peut etre main non tournée paume et on peut definir la main", palm_area)
-    elif palm_area > 300: print("main tournée paume  et on peut definir la main", palm_area)
 
-    cv2.circle(copy, palm_center, 2, (255, 255, 255), 1)
-    [cv2.circle(copy, pts, 2, (0, 0, 0), 1) for pts in area]
 
-    cv2.imshow("palm", copy)
+    #analyse_space_thumb_fingers(finger, finger2, palm, crop)
+
+    cv2.imshow("thumb", copy)
     cv2.waitKey(0)
 
 
-def hand_location(thumb, index, major, annular, auricular, crop):
-
-    hand = ""
-    copy = crop.copy()
-
-    end_fingers = [[j for i in index for j in i if j != (0, 0)],
-                   [j for i in major for j in i if j != (0, 0)],
-                   [j for i in annular for j in i if j != (0, 0)],
-                   [j for i in auricular for j in i if j != (0, 0)]]
-
-    end_fingers = [fingers[-1] for fingers in end_fingers]
-    [cv2.circle(copy, fingers, 2, (255, 0, 0), 2) for fingers in end_fingers]
-
-    thumb = [j for i in thumb for j in i if j != (0, 0)][-1]
-    cv2.circle(copy, thumb, 2, (0, 0, 255), 2)
-
-    left = 0
-    right = 0
-    for fing in end_fingers:
-        if thumb[0] < fing[0]:
-            left += 1
-        elif thumb[0] > fing[0]:
-            right += 1
-
-    if left > right:
-        hand = "pouce gauche"
-    elif right > left:
-        hand = "pouce droite"
-    else:
-        print("probleme HAND LOCATION")
-
-    cv2.imshow("Hand", copy)
-    cv2.waitKey(0)
-
-    print(hand)
-    return hand
-
-
-
-def reorganize_finger_position(thumb, index, major, annular, auricular, crop):
-    copy = crop.copy()
-    copy_init = crop.copy()
-    fingers = [ [j for i in thumb for j in i if j != (0, 0)],
-                [j for i in index for j in i if j != (0, 0)],
-                [j for i in major for j in i if j != (0, 0)],
-                [j for i in annular for j in i if j != (0, 0)],
-                [j for i in auricular for j in i if j != (0, 0)]]
-
-    #remove doublon
-    fingers = [list(set(i)) for i in fingers]
-    #sort tuple by 1 position
-    data_sorted = [sorted(i, key=lambda tup: tup[1], reverse=True) for i in fingers]
-
-    #display
-    [cv2.circle(copy_init, j, 2, (0, 255, 0), 2) for i in fingers for j in i]
-
-    #verify all last finger point. if distance > 40 remove it (detection on other pts)
-    for data in data_sorted:
-        copy = crop.copy()
-        for i in range(len(data)):
-
-            if i == 0:
-                cv2.circle(copy, data[i], 2, (0, 0, 255), 2)
-
-            if i > 0:
-                distance_pts = dist.euclidean(data[i], data[i - 1])
-                print(distance_pts)
-                if distance_pts >= 40:
-                    print("point deleted")
-                    data.remove(data[i])
-                else:
-                    cv2.circle(copy, data[i], 2, (0, 0, 255), 2)
-                #cv2.imshow("copy", copy)
-                #cv2.waitKey(0)
-
-    #verify all fingers if 2 detections on one finger remove it
-    for i in range(len(data_sorted)):
-        same = 0
-
-        if i + 1 < len(data_sorted):
-            for j in data_sorted[i]:
-                for k in data_sorted[i + 1]:
-                    if abs(j[0] - k[0]) < 10 and\
-                       abs(j[1] - k[1]) < 10:
-                        same += 1
-
-            if same >= 6:
-                data_sorted.remove(data_sorted[i + 1])
-                print("finger removed")
-
-
-    #display
-    [cv2.circle(copy, j, 2, (0, 255, 0), 2) for i in data_sorted for j in i]
-
-    cv2.imshow("copy_init", copy_init)    
-    cv2.imshow("copy", copy)
-    cv2.waitKey(0)
-
-    return data_sorted
 
 
 
@@ -806,8 +649,8 @@ def treat_skeletton_points(skeletton, position, finger, proba, rectangle, crop):
 
 
 
-    #thumb_analyse(thumb, palm_center, index, rectangle, crop)
-    #index_analyse(index, palm_center, rectangle, crop)
+    thumb_analyse(palm_center, thumb, index, crop)
+    #index_analyse(thumb, index, major, crop)
 
     #major_analyse(major, palm_center, rectangle, crop)
 
@@ -873,9 +716,7 @@ def hand(frame, detection_graph, sess, head_box):
 if __name__ == "__main__":
     
 
-    IM = 67 #g
-    IM = 83 #d 186
-    #IM = 27 #g area 538
+    IM = 223
 
 
 
