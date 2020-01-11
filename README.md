@@ -1,20 +1,6 @@
 # S-Y-N-E-R-G-O
 
-- les mouvements avnt mtn
-
-- le pouce
-
-- le doigt le plus haut
-
-- les espacements entre les doigts
-
-- les espacements entre les points
-
-- main haut bas droite gauche
-
-- les mains qui se reunissent et la chai pas
-
-- j'ai compris que les lignes bizzard du style conv2D et tout sté ca de l'ia bah ca a l'air dur 
+- y'a plein de trucks a réécrire mais pas mtn
 
 <br><br><br><br><br><br><br><br><br>
 
