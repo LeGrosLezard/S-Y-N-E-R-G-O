@@ -704,7 +704,7 @@ def hand_location(thumb, index, major, annular, auricular, crop):
 
 def reorganize_finger_position(thumb, index, major, annular, auricular, crop):
     copy = crop.copy()
-
+    copy_init = crop.copy()
     fingers = [ [j for i in thumb for j in i if j != (0, 0)],
                 [j for i in index for j in i if j != (0, 0)],
                 [j for i in major for j in i if j != (0, 0)],
@@ -712,51 +712,56 @@ def reorganize_finger_position(thumb, index, major, annular, auricular, crop):
                 [j for i in auricular for j in i if j != (0, 0)]]
 
 
-    #display
     fingers = [list(set(i)) for i in fingers]
-    for i in fingers:
+    data_sorted = [sorted(i, key=lambda tup: tup[1], reverse=True) for i in fingers]
+
+    #display
+    [cv2.circle(copy_init, j, 2, (0, 255, 0), 2) for i in fingers for j in i]
+
+
+
+    for data in data_sorted:
         copy = crop.copy()
-        print(i)
-        for j in i:
-            cv2.circle(copy, j, 2, (0, 0, 255), 2)
-            cv2.imshow("copy", copy)
-            cv2.waitKey(0)
+        for i in range(len(data)):
+            print(i)
+            if i == 0:
+                cv2.circle(copy, data[i], 2, (0, 0, 255), 2)
+            if i > 0:
+                distance_pts = dist.euclidean(data[i], data[i - 1])
+                print(distance_pts)
+                if distance_pts >= 40:
+                    print("point deleted")
+                    data.remove(data[i])
+                else:
+                    cv2.circle(copy, data[i], 2, (0, 0, 255), 2)
+                #cv2.imshow("copy", copy)
+                #cv2.waitKey(0)
 
-    #on verifie chaques doigts et essayons de detecter un doigt détecter plusieurs fois
-    for i in range(len(fingers)):
-        if i + 1 < len(fingers):
-            print(fingers[i])
-            print(fingers[i+1])
 
+    for i in range(len(data_sorted)):
+        same = 0
 
-            for j in fingers[i]:
-                for k in fingers[i + 1]:
+        if i + 1 < len(data_sorted):
+            for j in data_sorted[i]:
+                for k in data_sorted[i + 1]:
                     if abs(j[0] - k[0]) < 10 and\
                        abs(j[1] - k[1]) < 10:
-                        print("deux fois le meme doigt ?")
+                        same += 1
+
+            if same >= 6:
+                data_sorted.remove(data_sorted[i + 1])
+                print("finger removed")
 
 
-    #MAIS avant la prochaine étape faut remettre les points dans un ordre croissant, décroissant
-        #MAIS on ne peut toujours pas savoir si la main et vers le bas ou vers le haut...
-                        #donc croissant miam
 
 
 
+    #display
+    [cv2.circle(copy, j, 2, (0, 255, 0), 2) for i in data_sorted for j in i]
 
-    #on essais de voir si un pts de ce doigt et allé sur un autre doigt
-    for i in fingers:
-        print(i)
-        for j in range(len(i)):
-            if j + 1 < len(i):
-
-                a = dist.euclidean(i[j], i[j + 1])
-                print(a)
-
-        print("")
-
-    cv2.imshow("finger_verification", copy)
+    cv2.imshow("copy_init", copy_init)    
+    cv2.imshow("copy", copy)
     cv2.waitKey(0)
-
 
 
 
@@ -787,7 +792,7 @@ def treat_skeletton_points(skeletton, position, finger, proba, rectangle, crop):
     thumb, index, major, annular, auricular =\
     reorganize_finger(thumb, index, major, annular, auricular, hand_localised, crop)
 
-    finger_verification(thumb, index, major, annular, auricular, crop)
+    reorganize_finger_position(thumb, index, major, annular, auricular, crop)
 
 
 
