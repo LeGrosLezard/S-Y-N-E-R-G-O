@@ -411,25 +411,39 @@ def reorganize_finger_position(thumb, index, major, annular, auricular, crop, fi
     one point detected on an another point.
     So we remove them"""
 
+    def fingers_tratment(fingers):
+        return list(set([j for i in fingers for j in i if i != (0, 0)]))
 
-    #We recuperate all element from pair's points; if no detection we put (0, 0)
-    copy = crop.copy()
-    copy_init = crop.copy()
-    fingers = [ [j for i in thumb for j in i if j != (0, 0)],
-                [j for i in index for j in i if j != (0, 0)],
-                [j for i in major for j in i if j != (0, 0)],
-                [j for i in annular for j in i if j != (0, 0)],
-                [j for i in auricular for j in i if j != (0, 0)]]
+    fingers = [fingers_tratment(fingers[nb]) for nb in range(5)]
 
-    #remove doublon
-    fingers = [list(set(i)) for i in fingers]
 
-    #sort tuples
-    data_sorted = [sorted(i, key=lambda tup: tup[1], reverse=True) for i in fingers]
-    #data_sorted = [sorted(i, key=lambda tup: tup[0], reverse=True) for i in fingers]
+    ok = []
+    for i in fingers:
+        for j in i:
+            for k in fingers_direction:
+                if j == k[1]:
+                    ok.append(i)
+                    ok.append(k[2])
 
-    #display
-    [cv2.circle(copy_init, j, 2, (0, 255, 0), 2) for i in fingers for j in i]
+
+
+    def sorted_data(data, position):
+        if position == "gauche":
+            data_sorted = [sorted(i, key=lambda tup: tup[0], reverse=True) for i in fingers]
+        elif position == "droite":
+            data_sorted = [sorted(i, key=lambda tup: tup[0]) for i in fingers]
+        elif position == "haut":
+            data_sorted = [sorted(i, key=lambda tup: tup[1], reverse=True) for i in fingers]
+        elif position == "bas":
+            data_sorted = [sorted(i, key=lambda tup: tup[1]) for i in fingers]
+
+        return data_sorted
+
+
+    for i in ok:
+        print(i)
+
+
 
 
     #verify all last finger point. if distance > 40 remove it (detection on other pts)
@@ -444,9 +458,11 @@ def reorganize_finger_position(thumb, index, major, annular, auricular, crop, fi
                 distance_pts = dist.euclidean(data[i], data[i - 1])
 
                 if distance_pts >= 40:
+                    cv2.circle(copy, data[i], 2, (0, 255, 0), 2)
                     print(distance_pts)
                     print("point deleted")
                     data.remove(data[i])
+
                 else:
                     cv2.circle(copy, data[i], 2, (0, 0, 255), 2)
                 cv2.imshow("copy", copy)
@@ -636,9 +652,9 @@ def palm_analyse(hand_localised, palm_center, palm, rectangle, crop,
         #the position like it
         if abs(int(mx/c)) > abs(int(my/c)):
             if int(mx/c) > 0:
-                i.append("droite")
-            elif int(mx/c) < 0:
                 i.append("gauche")
+            elif int(mx/c) < 0:
+                i.append("droite")
         elif abs(int(my/c)) > abs(int(mx/c)):
             if int(my/c) > 0:
                 i.append("haut")
@@ -652,8 +668,8 @@ def palm_analyse(hand_localised, palm_center, palm, rectangle, crop,
         for j in i[0]:
             cv2.circle(copy, j, 2, (0, 0, 255), 2)
 
-            #cv2.imshow("thumb", copy)
-            #cv2.waitKey(0)
+            cv2.imshow("thumb", copy)
+            cv2.waitKey(0)
 
     print("")
 
@@ -778,7 +794,7 @@ if __name__ == "__main__":
     IM = 585 #doigt haut
     IM = 3
     IM = 77
-
+    #IM = 227
 
 
 
@@ -823,6 +839,26 @@ if __name__ == "__main__":
     #plusieurs main pouce rond, ok, rien et circularité genre ca tourne rond
     #verifier hnad reoganization si pas tous les doigts pas pouce
     #main retourner du coup devient gauche -> droite et vis versa
+
+
+
+#FUNCTION
+    #rangement des pts du doigt -> 77
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
