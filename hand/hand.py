@@ -410,7 +410,7 @@ def reorganize_finger_position(thumb, index, major, annular, auricular, crop):
     """Sometimes we have false detection 2 times the same finger,
     one point detected on an another point.
     So we remove them"""
-    print("OUI MAIS PLIEE ENFAITE ICI FAUDRA FAIRE I>1     ")
+    print("SELON LA PAUME ET LA POSITION DES DOIGTS  ")
     #We recuperate all element from pair's points; if no detection we put (0, 0)
     copy = crop.copy()
     copy_init = crop.copy()
@@ -422,11 +422,14 @@ def reorganize_finger_position(thumb, index, major, annular, auricular, crop):
 
     #remove doublon
     fingers = [list(set(i)) for i in fingers]
-    #sort tuple by 1 position
+
+    #sort tuples
     data_sorted = [sorted(i, key=lambda tup: tup[1], reverse=True) for i in fingers]
+    #data_sorted = [sorted(i, key=lambda tup: tup[0], reverse=True) for i in fingers]
 
     #display
     [cv2.circle(copy_init, j, 2, (0, 255, 0), 2) for i in fingers for j in i]
+
 
     #verify all last finger point. if distance > 40 remove it (detection on other pts)
     for data in data_sorted:
@@ -440,6 +443,7 @@ def reorganize_finger_position(thumb, index, major, annular, auricular, crop):
                 distance_pts = dist.euclidean(data[i], data[i - 1])
 
                 if distance_pts >= 40:
+                    print(distance_pts)
                     print("point deleted")
                     data.remove(data[i])
                 else:
@@ -601,37 +605,55 @@ def palm_analyse(hand_localised, palm_center, palm, rectangle, crop,
     cv2.imshow("palm", copy)
     cv2.waitKey(0)
 
-    print("MAIS SI ON A PAS LA PALM QUE FAIRE ??")
-    print("EN GROS LA FAUT DIRE PTS DOIGT EN HAUT EN BAS A DROITE OU A GAUCHE")
-    print("la moyenne ??? ou paume pts avec les doigts ? et ne pas pensé pas palm bonne chance jb du futur")
-    print("en gros, faut juste ensuite fractionner la grosse fonction en plus petite quoi")
-    print("bon app")
-
-    #palm_points
-    palm_points = [(pts[0], pts[1]) for pts in area if pts != (0, 0)]
-
-    #recuperate mid of finger's (not extremum points) for have
-    #the direction of the finger's by contribution to the palm
-    end_fingers = [[i for i in thumb[1:-1] if i != (0, 0)],
-                   [i for i in index[1:-1] if i != (0, 0)],
-                   [i for i in major[1:-1] if i != (0, 0)],
-                   [i for i in annular[1:-1] if i != (0, 0)],
-                   [i for i in auricular[1:-1] if i != (0, 0)]]
-
-    print(palm_points)
-    print(end_fingers)
-
-    [cv2.circle(copy, i, 2, (0, 0, 255), 2) for pts in end_fingers for i in pts]
 
 
-    
+    fingers = [thumb, index, major, annular, auricular]
+
+    def finger_list(fingers):
+        return [list(set([j for i in fingers[1:] for j in i])), fingers[0][0]]
+
+    fingers = [finger_list(fingers[nb]) for nb in range(5)]
 
 
-    cv2.imshow("palm_orientation", copy)
+    for i in fingers:
+
+        top = 0; bot = 0; left = 0; right = 0
+
+        for j in i[0]:
+            if i[1][0] - j[0] > 0: right += 1
+            elif i[1][0] - j[0] < 0: left += 1
+
+            if i[1][1] - j[1] > 0: bot += 1
+            elif i[1][1] - j[1] < 0: top += 1
+
+        pos = ["", ""]
+        if left > right: pos[0] = "gauche"
+        elif right > left:pos[0] = "droite"
+
+        if top > bot:pos[1] = "bas"
+        elif bot > top: pos[1] = "haut"
+
+        i.append(pos)
+
+
+
+    for i in fingers:
+        print(i[0], i[1], i[2])
+        cv2.circle(copy, i[1], 2, (255, 255, 255), 2)
+
+        for j in i[0]:
+            cv2.circle(copy, j, 2, (0, 0, 255), 2)
+
+            #cv2.imshow("thumb", copy)
+            #cv2.waitKey(0)
+
+    print("")
+
+    cv2.imshow("thumb", copy)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
-
+    return fingers
 
 def treat_skeletton_points(skeletton, position, finger, proba, rectangle, crop):
 
@@ -641,10 +663,10 @@ def treat_skeletton_points(skeletton, position, finger, proba, rectangle, crop):
     palm_center =  position[0][0]
 
     palm = [[position[5][0], position[9][0], position[13][0],
-             position[17][0], position[0][1], position[1][1]],
+             position[17][0], position[0][1]],
 
             [position[5][0], position[9][0], position[13][0],
-             position[17][0], position[0][1], position[1][1]]]
+             position[17][0], position[0][1]]]
 
     #attribuate finger's to their initial detection
     thumb = position[1:4]
@@ -655,6 +677,10 @@ def treat_skeletton_points(skeletton, position, finger, proba, rectangle, crop):
 
     #location of the thumb
     hand_localised = hand_location(thumb, index, major, annular, auricular, crop)
+
+    #area of the palm
+    fingers_direction = palm_analyse(hand_localised, palm_center, palm, rectangle, crop,
+                                     thumb, index, major, annular, auricular)
 
     #attribuate by x axis fingers
     thumb, index, major, annular, auricular =\
@@ -671,13 +697,8 @@ def treat_skeletton_points(skeletton, position, finger, proba, rectangle, crop):
     auricular = finger_sorted[4]
 
 
-    #area of the palm
-    palm_analyse(hand_localised, palm_center, palm, rectangle, crop,
-                 thumb, index, major, annular, auricular)
 
-
-
-    thumb_analyse(palm_center, thumb, index, crop)
+    #thumb_analyse(palm_center, thumb, index, crop)
     #index_analyse(thumb, index, major, crop)
 
     #major_analyse(major, palm_center, rectangle, crop)
@@ -744,10 +765,10 @@ def hand(frame, detection_graph, sess, head_box):
 if __name__ == "__main__":
     
 
-    IM = 625
-
-
-
+    IM = 625 #doigt bas
+    IM = 585 #doigt haut
+    IM = 3
+    #IM = 77
 
 
 
