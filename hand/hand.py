@@ -406,11 +406,12 @@ def hand_location(thumb, index, major, annular, auricular, crop):
 
 
 
-def reorganize_finger_position(thumb, index, major, annular, auricular, crop):
+def reorganize_finger_position(thumb, index, major, annular, auricular, crop, fingers_direction):
     """Sometimes we have false detection 2 times the same finger,
     one point detected on an another point.
     So we remove them"""
-    print("SELON LA PAUME ET LA POSITION DES DOIGTS  ")
+
+
     #We recuperate all element from pair's points; if no detection we put (0, 0)
     copy = crop.copy()
     copy_init = crop.copy()
@@ -448,8 +449,8 @@ def reorganize_finger_position(thumb, index, major, annular, auricular, crop):
                     data.remove(data[i])
                 else:
                     cv2.circle(copy, data[i], 2, (0, 0, 255), 2)
-                #cv2.imshow("copy", copy)
-                #cv2.waitKey(0)
+                cv2.imshow("copy", copy)
+                cv2.waitKey(0)
 
 
     #verify all fingers if 2 detections on one finger remove it
@@ -623,25 +624,26 @@ def palm_analyse(hand_localised, palm_center, palm, rectangle, crop,
     #for each points compare them with the palm point and define finger position
     for i in fingers:
 
-        top = 0; bot = 0; left = 0; right = 0
-
+        mx = 0
+        my = 0
+        c = 0
         for j in i[0]:
-            if i[1][0] - j[0] > 0: right += 1
-            elif i[1][0] - j[0] < 0: left += 1
+            mx += i[1][0] - j[0]
+            my += i[1][1] - j[1]
+            c += 1
 
-            if i[1][1] - j[1] > 0: bot += 1
-            elif i[1][1] - j[1] < 0: top += 1
-
-        pos = ["", ""]
-        if left > right: pos[0] = "droite"
-        elif right > left:pos[0] = "gauche"
-
-        if top > bot:pos[1] = "bas"
-        elif bot > top: pos[1] = "haut"
-
-        i.append(pos)
-
-
+        #We say: the highter number is the highter difference and we define
+        #the position like it
+        if abs(int(mx/c)) > abs(int(my/c)):
+            if int(mx/c) > 0:
+                i.append("droite")
+            elif int(mx/c) < 0:
+                i.append("gauche")
+        elif abs(int(my/c)) > abs(int(mx/c)):
+            if int(my/c) > 0:
+                i.append("haut")
+            elif int(my/c) < 0:
+                i.append("bas")
 
     for i in fingers:
         print(i[0], i[1], i[2])
@@ -693,7 +695,8 @@ def treat_skeletton_points(skeletton, position, finger, proba, rectangle, crop):
     reorganize_finger(thumb, index, major, annular, auricular, hand_localised, crop)
 
     #delete false points finger detection
-    finger_sorted = reorganize_finger_position(thumb, index, major, annular, auricular, crop)
+    finger_sorted = reorganize_finger_position(thumb, index, major, annular,
+                                               auricular, crop, fingers_direction)
 
     #reattribuate points
     thumb = finger_sorted[0]
@@ -774,7 +777,7 @@ if __name__ == "__main__":
     IM = 625 #doigt bas
     IM = 585 #doigt haut
     IM = 3
-    #IM = 77
+    IM = 77
 
 
 
