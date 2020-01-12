@@ -411,6 +411,8 @@ def reorganize_finger_position(thumb, index, major, annular, auricular, crop, fi
     one point detected on an another point.
     So we remove them"""
 
+    fingers = [thumb, index, major, annular, auricular]
+
     def fingers_tratment(fingers):
         """We recuperate all fingers without doublon and None detection (0,0)"""
         return list(set([j for i in fingers for j in i if i != (0, 0)]))
@@ -424,13 +426,13 @@ def reorganize_finger_position(thumb, index, major, annular, auricular, crop, fi
     #Now we can sort them for example finger to top so we take max to min y points.
     def sorted_data(data, position):
         if position == "gauche":
-            data_sorted = [sorted(i, key=lambda tup: tup[0], reverse=True) for i in fingers]
+            data_sorted = sorted(data, key=lambda tup: tup[0], reverse=True)
         elif position == "droite":
-            data_sorted = [sorted(i, key=lambda tup: tup[0]) for i in fingers]
+            data_sorted = sorted(data, key=lambda tup: tup[0])
         elif position == "haut":
-            data_sorted = [sorted(i, key=lambda tup: tup[1], reverse=True) for i in fingers]
+            data_sorted = sorted(data, key=lambda tup: tup[1], reverse=True) 
         elif position == "bas":
-            data_sorted = [sorted(i, key=lambda tup: tup[1]) for i in fingers]
+            data_sorted = sorted(data, key=lambda tup: tup[1])
 
         return data_sorted
 
@@ -438,9 +440,10 @@ def reorganize_finger_position(thumb, index, major, annular, auricular, crop, fi
     sorted_fingers = [sorted_data(i[0], i[1]) for i in fingers_orientation]
 
     for i in sorted_fingers:
+        copy = crop.copy()
         for j in i:
-            cv2.circle(copy, j, 2, (255, 255, 255), 2)
-            cv2.imshow("copy", copy)
+            cv2.circle(copy, j, 2, (0, 0, 255), 2)
+            cv2.imshow("sorted", copy)
             cv2.waitKey(0)
 
 
@@ -452,7 +455,7 @@ def reorganize_finger_position(thumb, index, major, annular, auricular, crop, fi
 
             #First point (palm)
             if i == 0:
-                cv2.circle(copy, data[i], 2, (0, 0, 255), 2)
+                cv2.circle(copy, data[i], 2, (0, 255, 255), 2)
 
             #Current and last point distance
             if i > 0:
@@ -460,42 +463,41 @@ def reorganize_finger_position(thumb, index, major, annular, auricular, crop, fi
 
                 #Distance > 40 delete point (false detection).
                 if distance_pts >= 40:
-                    cv2.circle(copy, data[i], 2, (0, 255, 0), 2)
+                    cv2.circle(copy, data[i], 2, (0, 0, 255), 2)
                     print(distance_pts)
                     print("point deleted")
                     data.remove(data[i])
 
                 else:
-                    cv2.circle(copy, data[i], 2, (0, 0, 255), 2)
-                cv2.imshow("copy", copy)
+                    cv2.circle(copy, data[i], 2, (0, 255, 0), 2)
+                cv2.imshow("deleted", copy)
                 cv2.waitKey(0)
 
 
     #verify all fingers if 2 detections on one finger remove it
     #By the absolute différence beetween finger's points.
-    for i in range(len(data_sorted)):
+    for i in range(len(sorted_fingers)):
         same = 0
 
-        if i + 1 < len(data_sorted):
-            for j in data_sorted[i]:
-                for k in data_sorted[i + 1]:
+        if i + 1 < len(sorted_fingers):
+            for j in sorted_fingers[i]:
+                for k in sorted_fingers[i + 1]:
                     if abs(j[0] - k[0]) < 10 and\
                        abs(j[1] - k[1]) < 10:
                         same += 1
 
             if same >= 6:
-                data_sorted.remove(data_sorted[i + 1])
+                sorted_fingers.remove(sorted_fingers[i + 1])
                 print("finger removed")
 
 
     #display
-    [cv2.circle(copy, j, 2, (0, 255, 0), 2) for i in data_sorted for j in i]
-
-    cv2.imshow("copy_init", copy_init)    
+    [cv2.circle(copy, j, 2, (0, 255, 0), 2) for i in sorted_fingers for j in i]
+   
     cv2.imshow("copy", copy)
     cv2.waitKey(0)
 
-    return data_sorted
+    return sorted_fingers
 
 
 def reorganize_finger(thumb, index, major, annular, auricular, hand_localisation, crop):
@@ -635,7 +637,9 @@ def palm_analyse(hand_localised, palm_center, palm, rectangle, crop,
 
     #recuperate first point (palm start finger)
     def finger_list(fingers):
-        return [list(set([j for i in fingers[1:-1] for j in i])), fingers[0][0]]
+        if fingers[0][0] == (0, 0):
+            print("ouiiiiiiiiiIIIIIIIIIIIIIIII")
+        return [list(set([j for i in fingers[1:-1] for j in i if j != (0, 0)])), fingers[0][0]]
 
     #recuperate points beetween extremums points of the finger.
     fingers = [finger_list(fingers[nb]) for nb in range(5)]
@@ -643,26 +647,28 @@ def palm_analyse(hand_localised, palm_center, palm, rectangle, crop,
     #for each points compare them with the palm point and define finger position
     for i in fingers:
 
-        mx = 0
-        my = 0
-        c = 0
+        mx = 0; my = 0; c = 0
         for j in i[0]:
-            mx += i[1][0] - j[0]
-            my += i[1][1] - j[1]
+            mx += (i[1][0] - j[0])
+            my += (i[1][1] - j[1])
             c += 1
 
         #We say: the highter number is the highter difference and we define
         #the position like it
-        if abs(int(mx/c)) > abs(int(my/c)):
+        if abs(mx/c) > abs(my/c):
             if int(mx/c) > 0:
                 i.append("gauche")
             elif int(mx/c) < 0:
                 i.append("droite")
-        elif abs(int(my/c)) > abs(int(mx/c)):
+                      
+        elif abs(my/c) > abs(mx/c):
             if int(my/c) > 0:
                 i.append("haut")
             elif int(my/c) < 0:
                 i.append("bas")
+        else:
+            print("PROBLEMMMMMMMME y'a egalité")
+
 
     for i in fingers:
         print(i[0], i[1], i[2])
