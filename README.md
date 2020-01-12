@@ -12,6 +12,9 @@
 
 - opération sur les doigts
 
+- signes
+
+
 <br><br><br><br><br><br><br><br><br>
 
 
