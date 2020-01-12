@@ -1,6 +1,16 @@
 # S-Y-N-E-R-G-O
 
-- y'a plein de trucks a réécrire mais pas mtn
+- si y'a pas de pouce ? .......
+
+- et y'a un truk dans palm avec le (0,0) mais ch'ai pas
+
+- trouver un truk pour la paume (la hauteur ? pcque l'air ca marche pas, les ongles ?)
+
+- commencer a ranger (treat avant doigt)
+
+- doigt
+
+- opération sur les doigts
 
 <br><br><br><br><br><br><br><br><br>
 
