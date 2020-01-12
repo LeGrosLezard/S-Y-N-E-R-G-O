@@ -412,21 +412,16 @@ def reorganize_finger_position(thumb, index, major, annular, auricular, crop, fi
     So we remove them"""
 
     def fingers_tratment(fingers):
+        """We recuperate all fingers without doublon and None detection (0,0)"""
         return list(set([j for i in fingers for j in i if i != (0, 0)]))
 
     fingers = [fingers_tratment(fingers[nb]) for nb in range(5)]
 
+    #We recuperate finger's with their orientation to top left right or bot.
+    fingers_orientation = [([i] + [k[2]]) for i in fingers
+                           for j in i for k in fingers_direction if j == k[1]]
 
-    ok = []
-    for i in fingers:
-        for j in i:
-            for k in fingers_direction:
-                if j == k[1]:
-                    ok.append(i)
-                    ok.append(k[2])
-
-
-
+    #Now we can sort them for example finger to top so we take max to min y points.
     def sorted_data(data, position):
         if position == "gauche":
             data_sorted = [sorted(i, key=lambda tup: tup[0], reverse=True) for i in fingers]
@@ -439,24 +434,31 @@ def reorganize_finger_position(thumb, index, major, annular, auricular, crop, fi
 
         return data_sorted
 
+    #Sort data in function of orientation
+    sorted_fingers = [sorted_data(i[0], i[1]) for i in fingers_orientation]
 
-    for i in ok:
-        print(i)
-
+    for i in sorted_fingers:
+        for j in i:
+            cv2.circle(copy, j, 2, (255, 255, 255), 2)
+            cv2.imshow("copy", copy)
+            cv2.waitKey(0)
 
 
 
     #verify all last finger point. if distance > 40 remove it (detection on other pts)
-    for data in data_sorted:
+    for data in sorted_fingers:
         copy = crop.copy()
         for i in range(len(data)):
 
+            #First point (palm)
             if i == 0:
                 cv2.circle(copy, data[i], 2, (0, 0, 255), 2)
 
+            #Current and last point distance
             if i > 0:
                 distance_pts = dist.euclidean(data[i], data[i - 1])
 
+                #Distance > 40 delete point (false detection).
                 if distance_pts >= 40:
                     cv2.circle(copy, data[i], 2, (0, 255, 0), 2)
                     print(distance_pts)
@@ -470,6 +472,7 @@ def reorganize_finger_position(thumb, index, major, annular, auricular, crop, fi
 
 
     #verify all fingers if 2 detections on one finger remove it
+    #By the absolute différence beetween finger's points.
     for i in range(len(data_sorted)):
         same = 0
 
