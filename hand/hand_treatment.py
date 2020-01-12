@@ -10,31 +10,99 @@ from numpy import expand_dims, squeeze
 
 from scipy.spatial import distance as dist
 
+def hand_position():
+    pass
+    #angle bas rectangle et angle pousse (main retourné ou non a par quelques degres)
+
+def palm_analyse(hand_localised, palm_center, palm, rectangle, crop,
+                 thumb, index, major, annular, auricular):
+
+    """Here we hope if area > threshold == palm
+                    else area < threshold == turn around hand
+        with that we can define localisation of the hand (right or left hand)"""
+
+    copy = crop.copy()
+
+    if hand_localised == "pouce droite": area = palm[0]
+    else: area = palm[1]
+
+    palm_area_draw = np.array([(pts[0], pts[1]) for pts in area if pts != (0, 0)])
+    cv2.drawContours(copy, [palm_area_draw], 0, (0, 255, 0), 1)
+    palm_area = cv2.contourArea(palm_area_draw)
+
+    if palm_area < 300: print("peut etre main non tournée paume et on peut definir la main", palm_area)
+    elif palm_area > 300: print("main tournée paume  et on peut definir la main", palm_area)
+
+    cv2.circle(copy, palm_center, 2, (255, 255, 255), 1)
+    [cv2.circle(copy, pts, 2, (0, 0, 0), 1) for pts in area]
 
 
-import math
-import time
+    cv2.imshow("palm", copy)
+    cv2.waitKey(0)
 
-import imutils
-import numpy as np
-#import tensorflow as tf
-from matplotlib import pyplot as plt
-from numpy import expand_dims, squeeze
+    """Here we need the function because we reorganize finger's
+    for reorganize finger in case they have a false detection
+    and phax are localised in a wrong order
+    we need to sort them, but sort them by y by x ? so we create a list with informations !"""
 
-from scipy.spatial import distance as dist
+    #recuperate all fingers
+    fingers = [thumb, index, major, annular, auricular]
 
+    #recuperate first point (palm start finger)
+    def finger_list(fingers):
+        if fingers[0][0] == (0, 0):
+            print("ouiiiiiiiiiIIIIIIIIIIIIIIII")
+        return [list(set([j for i in fingers[1:-1] for j in i if j != (0, 0)])), fingers[0][0]]
 
+    #recuperate points beetween extremums points of the finger.
+    fingers = [finger_list(fingers[nb]) for nb in range(5)]
 
+    #for each points compare them with the palm point and define finger position
+    for i in fingers:
 
+        mx = 0; my = 0; c = 0
+        for j in i[0]:
+            mx += (i[1][0] - j[0])
+            my += (i[1][1] - j[1])
+            c += 1
 
+        #We say: the highter number is the highter difference and we define
+        #the position like it
+        if c > 0 and abs(mx/c) > abs(my/c):
+            if int(mx/c) > 0:
+                i.append("gauche")
+            elif int(mx/c) < 0:
+                i.append("droite")
+            else:
+                print("egal a 0 PROBLEME")
+        elif c > 0 and abs(my/c) > abs(mx/c):
+            if int(my/c) > 0:
+                i.append("haut")
+            elif int(my/c) < 0:
+                i.append("bas")
+            else:
+                print("egal a 0 PROBLEME")
+        else:
+            print("PROBLEMMMMMMMME y'a egalité")
+            i.append("egal")
 
+    for i in fingers:
+        print(i[0], i[1], i[2])
+        cv2.circle(copy, i[1], 2, (255, 255, 255), 2)
 
+        for j in i[0]:
+            cv2.circle(copy, j, 2, (0, 0, 255), 2)
 
+            cv2.imshow("thumb", copy)
+            cv2.waitKey(0)
 
+    print("")
 
+    cv2.imshow("thumb", copy)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
-
-
+    return fingers
 
 
 
@@ -132,204 +200,158 @@ def palm_analyse(hand_localised, palm_center, palm, rectangle, crop,
 
 
 
+#================================================================================reorganize_finger()
 
 
+def no_finger_found(finger, thumb, index, major, annular, auricular):
+
+    #Points manquants
+    all_fings = set([i for i in range(20)])
+    finger_ = set(finger)
+
+    no_finger = [fing for fing in all_fings if not(fing in finger_)]
+
+    if len(no_finger) > 0:
+        print("manque : ", len(no_finger), " point(s)", no_finger)
+
+    #Pouce manquant
+    thumb_points = list(set([j for i in thumb for j in i if j != (0, 0)]))
+    print("manque: ", 4 - len(thumb_points), " point(s) du pouce")
 
 
+    #Doigts manquants
+    fingers = [ [j for i in thumb for j in i if j != (0, 0)],
+                [j for i in index for j in i if j != (0, 0)],
+                [j for i in major for j in i if j != (0, 0)],
+                [j for i in annular for j in i if j != (0, 0)],
+                [j for i in auricular for j in i if j != (0, 0)]]
 
-
-
-
-
-
-
-
-
-
-
-def palm_analyse(hand_localised, palm_center, palm, rectangle, crop,
-                 thumb, index, major, annular, auricular):
-
-    """Here we hope if area > threshold == palm
-                    else area < threshold == turn around hand
-        with that we can define localisation of the hand (right or left hand)"""
-
-    copy = crop.copy()
-
-    if hand_localised == "pouce droite": area = palm[0]
-    else: area = palm[1]
-
-    palm_area_draw = np.array([(pts[0], pts[1]) for pts in area if pts != (0, 0)])
-    cv2.drawContours(copy, [palm_area_draw], 0, (0, 255, 0), 1)
-    palm_area = cv2.contourArea(palm_area_draw)
-
-    if palm_area < 300: print("peut etre main non tournée paume et on peut definir la main", palm_area)
-    elif palm_area > 300: print("main tournée paume  et on peut definir la main", palm_area)
-
-    cv2.circle(copy, palm_center, 2, (255, 255, 255), 1)
-    [cv2.circle(copy, pts, 2, (0, 0, 0), 1) for pts in area]
-
-
-    cv2.imshow("palm", copy)
-    cv2.waitKey(0)
-
-    """Here we need the function because we reorganize finger's
-    for reorganize finger in case they have a false detection
-    and phax are localised in a wrong order
-    we need to sort them, but sort them by y by x ? so we create a list with informations !"""
-
-    #recuperate all fingers
-    fingers = [thumb, index, major, annular, auricular]
-
-    #recuperate first point (palm start finger)
-    def finger_list(fingers):
-        if fingers[0][0] == (0, 0):
-            print("ouiiiiiiiiiIIIIIIIIIIIIIIII")
-        return [list(set([j for i in fingers[1:-1] for j in i if j != (0, 0)])), fingers[0][0]]
-
-    #recuperate points beetween extremums points of the finger.
-    fingers = [finger_list(fingers[nb]) for nb in range(5)]
-
-    #for each points compare them with the palm point and define finger position
-    for i in fingers:
-
-        mx = 0; my = 0; c = 0
-        for j in i[0]:
-            mx += (i[1][0] - j[0])
-            my += (i[1][1] - j[1])
-            c += 1
-
-        #We say: the highter number is the highter difference and we define
-        #the position like it
-        if c > 0 and abs(mx/c) > abs(my/c):
-            if int(mx/c) > 0:
-                i.append("gauche")
-            elif int(mx/c) < 0:
-                i.append("droite")
-            else:
-                print("egal a 0 PROBLEME")
-        elif c > 0 and abs(my/c) > abs(mx/c):
-            if int(my/c) > 0:
-                i.append("haut")
-            elif int(my/c) < 0:
-                i.append("bas")
-            else:
-                print("egal a 0 PROBLEME")
-        else:
-            print("PROBLEMMMMMMMME y'a egalité")
-            i.append("egal")
-
-    for i in fingers:
-        print(i[0], i[1], i[2])
-        cv2.circle(copy, i[1], 2, (255, 255, 255), 2)
-
-        for j in i[0]:
-            cv2.circle(copy, j, 2, (0, 0, 255), 2)
-
-            cv2.imshow("thumb", copy)
-            cv2.waitKey(0)
-
+    counter_miss = sum([1 for i in fingers if i == []])
+    print("manque", counter_miss, "doigts")
     print("")
 
-    cv2.imshow("thumb", copy)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-
-    return fingers
+    return len(thumb_points)
 
 
 
 
+#================================================================================reorganize_finger()
 
 
+def sort_points(fingers, val, to_reverse):
+
+    #On recupere le premier point et son axe
+    value = [i[0][0][val] for i in fingers]
+
+    #Sort point
+    value = sorted(value, reverse=to_reverse)
+
+    #Si on a un points qui match avec nos points sorted on append
+    sorted_points = []
+    for v in value:
+        for i in fingers:
+            if i[0][0][val] == v:
+                sorted_points.append(i)
+
+    return sorted_points
 
 
+def search_index(thumb, fingers):
 
-def reorganize_finger(thumb, index, major, annular, auricular, hand_localisation, crop):
+    #si le pouce est a droite alors on cherche nos points par gauche
+    if thumb[1] == "droite":
+        search_finger = "gauche"
+    elif thumb[1] == "gauche":
+        search_finger = "droite"
+
+    #si le pouce est en haut alors on cherche nos points par ordre decroissant par le bas
+    elif thumb[1] == "haut":
+        search_finger = "bas"
+    elif thumb[1] == "bas":
+        search_finger = "haut"
+
+    thumb = thumb[0][-1]
+    work_finger = [i[0] for i in fingers if i[1] == search_finger]
+
+
+    #recherche: par hauteur (axe y)
+    print("if probleme et ce qui arrivera c qu'il y a une egalité et faut trancher par x")
+    if search_finger == "gauche" or search_finger == "droite":
+        sorted_points = sort_points(fingers, 1, False)
+
+    #gauche
+    if search_finger == "bas" and thumb[1] == "gauche" or\
+        search_finger == "haut" and thumb[1] == "gauche":
+        sorted_points = sort_points(fingers, 0, True)
+
+    #droite 
+    if search_finger == "bas" and thumb[1] == "droite" or\
+        search_finger == "bas" and thumb[1] == "droite":
+        sorted_points = sort_points(fingers, 0, False)
+
+
+    return sorted_points
+
+
+def reorganize_finger(thumb, index, major, annular, auricular,
+                      hand_localisation, crop, miss_points,
+                      finger_sorted, fingers_orientation):
     """Sometime finger's are detected in a different order like thumb annular index...
-    so we sort finger from the thumb and replace them      like thumb index ... annular
-    from distance beetween thum"""
+    so we sort finger from the thumb and replace them      like thumb index ... annular"""
 
     copy = crop.copy()
+    if miss_points == 0:
+        print("PROBLEME NO POUCE")
 
-    #sommets doigts
-    end_fingers = [[j for i in index for j in i if j != (0, 0)],
-                   [j for i in major for j in i if j != (0, 0)],
-                   [j for i in annular for j in i if j != (0, 0)],
-                   [j for i in auricular for j in i if j != (0, 0)]]
+    else:
+        #on a le pouce
+        thumb = finger_sorted[0]
+        finger_sorted = finger_sorted[1:]
 
-    thumb_end = [j for i in thumb for j in i if j != (0, 0)][-1]
-    cv2.circle(copy, thumb_end, 2, (0, 0, 255), 2)
+    miss = False
+    for i in finger_sorted:
+        if i == []:
+            miss = True
 
-    [cv2.circle(copy, fingers[-1], 2, (255, 0, 0), 2) for fingers in end_fingers if len(fingers) > 0]
-    end_fingers = [fingers[-1] for fingers in end_fingers if len(fingers) > 0]
+    if miss is True:
+        print("PROBLEME MANQUE DES DOIGTS LES REPLACER C LA OU IL VA FALLOIR")
+        print("RECUPERER LES LONGUEURS ENTRE LE POUCE")
 
-
-    repear_finger = []
-    thumb_fingers_points = []
-    #on récupere la distance entre le pouce et les doigts
-    #ensuite on va devoir sort les distance.
-    #donc pour s'y retrouver on fait un repear_finger avec:
-        #les coordonées du sommet des doigts mais aussi la distance
-    for finger in end_fingers:
-        cv2.line(copy, thumb_end, finger, (0, 255, 0), 1)
-        distance = dist.euclidean(thumb_end, finger)
-        thumb_fingers_points.append(distance)
-        repear_finger.append((distance, finger))
-
-    thumb_fingers_points = sorted(thumb_fingers_points)
-    #print(thumb_fingers_points)
-    #print(repear_finger)
-
-    finger_sorted = [thumb]
-
-    #We need to remove None data from all finger for replace it
-    all_finger = [thumb, index, major, annular, auricular]
-    for i in all_finger:
-        for j in i:
-            if j == ((0, 0), (0, 0)):
-                i.remove(j)
-
-    #on compare les distances sorted avec le repaire.
-    for i in thumb_fingers_points:
-        for j in repear_finger:
-            if i == j[0]:
-                #on compare le repaire avec les points du skelette.
-                for k in all_finger:
-                    if j[1] == (k[-1][1]):
-                        finger_sorted.append(k)
-
-##    copy2 = crop.copy()
-##    for i in finger_sorted:
-##        for j in i:
-##            for k in j:
-##                cv2.circle(copy2, k, 2, (255, 0, 0), 2)
-##
-##        cv2.imshow("reorg_finger", copy2)
-##        cv2.waitKey(0)
-
-    #We havn't all fingers, add empty list
-    if len(finger_sorted) < 5:
-        to_add = 5 - len(finger_sorted)
-        for i in range(to_add):
-            finger_sorted.append([])
-
-    thumb = finger_sorted[0]
-    index = finger_sorted[1]
-    major = finger_sorted[2]
-    annular = finger_sorted[3]
-    auricular = finger_sorted[4]
+    else:
 
 
-    cv2.imshow("reorganisation", copy)
-    cv2.waitKey(0)
+        #on mélange les points du doigt + l'orientation
+        fingers = [[i, j[1]] for i, j in zip(finger_sorted, fingers_orientation)]
 
+        thumb = fingers[0]
+        fingers = fingers[1:]
+
+        sorted_points = search_index(thumb, fingers)
+        print("")
+        for i in sorted_points:
+            cv2.circle(copy, thumb[0][0], 2, (0, 0, 255), 2)
+            for j in i[0]:
+                cv2.circle(copy, j, 2, (0, 255, 255), 2)
+
+            cv2.imshow("thumb", copy)
+            cv2.waitKey(0)
+
+
+        thumb = sorted_points[0]
+        index = sorted_points[1]
+        major = sorted_points[2]
+        annular = sorted_points[3]
+        auricular = sorted_points[4]
+    
     return thumb, index, major, annular, auricular
 
+#================================================================================reorganize_finger()
 
 
 
-#   reorganize_finger_position()
+
+
+#=========================================================================reorganize_phax_position()
 def no_detection_orientatation(fingers_orientation):
     """Des fois y'a des egalités du coup on définit le sens du doigt par apport aux autres"""
 
@@ -360,7 +382,7 @@ def no_detection_orientatation(fingers_orientation):
     return fingers_orientation
 
 
-def reorganize_finger_position(thumb, index, major, annular, auricular, crop, fingers_direction):
+def reorganize_phax_position(thumb, index, major, annular, auricular, crop, fingers_direction):
     """Sometimes we have false detection 2 times the same finger,
     one point detected on an another point.
     So we remove them"""
@@ -471,7 +493,7 @@ def reorganize_finger_position(thumb, index, major, annular, auricular, crop, fi
     cv2.imshow("copy", copy)
     cv2.waitKey(0)
 
-    return sorted_fingers
+    return sorted_fingers, fingers_orientation
 
 
 
@@ -528,61 +550,6 @@ def hand_location(thumb, index, major, annular, auricular, crop):
 
     print(hand)
     return hand
-
-
-
-def no_finger_found(finger, thumb, index, major, annular, auricular):
-
-    fings = set([i for i in range(20)])
-    finger_ = set(finger)
-    
-    no_finger = [fing for fing in fings if not(fing in finger_)]
-
-    if len(no_finger) > 0:
-        print("manque : ", len(no_finger), " doigts", no_finger)
-
-    fingers = [thumb, index, major, annular, auricular]
-
-
-    fingers = [ [j for i in thumb for j in i if j != (0, 0)],
-                [j for i in index for j in i if j != (0, 0)],
-                [j for i in major for j in i if j != (0, 0)],
-                [j for i in annular for j in i if j != (0, 0)],
-                [j for i in auricular for j in i if j != (0, 0)]]
-
-    c = 0
-    for i in fingers:
-        if i != []:
-            c += 1
-
-    print("manque", 5 - c, "doigts")
-
-
-    return fingers
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
