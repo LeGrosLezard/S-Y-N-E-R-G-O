@@ -383,6 +383,7 @@ def thumb_analyse(palm, thumb, index, crop):
 
 
 
+
 def treat_skeletton_points(skeletton, position, finger, proba, rectangle, crop):
 
 
@@ -402,6 +403,8 @@ def treat_skeletton_points(skeletton, position, finger, proba, rectangle, crop):
     major = position[9:12]
     annular = position[13:16]
     auricular = position[17:20]
+
+    no_finger_found(finger, thumb, index, major, annular, auricular)
 
     #location of the thumb
     hand_localised = hand_location(thumb, index, major, annular, auricular, crop)
@@ -545,7 +548,7 @@ if __name__ == "__main__":
 #FUNCTION
     #rangement des pts du doigt -> 77
     #egalité réglé 1
-
+    #delete points 17
 
 
 
