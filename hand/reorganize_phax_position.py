@@ -107,7 +107,7 @@ def delete_finger(sorted_fingers, crop):
 
 def delete_phax(sorted_fingers, copy):
     #Parcours all points of a finger.
-    #If two points are more than 40 (space beetween finger's are ~ 10 and there are 3 spaces)
+    #If two points are more than 40 (space beetween finger's are ~ 15-10 and there are 3 spaces)
         #recuperate the first point of the finger and the 2 points fingers (sort before)
         #we delete the one who's the far from the original
 
