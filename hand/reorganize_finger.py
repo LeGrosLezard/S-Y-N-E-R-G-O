@@ -68,7 +68,7 @@ def search_index(thumb, fingers):
 
 
 def identify_fingers(thumb, fingers, crop):
-
+    """tester, voir si c toujours vrai, faire les ratio trouver les min max distances"""
     copy = crop.copy()
 
     [cv2.circle(copy, i, 2, (0, 0, 0), 2) for i in thumb[0]]
@@ -79,24 +79,70 @@ def identify_fingers(thumb, fingers, crop):
     points = [(lambda x: () if x == None else x[0][-1])(i) for i in fingers]
 
 
+    font = cv2.FONT_HERSHEY_COMPLEX_SMALL
+
     cv2.circle(copy, thumb[0][-1], 2, (255, 255, 255), 2)
+    cv2.putText(copy, 'P', thumb[0][-1], font,  
+                            1, (255, 255, 255), 1, cv2.LINE_AA)
+
+    fing = ["I", "M", "An", "Au"]
 
 
-    print(points)
     for i in range(len(points)):
+
+        if i == 0:
+            print(thumb[0][-1], points[i])
+            cv2.line(copy, (points[i]), (thumb[0][-1]), (0, 255, 0), 1)
+            a = dist.euclidean(points[i], thumb[0][-1])
+            print(a)
+
+            cv2.line(copy, (points[0]), (thumb[0][-1]), (0, 255, 0), 1)
+            a = dist.euclidean(points[0], thumb[0][-1])
+            if a < 74:
+               
+                cv2.putText(copy, 'I', points[0], font,  
+                            1, (255, 255, 255), 1, cv2.LINE_AA)
+            else:
+                print("PLUS QUE 74")
+
+
+
+            cv2.imshow("thumb", copy)
+            cv2.waitKey(0)
+
+
+            print("")
+
+
+
         if i < len(points) - 1:
+
             print(points[i], points[i + 1])
+            if points[i] is not () and points[i + 1] is not ():
+                cv2.line(copy, (points[i]), (points[i + 1]), (0, 255, 0), 1)
+                a = dist.euclidean(points[i], points[i + 1])
+                print(a)
 
 
 
+                if a < 35:
+                    
+                    cv2.putText(copy, fing[i + 1], points[i + 1], font,  
+                                1, (255, 255, 255), 1, cv2.LINE_AA)
 
-    ##    if i is not ():
-    ##        print(i, thumb[0][-1])
-    ##        a = dist.euclidean(i, thumb[0][-1])
-    ##        cv2.line(copy, (i), (thumb[0][-1]), (0, 255, 0), 1)
-    ##        print(a)
-    ##
-    ##    print("")
+                elif a > 35:
+                    print("plus que 35 next points")
+                    cv2.putText(copy, fing[i + 1], points[i + 1], font,  
+                                1, (255, 255, 255), 1, cv2.LINE_AA)
+
+
+                cv2.imshow("thumb", copy)
+                cv2.waitKey(0)
+                print("")
+
+
+        print("")
+
 
 
 
@@ -178,10 +224,10 @@ def reorganize_finger(hand_localisation, crop, miss_points,
         print("")
         print("for now we have: ")
         print(thumb)
-        print(fingers)
+        print(sorted_points)
 
 
-        identify_fingers(thumb, fingers)
+        identify_fingers(thumb, sorted_points)
 
     print("")
 
