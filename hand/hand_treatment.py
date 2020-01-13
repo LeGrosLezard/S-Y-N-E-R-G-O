@@ -427,12 +427,16 @@ def reorganize_phax_position(thumb, index, major, annular, auricular, crop, fing
     #Sort data in function of orientation
     sorted_fingers = [sorted_data(i[0], i[1]) for i in fingers_orientation]
 
+    #remove None detections
     for fingers in sorted_fingers:
         for finger in fingers:
             if finger == (0, 0):
                 fingers.remove(finger)
 
-
+    #Parcours all points of a finger.
+    #If two points are more than 40 (space beetween finger's are ~ 10 and there are 3 spaces)
+        #recuperate the first point of the finger and the 2 points fingers (sort before)
+        #we delete the one who's the far from the original
     for fingers in sorted_fingers:
 
         for finger1 in fingers:
