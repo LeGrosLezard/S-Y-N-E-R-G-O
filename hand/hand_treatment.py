@@ -319,9 +319,6 @@ def reorganize_finger(thumb, index, major, annular, auricular,
 
     else:
 
-        print(finger_sorted)
-        print(fingers_orientation)
-
         #on mélange les points du doigt + l'orientation
         fingers = [[i, j[1]] for i, j in zip(finger_sorted, fingers_orientation)]
 
@@ -404,6 +401,7 @@ def sorted_data(data, position):
         data_sorted = sorted(data, key=lambda tup: tup[1], reverse=True) 
     elif position == "bas":
         data_sorted = sorted(data, key=lambda tup: tup[1])
+    else: data_sorted = []
 
     return data_sorted
 
@@ -412,6 +410,8 @@ def reorganize_phax_position(thumb, index, major, annular, auricular, crop, fing
     """Sometimes we have false detection 2 times the same finger,
     one point detected on an another point.
     So we remove them"""
+
+    copy = crop.copy()
 
     fingers = [thumb, index, major, annular, auricular]
 
@@ -427,56 +427,36 @@ def reorganize_phax_position(thumb, index, major, annular, auricular, crop, fing
     #Sort data in function of orientation
     sorted_fingers = [sorted_data(i[0], i[1]) for i in fingers_orientation]
 
-    for i in sorted_fingers:
-        copy = crop.copy()
-        for j in i:
-            cv2.circle(copy, j, 2, (0, 0, 255), 2)
-            cv2.imshow("sorted", copy)
-            cv2.waitKey(0)
-
-    if len(sorted_fingers) < 5:
-        to_add = 5 - len(sorted_fingers)
-        for i in range(to_add):
-            sorted_fingers.append([])
+    for fingers in sorted_fingers:
+        for finger in fingers:
+            if finger == (0, 0):
+                fingers.remove(finger)
 
 
-    #verify all last finger point. if distance > 40 remove it (detection on other pts)
-    for data in sorted_fingers:
-        copy = crop.copy()
+    for fingers in sorted_fingers:
 
-        for i in range(len(data)):
+        for finger1 in fingers:
+            for finger2 in fingers:
 
-            #First point (palm)
-            if i == 0:
-                cv2.circle(copy, data[i], 2, (0, 255, 255), 2)
+                if dist.euclidean(finger1, finger2) >= 40:
 
-            #Current and last point distance
-            if i > 0 and len(data) > i:
-                distance_pts = dist.euclidean(data[i], data[i - 1])
+                    a = dist.euclidean(fingers[0], finger2)
+                    b = dist.euclidean(fingers[0], finger1)
 
-                #Distance > 40 replace point by the i -1 element (because false detection).
-                if distance_pts >= 40:
-                    cv2.circle(copy, data[i], 2, (0, 0, 255), 2)
-                    print(distance_pts)
-                    print("point deleted")
-                    data[i] = data[i - 1]
+                    if a > b:
+                        fingers.remove(finger2)
+                        cv2.circle(copy, finger2, 2, (0, 0, 255), 2)
+                    if b > a:
+                        fingers.remove(finger1)
+                        cv2.circle(copy, finger1, 2, (0, 0, 255), 2)
 
-                else:
-                    cv2.circle(copy, data[i], 2, (0, 255, 0), 2)
-                cv2.imshow("deleted", copy)
-                cv2.waitKey(0)
 
-    #En gros la on a avait: (1, 1) (1, 10) -> (1, 1), (1, 1)
-    #'delete doublon' can use set() because it sort our sort axis
-    new_list = []
-    for i in sorted_fingers:
-        work_list = []
-        for j in i:
-            if j not in work_list:
-                work_list.append(j)
-        new_list.append(work_list)
+    for fingers in sorted_fingers:
+        for i in fingers:
+            cv2.circle(copy, i, 2, (0, 255, 0), 2)
 
-    sorted_fingers = new_list
+    cv2.imshow("DELETE", copy)
+    cv2.waitKey(0)
 
 
 
