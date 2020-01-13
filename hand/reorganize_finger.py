@@ -64,6 +64,53 @@ def search_index(thumb, fingers):
 
 
 
+
+
+
+def identify_fingers(thumb, fingers, crop):
+
+    copy = crop.copy()
+
+    [cv2.circle(copy, i, 2, (0, 0, 0), 2) for i in thumb[0]]
+    [cv2.circle(copy, j, 2, (0, 0, 255), 2) for i in fingers for j in i[0]]
+
+
+    fingers += [None for i in range(4 - len(fingers))]
+    points = [(lambda x: () if x == None else x[0][-1])(i) for i in fingers]
+
+
+    cv2.circle(copy, thumb[0][-1], 2, (255, 255, 255), 2)
+
+
+    print(points)
+    for i in range(len(points)):
+        if i < len(points) - 1:
+            print(points[i], points[i + 1])
+
+
+
+
+    ##    if i is not ():
+    ##        print(i, thumb[0][-1])
+    ##        a = dist.euclidean(i, thumb[0][-1])
+    ##        cv2.line(copy, (i), (thumb[0][-1]), (0, 255, 0), 1)
+    ##        print(a)
+    ##
+    ##    print("")
+
+
+
+
+
+
+    cv2.imshow("thumb", copy)
+
+
+
+
+
+
+
 def reorganize_finger(hand_localisation, crop, miss_points,
                       finger_sorted, fingers_orientation):
     """Sometime finger's are detected in a different order like thumb annular index...
@@ -71,6 +118,8 @@ def reorganize_finger(hand_localisation, crop, miss_points,
 
     copy = crop.copy()
 
+
+    print("reorganize_finger")
 
     #Verification du pouce
     if miss_points == 0:
@@ -126,15 +175,17 @@ def reorganize_finger(hand_localisation, crop, miss_points,
             cv2.imshow("thumb", copy)
             cv2.waitKey(0)
 
+        print("")
+        print("for now we have: ")
+        print(thumb)
+        print(fingers)
 
-        thumb = thumb
-        index = sorted_points[0]
-        major = sorted_points[1]
-        annular = sorted_points[2]
-        auricular = sorted_points[3]
 
-    
-    return thumb, index, major, annular, auricular
+        identify_fingers(thumb, fingers)
+
+    print("")
+
+    #return thumb, index, major, annular, auricular
 
 
 
