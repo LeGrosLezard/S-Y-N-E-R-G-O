@@ -300,25 +300,20 @@ def reorganize_finger(thumb, index, major, annular, auricular,
     so we sort finger from the thumb and replace them      like thumb index ... annular"""
 
     copy = crop.copy()
-    if miss_points == 0:
-        print("PROBLEME NO POUCE")
 
-    else:
-        #on a le pouce
-        thumb = finger_sorted[0]
-        finger_sorted = finger_sorted[1:]
+    #Verification du pouce
+    if miss_points == 0: print("PROBLEME NO POUCE")
 
+    #Verification tous les doigts
     miss = False
     for i in finger_sorted:
         if i == []:
             miss = True
 
     if miss is True:
-        print("PROBLEME MANQUE DES DOIGTS LES REPLACER C LA OU IL VA FALLOIR")
-        print("RECUPERER LES LONGUEURS ENTRE LE POUCE")
+        print("manque doigts...................")
 
     else:
-
 
         #on mélange les points du doigt + l'orientation
         fingers = [[i, j[1]] for i, j in zip(finger_sorted, fingers_orientation)]
@@ -327,9 +322,11 @@ def reorganize_finger(thumb, index, major, annular, auricular,
         fingers = fingers[1:]
 
         sorted_points = search_index(thumb, fingers)
-        print("")
+
+        cv2.circle(copy, thumb[0]
+
+                   , 2, (0, 0, 0), 2)
         for i in sorted_points:
-            cv2.circle(copy, thumb[0][0], 2, (0, 0, 255), 2)
             for j in i[0]:
                 cv2.circle(copy, j, 2, (0, 255, 255), 2)
 
@@ -337,11 +334,11 @@ def reorganize_finger(thumb, index, major, annular, auricular,
             cv2.waitKey(0)
 
 
-        thumb = sorted_points[0]
-        index = sorted_points[1]
-        major = sorted_points[2]
-        annular = sorted_points[3]
-        auricular = sorted_points[4]
+        thumb = thumb
+        index = sorted_points[0]
+        major = sorted_points[1]
+        annular = sorted_points[2]
+        auricular = sorted_points[3]
     
     return thumb, index, major, annular, auricular
 
@@ -382,16 +379,36 @@ def no_detection_orientatation(fingers_orientation):
     return fingers_orientation
 
 
+
+
+
+
+
+#================================================================================== reorganize_phax_position()
+
+def fingers_tratment(fingers):
+    """We recuperate all fingers without doublon and None detection (0,0)"""
+    return list(set([j for i in fingers for j in i if i != (0, 0)]))
+
+def sorted_data(data, position):
+    if position == "gauche":
+        data_sorted = sorted(data, key=lambda tup: tup[0], reverse=True)
+    elif position == "droite":
+        data_sorted = sorted(data, key=lambda tup: tup[0])
+    elif position == "haut":
+        data_sorted = sorted(data, key=lambda tup: tup[1], reverse=True) 
+    elif position == "bas":
+        data_sorted = sorted(data, key=lambda tup: tup[1])
+
+    return data_sorted
+
+
 def reorganize_phax_position(thumb, index, major, annular, auricular, crop, fingers_direction):
     """Sometimes we have false detection 2 times the same finger,
     one point detected on an another point.
     So we remove them"""
 
     fingers = [thumb, index, major, annular, auricular]
-
-    def fingers_tratment(fingers):
-        """We recuperate all fingers without doublon and None detection (0,0)"""
-        return list(set([j for i in fingers for j in i if i != (0, 0)]))
 
     fingers = [fingers_tratment(fingers[nb]) for nb in range(5)]
 
@@ -402,18 +419,6 @@ def reorganize_phax_position(thumb, index, major, annular, auricular, crop, fing
     fingers_orientation = no_detection_orientatation(fingers_orientation)
 
     #Now we can sort them for example finger to top so we take max to min y points.
-    def sorted_data(data, position):
-        if position == "gauche":
-            data_sorted = sorted(data, key=lambda tup: tup[0], reverse=True)
-        elif position == "droite":
-            data_sorted = sorted(data, key=lambda tup: tup[0])
-        elif position == "haut":
-            data_sorted = sorted(data, key=lambda tup: tup[1], reverse=True) 
-        elif position == "bas":
-            data_sorted = sorted(data, key=lambda tup: tup[1])
-
-        return data_sorted
-
     #Sort data in function of orientation
     sorted_fingers = [sorted_data(i[0], i[1]) for i in fingers_orientation]
 
