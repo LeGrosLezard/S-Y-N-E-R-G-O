@@ -404,7 +404,7 @@ def treat_skeletton_points(skeletton, position, finger, proba, rectangle, crop):
     annular = position[13:16]
     auricular = position[17:20]
 
-    no_finger_found(finger, thumb, index, major, annular, auricular)
+    miss_points = no_finger_found(finger, thumb, index, major, annular, auricular)
 
     #location of the thumb
     hand_localised = hand_location(thumb, index, major, annular, auricular, crop)
@@ -413,13 +413,16 @@ def treat_skeletton_points(skeletton, position, finger, proba, rectangle, crop):
     fingers_direction = palm_analyse(hand_localised, palm_center, palm, rectangle, crop,
                                      thumb, index, major, annular, auricular)
 
-    #attribuate by x axis fingers
-    thumb, index, major, annular, auricular =\
-    reorganize_finger(thumb, index, major, annular, auricular, hand_localised, crop)
+
 
     #delete false points finger detection
-    finger_sorted = reorganize_finger_position(thumb, index, major, annular,
-                                               auricular, crop, fingers_direction)
+    finger_sorted, fingers_orientation = reorganize_phax_position(thumb, index, major, annular,
+                                             auricular, crop, fingers_direction)
+
+    #reorganize finger's position
+    thumb, index, major, annular, auricular =\
+    reorganize_finger(thumb, index, major, annular, auricular,
+                      hand_localised, crop, miss_points, finger_sorted, fingers_orientation)
 
     #reattribuate points
     thumb = finger_sorted[0]
@@ -497,11 +500,8 @@ def hand(frame, detection_graph, sess, head_box):
 if __name__ == "__main__":
     
 
-    IM = 17
 
-
-
-
+    IM = 25
 
 
     image = r"C:\Users\jeanbaptiste\Desktop\hand_picture\a{}.jpg".format(str(IM))
@@ -538,6 +538,9 @@ if __name__ == "__main__":
 
 
 #TODO
+
+    
+    
     #image 5 un pec change major et le doigt dapres
     #changement de perspective doigt plus long -> penché vers torse et versa #531
     #angle entre debut doigt et fin ex 259 doigt coté face
@@ -548,8 +551,8 @@ if __name__ == "__main__":
 #FUNCTION
     #rangement des pts du doigt -> 77
     #egalité réglé 1
-    #delete points 17
-
+    #delete points 17; 25
+    #reorganisation doigt 23 (pts theorique non respecté)
 
 
 
