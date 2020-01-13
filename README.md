@@ -1,20 +1,20 @@
 # S-Y-N-E-R-G-O
 
-- si y'a pas de pouce ? .......
+- et s'il n'y a pas de pouce ? .......
 
-- et y'a un truk dans palm avec le (0,0) mais ch'ai pas
+- si dans la fonction palm() une donnée se presnte sous la forme (0,0) ?
 
-- trouver un truk pour la paume (la hauteur ? pcque l'air ca marche pas, les ongles ?)
+- trouver une approche pour la paume (la hauteur ? le contour des ongles?)
 
-- commencer a ranger (treat avant doigt)
+- nettoyer, réecrire le code.
 
-- doigt
+- partie doigts
 
-- opération sur les doigts
+- partie opération sur les doigts
 
-- signes
+- partie signes
 
-- y'a uassi les t l path
+
 
 <br><br><br><br><br><br><br><br><br>
 
