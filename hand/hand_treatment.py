@@ -258,6 +258,8 @@ def sort_points(fingers, val, to_reverse):
 
 def search_index(thumb, fingers):
 
+    print("pouce situé a: ", thumb[1])
+
     #si le pouce est a droite alors on cherche nos points par gauche
     if thumb[1] == "droite":
         search_finger = "gauche"
@@ -270,9 +272,9 @@ def search_index(thumb, fingers):
     elif thumb[1] == "bas":
         search_finger = "haut"
 
-    thumb = thumb[0][-1]
-    work_finger = [i[0] for i in fingers if i[1] == search_finger]
+    print("recherche par :", search_finger)
 
+    thumb = thumb[0][-1]
 
     #recherche: par hauteur (axe y)
     print("if probleme et ce qui arrivera c qu'il y a une egalité et faut trancher par x")
@@ -289,6 +291,9 @@ def search_index(thumb, fingers):
         search_finger == "bas" and thumb[1] == "droite":
         sorted_points = sort_points(fingers, 0, False)
 
+
+    for i in sorted_points:
+        print(i)
 
     return sorted_points
 
@@ -310,10 +315,12 @@ def reorganize_finger(thumb, index, major, annular, auricular,
         if i == []:
             miss = True
 
-    if miss is True:
-        print("manque doigts...................")
+    if miss is True: print("manque doigts...................")
 
     else:
+
+        print(finger_sorted)
+        print(fingers_orientation)
 
         #on mélange les points du doigt + l'orientation
         fingers = [[i, j[1]] for i, j in zip(finger_sorted, fingers_orientation)]
@@ -323,9 +330,7 @@ def reorganize_finger(thumb, index, major, annular, auricular,
 
         sorted_points = search_index(thumb, fingers)
 
-        cv2.circle(copy, thumb[0]
-
-                   , 2, (0, 0, 0), 2)
+        [cv2.circle(copy, i, 2, (0, 0, 0), 2) for i in thumb[0]]
         for i in sorted_points:
             for j in i[0]:
                 cv2.circle(copy, j, 2, (0, 255, 255), 2)
