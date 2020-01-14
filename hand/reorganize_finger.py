@@ -48,21 +48,19 @@ def search_index(thumb, fingers):
     if search_finger == "droite":
         sorted_points = sort_points(fingers, 0, False)
 
-    #gauche
-    if search_finger == "bas" and thumb[1] == "gauche" or\
-        search_finger == "haut" and thumb[1] == "gauche":
-        sorted_points = sort_points(fingers, 0, True)
 
-    #droite 
-    if search_finger == "bas" and thumb[1] == "droite" or\
-        search_finger == "bas" and thumb[1] == "droite":
-        sorted_points = sort_points(fingers, 0, False)
+    if search_finger == "haut":
+        sorted_points = sort_points(fingers, 1, True)
+
+
+    if search_finger == "bas":
+        sorted_points = sort_points(fingers, 1, False)
 
 
     for i in sorted_points:
         print(i)
 
-    return sorted_points
+    return sorted_points, direction
 
 
 
@@ -70,18 +68,18 @@ def search_index(thumb, fingers):
 
 
 
-def identify_fingers(thumb, fingers, crop):
+def identify_fingers(thumb, fingers, crop, rectangle, direction):
     print("")
     print("identify_fingers")
 
     print("Box de la main est de: ", rectangle)
     print(thumb)
     print(fingers)
-    
+    print(direction)
 
     copy = crop.copy()
 
-    rectangle = (31, 31, 114, 111)
+
 
     [cv2.circle(copy, i, 2, (0, 0, 0), 2) for i in thumb[0]]
     [cv2.circle(copy, j, 2, (0, 0, 255), 2) for i in fingers for j in i[0]]
@@ -95,6 +93,7 @@ def identify_fingers(thumb, fingers, crop):
 
     draw = lambda picture, text, pts:\
         cv2.putText(copy, text, pts, font, 1, (255, 255, 255), 1, cv2.LINE_AA)
+
 
     draw_line = lambda picture, pts1, pts2:\
         cv2.line(picture, pts1, pts2, (0, 255, 0), 1)
@@ -125,15 +124,19 @@ def identify_fingers(thumb, fingers, crop):
 
 
     x, y, w, h = rectangle
-    area = w * h
-    print(area)
-    print(area * 0.0041)#index
+    print(w, h)
+
+    if direction in ("droite", "gauche"):
+        area = "width"
+    elif direction in ("bas", "haut"):
+        area = "height"
 
 
     thumb_index = dist.euclidean(points[0], thumb[0][-1])
 
     print(thumb_index)
-    if thumb_index < area * 0.0041:
+    if area == "width" and thumb_index < w * 0.535 or\
+       area == "height" and thumb_index < w * 0.535:
         draw(copy, fing[0], points[0])
         draw_line(copy, points[0], thumb[0][-1])
         fing.remove(fing[0])
@@ -174,6 +177,9 @@ def identify_fingers(thumb, fingers, crop):
 
 
             a = dist.euclidean(points[i], points[i + 1])
+            print(a)
+
+
 
             if a < 35:  #One point after
                 print("Moins 35")
@@ -196,7 +202,6 @@ def identify_fingers(thumb, fingers, crop):
             cv2.imshow("thumb_next_finger", copy)
             cv2.waitKey(0)
             print("")
-
 
 
 
@@ -247,7 +252,7 @@ def reorganize_finger(hand_localisation, crop, miss_points,
         print("fingers : ", fingers)
 
 
-        sorted_points = search_index(thumb, fingers)
+        sorted_points, direction = search_index(thumb, fingers)
 
         [cv2.circle(copy, i, 2, (0, 0, 0), 2) for i in thumb[0]]
         for i in sorted_points:
@@ -261,7 +266,7 @@ def reorganize_finger(hand_localisation, crop, miss_points,
 
 
 
-        identify_fingers(thumb, sorted_points, crop, rectangle)
+        identify_fingers(thumb, sorted_points, crop, rectangle, direction)
 
 
 
@@ -282,7 +287,7 @@ def reorganize_finger(hand_localisation, crop, miss_points,
         thumb = fingers[0]
         fingers = fingers[1:]
 
-        sorted_points = search_index(thumb, fingers)
+        sorted_points, direction = search_index(thumb, fingers)
 
         [cv2.circle(copy, i, 2, (0, 0, 0), 2) for i in thumb[0]]
         for i in sorted_points:
@@ -298,7 +303,7 @@ def reorganize_finger(hand_localisation, crop, miss_points,
         print("fingers : ", sorted_points)
 
 
-        identify_fingers(thumb, sorted_points, crop, rectangle)
+        identify_fingers(thumb, sorted_points, crop, rectangle, direction)
 
     print("")
 
