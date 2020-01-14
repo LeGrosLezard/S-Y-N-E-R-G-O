@@ -4,7 +4,7 @@ from scipy.spatial import distance as dist
 def sort_points(fingers, val, to_reverse):
 
     #On recupere le premier point et son axe
-    value = [i[0][0][val] for i in fingers]
+    value = [i[0][0][val] for i in fingers if i[0] != []]
 
     #Sort point
     value = sorted(value, reverse=to_reverse)
@@ -13,7 +13,7 @@ def sort_points(fingers, val, to_reverse):
     sorted_points = []
     for v in value:
         for i in fingers:
-            if i[0][0][val] == v:
+            if i[0] != [] and i[0][0][val] == v:
                 sorted_points.append(i)
 
     return sorted_points
@@ -240,6 +240,8 @@ def reorganize_finger(hand_localisation, crop, miss_points,
 
     print("reorganize_finger")
 
+
+
     #Verification du pouce
     if miss_points == 0:
         print("PROBLEME NO POUCE")
@@ -260,10 +262,33 @@ def reorganize_finger(hand_localisation, crop, miss_points,
         print(finger_sorted)
         print(fingers_orientation)
 
+
+        fingers = [[i, j[1]] for i, j in zip(finger_sorted, fingers_orientation)]
+
         thumb = fingers[0]
         fingers = fingers[1:]
 
+        print("")
+        print("for now we have: ")
+        print("thumb: ", thumb)
+        print("fingers : ", fingers)
 
+
+        sorted_points = search_index(thumb, fingers)
+
+        [cv2.circle(copy, i, 2, (0, 0, 0), 2) for i in thumb[0]]
+        for i in sorted_points:
+            if i != []:
+                for j in i[0]:
+                    cv2.circle(copy, j, 2, (0, 255, 255), 2)
+
+            cv2.imshow("thumb", copy)
+            cv2.waitKey(0)
+
+
+
+
+        identify_fingers(thumb, sorted_points, crop)
 
 
 
@@ -296,8 +321,8 @@ def reorganize_finger(hand_localisation, crop, miss_points,
 
         print("")
         print("for now we have: ")
-        print(thumb)
-        print(sorted_points)
+        print("thumb: ", thumb)
+        print("fingers : ", sorted_points)
 
 
         identify_fingers(thumb, sorted_points, crop)
