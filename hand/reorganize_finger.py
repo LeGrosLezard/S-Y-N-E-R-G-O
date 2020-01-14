@@ -68,6 +68,13 @@ def search_index(thumb, fingers):
 
 
 def identify_fingers(thumb, fingers, crop):
+    print("")
+    print("identify_fingers")
+
+
+    print(thumb)
+    print(fingers)
+
 
     copy = crop.copy()
 
@@ -80,17 +87,21 @@ def identify_fingers(thumb, fingers, crop):
 
 
     font = cv2.FONT_HERSHEY_COMPLEX_SMALL
+    draw = lambda picture, text, pts: cv2.putText(copy, 'P', pts, font, 1,
+                                                  (255, 255, 255), 1, cv2.LINE_AA)
+
 
     cv2.circle(copy, thumb[0][-1], 2, (255, 255, 255), 2)
-    cv2.putText(copy, 'P', thumb[0][-1], font,  
-                            1, (255, 255, 255), 1, cv2.LINE_AA)
+    draw(copy, "P", thumb[0][-1])
 
-    fing = ["I", "M", "An", "Au"]
 
+
+    fing = ["I", "M", "An", "a"]
 
     for i in range(len(points)):
 
-        if i == 0:
+        if i == 0:  #index
+
             print(thumb[0][-1], points[i])
             cv2.line(copy, (points[i]), (thumb[0][-1]), (0, 255, 0), 1)
             a = dist.euclidean(points[i], thumb[0][-1])
@@ -98,27 +109,51 @@ def identify_fingers(thumb, fingers, crop):
 
             cv2.line(copy, (points[0]), (thumb[0][-1]), (0, 255, 0), 1)
             a = dist.euclidean(points[0], thumb[0][-1])
-            if a < 74:
-               
-                cv2.putText(copy, fing[i], points[0], font,  
-                            1, (255, 255, 255), 1, cv2.LINE_AA)
-            if a > 75 and a < 100:
-                cv2.putText(copy, fing[i + 1], points[0], font,  
-                            1, (255, 255, 255), 1, cv2.LINE_AA)
 
-            elif a > 100 and a < 130:
-                cv2.putText(copy, fing[i + 2], points[0], font,  
-                            1, (255, 255, 255), 1, cv2.LINE_AA)
 
-            elif a > 130:
-                cv2.putText(copy, fing[i + 3], points[0], font,  
-                            1, (255, 255, 255), 1, cv2.LINE_AA)
+
+            if a < 74:  #major
+
+                print("pouce moin 74")
+                print(len(points))
+
+                draw(copy, fing[0], points[0])
+                fing.remove(fing[0])
+
+
+            if a > 75 and a < 100:  #annu
+                print("pouce plus 75")
+                print(len(points))
+
+                fing.remove(fing[0])
+                draw(copy, fing[0], points[0])
+                fing.remove(fing[0])
+
+
+
+
+            elif a > 100 and a < 130:   #auri
+                print("pouce plus 100")
+                print(len(points))
+
+                fing.remove(fing[0])
+                fing.remove(fing[0])
+                draw(copy, fing[0], points[0])
+                fing.remove(fing[0])
+
+
 
             cv2.imshow("thumb", copy)
             cv2.waitKey(0)
 
 
             print("")
+
+
+
+
+
+
 
 
 
@@ -133,34 +168,58 @@ def identify_fingers(thumb, fingers, crop):
 
 
                 if a < 35:
-                    
-                    cv2.putText(copy, fing[i + 1], points[i + 1], font,  
+                    print("moin 35")
+                    print(fing)
+
+                    draw(copy, fing[0], points[i + 1])
+                    fing.remove(fing[0])
+
+
+                elif a > 35 and len(fing[0]) == 1:
+                    draw(copy, fing[0], points[i + 1])
+                    fing.remove(fing[0])
+
+
+
+                elif a > 35 and len(fing[0]) == 3:
+                    cv2.putText(copy, fing[0], points[i + 1], font,  
                                 1, (255, 255, 255), 1, cv2.LINE_AA)
+                    fing.remove(fing[0])
+
 
                 elif a > 35 and a < 70:
                     print("plus que 35 next points")
-                    cv2.putText(copy, fing[i + 2], points[i + 1], font,  
-                                1, (255, 255, 255), 1, cv2.LINE_AA)
 
+                    fing.remove(fing[0])
+                    draw(copy, fing[0], points[i + 1])
+                    fing.remove(fing[0])
 
                 elif a > 70 and a < 105:
-                    print("plus que 35 next points")
-                    cv2.putText(copy, fing[i + 3], points[i + 1], font,  
-                                1, (255, 255, 255), 1, cv2.LINE_AA)
+                    print("plus que 70 next points")
+
+                    fing.remove(fing[0])
+                    fing.remove(fing[0])
+                    draw(copy, fing[0], points[i + 1])
+                    fing.remove(fing[0])
+
 
                 elif a > 105:
-                    cv2.putText(copy, fing[i + 4], points[i + 1], font,  
-                                1, (255, 255, 255), 1, cv2.LINE_AA)
+                    print("plus de 105")
+                    
+                    fing.remove(fing[0])
+                    fing.remove(fing[0])
+                    fing.remove(fing[0])
+                    draw(copy, fing[0], points[i + 1])
+                    fing.remove(fing[0])
+
+
 
                 cv2.imshow("thumb", copy)
                 cv2.waitKey(0)
                 print("")
 
 
-
-
-
-
+        print("")
 
 
     cv2.imshow("thumb", copy)
@@ -241,7 +300,7 @@ def reorganize_finger(hand_localisation, crop, miss_points,
         print(sorted_points)
 
 
-        identify_fingers(thumb, sorted_points)
+        identify_fingers(thumb, sorted_points, crop)
 
     print("")
 
