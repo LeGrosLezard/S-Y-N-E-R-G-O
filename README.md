@@ -6,7 +6,7 @@
 
 - trouver une approche pour la paume (la hauteur ? le contour des ongles?)
 
-- <strong> nettoyer, réecrire le code. Pendant le changement de valeur en ratio </strong>
+- <strong> nettoyer, réecrire le code. Pendant le changement de valeur en ratio </strong> : but plus de boucle ni de fonction
 
 - partie doigts
 
