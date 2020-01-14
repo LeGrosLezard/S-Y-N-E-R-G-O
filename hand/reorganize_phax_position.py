@@ -63,12 +63,17 @@ def delete_finger(sorted_fingers, crop):
             #Distance
             for j in sorted_fingers[i]:
                 for k in sorted_fingers[i + 1]:
+
                     if abs(j[0] - k[0]) <= 15 and\
                        abs(j[1] - k[1]) <= 15:
+                        print("same finger ?: ", abs(j[0] - k[0]), abs(j[1] - k[1]))
                         same_points_localisation += 1
 
+
+            print("correspondance : ", same_points_localisation)
+
             #5 identics localisations
-            if same_points_localisation >= 5:
+            if same_points_localisation > 7:
 
 
                 #Choice delete finger
@@ -86,7 +91,7 @@ def delete_finger(sorted_fingers, crop):
                     [cv2.circle(copy_delete, j, 2, (0, 0, 0), 2) for j in sorted_fingers[i]]
 
                 print("finger removed")
-
+            print("")
 
             cv2.imshow("copy_delete", copy_delete)
             cv2.waitKey(0)
@@ -129,12 +134,13 @@ def delete_phax(sorted_fingers, copy):
                             cv2.circle(copy, finger2, 2, (0, 0, 255), 2)
                             cv2.imshow("DELETED", copy)
                             cv2.waitKey(0)
-     
+
                         if legnth_to_origin2 > legnth_to_origin1:
                             fingers.remove(finger1)
                             cv2.circle(copy, finger1, 2, (0, 0, 255), 2)
                             cv2.imshow("DELETED", copy)
                             cv2.waitKey(0)
+
 
             elif len(fingers) > 2:
                 for finger2 in fingers[1:-1]:
@@ -155,6 +161,22 @@ def delete_phax(sorted_fingers, copy):
                             cv2.circle(copy, finger1, 2, (0, 0, 255), 2)
                             cv2.imshow("DELETED", copy)
                             cv2.waitKey(0)
+ 
+
+
+    extremum = copy.copy()
+
+    for fingers in sorted_fingers:
+
+        cv2.circle(extremum, fingers[0], 2, (0, 0, 255), 2)
+        cv2.circle(extremum, fingers[-1], 2, (255, 0, 0), 2)
+        print("extremum length :", dist.euclidean(fingers[0], fingers[-1]))
+        if dist.euclidean(fingers[0], fingers[-1]) >= 48:
+            fingers.remove(fingers[-1])
+            print("removed")
+        cv2.imshow("extremum", extremum)
+        cv2.waitKey(0)
+
 
 
     print("")
