@@ -116,6 +116,8 @@ def delete_phax(sorted_fingers, copy):
         #recuperate the first point of the finger and the 2 points fingers (sort before)
         #we delete the one who's the far from the original
 
+
+    """Points vraiment exterieur"""
     print("delete_phax")
     print(sorted_fingers)
     for fingers in sorted_fingers:
@@ -164,18 +166,30 @@ def delete_phax(sorted_fingers, copy):
  
 
 
-    extremum = copy.copy()
+    """Points de phalange"""
+    for i in points:
+        last = 0
+        dont = False
+        for j in range(1, len(i)):
+            if j < len(i) - 1:
+                extremum = copy.copy()
+                cv2.circle(extremum, i[j], 2, (0, 255, 255), 2)
+                cv2.circle(extremum, i[j + 1], 2, (0, 0, 255), 2)
 
-    for fingers in sorted_fingers:
 
-        cv2.circle(extremum, fingers[0], 2, (0, 0, 255), 2)
-        cv2.circle(extremum, fingers[-1], 2, (255, 0, 0), 2)
-        print("extremum length :", dist.euclidean(fingers[0], fingers[-1]))
-        if dist.euclidean(fingers[0], fingers[-1]) >= 48:
-            fingers.remove(fingers[-1])
-            print("removed")
-        cv2.imshow("extremum", extremum)
-        cv2.waitKey(0)
+                if last > 0:
+                    if int(dist.euclidean(i[j], i[j + 1])) >= int(last + 15):
+                        print("Phalange tres superieur a l'autre : ", \
+                              int(last), int(dist.euclidean(i[j], i[j + 1])))
+
+                        i.remove(i[j + 1])
+                        dont = True
+
+                if dont is False:
+                    last = dist.euclidean(i[j], i[j + 1])
+
+                cv2.imshow("extremum", extremum)
+                cv2.waitKey(0)
 
 
 
