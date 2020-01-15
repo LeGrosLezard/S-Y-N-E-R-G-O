@@ -1,16 +1,10 @@
 # S-Y-N-E-R-G-O
 
-- ca tri mal faut faire un if
+- faire les doigts
 
-  - en gros le pouce est a droite mais les doigts doivent etre trié par le haut
-  
-  - et ca sera un majeur car + de 20
-  
-  - et il reste 2 doigts juste apres !!
-  
-  - et qu'on a que 3 doigts sur les 4
+- télécharger d'autres mains et au pire resize les crop avant le skelette
 
-- continuer de faire les distance pour l'instant le majeur est toujours a + 20 ouf
+- et pour les main jointent...
 
 
 <br><br><br><br><br><br><br><br><br>
