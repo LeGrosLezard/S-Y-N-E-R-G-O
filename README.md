@@ -7,6 +7,8 @@
   - et ca sera un majeur car + de 20
   
   - et il reste 2 doigts juste apres !!
+  
+  - et qu'on a que 3 doigts sur les 4
 
 - continuer de faire les distance pour l'instant le majeur est toujours a + 20 ouf
 
