@@ -84,7 +84,7 @@ def reorganize_finger(crop, miss_points, finger_sorted, fingers_orientation):
     fingers = fingers[1:]
 
     #Recuperate x and y first point
-    axis = [ [i[0][0][0] for i in fingers], [i[0][0][1] for i in fingers] ]
+    axis = [ [i[0][0][0] for i in fingers if i[0] != []], [i[0][0][1] for i in fingers if i[0] != []] ]
 
     #Make F(k)|Ki+1 - Ki| = Diff beetween each points = space beetween finger
     to_list = lambda liste: [abs(liste[i] - liste[i + 1]) for i in range(len(liste))
