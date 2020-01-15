@@ -4,16 +4,16 @@ from scipy.spatial import distance as dist
 def sort_points(fingers, val, to_reverse):
 
     #On recupere le premier point et son axe
-    value = [i[0][0][val] for i in fingers if i[0] != []]
+    value = [i[0][0] for i in fingers if i[0] != []]
 
     #Sort point
-    value = sorted(value, reverse=to_reverse)
+    value = sorted(value, key=lambda tup: tup[val], reverse=to_reverse)
 
     #Si on a un points qui match avec nos points sorted on append
     sorted_points = []
     for v in value:
         for i in fingers:
-            if i[0] != [] and i[0][0][val] == v:
+            if i[0] != [] and i[0][0] == v:
                 sorted_points.append(i)
 
     return sorted_points
@@ -214,7 +214,7 @@ def reorganize_finger(hand_localisation, crop, miss_points,
     copy = crop.copy()
 
 
-    print("reorganize_finger")
+    print("REORGANIZE FINGER")
 
     #Verification du pouce
     if miss_points == 0:
