@@ -2,6 +2,8 @@
 
 - ca tri mal faut faire un if
 
+  - en gros le pouce est a droite mais les doigts doivent etre trié par le haut
+
 - continuer de faire les distance pour l'instant le majeur est toujours a + 20 ouf
 
 
