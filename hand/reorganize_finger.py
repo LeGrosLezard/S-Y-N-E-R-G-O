@@ -56,11 +56,7 @@ def search_index(thumb, fingers):
     if search_finger == "bas":
         sorted_points = sort_points(fingers, 1, False)
 
-
-    for i in sorted_points:
-        print(i)
-
-    return sorted_points, direction
+    return sorted_points, search_finger
 
 
 
@@ -70,7 +66,7 @@ def search_index(thumb, fingers):
 
 def identify_fingers(thumb, fingers, crop, rectangle, direction):
     print("")
-    print("identify_fingers")
+    print("IDENTIFY FINGERS")
 
     print("Box de la main est de: ", rectangle)
     print(thumb)
@@ -225,16 +221,8 @@ def reorganize_finger(hand_localisation, crop, miss_points,
         print("PROBLEME NO POUCE")
 
 
-
-
     #Verification tous les doigts
-    miss = False
-    for i in finger_sorted:
-        if i == []:
-            miss = True
-
-
-    if miss is True:
+    if len(finger_sorted) < 5:
         print("manque doigts...................")
 
         print(finger_sorted)
@@ -246,13 +234,10 @@ def reorganize_finger(hand_localisation, crop, miss_points,
         thumb = fingers[0]
         fingers = fingers[1:]
 
-        print("")
-        print("for now we have: ")
-        print("thumb: ", thumb)
-        print("fingers : ", fingers)
-
 
         sorted_points, direction = search_index(thumb, fingers)
+
+
 
         [cv2.circle(copy, i, 2, (0, 0, 0), 2) for i in thumb[0]]
         for i in sorted_points:
@@ -281,7 +266,9 @@ def reorganize_finger(hand_localisation, crop, miss_points,
 
     else:
 
-        #on mélange les points du doigt + l'orientation
+        print("Tous les doigts")
+
+
         fingers = [[i, j[1]] for i, j in zip(finger_sorted, fingers_orientation)]
 
         thumb = fingers[0]
@@ -297,10 +284,7 @@ def reorganize_finger(hand_localisation, crop, miss_points,
             cv2.imshow("thumb", copy)
             cv2.waitKey(0)
 
-        print("")
-        print("for now we have: ")
-        print("thumb: ", thumb)
-        print("fingers : ", sorted_points)
+
 
 
         identify_fingers(thumb, sorted_points, crop, rectangle, direction)
