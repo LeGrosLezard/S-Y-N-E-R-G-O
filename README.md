@@ -1,19 +1,8 @@
 # S-Y-N-E-R-G-O
 
-- et s'il n'y a pas de pouce ? .......
+- ca tri mal faut faire un if
 
-- si dans la fonction palm() une donnée se presnte sous la forme (0,0) ?
-
-- trouver une approche pour la paume (la hauteur ? le contour des ongles?)
-
-- <strong> nettoyer, réecrire le code. Pendant le changement de valeur en ratio </strong> : but plus de boucle ni de fonction
-
-- partie doigts
-
-- partie opération sur les doigts
-
-- partie signes
-
+- continuer de faire les distance pour l'instant le majeur est toujours a + 20 ouf
 
 
 <br><br><br><br><br><br><br><br><br>
