@@ -14,7 +14,6 @@ def identify_fingers(thumb, fingers, crop, rectangle, direction):
     copy = crop.copy()
 
 
-
     [cv2.circle(copy, i, 2, (0, 0, 0), 2) for i in thumb[0]]
     [cv2.circle(copy, j, 2, (0, 0, 255), 2) for i in fingers for j in i[0]]
 
@@ -38,13 +37,10 @@ def identify_fingers(thumb, fingers, crop, rectangle, direction):
     cv2.circle(copy, thumb[0][-1], 2, (255, 255, 255), 2)
     draw(copy, "P", thumb[0][-1])
 
-
-
     fing = ["I", "M", "An", "a"]
-
-
     x, y, w, h = rectangle
-    print(w, h)
+
+
 
     if direction in ("droite", "gauche"):
         area = "width"
@@ -52,11 +48,18 @@ def identify_fingers(thumb, fingers, crop, rectangle, direction):
         area = "height"
 
 
-    thumb_index = dist.euclidean(points[0], thumb[0][-1])
 
-    print(thumb_index)
-    if area == "width" and thumb_index < w * 0.535 or\
-       area == "height" and thumb_index < w * 0.535:
+
+
+    for i in points:
+        if i != ():
+            print(dist.euclidean(i, thumb[0][-1]))
+
+    thumb_index = dist.euclidean(points[0], thumb[0][-1])
+    print(thumb_index, (w,h))
+
+    if area == "width" and thumb_index < w * 0.574 or\
+       area == "height" and thumb_index < w * 0.574:
         draw(copy, fing[0], points[0])
         draw_line(copy, points[0], thumb[0][-1])
         fing.remove(fing[0])
@@ -71,8 +74,8 @@ def identify_fingers(thumb, fingers, crop, rectangle, direction):
         draw(copy, fing[2], points[0])
         draw_line(copy, points[2], thumb[0][-1])
         fing.remove(fing[0])
-        for i in range(2):
-            fing.remove(fing[3])
+        for i in range(3):
+            fing.remove(fing[0])
 
     elif thumb_index > 130:
         draw(copy, fing[3], points[0])
@@ -85,38 +88,38 @@ def identify_fingers(thumb, fingers, crop, rectangle, direction):
     cv2.waitKey(0)
 
 
-
-
-    print(points)
+    print("")
 
     for i in range(len(points)):
 
-        if i < len(points) - 1:
+        print(fing)
 
-            print(points[i], points[i + 1])
+        if i < len(points) - 1 and points[i] != () and points[i + 1] != ():
 
 
             a = dist.euclidean(points[i], points[i + 1])
-            print(a)
+            print(a, (w, h))
 
 
-
-            if a < 35:  #One point after
+            #One point after
+            if a < w * 0.295 and area == "width" or\
+               a < w * 0.295 and area == "height":
                 print("Moins 35")
                 draw_line(copy, points[i], points[i + 1])
                 draw(copy, fing[0], points[i + 1])
                 fing.remove(fing[0])
 
 
-            if a > 74 and a < 100:  #Two point after
-
-                print("74 - 100")
+            elif len(fing) == 1:
+                print("reste plus qu'un doigt")
                 draw_line(copy, points[i], points[i + 1])
-                draw(copy, fing[1], points[i + 1])
+                draw(copy, fing[0], points[i + 1])
+                fing.remove(fing[0])
 
-                for i in range(2):
-                    fing.remove(fing[0])
-                
+
+            elif a > w * 0.295:
+                print("ici ecart quel doigt data monte + 50 sur un rectangle de w 120")
+
 
 
             cv2.imshow("thumb_next_finger", copy)
@@ -124,6 +127,10 @@ def identify_fingers(thumb, fingers, crop, rectangle, direction):
             print("")
 
 
+
+
+
+    if len(fing) > 0: print("manque des doigts :", fing)
 
 
 
