@@ -27,6 +27,8 @@ def fingers_tratment(fingers):
 
 def sorted_data(data, position):
 
+    print("SORTED FINGER")
+
     if position == "gauche":
         data_sorted = sorted(data, key=lambda tup: tup[0], reverse=True)
     elif position == "droite":
@@ -41,9 +43,10 @@ def sorted_data(data, position):
 
 
 
-def delete_finger(sorted_fingers, crop):
+def delete_finger(sorted_fingers, fingers_orientation, crop):
     aa = crop.copy()
-    print("delete_finger")
+
+    print("DELETE FINGER")
 
 
     to_remove = []
@@ -58,55 +61,65 @@ def delete_finger(sorted_fingers, crop):
             #Draw
             [cv2.circle(copy_delete, j, 2, (255, 0, 0), 2) for j in sorted_fingers[i]]
             [cv2.circle(copy_delete, j, 2, (0, 0, 255), 2) for j in sorted_fingers[i + 1]]
-            print(sorted_fingers[i], "\n", sorted_fingers[i + 1])
 
             #Distance
             for j in sorted_fingers[i]:
                 for k in sorted_fingers[i + 1]:
-
+                    #print("same finger: ", abs(j[0] - k[0]), abs(j[1] - k[1]))
                     if abs(j[0] - k[0]) <= 15 and\
+                       abs(j[1] - k[1]) <= 8 or\
+                       abs(j[0] - k[0]) <= 8 and\
                        abs(j[1] - k[1]) <= 15:
-                        print("same finger ?: ", abs(j[0] - k[0]), abs(j[1] - k[1]))
                         same_points_localisation += 1
 
+            length1 = len(sorted_fingers[i])
+            length2 = len(sorted_fingers[i + 1])
 
-            print("correspondance : ", same_points_localisation)
+            print("correspondance : ", same_points_localisation, " / total pts: ", length1 * length2)
 
             #5 identics localisations
-            if same_points_localisation > 7:
+            if same_points_localisation >= int(length1 * length2) / 2:
 
+                to_remove.append(i + 1)
+                [cv2.circle(copy_delete, j, 2, (0, 0, 0), 2) for j in sorted_fingers[i + 1]]
 
-                #Choice delete finger
-                finger_length1 = len(sorted_fingers[i])
-                finger_length2 = len(sorted_fingers[i + 1])
-
-                print(finger_length1, finger_length2)
-
-                if finger_length1 > finger_length2:
-                    to_remove.append(i + 1)
-                    [cv2.circle(copy_delete, j, 2, (0, 0, 0), 2) for j in sorted_fingers[i + 1]]
-
-                elif finger_length2 > finger_length1 or finger_length2 == finger_length1:
-                    to_remove.append(i)
-                    [cv2.circle(copy_delete, j, 2, (0, 0, 0), 2) for j in sorted_fingers[i]]
-
-                print("finger removed")
-            print("")
+                print("finger removed \n")
 
             cv2.imshow("copy_delete", copy_delete)
             cv2.waitKey(0)
 
 
-    for i in to_remove:
-        sorted_fingers.remove(sorted_fingers[i])
+    if len(to_remove) > 0:
 
-    for i in sorted_fingers:
-        print(i)
+        print("element a supprimer :", to_remove)
+
+        elements_finger = []
+        elements_orientation = []
+
+        for i in to_remove:
+            elements_finger.append(sorted_fingers[i])
+            elements_orientation.append(fingers_orientation[i])
+
+        for i in elements_finger:
+            for j in sorted_fingers:
+                if i == j:
+                    sorted_fingers.remove(j)
+        
+        for i in elements_orientation:
+            for j in fingers_orientation:
+                if i == j:
+                    fingers_orientation.remove(j)
+
+
+
+    
+    print(sorted_fingers)
+    print(fingers_orientation)
+
 
     print("")
 
-
-    return sorted_fingers
+    return sorted_fingers, fingers_orientation
 
 
 
@@ -116,73 +129,30 @@ def delete_phax(sorted_fingers, copy):
         #recuperate the first point of the finger and the 2 points fingers (sort before)
         #we delete the one who's the far from the original
 
-
-    """Points vraiment exterieur"""
-    print("delete_phax")
-    print(sorted_fingers)
-    for fingers in sorted_fingers:
-
-        for finger1 in fingers:
-            if len(fingers) == 2:
-                for finger2 in fingers:
-
-                    if dist.euclidean(finger1, finger2) >= 40:
-
-                        legnth_to_origin1 = dist.euclidean(fingers[0], finger2)
-                        legnth_to_origin2 = dist.euclidean(fingers[0], finger1)
-
-                        if legnth_to_origin1 > legnth_to_origin2:
-                            fingers.remove(finger2)
-                            cv2.circle(copy, finger2, 2, (0, 0, 255), 2)
-                            cv2.imshow("DELETED", copy)
-                            cv2.waitKey(0)
-
-                        if legnth_to_origin2 > legnth_to_origin1:
-                            fingers.remove(finger1)
-                            cv2.circle(copy, finger1, 2, (0, 0, 255), 2)
-                            cv2.imshow("DELETED", copy)
-                            cv2.waitKey(0)
-
-
-            elif len(fingers) > 2:
-                for finger2 in fingers[1:-1]:
-
-                    if dist.euclidean(finger1, finger2) >= 40:
-
-                        legnth_to_origin1 = dist.euclidean(fingers[0], finger2)
-                        legnth_to_origin2 = dist.euclidean(fingers[0], finger1)
-
-                        if legnth_to_origin1 > legnth_to_origin2:
-                            fingers.remove(finger2)
-                            cv2.circle(copy, finger2, 2, (0, 0, 255), 2)
-                            cv2.imshow("DELETED", copy)
-                            cv2.waitKey(0)
-     
-                        if legnth_to_origin2 > legnth_to_origin1:
-                            fingers.remove(finger1)
-                            cv2.circle(copy, finger1, 2, (0, 0, 255), 2)
-                            cv2.imshow("DELETED", copy)
-                            cv2.waitKey(0)
- 
+    print("")
+    print("DELETE PHAX")
 
 
     """Points de phalange"""
-    for i in points:
+    to_remove = []
+
+    for nb, i in enumerate(sorted_fingers):
         last = 0
         dont = False
-        for j in range(1, len(i)):
+        for j in range(0, len(i)):
             if j < len(i) - 1:
                 extremum = copy.copy()
                 cv2.circle(extremum, i[j], 2, (0, 255, 255), 2)
                 cv2.circle(extremum, i[j + 1], 2, (0, 0, 255), 2)
-
 
                 if last > 0:
                     if int(dist.euclidean(i[j], i[j + 1])) >= int(last + 15):
                         print("Phalange tres superieur a l'autre : ", \
                               int(last), int(dist.euclidean(i[j], i[j + 1])))
 
-                        i.remove(i[j + 1])
+                        cv2.circle(extremum, i[j + 1], 2, (255, 255, 255), 2)
+                        i[j + 1] = i[j]
+                        to_remove.append(i[j + 1])
                         dont = True
 
                 if dont is False:
@@ -192,6 +162,22 @@ def delete_phax(sorted_fingers, copy):
                 cv2.waitKey(0)
 
 
+
+    for remove in to_remove:
+
+        for fingers in sorted_fingers:
+            for finger in fingers:
+                if remove == finger:
+
+                    try:sorted_fingers.remove(finger)
+                    except:pass
+
+
+    [cv2.circle(extremum, j, 2, (0, 0, 255), 2) for i in sorted_fingers for j in i]
+
+
+    cv2.imshow("extremum", extremum)
+    cv2.waitKey(0)
 
     print("")
     return sorted_fingers
@@ -245,16 +231,8 @@ def reorganize_phax_position(thumb, index, major, annular, auricular, crop, fing
 
 
     #Delete finger
-    sorted_fingers = delete_finger(sorted_fingers, crop)
+    sorted_fingers, fingers_orientation = delete_finger(sorted_fingers, fingers_orientation, crop)
 
-
-
-    for i in sorted_fingers:
-        print(i)
-    print("")
-
-    for i in fingers_orientation:
-        print(i)
 
     print("")
 
