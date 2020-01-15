@@ -19,6 +19,9 @@ from hand_location import hand_location
 from skeletton import hand_skelettor
 from hand_mask import skin_detector, hand_treatment, make_bitwise
 from sign import sign
+from identify_fingers import identify_fingers
+
+
 
 def save(crop, C):
     cv2.imwrite(r"C:\Users\jeanbaptiste\Desktop\hand_picture\a" + str(C) + ".jpg", crop)
@@ -75,6 +78,8 @@ def treat_skeletton_points(skeletton, position, finger, proba, rectangle, crop):
 
 
     x, y, w, h = rectangle
+    print("Box de la main est de :", rectangle)
+
 
     palm_center =  position[0][0]
 
@@ -103,12 +108,15 @@ def treat_skeletton_points(skeletton, position, finger, proba, rectangle, crop):
 
 
     #delete false points finger detection
-    finger_sorted, fingers_orientation = reorganize_phax_position(thumb, index, major, annular,
+    sorted_fingers, fingers_orientation = reorganize_phax_position(thumb, index, major, annular,
                                              auricular, crop, fingers_direction)
 
     #reorganize finger's position
-    thumb, index, major, annular, auricular =\
-    reorganize_finger(hand_localised, crop, miss_points, finger_sorted, fingers_orientation)
+    sorted_points, direction, thumb = reorganize_finger(crop, miss_points,
+                                                        sorted_fingers, fingers_orientation)
+
+
+    identify_fingers(thumb, sorted_points, crop, rectangle, direction)
 
     #reattribuate points
     thumb = finger_sorted[0]
@@ -221,21 +229,16 @@ if __name__ == "__main__":
 
 
 #TODO
-
-    
-    
-    #image 5 un pec change major et le doigt dapres
-    #changement de perspective doigt plus long -> penché vers torse et versa #531
-    #angle entre debut doigt et fin ex 259 doigt coté face
-    #angle 261
-    #pouce via index via majeur ect ex pouce rond index -> 261
+    #7 No pouce
 
 
 #FUNCTION
     #rangement des pts du doigt -> 77
     #egalité réglé 1
-    #delete points 17; 25
+    #delete phax 17; 25; 27; 5; 26
     #reorganisation doigt 23 (pts theorique non respecté)
+    #finger remove 27; 25;      contre = 1
+    #Identify finger 27; 25
 
 
 
@@ -246,6 +249,21 @@ if __name__ == "__main__":
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
 
 
 
