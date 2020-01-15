@@ -27,7 +27,7 @@ def fingers_tratment(fingers):
 
 def sorted_data(data, position):
 
-    print("SORTED FINGER")
+    print("SORTED FINGER TO : ", position)
 
     if position == "gauche":
         data_sorted = sorted(data, key=lambda tup: tup[0], reverse=True)
@@ -78,7 +78,7 @@ def delete_finger(sorted_fingers, fingers_orientation, crop):
             print("correspondance : ", same_points_localisation, " / total pts: ", length1 * length2)
 
             #5 identics localisations
-            if same_points_localisation >= int(length1 * length2) / 2:
+            if same_points_localisation >= int(length1 * length2) / 2 and length1 * length2 > 0:
 
                 to_remove.append(i + 1)
                 [cv2.circle(copy_delete, j, 2, (0, 0, 0), 2) for j in sorted_fingers[i + 1]]
@@ -131,7 +131,7 @@ def delete_phax(sorted_fingers, copy):
 
     print("")
     print("DELETE PHAX")
-
+    print(sorted_fingers)
 
     """Points de phalange"""
     to_remove = []
@@ -146,7 +146,7 @@ def delete_phax(sorted_fingers, copy):
                 cv2.circle(extremum, i[j + 1], 2, (0, 0, 255), 2)
 
                 if last > 0:
-                    if int(dist.euclidean(i[j], i[j + 1])) >= int(last + 15):
+                    if int(dist.euclidean(i[j], i[j + 1])) >= int(last + 13):
                         print("Phalange tres superieur a l'autre : ", \
                               int(last), int(dist.euclidean(i[j], i[j + 1])))
 
@@ -190,7 +190,7 @@ def reorganize_phax_position(thumb, index, major, annular, auricular, crop, fing
     one point detected on an another point.
     So we remove them"""
 
-    print("reorganize_phax_position")
+    print("REOGARNIZE PHAX POSITION")
 
     copy = crop.copy()
 
