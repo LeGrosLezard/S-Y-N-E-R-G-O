@@ -2,14 +2,15 @@ import cv2
 from scipy.spatial import distance as dist
 
 
-def identify_fingers(thumb, fingers, crop, rectangle, direction):
+def identify_fingers(thumb, fingers, crop, rectangle, direction, axis):
+
     print("")
     print("IDENTIFY FINGERS")
 
     print("Box de la main est de: ", rectangle)
     print(thumb)
     print(fingers)
-    print(direction)
+    print(direction, axis)
 
     copy = crop.copy()
 
@@ -64,22 +65,23 @@ def identify_fingers(thumb, fingers, crop, rectangle, direction):
         draw_line(copy, points[0], thumb[0][-1])
         fing.remove(fing[0])
 
-    elif 100 > thumb_index > 74:
+    elif area == "width" and w * 0.775 > thumb_index > w * 0.574 or\
+         area == "height" and w * 0.775 > thumb_index > w * 0.574:
         draw(copy, fing[1], points[0])
-        draw_line(copy, points[1], thumb[0][-1])
+        draw_line(copy, points[0], thumb[0][-1])
         for i in range(2):
             fing.remove(fing[0])
 
-    elif 130 > thumb_index > 100:
+    elif 130 > thumb_index > 105:
         draw(copy, fing[2], points[0])
-        draw_line(copy, points[2], thumb[0][-1])
+        draw_line(copy, points[0], thumb[0][-1])
         fing.remove(fing[0])
         for i in range(3):
             fing.remove(fing[0])
 
     elif thumb_index > 130:
         draw(copy, fing[3], points[0])
-        draw_line(copy, points[3], thumb[0][-1])
+        draw_line(copy, points[0], thumb[0][-1])
         for i in range(4):
             fing.remove(fing[0])
 
@@ -117,8 +119,32 @@ def identify_fingers(thumb, fingers, crop, rectangle, direction):
                 fing.remove(fing[0])
 
 
-            elif a > w * 0.295:
-                print("ici ecart quel doigt data monte + 50 sur un rectangle de w 120")
+            elif (w * 0.295) * 2 > a > w * 0.295:
+                print("1 doigt apres")
+                draw_line(copy, points[i], points[i + 1])
+                draw(copy, fing[1], points[i + 1])
+                for i in range(2):
+                    fing.remove(fing[0])
+
+
+            elif (w * 0.295) * 3 > a > (w * 0.295) * 2:
+                print("2 doigts apres")
+                draw_line(copy, points[i], points[i + 1])
+                draw(copy, fing[2], points[i + 1])
+                for i in range(3):
+                    fing.remove(fing[0])
+                fing.remove(fing[0])
+
+            elif (w * 0.295) * 4 > a > (w * 0.295) * 3:
+                print("3 doigts apres")
+                draw_line(copy, points[i], points[i + 1])
+                draw(copy, fing[3], points[i + 1])
+                for i in range(4):
+                    fing.remove(fing[0])
+
+
+            elif a > (w * 0.295) * 4:
+                print("ici ecart supp a * 4")
 
 
 
