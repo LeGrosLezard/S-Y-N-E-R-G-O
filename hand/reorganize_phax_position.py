@@ -32,6 +32,9 @@ def sorted_data(data, position):
 
     return data_sorted
 
+
+
+
 #================================================================= delete_finger()
 
 def delete_finger(sorted_fingers, fingers_orientation, crop):
@@ -52,12 +55,15 @@ def delete_finger(sorted_fingers, fingers_orientation, crop):
             [cv2.circle(copy_delete, j, 2, (255, 0, 0), 2) for j in sorted_fingers[i]]
             [cv2.circle(copy_delete, j, 2, (0, 0, 255), 2) for j in sorted_fingers[i + 1]]
 
+
             #Distance
             for j in sorted_fingers[i]:
                 for k in sorted_fingers[i + 1]:
 
-                    if abs(j[0] - k[0]) <= 15 and abs(j[1] - k[1]) <= 8 or\
-                       abs(j[0] - k[0]) <= 8 and abs(j[1] - k[1]) <= 15:
+                    print(abs(j[0] - k[0]), 8 and abs(j[1] - k[1]))
+
+                    if abs(j[0] - k[0]) <= 12 and abs(j[1] - k[1]) <= 10 or\
+                       abs(j[0] - k[0]) <= 10 and abs(j[1] - k[1]) <= 12:
                         same_points_localisation += 1
 
             length1 = len(sorted_fingers[i])
@@ -66,14 +72,14 @@ def delete_finger(sorted_fingers, fingers_orientation, crop):
             print("correspondance : ", same_points_localisation, " / total pts: ", length1 * length2)
 
 
-            if same_points_localisation >= int(length1 * length2) / 2 and length1 * length2 > 0:
+            if same_points_localisation >= (int(length1 * length2) / 2) and length1 * length2 > 0:
                 to_remove.append(i + 1)
                 [cv2.circle(copy_delete, j, 2, (0, 0, 0), 2) for j in sorted_fingers[i + 1]]
-                print("finger removed \n")
+                print("finger removed")
 
             cv2.imshow("copy_delete", copy_delete)
             cv2.waitKey(0)
-
+            print("")
 
     if len(to_remove) > 0:
 
@@ -101,6 +107,8 @@ def delete_finger(sorted_fingers, fingers_orientation, crop):
     print("")
 
     return sorted_fingers, fingers_orientation
+
+
 
 
 #==================================================================================== delete_phax()
@@ -151,55 +159,60 @@ def delete_phax(sorted_fingers, copy):
 
 
 
+    for finger in sorted_fingers:
+        origin = finger[0]
+        print(origin, "   ", finger[1:])
 
-    """Points de phalange"""
-    to_remove = []
+        cv2.circle(copy, origin, 2, (0, 0, 255), 2)
 
-    for nb, finger in enumerate(sorted_fingers):
-
-        last_point = 0
-        dont = False
-
-        for pts in range(0, len(finger)):
-            if pts < len(finger) - 1:
-
-                points_to_point = drawing(copy, finger, pts)
-
-                #Compare last point with the current point.
-                if last_point > 0:
-
-                    print(int(dist.euclidean(finger[pts], finger[pts + 1])), (int(last_point)))
-
-                    #current phax > last phax to 13 px
-                    if int(dist.euclidean(finger[pts], finger[pts + 1])) >= int(last_point + 13):
-                        dont = to_removing_point(last_point, finger[pts], finger[pts + 1], to_remove, copy)
-                        finger[pts + 1] = finger[pts]
-        
-                    #current phax < last phax to 25px
-                    elif int(last_point) >= int(dist.euclidean(finger[pts], finger[pts + 1])) + 25:
-                        dont = to_removing_point(last_point, finger[pts], finger[pts - 1], to_remove, copy)
-                        finger[pts - 1] = finger[pts]
-
-
-                if dont is False:
-                    last_point = dist.euclidean(finger[pts], finger[pts + 1])
-
-                cv2.imshow("points_to_point", points_to_point)
-                cv2.waitKey(0)
-
-
-        sorted_fingers = removing(to_remove, sorted_fingers)
+        analysex = ""
+        analysey = ""
 
 
 
+        for point in finger[1:]:
 
-    [cv2.circle(points_to_point, j, 2, (0, 0, 255), 2) for i in sorted_fingers for j in i]
+            distancex = origin[0] - point[0]
+            distancey = origin[1] - point[1]
+
+            print(distancex, distancey)
+            print(analysex, analysey)
+            
 
 
-    cv2.imshow("points_to_point", points_to_point)
-    cv2.waitKey(0)
+            if distancex > 0 : analysex = "droite"
+            elif distancex < 0 : analysex = "gauche"
 
-    print("")
+            if distancey > 0 : analysey = "bas"
+            elif distancey < 0 : analysey = "haut"
+
+            
+
+            cv2.circle(copy, point, 2, (0, 255, 255), 2)
+
+
+            if abs(distancex) > 40 and abs(distancey) > 40:
+                cv2.circle(copy, point, 2, (255, 255, 255), 2)
+            elif abs(distancex) > 40:
+                cv2.circle(copy, point, 2, (255, 255, 255), 2)
+            elif abs(distancey) > 40:
+                cv2.circle(copy, point, 2, (255, 255, 255), 2)
+            
+
+
+
+
+
+
+
+
+
+
+            cv2.imshow("aa", copy)
+            cv2.waitKey(0)
+
+        print("")
+
 
 
     return sorted_fingers
