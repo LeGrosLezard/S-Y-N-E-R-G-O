@@ -146,12 +146,13 @@ def releve_data_thumb_fingers(points, thumb):
     #not good; sort finger's a last time.
     else:
         print("\n \n re organisation of data")
-
         reorganisation += [pts for sorted_pts in sorted_distance for pts in points
                            if pts != () and dist.euclidean(pts, thumb[0][-1]) == sorted_pts]
-      
+
         points = reorganisation
-        for pts in points: if pts != (): print(dist.euclidean(pts, thumb[0][-1]))
+        for pts in points:
+            if pts != ():
+                print(dist.euclidean(pts, thumb[0][-1]))
 
     return points
             
