@@ -122,6 +122,20 @@ def removing(remove, sorted_fingers):
     return sorted_fingers
 
 
+
+
+def set_function(sorted_fingers):
+    """Sometimes points have same position
+    need to delete the doublon so we make a set list of list"""
+
+    set_list = []
+    for i in sorted_fingers:
+        if i != []:
+            if i not in set_list:
+                set_list.append(i)
+   
+    return set_list
+
 def delete_phax(sorted_fingers, copy):
     #Parcours all points of a finger.
     #If two points are more than 40 (space beetween finger's are ~ 15-10 and there are 3 spaces)
@@ -132,7 +146,7 @@ def delete_phax(sorted_fingers, copy):
     print("DELETE PHAX")
     print(sorted_fingers)
 
-
+    sorted_fingers = set_function(sorted_fingers)
 
     remove = []
     for nb, finger in enumerate(sorted_fingers):
