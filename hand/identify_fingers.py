@@ -28,13 +28,6 @@ def draw_line_pts(copy, text, pts1, pts2):
     cv2.line(copy, pts1, pts2, (0, 255, 0), 1)
 
 
-def releve_data_thumb_fingers(points, thumb):
-    """We need thumb/fingers space for releve ratio"""
-
-    for i in points:
-        if i != (): print(dist.euclidean(i, thumb[0][-1]))
-
-
 def removing(nb, liste):
     """Remove fingers annatotation from list"""
     for i in range(nb): liste.remove(liste[0])
@@ -130,6 +123,41 @@ def fingers_distance(distance, rectangle_w, rectangle_h,
     cv2.waitKey(0)
     print("")
 
+
+
+
+def releve_data_thumb_fingers(points, thumb):
+    """We need thumb/fingers space for releve ratio"""
+
+    reorganisation = []
+
+    no_sorted_distance = [dist.euclidean(i, thumb[0][-1]) for i in points]
+    sorted_distance = sorted([dist.euclidean(i, thumb[0][-1]) for i in points])
+
+    if no_sorted_distance == sorted_distance:
+        print("ok good sort thumb - fingers")
+
+        for i in points:
+            if i != (): print(dist.euclidean(i, thumb[0][-1]))
+        
+    else:
+        print("\n \n re organisation of data")
+
+        for j in sorted_distance:
+            for i in points:
+                if i != ():
+                    if dist.euclidean(i, thumb[0][-1]) == j:
+                        reorganisation.append(i)
+        points = reorganisation
+
+    return points
+            
+
+
+
+
+
+
 def identify_fingers(thumb, fingers, crop, rectangle, direction, axis):
 
 
@@ -147,13 +175,13 @@ def identify_fingers(thumb, fingers, crop, rectangle, direction, axis):
     #Choice area in function of hand position
     area_for_ratio = ratio_choice(direction)
 
+
+    #Reorganise a last time
+    fingers = releve_data_thumb_fingers(fingers, thumb)
+
     #Identify finger after the thumb
     thumb_to_next_finger(fingers, thumb, finger_annotation, copy,
                          rectangle_w, rectangle_h, area_for_ratio)
-
-    #For us
-    releve_data_thumb_fingers(fingers, thumb)
-
 
     for i in range(len(fingers)):
         print("\n", finger_annotation)
