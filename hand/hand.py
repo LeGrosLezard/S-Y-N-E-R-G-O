@@ -112,11 +112,12 @@ def treat_skeletton_points(skeletton, position, finger, proba, rectangle, crop):
                                              auricular, crop, fingers_direction)
 
     #reorganize finger's position
-    sorted_points, direction, thumb = reorganize_finger(crop, miss_points,
-                                                        sorted_fingers, fingers_orientation)
+    thumb, sorted_points,\
+    direction , axis = reorganize_finger(crop, miss_points,
+                                         sorted_fingers, fingers_orientation)
 
 
-    identify_fingers(thumb, sorted_points, crop, rectangle, direction)
+    identify_fingers(thumb, sorted_points, crop, rectangle, direction, axis)
 
     #reattribuate points
     thumb = finger_sorted[0]
@@ -149,7 +150,7 @@ def treat_skeletton_points(skeletton, position, finger, proba, rectangle, crop):
 
 
 
-C = 0
+C = 626
 
 def hand(frame, detection_graph, sess, head_box):
     global C
@@ -192,7 +193,7 @@ if __name__ == "__main__":
     
 
 
-    IM = 25
+    IM = 55
 
 
     image = r"C:\Users\jeanbaptiste\Desktop\hand_picture\a{}.jpg".format(str(IM))
@@ -230,17 +231,21 @@ if __name__ == "__main__":
 
 #TODO
     #7 No pouce
+    #3 annuiare
+    #paume de la main
+
+
 
 
 #FUNCTION
     #rangement des pts du doigt -> 77
     #egalité réglé 1
-    #delete phax 17; 25; 27; 5; 26
-    #reorganisation doigt 23 (pts theorique non respecté)
-    #finger remove 27; 25;      contre = 1
+    #delete phax 17; 25; 27; 5; 26; 29; 45
+    #reorganisation doigt 23; 25 (pts theorique non respecté)
+    #finger remove 27; 25;29;35      
     #Identify finger 27; 25
-
-
+    #last reorganise 49
+    #extremum phax 55
 
 
 
