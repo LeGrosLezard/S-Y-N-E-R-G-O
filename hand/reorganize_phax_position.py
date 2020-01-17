@@ -36,6 +36,35 @@ def sorted_data(data, position):
 
 
 #================================================================= delete_finger()
+def to_removing_finger(to_remove, sorted_fingers, fingers_orientation):
+    
+    if len(to_remove) > 0:
+
+        print("element a supprimer :", to_remove)
+
+        elements_finger = []
+        elements_orientation = []
+
+        for i in to_remove:
+            elements_finger.append(sorted_fingers[i])
+            elements_orientation.append(fingers_orientation[i])
+
+        for i in elements_finger:
+            for j in sorted_fingers:
+                if i == j:
+                    sorted_fingers.remove(j)
+        
+        for i in elements_orientation:
+            for j in fingers_orientation:
+                if i == j:
+                    fingers_orientation.remove(j)
+    
+    print(sorted_fingers)
+    print(fingers_orientation)
+    print("")
+
+    return sorted_fingers, fingers_orientation
+
 
 def delete_finger(sorted_fingers, fingers_orientation, crop):
 
@@ -81,30 +110,9 @@ def delete_finger(sorted_fingers, fingers_orientation, crop):
             cv2.waitKey(0)
             print("")
 
-    if len(to_remove) > 0:
 
-        print("element a supprimer :", to_remove)
-
-        elements_finger = []
-        elements_orientation = []
-
-        for i in to_remove:
-            elements_finger.append(sorted_fingers[i])
-            elements_orientation.append(fingers_orientation[i])
-
-        for i in elements_finger:
-            for j in sorted_fingers:
-                if i == j:
-                    sorted_fingers.remove(j)
-        
-        for i in elements_orientation:
-            for j in fingers_orientation:
-                if i == j:
-                    fingers_orientation.remove(j)
-    
-    print(sorted_fingers)
-    print(fingers_orientation)
-    print("")
+    sorted_fingers, fingers_orientation =\
+                    to_removing_finger(to_remove, sorted_fingers, fingers_orientation)
 
     return sorted_fingers, fingers_orientation
 
@@ -122,8 +130,6 @@ def removing(remove, sorted_fingers):
     return sorted_fingers
 
 
-
-
 def set_function(sorted_fingers):
     """Sometimes points have same position
     need to delete the doublon so we make a set list of list"""
@@ -135,6 +141,37 @@ def set_function(sorted_fingers):
                 set_list.append(i)
    
     return set_list
+
+
+def extremum(finger, copy):
+    to_remove = []
+    for i in finger:
+
+        first_second_points = dist.euclidean(i[0], i[1])
+
+        if first_second_points > 40 and len(i) == 2:
+            print("second point to far")
+            cv2.circle(copy, i[1], 2, (0, 0, 255), 2)
+            to_remove.append(i[1])
+
+        elif first_second_points > 40 and len(i) > 2:
+            print("first or second point to far")
+
+            second_third_points = dist.euclidean(i[1], i[2])
+            if second_third_points < 20:
+                print("second and third close so first to far")
+                cv2.circle(copy, i[0], 2, (0, 0, 255), 2)
+                to_remove.append(i[0])
+
+    for i in to_remove:
+        for j in finger:
+            for nb, k in enumerate(j):
+                if k == i:
+                    j.remove(k)
+        
+
+    return finger
+
 
 def delete_phax(sorted_fingers, copy):
     #Parcours all points of a finger.
@@ -190,13 +227,18 @@ def delete_phax(sorted_fingers, copy):
             cv2.circle(copy, point, 2, (0, 255, 0), 2)
 
     cv2.imshow("aa", copy)
+
+    sorted_fingers = extremum(sorted_fingers, copy)
+
+    cv2.imshow("sorted_fingerssorted_fingers", copy)
     cv2.waitKey(0)
 
-
+    print("")
 
     return sorted_fingers
 
 
+#=================================================================== reorganize_phax_position()
 
 def fingers_tratment(fingers):
     """We recuperate all fingers without doublon and None detection (0,0)"""
