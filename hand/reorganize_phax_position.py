@@ -175,11 +175,7 @@ def extremum(finger, copy):
 
 
 
-
-
-
-
-def point_concentration(finger, sorted_fingers):
+def point_concentration(finger, sorted_fingers, copy):
 
     possibilities = None
 
@@ -215,7 +211,7 @@ def point_concentration(finger, sorted_fingers):
 
         print("deux possibilité de localisation de point")
 
-        foyer = crop.copy()
+        foyer = copy.copy()
         foyer_finger = []
 
         for nb, i in enumerate(verify_distance):
@@ -245,24 +241,36 @@ def point_concentration(finger, sorted_fingers):
 
 
 
+def from_last_hand(foyer_pts_thumb, last, copy):
+
+    #Recuperate last thumb
+    last_thumb = [i[0][0] for i in last if i[-1] == "thumb"][0]
+    [cv2.circle(copy, i, 2, (0, 0, 0), 2) for i in last_thumb]
 
 
+    #The 2 foyers of thumb pts
+    foyer1 = foyer_pts_thumb[0]
+    foyer2 = foyer_pts_thumb[1]
 
+    #Distance beetween last thump localiton and foyers
+    foyer1_last_thumb = np.mean([dist.euclidean(thmb, i) for i in foyer1 for thmb in last_thumb])
+    foyer2_last_thumb = np.mean([dist.euclidean(thmb, i) for i in foyer2 for thmb in last_thumb])
+ 
+    print("foyer 1 : ", foyer1_last_thumb, "foyer 2 : ", foyer2_last_thumb)
+    if foyer1_last_thumb < foyer2_last_thumb:
+        print("Choix foyer 1")
+        [cv2.circle(copy, i, 2, (0, 255, 0), 2) for i in foyer1]
+        out = foyer1
 
+    elif foyer2_last_thumb < foyer1_last_thumb:
+        print("Choix foyer 2")
+        [cv2.circle(copy, i, 2, (0, 255, 0), 2) for i in foyer2]
+        out = foyer2
 
+    cv2.imshow("aa", copy)
+    cv2.waitKey(0)
 
-
-
-
-
-
-
-
-
-
-
-
-
+    
 
 def delete_phax(sorted_fingers, copy):
     #Parcours all points of a finger.
@@ -278,11 +286,11 @@ def delete_phax(sorted_fingers, copy):
 
     #In case thumb has 2 points possibilities.
 
-    foyer_pts_thumb = point_concentration(sorted_fingers[0], sorted_fingers)
+    foyer_pts_thumb = point_concentration(sorted_fingers[0], sorted_fingers, copy)
     if foyer_pts_thumb is not None:
-        print(foyer_pts_thumb)
+        sorted_fingers[0] = from_last_hand(foyer_pts_thumb, last, copy)
 
-    #TODOO
+
 
 
     remove = []
@@ -344,7 +352,8 @@ def fingers_tratment(fingers):
     """We recuperate all fingers without doublon and None detection (0,0)"""
     return list(set([j for i in fingers for j in i if i != (0, 0)]))
 
-def reorganize_phax_position(thumb, index, major, annular, auricular, crop, fingers_direction):
+def reorganize_phax_position(thumb, index, major, annular, auricular,
+                             crop, fingers_direction, last):
     """Sometimes we have false detection 2 times the same finger,
     one point detected on an another point.
     So we remove them"""
