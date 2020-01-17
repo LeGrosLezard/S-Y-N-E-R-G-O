@@ -1,6 +1,8 @@
 import cv2
 from scipy.spatial import distance as dist
 
+
+
 def sort_points(fingers, val, to_reverse):
 
     #On recupere le premier point et son axe
@@ -34,6 +36,7 @@ def search_fingers(thumb, fingers, search):
     print("recherche par :", search_finger, "sur axe :", search)
 
     thumb = thumb[0][-1]
+
     #u = unkonw
     #Pouce a gauche recherche de haut en bas
     if search_finger   == "gauche" and search == "y":     sorted_points = sort_points(fingers, 1, False)
@@ -48,18 +51,22 @@ def search_fingers(thumb, fingers, search):
     elif search_finger == "droite" and search == "u":     sorted_points = sort_points(fingers, 1, False)
 
 
-    #To verify so make an error
+    elif search_finger == "haut" and search == "y":     sorted_points = sort_points(fingers, 1, True)
+    elif search_finger == "haut" and search == "x":     sorted_points = sort_points(fingers, 0, False)
+    elif search_finger == "haut" and search == "u":     sorted_points = sort_points(fingers, 0, False)
 
-    elif a == "haut" and search == "y":     sorted_points = sort_points(fingers, 1, True)
-    elif a == "haut" and search == "x":     sorted_points = sort_points(fingers, 0, True)
+    elif search_finger == "bas" and search == "y":      sorted_points = sort_points(fingers, 1, False)
+    elif search_finger == "bas" and search == "x":      sorted_points = sort_points(fingers, 0, True)
+    elif search_finger == "bas" and search == "u":      sorted_points = sort_points(fingers, 0, True)
+
+    return sorted_points, search_finger, search
 
 
-    elif a == "bas" and search == "y":      sorted_points = sort_points(fingers, 1, False)
-    elif a == "bas" and search == "x":      sorted_points = sort_points(fingers, 0, False)
+def printing(finger_sorted, fingers_orientation):
 
-    return sorted_points, search_finger
-
-
+    print("REORGANIZE FINGER")
+    print(finger_sorted)
+    print(fingers_orientation)
 
 def reorganize_finger(crop, miss_points, finger_sorted, fingers_orientation):
     """Sometime finger's are detected in a different order like thumb annular index...
@@ -67,16 +74,12 @@ def reorganize_finger(crop, miss_points, finger_sorted, fingers_orientation):
 
     copy = crop.copy()
 
-
-    print("REORGANIZE FINGER")
+    #Make prints
+    printing(finger_sorted, fingers_orientation)
 
     #Verification du pouce
     if miss_points == 0:    print("PROBLEME NO POUCE")
 
-
-    print(finger_sorted)
-    print(fingers_orientation)
-    
     #Mélange des doigts triés et de leur orientation
     fingers = [[i, j[1]] for i, j in zip(finger_sorted, fingers_orientation)]
 
@@ -105,7 +108,7 @@ def reorganize_finger(crop, miss_points, finger_sorted, fingers_orientation):
     print("les espace sur", search)
 
     #Sorted points from spacement
-    sorted_points, direction = search_fingers(thumb, fingers, search)
+    sorted_points, direction, axis = search_fingers(thumb, fingers, search)
 
 
     #Display
@@ -119,7 +122,7 @@ def reorganize_finger(crop, miss_points, finger_sorted, fingers_orientation):
 
 
 
-    return sorted_points, direction, thumb
+    return thumb, sorted_points, direction, axis
 
 
 
