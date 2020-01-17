@@ -73,9 +73,13 @@ def hands_detections(scores, boxes, frame):
 
 
 
-
+LAST_FINGERS_RIGHT = []
+LAST_FINGERS_LEFT = []
 def treat_skeletton_points(skeletton, position, finger, proba, rectangle, crop):
 
+
+    global LAST_FINGERS_RIGHT
+    global LAST_FINGERS_LEFT
 
     x, y, w, h = rectangle
     print("Box de la main est de :", rectangle)
@@ -109,7 +113,7 @@ def treat_skeletton_points(skeletton, position, finger, proba, rectangle, crop):
 
     #delete false points finger detection
     sorted_fingers, fingers_orientation = reorganize_phax_position(thumb, index, major, annular,
-                                             auricular, crop, fingers_direction)
+                                             auricular, crop, fingers_direction, LAST_FINGERS_RIGHT)
 
     #reorganize finger's position
     thumb, sorted_points,\
@@ -117,14 +121,15 @@ def treat_skeletton_points(skeletton, position, finger, proba, rectangle, crop):
                                          sorted_fingers, fingers_orientation)
 
 
-    identify_fingers(thumb, sorted_points, crop, rectangle, direction, axis)
+    finger_sorted = identify_fingers(thumb, sorted_points, crop, rectangle, direction, axis)
+    LAST_FINGERS_RIGHT = finger_sorted
 
     #reattribuate points
-    thumb = finger_sorted[0]
-    index = finger_sorted[1]
-    major = finger_sorted[2]
-    annular = finger_sorted[3]
-    auricular = finger_sorted[4]
+##    thumb = finger_sorted[0]
+##    index = finger_sorted[1]
+##    major = finger_sorted[2]
+##    annular = finger_sorted[3]
+##    auricular = finger_sorted[4]
 
 
 
@@ -193,7 +198,7 @@ if __name__ == "__main__":
     
 
 
-    IM = 55
+    IM = 59
 
 
     image = r"C:\Users\jeanbaptiste\Desktop\hand_picture\a{}.jpg".format(str(IM))
