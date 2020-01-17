@@ -1,10 +1,6 @@
 # S-Y-N-E-R-G-O
 
-- faire les doigts
-
-- télécharger d'autres mains et au pire resize les crop avant le skelette
-
-- et pour les main jointent...
+- au tout début on laisse le (0, 0) mais on peut l'enlever voir si ca fait un truk
 
 
 <br><br><br><br><br><br><br><br><br>
