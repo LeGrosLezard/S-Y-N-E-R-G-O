@@ -5,6 +5,10 @@ import numpy as np
 def finger_list(fingers):
     if fingers[0][0] == (0, 0):
         print("ouiiiiiiiiiIIIIIIIIIIIIIIII")
+
+    #fingers = list(set([j for i in fingers[1:-1] for j in i if j != (0, 0)]))
+    #return [fingers, fingers[0]]
+
     return [list(set([j for i in fingers[1:-1] for j in i if j != (0, 0)])), fingers[0][0]]
 
 
@@ -37,7 +41,8 @@ def palm_analyse(hand_localised, palm_center, palm, rectangle, crop,
                     else area < threshold == turn around hand
         with that we can define localisation of the hand (right or left hand)"""
 
-    print("palm_analyse")
+    print("PALM ANALYSIS")
+
     copy = crop.copy()
 
     area = treat_area_palm(hand_localised, palm, palm_center, copy)
@@ -50,11 +55,13 @@ def palm_analyse(hand_localised, palm_center, palm, rectangle, crop,
 
     #recuperate all fingers
     fingers = [thumb, index, major, annular, auricular]
-
+    print("fingers : ", fingers)
     #recuperate points beetween extremums points of the finger.
     fingers = [finger_list(fingers[nb]) for nb in range(5)]
 
-    #for each points compare them with the palm point and define finger position
+
+
+    # (origin finger pts - fingers pts [1; -1]) <-- mean
     for i in fingers:
 
         mx = 0; my = 0; c = 0
@@ -63,31 +70,21 @@ def palm_analyse(hand_localised, palm_center, palm, rectangle, crop,
             my += (i[1][1] - j[1])
             c += 1
 
-        #We say: the highter number is the highter difference and we define
-        #the position like it
         if c > 0 and abs(mx/c) > abs(my/c):
-            if int(mx/c) > 0:
-                i.append("gauche")
-            elif int(mx/c) < 0:
-                i.append("droite")
-            else:
-                print("egal a 0 PROBLEME")
+            if int(mx/c) > 0:       i.append("gauche")
+            elif int(mx/c) < 0:     i.append("droite")
+
         elif c > 0 and abs(my/c) > abs(mx/c):
-            if int(my/c) > 0:
-                i.append("haut")
-            elif int(my/c) < 0:
-                i.append("bas")
-            else:
-                print("egal a 0 PROBLEME")
+            if int(my/c) > 0:       i.append("bas")
+            elif int(my/c) < 0:     i.append("haut")
+
         else:
-            print("PROBLEMMMMMMMME y'a egalité")
             i.append("egal")
 
 
     for i in fingers:
         print(i[0], i[1], i[2])
         cv2.circle(copy, i[1], 2, (255, 255, 255), 2)
-
         for j in i[0]:
             cv2.circle(copy, j, 2, (0, 0, 255), 2)
 
