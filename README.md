@@ -2,6 +2,7 @@
 
 - au tout début on laisse le (0, 0) mais on peut l'enlever voir si ca fait un truk
 
+- si ca ne marche pas avec les autres mains... essayer le resize juste avant le skeletton sinon mettre en avant son front
 
 <br><br><br><br><br><br><br><br><br>
 
