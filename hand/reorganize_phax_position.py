@@ -179,115 +179,68 @@ def extremum(finger, copy):
 
 
 
-def point_concentration(finger, no_finger, sorted_fingers):
+def point_concentration(finger, sorted_fingers):
 
-    print(finger)
+    possibilities = None
 
     verify_distance = []
     points = []
+
     for pts in range(len(finger)):
         if pts < len(finger) - 1:
+
             distance = dist.euclidean(finger[pts], finger[pts + 1])
 
             if distance <= 30:
                 verify_distance.append("ok")
-                points.append((    finger[pts], finger[pts + 1], distance,          #phax distance
-                                   int( (finger[pts][0] + finger[pts + 1][0]) / 2), #x center
-                                   int( (finger[pts][1] + finger[pts + 1][1]) / 2), #y center
-                                   abs(finger[pts][0] - finger[pts + 1][0]),        #radius x
-                                   abs(finger[pts][1] - finger[pts + 1][1]),        #radius y
-                                   no_finger,                                       #finger in sorted finger
-                                   pts                                              #numero foyer
-                              ))
-
-            else:
+            elif distance > 30:
                 verify_distance.append("far")
-                points.append((    finger[pts], finger[pts + 1], distance,          
-                                   int( (finger[pts][0] + finger[pts + 1][0]) / 2),
-                                   int( (finger[pts][1] + finger[pts + 1][1]) / 2),
-                                   abs(finger[pts][0] - finger[pts + 1][0]),
-                                   abs(finger[pts][1] - finger[pts + 1][1]),
-                                   no_finger,
-                                   pts
-                              ))
 
+            points.append((    finger[pts], finger[pts + 1], distance,          #phax distance
+                               int( (finger[pts][0] + finger[pts + 1][0]) / 2), #x center
+                               int( (finger[pts][1] + finger[pts + 1][1]) / 2), #y center
+                               abs(finger[pts][0] - finger[pts + 1][0]),        #radius x
+                               abs(finger[pts][1] - finger[pts + 1][1]),        #radius y
+                               pts                                              #numero foyer
+                          ))
 
         cv2.circle(copy, finger[pts], 2, (0, 0, 255), 2)
 
 
-    foyer_next_finger = []
-
-    #Il ne peut y avoir plus de 3 distances
-
-
-
-
-
-
-    #1er pts
-    if verify_distance == ["far", "ok", "ok"]:
-        print("DELETE FISRT POINT")
-
-
     #2 foyers
-    elif verify_distance == ["ok", "far", "ok"]:
+    if verify_distance == ["ok", "far", "ok"]:
 
         """en gros on recupere les 2 foyers de possibilité
         on les compare avec le prochain doigt"""
 
-        print("")
-        for i in points:
-            print(i)
-
-        
         print("deux possibilité de localisation de point")
+
         foyer = crop.copy()
+        foyer_finger = []
+
         for nb, i in enumerate(verify_distance):
             if nb == 0 or nb == 2:
                 cv2.circle(foyer, (points[nb][3], points[nb][4]),
                            min(points[nb][5], points[nb][6]), (0, 0, 255), 2)
-        
-                foyer_next_finger.append((  points[nb][3], points[nb][4]  ))
+
+                foyer_finger.append((  points[nb][3], points[nb][4]  ))
 
 
-        #doigt d'apres
-        if no_finger < len(sorted_fingers):
-            pass
 
-        #doigts d'avant
-        elif no_finger == len(sorted_fingers):
-            pass
+        possibilities = [[] for i in range(len(foyer_finger))]
+
+        for nb, i in enumerate(foyer_finger):
+            for fing in finger:
+                distance = dist.euclidean(foyer_finger[nb], fing)
+                if distance < 20:
+                    possibilities[nb].append(fing)
 
         cv2.imshow("foyer", foyer)
         cv2.waitKey(0)
-        print("")
 
+    print("")
 
-
-
-
-
-        
-    elif verify_distance == ["ok", "ok", "far"]:
-        print("last point to delete but ok")
-
-    elif verify_distance == ["ok", "far", "far"]:
-        print("first point ok jcrois donc ok")
-
-    elif verify_distance == ["far", "ok", "far"]:
-        print("PROBLMEE")
-
-
-
-
-    cv2.imshow("aa", copy)
-    cv2.waitKey(0)
-
-        
-
-
-
-    return ""
+    return possibilities
 
 
 
@@ -322,6 +275,15 @@ def delete_phax(sorted_fingers, copy):
     print(sorted_fingers)
 
     sorted_fingers = set_function(sorted_fingers)
+
+    #In case thumb has 2 points possibilities.
+
+    foyer_pts_thumb = point_concentration(sorted_fingers[0], sorted_fingers)
+    if foyer_pts_thumb is not None:
+        print(foyer_pts_thumb)
+
+    #TODOO
+
 
     remove = []
     for nb, finger in enumerate(sorted_fingers):
