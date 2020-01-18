@@ -75,7 +75,7 @@ def hands_detections(scores, boxes, frame):
 
 LAST_FINGERS_RIGHT = [([[(89, 29), (92, 26)], 'droite'], 'I'), ([[(83, 65), (105, 51), (114, 48), (130, 42)], 'droite'], 'M'), ([[(91, 76), (111, 73), (125, 70), (138, 67)], 'droite'], 'An'), ([[(92, 89), (108, 95), (119, 103), (130, 109)], 'droite'], 'a'), ([[(56, 76), (42, 64), (26, 54), (23, 51)], 'gauche'], 'thumb')]
 LAST_FINGERS_LEFT = []
-def treat_skeletton_points(skeletton, position, finger, proba, rectangle, crop):
+def treat_skeletton_points(skeletton, position, finger, rectangle, crop):
 
 
     global LAST_FINGERS_RIGHT
@@ -220,10 +220,8 @@ if __name__ == "__main__":
     copy = img.copy()
     rectangle = cv2.boundingRect(contours[-1])
 
-
-
-    points, position, finger, proba = hand_skelettor(copy_img, protoFile, weightsFile)
-    treat_skeletton_points(points, position, finger, proba, rectangle, img)
+    points, position, finger = hand_skelettor(copy_img, protoFile, weightsFile)
+    treat_skeletton_points(points, position, finger, rectangle, img)
 
 
 
