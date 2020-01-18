@@ -4,9 +4,8 @@ from scipy.spatial import distance as dist
 
 
 
-def printing(sorted_fingers):
-    print("\nFINGER ANALYSE \n", sorted_fingers, "\n")
-
+#============================================================ position_from_other_fingers()
+    
 def position_from_other_fingers(fingers_dico, crop):
     """position du doigt, par apport aux autres"""
 
@@ -16,15 +15,15 @@ def position_from_other_fingers(fingers_dico, crop):
     finger_highter = [finger_name for finger_name, points in fingers_dico.items()
                       for pts in highter if points[-1][1] == pts]
 
-    #ex: main toute droite = majeur,
+    #ex: main toute droite = majeur
     #pouce = pouce
     #telephone pouce petit doa
 
-    print(finger_highter)
+    print("hauteur décroissant :", finger_highter)
     print("")
 
 
-#======================================================== position_of_the_finger()
+#================================================================= position_of_the_finger()
 
 def draw_on_figure(triangle,  copy):
 
@@ -37,16 +36,18 @@ def draw_on_figure(triangle,  copy):
     font = cv2.FONT_HERSHEY_COMPLEX_SMALL
     cv2.putText(copy, 'a', (triangle[0][0] - 20, triangle[0][1]), font,  
                        1, (0, 0, 255), 1, cv2.LINE_AA)
-    cv2.putText(copy, 'b', triangle[1], font,  
+
+    cv2.putText(copy, 'b', (triangle[1][0] + 5, triangle[1][1] - 5), font,  
                        1, (255, 255, 255), 1, cv2.LINE_AA)
-    cv2.putText(copy, 'c', triangle[2], font,  
+
+    cv2.putText(copy, 'c',(triangle[2][0] + 10, triangle[2][1] + 10), font,  
                        1, (255, 255, 255), 1, cv2.LINE_AA)
 
 
 def defintion_to_angle(finger_name, angle):
     print(finger_name, angle, "degrés")
 
-    if 0 < angle < 20:
+    if 0 <= angle < 20:
         print("doigt horrizontal \n")
 
     elif 20 < angle < 60:
@@ -81,15 +82,27 @@ def position_of_the_finger(fingers_dico, crop):
         cv2.imshow("copy", copy)
         cv2.waitKey(0)
 
-
+#======================================================== space_beetween_fingers()
 def space_beetween_fingers(fingers_dico, crop):
     pass
 
 
+#============================================================== length_of_fingers()
 def length_of_fingers(fingers_dico, crop):
     pass
 
 
+#=================================================================== sens_finger()
+def sens_finger(sorted_fingers, crop):
+    pass
+
+
+#=================================================================== fingers_analyse()
+
+def printing(sorted_fingers):
+    print("\nFINGER ANALYSE \n", sorted_fingers, "\n")
+
+    
 def fingers_analyse(sorted_fingers, crop):
 
     copy = crop.copy()
@@ -105,6 +118,3 @@ def fingers_analyse(sorted_fingers, crop):
 
     position_from_other_fingers(fingers_dico, crop)
     position_of_the_finger(fingers_dico, crop)
-
-
-
