@@ -73,7 +73,7 @@ def hands_detections(scores, boxes, frame):
 
 
 
-LAST_FINGERS_RIGHT = []
+LAST_FINGERS_RIGHT = [([[(89, 29), (92, 26)], 'droite'], 'I'), ([[(83, 65), (105, 51), (114, 48), (130, 42)], 'droite'], 'M'), ([[(91, 76), (111, 73), (125, 70), (138, 67)], 'droite'], 'An'), ([[(92, 89), (108, 95), (119, 103), (130, 109)], 'droite'], 'a'), ([[(56, 76), (42, 64), (26, 54), (23, 51)], 'gauche'], 'thumb')]
 LAST_FINGERS_LEFT = []
 def treat_skeletton_points(skeletton, position, finger, proba, rectangle, crop):
 
@@ -198,7 +198,7 @@ if __name__ == "__main__":
     
 
 
-    IM = 59
+    IM = 61
 
 
     image = r"C:\Users\jeanbaptiste\Desktop\hand_picture\a{}.jpg".format(str(IM))
@@ -247,11 +247,11 @@ if __name__ == "__main__":
     #egalité réglé 1
     #delete phax 17; 25; 27; 5; 26; 29; 45
     #reorganisation doigt 23; 25 (pts theorique non respecté)
-    #finger remove 27; 25;29;35      
+    #finger remove 27; 25;29;35; 61      
     #Identify finger 27; 25
     #last reorganise 49
     #extremum phax 55
-
+    #foyer 61
 
 
 
