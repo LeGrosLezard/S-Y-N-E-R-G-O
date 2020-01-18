@@ -400,7 +400,7 @@ def reorganize_phax_position(thumb, index, major, annular, auricular,
 
 
     #Delete finger
-    sorted_fingers, fingers_orientation = (sorted_fingers, fingers_orientation, crop)
+    sorted_fingers, fingers_orientation = delete_finger(sorted_fingers, fingers_orientation, crop)
 
 
     print("")
