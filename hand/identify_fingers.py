@@ -122,8 +122,22 @@ def fingers_distance(distance, rectangle_w, rectangle_h, area_for_ratio,
 
 
 
-#================================================================================== releve_data_thumb_fingers()
-    
+
+
+#========================================================================= identify_fingers()
+
+def printing(rectangle, thumb, fingers, direction, axis):
+    print("\n IDENTIFY FINGERS \n Box de la main est de: ",
+          rectangle, "\n", thumb, "\n", fingers, "\n", direction, axis)
+
+
+def ratio_choice(direction):
+    """Choose the ratio length"""
+    if direction in ("droite", "gauche"):   area = "width"
+    elif direction in ("bas", "haut"):      area = "height"
+    return area
+
+
 def releve_data_thumb_fingers(points, thumb):
     """We need thumb/fingers space for releve ratio
     We can have a bad sorted of fingers.
@@ -162,27 +176,6 @@ def releve_data_thumb_fingers(points, thumb):
 
 
 
-
-
-
-
-
-
-
-#========================================================================= identify_fingers()
-
-def printing(rectangle, thumb, fingers, direction, axis):
-    print("\n IDENTIFY FINGERS \n Box de la main est de: ",
-          rectangle, "\n", thumb, "\n", fingers, "\n", direction, axis)
-
-
-def ratio_choice(direction):
-    """Choose the ratio length"""
-    if direction in ("droite", "gauche"):   area = "width"
-    elif direction in ("bas", "haut"):      area = "height"
-    return area
-
-
 def appropriate_finger_to_his_points(fingers, original_fingers):
     """From original fingers, recuperate all point and attribuate
     it to a finger"""
@@ -196,6 +189,8 @@ FINGER_ANNOTATION = ["I", "M", "An", "a"]
 
 def identify_fingers(thumb, fingers, crop, rectangle, direction, axis):
 
+    global FINGER_ANNOTATION
+
     original_fingers = fingers
     copy = crop.copy()
     _, _, rectangle_w, rectangle_h = rectangle
@@ -203,16 +198,16 @@ def identify_fingers(thumb, fingers, crop, rectangle, direction, axis):
     printing(rectangle, thumb, fingers, direction, axis)
 
 
-    #Add None then replace by ()
+    #Add None then replace by () my first lambda so let it
     fingers += [None for i in range(4 - len(fingers))]
     fingers = [(lambda x: () if x == None else x[0][-1])(i) for i in fingers]
 
 
+    #We have fingers
     if len(fingers) > fingers.count(()):
     
         #Choice area in function of hand position
         area_for_ratio = ratio_choice(direction)
-
 
         #Reorganise a last time
         fingers = distance_thumb_fingers(fingers, thumb)
@@ -234,10 +229,10 @@ def identify_fingers(thumb, fingers, crop, rectangle, direction, axis):
                                  area_for_ratio, FINGER_ANNOTATION, fingers, copy, i,
                                  fingersX)
 
+        fingers = first_fingerX + fingersX
+        fingers = appropriate_finger_to_his_points(fingers, original_fingers)
 
-
-            
-
+    #Only have Thumb finger
     elif fingers.count(()) == len(fingers) and thumb != ():
         draw_line_pts(copy, "P", thumb[0][-1], thumb[0][-1])
         cv2.imshow("only thumb", copy)
@@ -249,9 +244,6 @@ def identify_fingers(thumb, fingers, crop, rectangle, direction, axis):
 
 
 
-    fingers = first_fingerX + fingersX
-    fingers = appropriate_finger_to_his_points(fingers, original_fingers)
-
     if len(FINGER_ANNOTATION) > 0: print("\n manque des doigts :", FINGER_ANNOTATION)
     [print(i) for i in fingers]
 
@@ -259,7 +251,6 @@ def identify_fingers(thumb, fingers, crop, rectangle, direction, axis):
 
 
     return fingers
-
 
 
 
