@@ -127,7 +127,7 @@ def fingers_distance(distance, rectangle_w, rectangle_h, area_for_ratio,
 #========================================================================= identify_fingers()
 
 def printing(rectangle, thumb, fingers, direction, axis):
-    print("\n IDENTIFY FINGERS \n Box de la main est de: ",
+    print("\nIDENTIFY FINGERS \n Box de la main est de: ",
           rectangle, "\n", thumb, "\n", fingers, "\n", direction, axis)
 
 
@@ -143,7 +143,7 @@ def releve_data_thumb_fingers(points, thumb):
     We can have a bad sorted of fingers.
     So we verify a last time distance by contribution of thumb."""
 
-    print("\n releve_data_thumb_fingers \n")
+    print("\nreleve_data_thumb_fingers \n")
     print(points, thumb)
 
     reorganisation = []
@@ -162,7 +162,7 @@ def releve_data_thumb_fingers(points, thumb):
 
     #Matching distances sorted error.
     else:
-        print("\n \n re organisation of data")
+        print("\n \nre organisation of data")
         reorganisation += [pts for sorted_pts in sorted_distance for pts in points
                            if pts != () and dist.euclidean(pts, thumb[0][-1]) == sorted_pts]
 
@@ -234,20 +234,19 @@ def identify_fingers(thumb, fingers, crop, rectangle, direction, axis):
 
     #Only have Thumb finger
     elif fingers.count(()) == len(fingers) and thumb != ():
+        fingers = thumb
         draw_line_pts(copy, "P", thumb[0][-1], thumb[0][-1])
         cv2.imshow("only thumb", copy)
         cv2.waitKey(0)
-
+        cv2.destroyAllWindows
 
     else:
         print("None")
 
 
 
-    if len(FINGER_ANNOTATION) > 0: print("\n manque des doigts :", FINGER_ANNOTATION)
+    if len(FINGER_ANNOTATION) > 0: print("\nmanque des doigts :", FINGER_ANNOTATION)
     [print(i) for i in fingers]
-
-
 
 
     return fingers
