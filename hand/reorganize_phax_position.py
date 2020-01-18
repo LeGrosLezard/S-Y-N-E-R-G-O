@@ -6,8 +6,8 @@ def no_detection_orientatation(fingers_orientation):
     """Des fois y'a des egalités du coup on définit le sens du doigt par apport aux autres"""
 
     positions = [i[1] for i in fingers_orientation]
-    print("sens des doigts semblent etre a : ", positions)
     pos = ["gauche", "droite", "haut", "bas"]
+    print("sens des doigts semblent etre a : ", positions)
 
     if positions != []:
         indexage = [positions.count(i) for i in pos]
@@ -35,11 +35,10 @@ def sorted_data(data, position):
 
 
 
-#================================================================= delete_finger()
+#=========================================================================================== delete_finger()
 def to_removing_finger(to_remove, sorted_fingers, fingers_orientation):
     
     if len(to_remove) > 0:
-
         print("element a supprimer :", to_remove)
 
         elements_finger = []
@@ -70,8 +69,7 @@ def delete_finger(sorted_fingers, fingers_orientation, crop):
 
     print("DELETE FINGER")
 
-    to_remove = [];
-
+    to_remove = []
 
     for i in range(len(sorted_fingers)):
 
@@ -89,11 +87,10 @@ def delete_finger(sorted_fingers, fingers_orientation, crop):
             for j in sorted_fingers[i]:
                 for k in sorted_fingers[i + 1]:
 
-                    print(abs(j[0] - k[0]), 8 and abs(j[1] - k[1]))
-
                     if abs(j[0] - k[0]) <= 12 and abs(j[1] - k[1]) <= 10 or\
                        abs(j[0] - k[0]) <= 10 and abs(j[1] - k[1]) <= 12:
                         same_points_localisation += 1
+
 
             length1 = len(sorted_fingers[i])
             length2 = len(sorted_fingers[i + 1])
@@ -120,7 +117,9 @@ def delete_finger(sorted_fingers, fingers_orientation, crop):
 
 
 #==================================================================================== delete_phax()
+
 def removing(remove, sorted_fingers):
+
     for rem in remove:
         for finger in sorted_fingers:
             for pts in finger:
@@ -144,9 +143,9 @@ def set_function(sorted_fingers):
 
 
 def extremum(finger, copy):
+
     to_remove = []
     for i in finger:
-
         first_second_points = dist.euclidean(i[0], i[1])
 
         if first_second_points > 40 and len(i) == 2:
@@ -325,7 +324,6 @@ def delete_phax(sorted_fingers, copy):
             cv2.waitKey(0)
 
         print("")
-
 
 
     sorted_fingers = removing(remove, sorted_fingers)
