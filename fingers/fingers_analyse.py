@@ -47,19 +47,26 @@ def draw_on_figure(triangle,  copy):
 def defintion_to_angle(finger_name, angle):
     print(finger_name, angle, "degrés")
 
+    position = ""
+
     if 0 <= angle < 20:
         print("doigt horrizontal \n")
+        position = "horrizontal"
 
     elif 20 < angle < 60:
         print("doigt legrement penché droite \n")
+        position = "droit penche droite"
 
     elif 80 < angle < 110:
         print("doigt droit \n")
+        position = "droit"
+
+    return position
 
 
 def position_of_the_finger(fingers_dico, crop):
 
-
+    position_fingers = {"thumb": [], "I": [], "M": [], "An": [], "a": []}
     for finger_name, points in fingers_dico.items():
         copy = crop.copy()
 
@@ -77,23 +84,86 @@ def position_of_the_finger(fingers_dico, crop):
         cos = (2 * b * c)
         angle = int(math.degrees(math.acos(a / cos)))
 
-        defintion_to_angle(finger_name, angle)
+        position = defintion_to_angle(finger_name, angle)
+        position_fingers[finger_name] = position
 
         cv2.imshow("copy", copy)
         cv2.waitKey(0)
 
+
+
+    return position_fingers
+
+
+
+
+
+#=================================================================== sens_finger()
+
+def left_right(points):
+
+    left_right = points[0][0] -  points[-1][0]
+    if left_right > 0:      sens = "gauche"
+    elif left_right < 0:    sens = "droite"
+    else:                   print("problerme")
+    return sens
+
+def top_bot(points):
+    top_bot = points[0][1] -  points[-1][1]
+    if top_bot > 0:      sens = "bas"
+    elif top_bot < 0:    sens = "haut"
+    else:                   print("problerme")
+    return sens
+
+
+def sens_finger(fingers_dico, position_fingers, crop):
+
+    sens_fingers = {"thumb": [], "I": [], "M": [], "An": [], "a": []}
+
+    for finger_name, points in fingers_dico.items():
+        print(finger_name, position_fingers[finger_name], points[0], points[-1])
+
+        if position_fingers[finger_name] == "horrizontal":
+            sensX = left_right(points)
+            sens_fingers[finger_name] = sensX
+            print(sensX)
+
+        elif position_fingers[finger_name] == "droit penche droite":
+            sensX = left_right(points)
+            sensY = top_bot(points)
+            sens_fingers[finger_name] = sensX, sensY
+            print(sensX, sensY)
+
+        elif position_fingers[finger_name] == "droit":
+            sensY = top_bot(points)
+            sens_fingers[finger_name] = sensY
+            print(sensY)
+
+        print("")
+
+
+    return sens_fingers
+
+
 #======================================================== space_beetween_fingers()
-def space_beetween_fingers(fingers_dico, crop):
-    pass
+def space_beetween_fingers(fingers_dico, sens_fingers, crop):
+
+    copy = crop.copy()
+
+    for finger_name, points in fingers_dico.items():
+        print(finger_name, points)
+        [cv2.circle(copy, pts, 2, (0, 255, 0), 2) for pts in points]
+        [cv2.line(copy, points[nb], points[nb + 1], (0, 255, 255), 2)
+         for nb in range(len(points)) if nb < len(points) - 1]
+
+        cv2.imshow("copy", copy)
+        cv2.waitKey(0)
+
+
 
 
 #============================================================== length_of_fingers()
 def length_of_fingers(fingers_dico, crop):
-    pass
-
-
-#=================================================================== sens_finger()
-def sens_finger(sorted_fingers, crop):
     pass
 
 
@@ -117,4 +187,8 @@ def fingers_analyse(sorted_fingers, crop):
                 fingers_dico[finger_name] = finger[0][0]
 
     position_from_other_fingers(fingers_dico, crop)
-    position_of_the_finger(fingers_dico, crop)
+    position_fingers = position_of_the_finger(fingers_dico, crop)
+    sens_fingers = sens_finger(fingers_dico, position_fingers, crop)
+    space_beetween_fingers(fingers_dico, sens_fingers, crop)
+
+
