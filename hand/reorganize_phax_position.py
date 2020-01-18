@@ -1,6 +1,6 @@
 import cv2
 from scipy.spatial import distance as dist
-
+import numpy as np
 
 def no_detection_orientatation(fingers_orientation):
     """Des fois y'a des egalités du coup on définit le sens du doigt par apport aux autres"""
@@ -57,7 +57,7 @@ def to_removing_finger(to_remove, sorted_fingers, fingers_orientation):
             for j in fingers_orientation:
                 if i == j:
                     fingers_orientation.remove(j)
-    
+
     print(sorted_fingers)
     print(fingers_orientation)
     print("")
@@ -68,7 +68,7 @@ def to_removing_finger(to_remove, sorted_fingers, fingers_orientation):
 def delete_finger(sorted_fingers, fingers_orientation, crop):
 
     print("DELETE FINGER")
-
+    print(sorted_fingers, "\n")
     to_remove = []
 
     for i in range(len(sorted_fingers)):
@@ -98,7 +98,7 @@ def delete_finger(sorted_fingers, fingers_orientation, crop):
             print("correspondance : ", same_points_localisation, " / total pts: ", length1 * length2)
 
 
-            if same_points_localisation >= (int(length1 * length2) / 2) and length1 * length2 > 0:
+            if same_points_localisation >= (int(length1 * length2) / 2) - 2 and length1 * length2 > 0:
                 to_remove.append(i + 1)
                 [cv2.circle(copy_delete, j, 2, (0, 0, 0), 2) for j in sorted_fingers[i + 1]]
                 print("finger removed")
@@ -269,9 +269,9 @@ def from_last_hand(foyer_pts_thumb, last, copy):
     cv2.imshow("aa", copy)
     cv2.waitKey(0)
 
-    
+    return out
 
-def delete_phax(sorted_fingers, copy):
+def delete_phax(sorted_fingers, copy, last):
     #Parcours all points of a finger.
     #If two points are more than 40 (space beetween finger's are ~ 15-10 and there are 3 spaces)
         #recuperate the first point of the finger and the 2 points fingers (sort before)
@@ -358,6 +358,9 @@ def reorganize_phax_position(thumb, index, major, annular, auricular,
 
     print("REOGARNIZE PHAX POSITION")
 
+
+    print(last)
+
     copy = crop.copy()
 
     #all points to delete (0, 0)
@@ -385,7 +388,7 @@ def reorganize_phax_position(thumb, index, major, annular, auricular,
                 fingers.remove(finger)
 
     #Delete phax
-    sorted_fingers = delete_phax(sorted_fingers, copy)
+    sorted_fingers = delete_phax(sorted_fingers, copy, last)
 
 
     for fingers in sorted_fingers:
@@ -397,7 +400,7 @@ def reorganize_phax_position(thumb, index, major, annular, auricular,
 
 
     #Delete finger
-    sorted_fingers, fingers_orientation = delete_finger(sorted_fingers, fingers_orientation, crop)
+    sorted_fingers, fingers_orientation = (sorted_fingers, fingers_orientation, crop)
 
 
     print("")
