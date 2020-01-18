@@ -1,5 +1,7 @@
 # S-Y-N-E-R-G-O
 
+pyramide par le dessus aussi
+
 - rendre tout propre
 
 - au tout début on laisse le (0, 0) mais on peut l'enlever voir si ca fait un truk
