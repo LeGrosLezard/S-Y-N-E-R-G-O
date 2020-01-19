@@ -81,8 +81,8 @@ def palm_analyse(hand_localised, palm_center, palm, rectangle, crop,
             elif int(mx/c) < 0:     i.append("droite")
 
         elif c > 0 and abs(my/c) > abs(mx/c):
-            if int(my/c) > 0:       i.append("bas")
-            elif int(my/c) < 0:     i.append("haut")
+            if int(my/c) > 0:       i.append("haut")
+            elif int(my/c) < 0:     i.append("bas")
 
         else:
             i.append("egal")
