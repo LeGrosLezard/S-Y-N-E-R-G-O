@@ -10,17 +10,21 @@ from numpy import expand_dims, squeeze
 
 from scipy.spatial import distance as dist
 
-
+#Treat the skeletton
+from sign import sign
+from skeletton import hand_skelettor
 from palm_analyse import palm_analyse
+from hand_location import hand_location
+from delete_phax import delete_phax
+from delete_finger import delete_finger
 from no_finger_found import no_finger_found
+from identify_fingers import identify_fingers
 from reorganize_finger import reorganize_finger
 from reorganize_phax_position import reorganize_phax_position
-from hand_location import hand_location
-from skeletton import hand_skelettor
 from hand_mask import skin_detector, hand_treatment, make_bitwise
-from sign import sign
-from identify_fingers import identify_fingers
 
+#Treat fingers
+from fingers_analyse import fingers_analyse
 
 
 def save(crop, C):
@@ -111,9 +115,16 @@ def treat_skeletton_points(skeletton, position, finger, rectangle, crop):
 
 
 
-    #delete false points finger detection
+    #Sort fingers
     sorted_fingers, fingers_orientation = reorganize_phax_position(thumb, index, major, annular,
-                                             auricular, crop, fingers_direction, LAST_FINGERS_RIGHT)
+                                             auricular, crop, fingers_direction)
+
+    sorted_fingers, fingers_orientation = delete_phax(sorted_fingers, fingers_orientation,
+                                                        LAST_FINGERS_RIGHT, crop)
+
+
+    sorted_fingers, fingers_orientation = delete_finger(sorted_fingers,
+                                                        fingers_orientation, crop)
 
     #reorganize finger's position
     thumb, sorted_points,\
@@ -122,34 +133,22 @@ def treat_skeletton_points(skeletton, position, finger, rectangle, crop):
 
 
     finger_sorted = identify_fingers(thumb, sorted_points, crop, rectangle, direction, axis)
+
+
+    fingers_analyse(finger_sorted, crop)
+
+
+
+
+
+
+
+    #sign(thumb, index)
+
+
+
+    #Save the hand combinaison
     LAST_FINGERS_RIGHT = finger_sorted
-
-    #reattribuate points
-##    thumb = finger_sorted[0]
-##    index = finger_sorted[1]
-##    major = finger_sorted[2]
-##    annular = finger_sorted[3]
-##    auricular = finger_sorted[4]
-
-
-
-    #thumb_analyse(palm_center, thumb, index, crop)
-    #index_analyse(thumb, index, major, crop)
-
-    #major_analyse(major, palm_center, rectangle, crop)
-
-    #annular_analyse(annular, palm_center, rectangle, crop)
-    #auricular_analyse(auricular, palm_center, rectangle, crop)
-
-
-
-
-    sign(thumb, index)
-
-
-
-
-
 
 
 
@@ -198,7 +197,7 @@ if __name__ == "__main__":
     
 
 
-    IM = 61
+    IM = 73
 
 
     image = r"C:\Users\jeanbaptiste\Desktop\hand_picture\a{}.jpg".format(str(IM))
