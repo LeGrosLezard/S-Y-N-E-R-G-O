@@ -5,21 +5,31 @@ from scipy.spatial import distance as dist
 
 
 #============================================================ position_from_other_fingers()
-    
+
+def sorted_points(abcisse_pos, to_reverse, fingers_dico):
+
+    #Recuperate x or y last points, and reverse or not it.
+    pos_sorted = sorted([points[-1][abcisse_pos] for finger_name, points in fingers_dico.items()],
+                        reverse=to_reverse)
+
+    #Recuperate from name of finger who's corresponding to position sorted.
+    recup_finger = [finger_name for pts in pos_sorted
+                    for finger_name, points in fingers_dico.items()
+                    if points[-1][abcisse_pos] == pts]
+
+    return recup_finger
+
+
 def position_from_other_fingers(fingers_dico, crop):
     """position du doigt, par apport aux autres"""
 
     copy = crop.copy()
 
-    highter = sorted([points[-1][1] for finger_name, points in fingers_dico.items()])
-    finger_highter = [finger_name for finger_name, points in fingers_dico.items()
-                      for pts in highter if points[-1][1] == pts]
-
-    #ex: main toute droite = majeur
-    #pouce = pouce
-    #telephone pouce petit doa
-
+    #Sort by y position
+    finger_highter = sorted_points(1, False, fingers_dico)
     print("hauteur décroissant :", finger_highter)
+
+
     print("")
 
 
@@ -50,15 +60,15 @@ def defintion_to_angle(finger_name, angle):
     position = ""
 
     if 0 <= angle < 20:
-        print("doigt horrizontal \n")
+        print("doigt horrizontal")
         position = "horrizontal"
 
     elif 20 < angle < 60:
-        print("doigt legrement penché droite \n")
+        print("doigt legrement penché droite")
         position = "droit penche droite"
 
     elif 80 < angle < 110:
-        print("doigt droit \n")
+        print("doigt droit")
         position = "droit"
 
     return position
@@ -90,7 +100,7 @@ def position_of_the_finger(fingers_dico, crop):
         cv2.imshow("copy", copy)
         cv2.waitKey(0)
 
-
+        print("")
 
     return position_fingers
 
@@ -107,6 +117,7 @@ def left_right(points):
     elif left_right < 0:    sens = "droite"
     else:                   print("problerme")
     return sens
+
 
 def top_bot(points):
     top_bot = points[0][1] -  points[-1][1]
@@ -139,14 +150,13 @@ def sens_finger(fingers_dico, position_fingers, crop):
             sens_fingers[finger_name] = sensY
             print(sensY)
 
-        print("")
 
+    print("")
 
     return sens_fingers
 
 
-#======================================================== position_beetween_fingers()
-
+#======================================================== space_beetween_fingers()
 
 def position(begening_finger):
     """Make addition of difference beetween points,
@@ -184,16 +194,22 @@ def position(begening_finger):
 
     print("en commencant par pouce")
 
-    if x_diff > y_diff and x_positive_sign > x_negative_sign: print("doigts gauche droite")
-    elif x_diff > y_diff and x_positive_sign < x_negative_sign: print("doigts droite gauche")
+    pos = ""
 
-    if y_diff > x_diff and y_positive_sign > y_negative_sign: print("doigts bas haut")
-    elif y_diff > x_diff and y_positive_sign < y_negative_sign: print("doigts haut bas")
+    if x_diff > y_diff and x_positive_sign > x_negative_sign: pos = "doigts gauche droite"
+    elif x_diff > y_diff and x_positive_sign < x_negative_sign: pos = "doigts droite gauche"
 
-    print("")
+    if y_diff > x_diff and y_positive_sign > y_negative_sign: pos = "doigts bas haut"
+    elif y_diff > x_diff and y_positive_sign < y_negative_sign: pos = "doigts haut bas"
 
 
-def space(begening_finger, end_finger, crop):
+    print(pos, "\n")
+    return pos
+
+    
+
+
+def space(begening_finger, end_finger, finger_pos, crop):
     """on dirait que c donne la direction du doigt par apport a l'autre
     et a donne l'ouverture"""
 
@@ -203,87 +219,28 @@ def space(begening_finger, end_finger, crop):
     [cv2.circle(copy, pts, 2, (0, 0, 255), 2) for pts in end_finger]
 
 
-    for pts in range(len(begening_finger)):
+    for pts in range(len(end_finger)):
 
-        if pts < len(begening_finger) - 1:
+        if pts < len(end_finger) - 1:
 
-
-            #C mesure -> mesure ouverture debut
-            copy2 = copy.copy()
-            pt1 = begening_finger[pts]
-            pt2 = end_finger[pts + 1]
-            pt3 = begening_finger[pts + 1]
-
-            cv2.line(copy2, pt1, pt2, (0, 255, 255), 2)
-            cv2.line(copy2, pt2, pt3, (0, 255, 255), 2)
-            cv2.line(copy2, pt3, pt1, (0, 255, 255), 2)
-
-
-            a = int(dist.euclidean(pt2, pt3))
-            b = int(dist.euclidean(pt1, pt3))
-            c = int(dist.euclidean(pt1, pt2))
-
-            c = (a**2) + (b**2) - (c**2)
-            cos = (2 * a * b)
-            angle = math.degrees(math.acos(c / cos))
-            print("c: ", angle)
-
-            cv2.imshow("copy2", copy2)
-            cv2.waitKey(0)
-
-
-
-
-            #A mesure      -> mesure ouverture fin
-            copy1 = copy.copy()
-            pt1 = begening_finger[pts + 1]
-            pt2 = end_finger[pts]
-            pt3 = end_finger[pts + 1]
-
-            cv2.line(copy1, pt1, pt2, (0, 255, 255), 2)
-            cv2.line(copy1, pt2, pt3, (0, 255, 255), 2)
-            cv2.line(copy1, pt3, pt1, (0, 255, 255), 2)
-
-            a = int(dist.euclidean(pt2, pt3))
-            b = int(dist.euclidean(pt1, pt3))
-            c = int(dist.euclidean(pt1, pt2))
-
-
-
-            a = (b**2) + (c**2) - (a**2)
-            cos = (2 * b * c)
-            angle = math.degrees(math.acos(a / cos))
-            print('a :', angle)
-
-
+            if finger_pos == "doigts bas haut" or finger_pos == "doigts haut bas":
             distancey = abs(end_finger[pts][1] - end_finger[pts + 1][1])
+            cv2.line(copy, end_finger[pts], end_finger[pts + 1], (0, 0, 255), 2)
             print("y :", distancey)
 
+            elif finger_pos == "doigts gauche droite" or finger_pos == "doigts droite gauche":
             distancex = abs(end_finger[pts][0] - end_finger[pts + 1][0])
+            cv2.line(copy, end_finger[pts], end_finger[pts + 1], (0, 255, 255), 2)
             print("x :", distancex)
+            print("")
 
-##
-##    font = cv2.FONT_HERSHEY_COMPLEX_SMALL
-##    cv2.putText(copy, 'a', (triangle[0][0] - 20, triangle[0][1]), font,  
-##                       1, (0, 0, 255), 1, cv2.LINE_AA)
-##
-##    cv2.putText(copy, 'b', (triangle[1][0] + 5, triangle[1][1] - 5), font,  
-##                       1, (255, 255, 255), 1, cv2.LINE_AA)
-##
-##    cv2.putText(copy, 'c',(triangle[2][0] + 10, triangle[2][1] + 10), font,  
-##                       1, (255, 255, 255), 1, cv2.LINE_AA)
-
-
-
-            
-            cv2.imshow("copy1", copy1)
+ 
+            cv2.imshow("copy", copy)
             cv2.waitKey(0)
-
 
 
 
 def position_beetween_fingers(fingers_dico, sens_fingers, crop):
-
 
     begening_finger = []
     end_finger = []
@@ -308,15 +265,64 @@ def position_beetween_fingers(fingers_dico, sens_fingers, crop):
         cv2.imshow("copy", copy)
         cv2.waitKey(0)
 
-    position(begening_finger)
-    space(begening_finger, end_finger, crop)
-
-
-
+    finger_pos = position(begening_finger)
+    space(begening_finger, end_finger, finger_pos, crop)
 
 #============================================================== length_of_fingers()
 def length_of_fingers(fingers_dico, crop):
-    pass
+
+
+    phax_dico = {"thumb": [], "I": [], "M": [], "An": [], "a": []}
+
+    total_length = 0
+    for finger_name, points in fingers_dico.items():
+        for nb_pts in range(len(points)):
+            if nb_pts < len(points) - 1:
+                distance = dist.euclidean(points[nb_pts], points[nb_pts + 1])
+                phax_dico[finger_name].append(distance)
+                total_length += distance
+     
+        phax_dico[finger_name].append(total_length)
+        total_length = 0
+
+    for k, v in phax_dico.items():
+        copy = crop.copy()
+        [cv2.circle(copy, points, 2, (0, 0, 255), 2) for points in fingers_dico[k]]
+
+        [cv2.line(copy, fingers_dico[k][nb], fingers_dico[k][nb + 1], (0, 255, 255), 2)
+        for nb in range(len(fingers_dico[k])) if nb < len(fingers_dico[k]) - 1]
+
+
+        print(k, v)
+
+        cv2.imshow("copy", copy)
+        cv2.waitKey(0)
+
+    print("")
+
+
+
+#============================================================== similar_points_finger()
+def similar_points_finger(fingers_dico, crop):
+
+    copy = crop.copy()
+
+    same = False
+
+    for k, v in fingers_dico.items():
+        for k1, v1 in fingers_dico.items():
+
+            for i in v:
+                for j in v1:
+
+                    if i[0] + 2 > j[0] > i[0] - 2 and i[1] + 2 > j[1] > i[1] - 2 and k != k1 or\
+                       j[0] + 2 > i[0] > j[0] - 2 and j[1] + 2 > i[1] > j[1] - 2 and k != k1:
+                        print(k, k1)
+                        same = True
+
+
+    if same is False:
+        print("no finger same points")
 
 
 #=================================================================== fingers_analyse()
@@ -342,5 +348,5 @@ def fingers_analyse(sorted_fingers, crop):
     position_fingers = position_of_the_finger(fingers_dico, crop)
     sens_fingers = sens_finger(fingers_dico, position_fingers, crop)
     position_beetween_fingers(fingers_dico, sens_fingers, crop)
-
-
+    length_of_fingers(fingers_dico, crop)
+    similar_points_finger(fingers_dico, crop)
