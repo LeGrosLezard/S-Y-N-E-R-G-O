@@ -41,10 +41,7 @@ def hand_location(thumb, index, major, annular, auricular, crop):
     #Delete None detection -> ((0, 0), (0, 0))
     fingers = [index, major, annular, auricular]
     removing = lambda liste, element: liste.remove(element)
-    for i in fingers:
-        for j in i:
-            if j == ((0, 0), (0, 0)):
-                removing(i, j)
+    [removing(i, j) for i in fingers for j in i if j == ((0, 0), (0, 0))]
 
     #recuperate last points of finger's (end of finger)
     end_fingers = [finger[-1][1] for finger in fingers if finger != []]
