@@ -8,6 +8,10 @@ pyramide par le dessus aussi
 
 - si ca ne marche pas avec les autres mains... essayer le resize juste avant le skeletton sinon mettre en avant son front
 
+
+- si on croit que le pouce est le petit doigt dès le début mais qu'avec la condition auriculaire < 50 degres et qu'on voit
+a un moment que ca depasse, recommencer la video en disant interchange = True
+
 <br><br><br><br><br><br><br><br><br>
 
 
