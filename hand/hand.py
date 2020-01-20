@@ -245,10 +245,10 @@ if __name__ == "__main__":
     #delete phax 17; 25; 27; 5; 26; 29; 45
     #reorganisation doigt 23; 25 (pts theorique non respecté)
     #finger remove 27; 25;29;35; 61      
-    #Identify finger 27; 25
+    #Identify finger 27; 25; 73
     #last reorganise 49
     #extremum phax 55
-    #foyer 61
+    #foyer 61; 73
 
 
 
