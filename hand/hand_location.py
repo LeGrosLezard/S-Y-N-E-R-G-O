@@ -25,16 +25,17 @@ def thumb_localisation(end_fingers, thumb):
     if dico_direction["left"] > dico_direction["right"]:    hand = "pouce gauche"
     elif dico_direction["right"] > dico_direction["left"]:  hand = "pouce droite"
 
-    if dico_direction["top"] > dico_direction["bot"]:       print("Doigts tendent vers le bas")
-    elif dico_direction["bot"] > dico_direction["top"]:     print("Doigts tendent vers le haut")
-
-
     return hand
+
+
+def printing(thumb, index, major, annular, auricular):
+    print("HAND LOCATION")    
+    print(thumb, index, major, annular, auricular, "\n")
 
 
 def hand_location(thumb, index, major, annular, auricular, crop):
 
-    print("HAND LOCATION")
+    printing(thumb, index, major, annular, auricular)
 
     copy = crop.copy()
 
@@ -47,20 +48,25 @@ def hand_location(thumb, index, major, annular, auricular, crop):
     end_fingers = [finger[-1][1] for finger in fingers if finger != []]
     [cv2.circle(copy, fingers, 2, (255, 0, 0), 2) for fingers in end_fingers]
 
-    #recuperate thumb last point
-    thumb = [j for i in thumb for j in i if j != (0, 0)][-1]
-    cv2.circle(copy, thumb, 2, (0, 0, 255), 2)
+    thumb_find = len([j for i in thumb for j in i if j == (0, 0)])
+    thumb_validation_points = len(thumb) * 2
 
-    #Thumb localisation
-    hand = thumb_localisation(end_fingers, thumb)
+    if thumb_validation_points == thumb_find:
+        return False
 
+    else:
+        #recuperate thumb last point
+        thumb = [j for i in thumb for j in i if j != (0, 0)][-1]
+        cv2.circle(copy, thumb, 2, (0, 0, 255), 2)
 
-    cv2.imshow("Hand", copy)
-    cv2.waitKey(0)
+        #Thumb localisation
+        hand = thumb_localisation(end_fingers, thumb)
 
-    print(hand, "\n")
+        cv2.imshow("Hand", copy)
+        cv2.waitKey(0)
 
+        print(hand, "\n")
 
-    return hand
+        return hand
 
 
