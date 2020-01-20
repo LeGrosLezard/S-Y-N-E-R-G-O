@@ -17,15 +17,6 @@ def recuperate_distance(finger, copy):
     pair = [(finger[i], finger[i + 1]) for i in range(len(finger))
             if i < len(finger) - 1]
 
-
-    for i in range(len(finger)):
-        if i < len(finger) - 1:
-
-            print(finger[i], finger[i + 1])
-
-            distance = dist.euclidean(finger[i], finger[i + 1])
-            print(distance)
-
     return pair, distance_points
 
 
@@ -77,10 +68,8 @@ def associate_foyer_to_points(foyer1_mean, foyer2_mean, points, copy):
         distance1 = dist.euclidean(i, foyer1_mean)
         distance2 = dist.euclidean(i, foyer2_mean)
 
-        if distance1 > distance2:
-            foyer2.append(i)
-        elif distance2 > distance1:
-            foyer1.append(i)
+        if distance1 > distance2:   foyer2.append(i)
+        elif distance2 > distance1: foyer1.append(i)
 
     [cv2.circle(copy_points, i, 2, (0, 0, 255), 2) for i in foyer1]
     [cv2.circle(copy_points, i, 2, (255, 0, 0), 2) for i in foyer2]
@@ -110,6 +99,7 @@ def analyse_foyers(foyers, pair, copy):
         return foyer1, foyer2, foyer1_mean, foyer2_mean
     else:
         return None, None, None, None
+
 
 def determinate_foyer(last, foyer1, foyer2, foyer1_mean, foyer2_mean, finger):
 
@@ -180,7 +170,6 @@ def delete_from_distance(sorted_fingers, crop):
             cv2.circle(copy, finger[point], 2, (0, 255, 255), 2)
             cv2.circle(copy, finger[point + 1], 2, (0, 0, 255), 2)
             cv2.line(copy, finger[point], finger[point + 1], (0, 0, 0), 1)
-
 
             if abs(distancex) >= 13 and abs(distancey) >= 11:
                 cv2.circle(copy, finger[point + 1], 2, (255, 255, 255), 2)
@@ -290,37 +279,7 @@ def delete_phax(sorted_fingers, fingers_orientation, last, crop):
     remove = delete_from_distance(sorted_fingers, crop)
     sorted_fingers = removing(remove, sorted_fingers)
 
-
-##    copy = crop.copy()
-##    for finger in sorted_fingers:
-##        for point in finger:
-##            cv2.circle(copy, point, 2, (0, 255, 0), 2)
-##    cv2.imshow("aa", copy)
-##
-##
     sorted_fingers[1:] = extremum(sorted_fingers[1:], crop)
-##
-##    cv2.imshow("sorted_fingerssorted_fingers", copy)
-##    cv2.waitKey(0)
-##
-##    print("")
-
 
     return sorted_fingers, fingers_orientation
 
-
-
-
-
-
-
-
-def delete_points(sorted_fingers, fingers_orientation, last, crop):
-
-    #Delete phax
-    sorted_fingers, fingers_orientation = delete_phax(sorted_fingers, crop, last, fingers_orientation)
-
-    #Delete finger
-    sorted_fingers, fingers_orientation = delete_finger(sorted_fingers, fingers_orientation, crop)
-
-    return sorted_fingers, fingers_orientation
