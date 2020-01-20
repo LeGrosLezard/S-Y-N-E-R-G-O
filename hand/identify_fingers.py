@@ -33,14 +33,14 @@ def thumb_to_next_finger(fingers, thumb, finger_annotation,
 
     #Index
     if area_for_ratio == "width" and thumb_index < rectangle_w * 0.574 or\
-       area_for_ratio == "height" and thumb_index < rectangle_w * 0.574:
+       area_for_ratio == "height" and thumb_index < rectangle_h * 0.595:
         fingers_identify.append((fingers[0], finger_annotation[0]))
         draw_line_pts(copy, finger_annotation[0], thumb[0][-1], fingers[0])
         [REMOVING(finger_annotation) for iteration in range(1)]
 
     #Major
     elif area_for_ratio == "width" and rectangle_w * 0.775 > thumb_index > rectangle_w * 0.574 or\
-         area_for_ratio == "height" and rectangle_w * 0.775 > thumb_index > rectangle_w * 0.574:
+         area_for_ratio == "height" and rectangle_h * 0.775 > thumb_index > rectangle_h * 0.595:
         fingers_identify.append((fingers[0], finger_annotation[1]))
         draw_line_pts(copy, finger_annotation[1], thumb[0][-1], fingers[0])
         [REMOVING(finger_annotation) for iteration in range(2)]
@@ -173,8 +173,6 @@ def releve_data_thumb_fingers(points, thumb):
 
     return points
             
-
-
 
 def appropriate_finger_to_his_points(fingers, original_fingers):
     """From original fingers, recuperate all point and attribuate
