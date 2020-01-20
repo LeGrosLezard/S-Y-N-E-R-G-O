@@ -23,6 +23,8 @@ def sorted_points(abcisse_pos, to_reverse, fingers_dico):
 def position_from_other_fingers(fingers_dico, crop):
     """position du doigt, par apport aux autres"""
 
+    print("\nposition")
+
     copy = crop.copy()
 
     #Sort by y position
@@ -64,17 +66,20 @@ def defintion_to_angle(finger_name, angle):
 
     position = ""
 
+    angles = {"horrizontal" : (0, 10), "gauche levé - ": (11, 30), "gauche levé +- ": (31, 50),
+              "gauche levé + ": (51, 60), "gauche levé ++ ": (61, 75), "droit": (76, 105)}
+
     if 0 <= angle < 20:
-        print("doigt horrizontal")
-        position = "horrizontal"
+        print("0-20")
+        positon = ""
 
     elif 20 < angle < 60:
-        print("doigt legrement penché droite")
-        position = "droit penche legerement droite"
-
+        print("20-60")
+        positon = ""
+        
     elif 60 < angle < 80:
-        print("doigt penché droite")
-        position = "droit penche droite"
+        print("60-80")
+        positon = ""
 
     elif 80 < angle < 110:
         print("doigt droit")
@@ -90,14 +95,16 @@ def position_of_the_finger(fingers_dico, crop):
 
     position_fingers = {"thumb": [], "I": [], "M": [], "An": [], "a": []}
     for finger_name, points in fingers_dico.items():
+
         copy = crop.copy()
+
+        print(finger_name, points)
 
         if points != []:
 
             triangle = [points[0], points[-1], (points[-1][0], points[0][1])]
 
             draw_on_figure(triangle, copy)
-
 
             a = int(dist.euclidean(triangle[1], triangle[2]))
             b = int(dist.euclidean(triangle[0], triangle[2]))
@@ -112,6 +119,9 @@ def position_of_the_finger(fingers_dico, crop):
 
                 position = defintion_to_angle(finger_name, angle)
                 position_fingers[finger_name] = position
+            else:
+                print("cos 0 faire via le doigt apres")
+
 
             cv2.imshow("copy", copy)
             cv2.waitKey(0)
@@ -381,6 +391,8 @@ def fingers_analyse(sorted_fingers, crop):
         for finger_name, value in fingers_dico.items():
             if finger[1] == finger_name:
                 fingers_dico[finger_name] = finger[0][0]
+
+    [print(k, v) for k, v in fingers_dico.items()]
 
     position_from_other_fingers(fingers_dico, crop)
     position_fingers = position_of_the_finger(fingers_dico, crop)
