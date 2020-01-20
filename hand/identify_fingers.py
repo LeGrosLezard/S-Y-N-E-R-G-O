@@ -167,15 +167,11 @@ def distance_resorted_beetween_fingers(current_fingers, fingers, all_finger):
 
     distance_to_sort = sorted([dist.euclidean(current_fingers, i) for i in fingers])
     reorganisation = []
-    for sort in distance_to_sort:
-        for fing in fingers:
-            if dist.euclidean(current_fingers, fing) == sort:
-                reorganisation.append(fing)
+    reorganisation += [fing for sort in distance_to_sort for fing in fingers if fing != ()
+                        and dist.euclidean(current_fingers, fing) == sort]
 
     if fingers != reorganisation:
         print("order changed")
-        print(fingers)
-        print(reorganisation)
 
     else:
         reorganisation = all_finger
