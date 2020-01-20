@@ -167,6 +167,7 @@ def delete_from_distance(sorted_fingers, crop):
         lasty_sign = ""
         lastx = 0
         lasty = 0
+
         for point in range(len(finger) - 1):
 
             distancex = finger[point][0] - finger[point + 1][0]
@@ -181,24 +182,24 @@ def delete_from_distance(sorted_fingers, crop):
             print(distancex, distancey)
             
             if distancex > 0 : signx = 1
-            else: signx = 0
+            else:              signx = 0
             if distancey > 0 : signy = 1
-            else: signy = 0
+            else:              signy = 0
 
 
-            print("plus grand que 20x ", abs(distancex) >= 20)
+            print("plus grand que 20x ", abs(distancex) >= 22)
             print("pas meme signe x : ", lastx_sign != signx)
 
-            print("plus grand que 20y ",abs(distancey) >= 20)
+            print("plus grand que 20y ",abs(distancey) >= 22)
             print("pas meme signe y : ",lasty_sign != signy)
 
-            print("plus grand que 17x et y > 10 ", abs(distancex) >= 17 and abs(distancey) > 10)
+            print("plus grand que 17x et y > 10 ", abs(distancex) >= 17 and abs(distancey) >= 10)
             print("pas meme signe 25y: ", abs(distancey) >= 25)
 
 
-            if abs(distancex) >= 20 and lastx_sign != signx and lasty_sign != signy or\
-               abs(distancey) >= 20 and lasty_sign != signy and lasty_sign != signy or\
-               abs(distancex) >= 17 and abs(distancey) > 10 or\
+            if abs(distancex) >= 22 and lastx_sign != signx and lasty_sign != signy and lastx_sign != "" or\
+               abs(distancey) >= 22 and lasty_sign != signy and lasty_sign != signy and lasty_sign != "" or\
+               abs(distancex) >= 17 and abs(distancey) >= 12 or\
                abs(distancey) >= 25:
 
                 cv2.circle(copy, finger[point + 1], 2, (255, 255, 255), 2)
@@ -217,6 +218,8 @@ def delete_from_distance(sorted_fingers, crop):
             cv2.waitKey(0)
 
         print("")
+
+
 
     return remove
 
