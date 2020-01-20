@@ -131,10 +131,10 @@ def printing(rectangle, thumb, fingers, direction, axis):
           rectangle, "\n", thumb, "\n", fingers, "\n", direction, axis)
 
 
-def ratio_choice(direction):
+def ratio_choice(rectangle_w, rectangle_h):
     """Choose the ratio length"""
-    if direction in ("droite", "gauche"):   area = "width"
-    elif direction in ("bas", "haut"):      area = "height"
+    if rectangle_w > rectangle_h:        area = "width"
+    elif rectangle_h > rectangle_w:      area = "height"
     return area
 
 
@@ -207,7 +207,8 @@ def identify_fingers(thumb, fingers, crop, rectangle, direction, axis):
     if len(fingers) > fingers.count(()):
     
         #Choice area in function of hand position
-        area_for_ratio = ratio_choice(direction)
+        area_for_ratio = ratio_choice(rectangle_w, rectangle_h)
+        print("\nratio choosen: ", area_for_ratio)
 
         #Reorganise a last time
         fingers = releve_data_thumb_fingers(fingers, thumb)
