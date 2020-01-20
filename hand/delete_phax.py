@@ -163,8 +163,10 @@ def delete_from_distance(sorted_fingers, crop):
     for nb, finger in enumerate(sorted_fingers):
 
         finger = finger[1:]
-        #print(finger)
-
+        lastx_sign = ""
+        lasty_sign = ""
+        lastx = 0
+        lasty = 0
         for point in range(len(finger) - 1):
 
             distancex = finger[point][0] - finger[point + 1][0]
@@ -173,17 +175,42 @@ def delete_from_distance(sorted_fingers, crop):
 
             cv2.circle(copy, finger[point], 2, (0, 255, 255), 2)
             cv2.circle(copy, finger[point + 1], 2, (0, 0, 255), 2)
+
             cv2.line(copy, finger[point], finger[point + 1], (0, 0, 0), 1)
 
-            if abs(distancex) >= 13 and abs(distancey) >= 11:
+            print(distancex, distancey)
+            
+            if distancex > 0 : signx = 1
+            else: signx = 0
+            if distancey > 0 : signy = 1
+            else: signy = 0
+
+
+            print("plus grand que 20x ", abs(distancex) >= 20)
+            print("pas meme signe x : ", lastx_sign != signx)
+
+            print("plus grand que 20y ",abs(distancey) >= 20)
+            print("pas meme signe y : ",lasty_sign != signy)
+
+            print("plus grand que 17x et y > 10 ", abs(distancex) >= 17 and abs(distancey) > 10)
+            print("pas meme signe 25y: ", abs(distancey) >= 25)
+
+
+            if abs(distancex) >= 20 and lastx_sign != signx and lasty_sign != signy or\
+               abs(distancey) >= 20 and lasty_sign != signy and lasty_sign != signy or\
+               abs(distancex) >= 17 and abs(distancey) > 10 or\
+               abs(distancey) >= 25:
+
                 cv2.circle(copy, finger[point + 1], 2, (255, 255, 255), 2)
                 remove.append(finger[point + 1])
                 finger[point + 1] = finger[point]
 
-            elif abs(distancey) >= 20:
-                cv2.circle(copy, finger[point + 1], 2, (255, 255, 255), 2)
-                remove.append(finger[point + 1])
-                finger[point + 1] = finger[point]
+            else:
+
+                lastx_sign = signx
+                lasty_sign = signy
+                lastx = distancex
+                lasty = distancey
 
 
             cv2.imshow("aa", copy)
@@ -215,7 +242,7 @@ def set_function(sorted_fingers):
 def printing(sorted_fingers):
     print("")
     print("DELETE PHAX \n")
-    print(sorted_fingers)
+    print("sorted fingers: ", sorted_fingers)
     print("")
 
 
