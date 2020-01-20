@@ -210,7 +210,7 @@ def identify_fingers(thumb, fingers, crop, rectangle, direction, axis):
         area_for_ratio = ratio_choice(direction)
 
         #Reorganise a last time
-        fingers = distance_thumb_fingers(fingers, thumb)
+        fingers = releve_data_thumb_fingers(fingers, thumb)
 
         #Identify finger after the thumb
         first_fingerX = thumb_to_next_finger(fingers, thumb, FINGER_ANNOTATION, copy,

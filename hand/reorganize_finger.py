@@ -84,6 +84,7 @@ def reorganize_finger(crop, miss_points, finger_sorted, fingers_orientation):
     fingers = [[i, j[1]] for i, j in zip(finger_sorted, fingers_orientation)]
 
     thumb = fingers[0]
+    print(thumb)
     fingers = fingers[1:]
 
     #Recuperate x and y first point
