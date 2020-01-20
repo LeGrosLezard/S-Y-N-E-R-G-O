@@ -83,7 +83,7 @@ def associate_foyer_to_points(foyer1_mean, foyer2_mean, points, copy):
 
 def analyse_foyers(foyers, pair, copy):
 
-    points = list(set([j for i in pair for j in i]))
+    points = list(set([j for i in pair for j in i if j != (0, 0)]))
     foyer1_mean = ""
 
     if foyers == ["ok", "far", "ok"]:
@@ -92,6 +92,10 @@ def analyse_foyers(foyers, pair, copy):
 
     elif foyers == ["far", "ok", "ok"]:
         print("premiere liaison foyer apres 1er pts")
+        foyer1_mean, foyer2_mean = build_foyer(1, 1, points, copy)
+
+    elif foyers == ["ok", "far"]:
+        print("premier liaison")
         foyer1_mean, foyer2_mean = build_foyer(1, 1, points, copy)
 
     if foyers != ["ok", "ok", "ok"]:
