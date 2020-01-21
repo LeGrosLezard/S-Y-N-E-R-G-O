@@ -7,7 +7,7 @@ def points_distance_fingers(name, name1, dico, copy):
     """Recuperate all points distances beetween fingers
     for stock it into csv file."""
 
-    print("fingers : ", liste_finger[i], liste_finger[i + 1])
+    print("fingers : ", name, name1)
 
     finger, finger1 = dico[name], dico[name1]                       #Recuperate points from dico
 
@@ -45,15 +45,15 @@ def angle_points_fingers():
 
 
 
-def inter_espace_fingers(dico):
+def inter_espace_fingers(dico, crop):
 
     distance_fingers = []
     liste_finger = ["thumb", "I", "M", "An", "a"]
     for i in range(len(liste_finger)):
         if i < len(liste_finger) - 1:
 
-            distance = distance_beetween_2_fingers(liste_finger[i],
-                                                   liste_finger[i + 1], dico, copy)
+            distance = points_distance_fingers(liste_finger[i],
+                                                liste_finger[i + 1], dico, crop)
             distance_fingers += distance
 
 
@@ -470,7 +470,7 @@ def fingers_analyse(sorted_fingers, crop):
     print("DICTIONNARY : ", fingers_dico)
     [print(k, v) for k, v in fingers_dico.items()]
 
-    inter_espace_fingers(dico)
+    inter_espace_fingers(fingers_dico, crop)
 
     position_from_other_fingers(fingers_dico, crop)
     position_fingers = position_of_the_finger(fingers_dico, crop)
