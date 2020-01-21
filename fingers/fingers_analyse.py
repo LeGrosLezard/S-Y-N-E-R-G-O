@@ -3,7 +3,7 @@ import math
 from scipy.spatial import distance as dist
 
 
-#======================================  inter_espace_fingers   ==================================
+#=================================================  inter_espace_fingers   ==================================================
 #points_distance_fingers
 #angle_points_fingers
 
@@ -38,7 +38,7 @@ def inter_espace_fingers(dico, crop):
     return distance_fingers, angle_fingers
 
 
-#=================================  points_distance_fingers   ==================================
+#============================================  points_distance_fingers   ==============================================
 
 def drawing_circle(f, f1, copy):                                    #Drawing circles
     cv2.circle(copy, f1, 2, (0, 255, 0), 2)
@@ -75,7 +75,7 @@ def points_distance_fingers(name, name1, dico, copy):
     return liste_ditance
 
 
-#======================================  angle_points_fingers   ==================================
+#================================================  angle_points_fingers   ================================================
 
 def drawing_triangle(f, f1, f2, copy_line):                         #Drawing triangle
 
@@ -137,7 +137,7 @@ def angle_points_fingers(name, name1, dico, copy):
 
 
 
-#*********************************************  inter_espace_fingers   ***********************************************
+#***********************************************  inter_espace_fingers   *************************************************
 
 
 
