@@ -3,6 +3,82 @@ import math
 from scipy.spatial import distance as dist
 
 
+def points_distance_fingers(name, name1, dico, copy):
+    """Recuperate all points distances beetween fingers
+    for stock it into csv file."""
+
+    print("fingers : ", liste_finger[i], liste_finger[i + 1])
+
+    finger, finger1 = dico[name], dico[name1]                       #Recuperate points from dico
+
+    def drawing_circle(f, f1, copy):                                #Drawing circles
+        cv2.circle(copy, f1, 2, (0, 255, 0), 2)
+        cv2.circle(copy, f, 2, (0, 0, 255), 2)
+
+    def drawing_line(f, f1, copy_line):                             #Drawing lines
+        cv2.line(copy_line, f1, f, (0, 0, 255), 1)
+
+    liste_ditance = []                                              #Stock distance and names
+    for f1, f in zip(finger1, finger):
+
+        drawing_circle(f, f1, copy)
+
+        copy_line = copy.copy()
+        drawing_line(f, f1, copy_line)
+
+        print(f1, f)
+
+        liste_ditance.append(dist.euclidean(f, f1))                 #Euclidian distances
+
+        cv2.imshow("copy_line", copy_line)
+        cv2.waitKey(0)
+
+    liste_ditance.append((name, name1))                             #Name's points
+
+    return liste_ditance
+
+
+
+def angle_points_fingers():
+    pass
+
+
+
+
+def inter_espace_fingers(dico):
+
+    distance_fingers = []
+    liste_finger = ["thumb", "I", "M", "An", "a"]
+    for i in range(len(liste_finger)):
+        if i < len(liste_finger) - 1:
+
+            distance = distance_beetween_2_fingers(liste_finger[i],
+                                                   liste_finger[i + 1], dico, copy)
+            distance_fingers += distance
+
+
+    return distance_fingers
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #============================================================ position_from_other_fingers()
 
@@ -272,6 +348,10 @@ def space(begening_finger, end_finger, finger_pos, crop):
 
 def position_beetween_fingers(fingers_dico, sens_fingers, crop):
 
+    """
+        espace entre les doigts, position en commencant par le pouce
+    """
+
     begening_finger = []
     end_finger = []
 
@@ -365,12 +445,16 @@ def courbure_du_doigt():
 
 
 
+
+
+
+
 #=================================================================== fingers_analyse()
 
 def printing(sorted_fingers):
     print("\nFINGER ANALYSE \n", sorted_fingers, "\n")
 
-    
+
 def fingers_analyse(sorted_fingers, crop):
 
     copy = crop.copy()
@@ -383,8 +467,10 @@ def fingers_analyse(sorted_fingers, crop):
         for finger_name, value in fingers_dico.items():
             if finger[1] == finger_name:
                 fingers_dico[finger_name] = finger[0]
-
+    print("DICTIONNARY : ", fingers_dico)
     [print(k, v) for k, v in fingers_dico.items()]
+
+    inter_espace_fingers(dico)
 
     position_from_other_fingers(fingers_dico, crop)
     position_fingers = position_of_the_finger(fingers_dico, crop)
