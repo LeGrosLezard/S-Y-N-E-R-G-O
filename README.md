@@ -1,6 +1,6 @@
 # S-Y-N-E-R-G-O
 
-pyramide par le dessus aussi
+- y'a plein de truck qui servent a rien, effacer les reorganisations 
 
 - rendre tout propre
 
