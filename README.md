@@ -1,10 +1,34 @@
 # S-Y-N-E-R-G-O
 
-- finir la mise en forme
+- en gros, on fait ratio
 
-- faire un truk si y'a pas de doigt qui suppose ou est le doigt manauqnat  via les mains qu'on a eu au paravant et ensuite on entraine un model svm
+- si manque un doigt on va chercher si on en a un a peu pres un via les csv de 100 par 100 qu'on parcourt en thread pour que ce soit plus rapide
 
-- finir les doigts
+- si on a pas de detection, on l'invente jusqu'a ce qu'on en trouve un, on efface le csv qui l'a inventé
+
+fin un truk comme ca jcrois
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <br><br><br><br><br><br><br><br><br>
 
