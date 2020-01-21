@@ -357,14 +357,6 @@ def similar_points_finger(fingers_dico, crop):
         print("no finger same points")
 
 
-
-
-
-
-
-
-
-
 #=================================================================== courbure_du_doigt()
 
 def courbure_du_doigt():
@@ -390,7 +382,7 @@ def fingers_analyse(sorted_fingers, crop):
     for finger in sorted_fingers:
         for finger_name, value in fingers_dico.items():
             if finger[1] == finger_name:
-                fingers_dico[finger_name] = finger[0][0]
+                fingers_dico[finger_name] = finger[0]
 
     [print(k, v) for k, v in fingers_dico.items()]
 
