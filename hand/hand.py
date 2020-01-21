@@ -14,7 +14,7 @@ from scipy.spatial import distance as dist
 from sign import sign
 from skeletton import hand_skelettor
 from palm_analyse import palm_analyse
-from hand_location import hand_location
+from thumb_location import thumb_location
 from delete_phax import delete_phax
 from delete_finger import delete_finger
 from no_finger_found import no_finger_found
@@ -104,53 +104,47 @@ def treat_skeletton_points(skeletton, position, finger, rectangle, crop):
     annular = position[13:16]
     auricular = position[17:20]
 
+
     miss_points = no_finger_found(finger, thumb, index, major, annular, auricular)
 
     #location of the thumb
-    hand_localised = hand_location(thumb, index, major, annular, auricular, crop)
+    thumb_localisation = thumb_location(thumb, index, major, annular, auricular, crop)
 
-    #area of the palm
-    fingers_direction = palm_analyse(hand_localised, palm_center, palm, rectangle, crop,
-                                     thumb, index, major, annular, auricular)
+    if thumb_localisation is not False:
 
+        #area of the palm
+        fingers_direction = palm_analyse(thumb_localisation, palm_center, palm, rectangle, crop,
+                                         thumb, index, major, annular, auricular)
 
+        #Sort fingers
+        sorted_fingers, fingers_orientation = reorganize_phax_position(thumb, index, major, annular,
+                                                 auricular, crop, fingers_direction)
 
-    #Sort fingers
-    sorted_fingers, fingers_orientation = reorganize_phax_position(thumb, index, major, annular,
-                                             auricular, crop, fingers_direction)
-
-    sorted_fingers, fingers_orientation = delete_phax(sorted_fingers, fingers_orientation,
-                                                        LAST_FINGERS_RIGHT, crop)
-
-
-    sorted_fingers, fingers_orientation = delete_finger(sorted_fingers,
-                                                        fingers_orientation, crop)
-
-    #reorganize finger's position
-    thumb, sorted_points,\
-    direction , axis = reorganize_finger(crop, miss_points,
-                                         sorted_fingers, fingers_orientation)
+        sorted_fingers, fingers_orientation = delete_phax(sorted_fingers, fingers_orientation,
+                                                            LAST_FINGERS_RIGHT, crop)
 
 
-    finger_sorted = identify_fingers(thumb, sorted_points, crop, rectangle, direction, axis)
+        sorted_fingers, fingers_orientation = delete_finger(sorted_fingers,
+                                                            fingers_orientation, crop)
+
+        
+        fingers = [[i, j[1]] for i, j in zip(sorted_fingers, fingers_orientation)]
+
+        finger_sorted = identify_fingers(fingers[0], fingers[1:], crop, rectangle, "", "")
 
 
-    fingers_analyse(finger_sorted, crop)
+        fingers_analyse(finger_sorted, crop)
 
 
+        #sign(thumb, index)
 
-
-
-
-
-    #sign(thumb, index)
+        #Save the hand combinaison
+        LAST_FINGERS_RIGHT = finger_sorted
 
 
 
-    #Save the hand combinaison
-    LAST_FINGERS_RIGHT = finger_sorted
-
-
+    if thumb_localisation is False:
+        print("no thumb found")
 
 
 
@@ -196,9 +190,9 @@ def hand(frame, detection_graph, sess, head_box):
 if __name__ == "__main__":
     
 
-
-    IM = 73
-
+    IM = 161
+    IM = 163
+    IM = 167
 
     image = r"C:\Users\jeanbaptiste\Desktop\hand_picture\a{}.jpg".format(str(IM))
     #image = r"C:\Users\jeanbaptiste\Desktop\hand_picture\{}.jpg".format(str(IM))
@@ -235,7 +229,7 @@ if __name__ == "__main__":
     #7 No pouce
     #3 annuiare
     #paume de la main
-
+    #5 doigt mask qui fausse la detection
 
 
 
