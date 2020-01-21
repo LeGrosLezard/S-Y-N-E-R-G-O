@@ -116,20 +116,16 @@ def treat_skeletton_points(skeletton, position, finger, rectangle, crop):
                                          thumb, index, major, annular, auricular)
 
         #Sort fingers
-        sorted_fingers, fingers_orientation = reorganize_phax_position(thumb, index, major, annular,
+        sorted_fingers = reorganize_phax_position(thumb, index, major, annular,
                                                  auricular, crop, fingers_direction)
 
-        sorted_fingers, fingers_orientation = delete_phax(sorted_fingers, fingers_orientation,
-                                                            LAST_FINGERS_RIGHT, crop)
+        sorted_fingers = delete_phax(sorted_fingers, LAST_FINGERS_RIGHT, crop)
 
 
-        sorted_fingers, fingers_orientation = delete_finger(sorted_fingers,
-                                                            fingers_orientation, crop)
+        sorted_fingers = delete_finger(sorted_fingers, crop)
 
-        
-        fingers = [[i, j[1]] for i, j in zip(finger_sorted, fingers_orientation)]
-        finger_sorted = identify_fingers(fingers[0], fingers[1:], crop, rectangle)
 
+        finger_sorted = identify_fingers(sorted_fingers[0], sorted_fingers[1:], crop, rectangle)
 
         fingers_analyse(finger_sorted, crop)
 

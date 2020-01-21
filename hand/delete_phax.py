@@ -122,19 +122,8 @@ def determinate_foyer(last, foyer1, foyer2, foyer1_mean, foyer2_mean, finger):
     return finger
 
 
-def re_determinate_search_finger(fingers_orientation, last, finger):
 
-
-    last_thumb_position = [i[0] for i in last if i[1] == "thumb"]
-
-    fingers_orientation[0][0] = finger
-    fingers_orientation[0][1] = last_thumb_position[0][1]
-
-    return fingers_orientation
-
-
-
-def point_concentration(finger, last, copy, fingers_orientation):
+def point_concentration(finger, last, copy):
 
     print("\npoint_concentration\n")
     print(finger)
@@ -146,8 +135,7 @@ def point_concentration(finger, last, copy, fingers_orientation):
     foyer1, foyer2, foyer1_mean, foyer2_mean = analyse_foyers(foyers, pair, copy)
     if foyer1 != None:
         finger = determinate_foyer(last, foyer1, foyer2, foyer1_mean, foyer2_mean, finger)
-        fingers_orientation = re_determinate_search_finger(fingers_orientation, last,finger)
-        return finger, fingers_orientation
+        return finger
     else:
         return None, None
 
@@ -295,19 +283,17 @@ def extremum(finger, copy):
 
 
 
-def delete_phax(sorted_fingers, fingers_orientation, last, crop):
+def delete_phax(sorted_fingers, last, crop):
 
     printing(sorted_fingers)
     sorted_fingers = set_function(sorted_fingers)
 
     #foyer
     for_display = sorted_fingers[0]
-    a, b = point_concentration(sorted_fingers[0], last, crop, fingers_orientation)
+    a = point_concentration(sorted_fingers[0], last, crop)
 
     if a != None:
         sorted_fingers[0] = a
-        fingers_orientation = b
-
         print("thumb points changed from : ", for_display, " to", sorted_fingers[0])
 
 
@@ -316,5 +302,5 @@ def delete_phax(sorted_fingers, fingers_orientation, last, crop):
 
     sorted_fingers[1:] = extremum(sorted_fingers[1:], crop)
 
-    return sorted_fingers, fingers_orientation
+    return sorted_fingers
 

@@ -3,36 +3,28 @@ from scipy.spatial import distance as dist
 import numpy as np
 
 #=========================================================================================== delete_finger()
-def to_removing_finger(to_remove, sorted_fingers, fingers_orientation):
+def to_removing_finger(to_remove, sorted_fingers):
     
     if len(to_remove) > 0:
         print("element a supprimer :", to_remove)
 
         elements_finger = []
-        elements_orientation = []
 
         for i in to_remove:
             elements_finger.append(sorted_fingers[i])
-            elements_orientation.append(fingers_orientation[i])
 
         for i in elements_finger:
             for j in sorted_fingers:
                 if i == j:
                     sorted_fingers.remove(j)
-        
-        for i in elements_orientation:
-            for j in fingers_orientation:
-                if i == j:
-                    fingers_orientation.remove(j)
 
     print(sorted_fingers)
-    print(fingers_orientation)
     print("")
 
-    return sorted_fingers, fingers_orientation
+    return sorted_fingers
 
 
-def delete_finger(sorted_fingers, fingers_orientation, crop):
+def delete_finger(sorted_fingers, crop):
 
     print("DELETE FINGER")
     print(sorted_fingers, "\n")
@@ -76,7 +68,6 @@ def delete_finger(sorted_fingers, fingers_orientation, crop):
             print("")
 
 
-    sorted_fingers, fingers_orientation =\
-                    to_removing_finger(to_remove, sorted_fingers, fingers_orientation)
+    sorted_fingers = to_removing_finger(to_remove, sorted_fingers)
 
-    return sorted_fingers, fingers_orientation
+    return sorted_fingers

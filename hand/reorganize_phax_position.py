@@ -76,5 +76,5 @@ def reorganize_phax_position(thumb, index, major, annular,
     sorted_fingers = [sorted_data(i[0], i[1]) for i in fingers_orientation]
 
 
-    return sorted_fingers, fingers_orientation
+    return sorted_fingers
 
