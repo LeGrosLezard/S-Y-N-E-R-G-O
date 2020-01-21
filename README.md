@@ -1,5 +1,7 @@
 # S-Y-N-E-R-G-O
 
+- pcque c trop chiant de découpé ces images de les étiquetté
+
 - en gros, on fait ratio
 
 - si manque un doigt on va chercher si on en a un a peu pres un via les csv de 100 par 100 qu'on parcourt en thread pour que ce soit plus rapide
