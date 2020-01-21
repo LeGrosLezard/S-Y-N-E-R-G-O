@@ -1,6 +1,6 @@
 # S-Y-N-E-R-G-O
 
-- y'a plein de truck qui servent a rien, effacer les reorganisations 
+-reorganisation phax sert a un truk ouuuuuuuuuuuuuuuuffffffff
 
 - rendre tout propre
 
