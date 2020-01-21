@@ -17,9 +17,8 @@ from palm_analyse import palm_analyse
 from thumb_location import thumb_location
 from delete_phax import delete_phax
 from delete_finger import delete_finger
-from no_finger_found import no_finger_found
+from finger_found import finger_found
 from identify_fingers import identify_fingers
-from reorganize_phax_position import reorganize_phax_position
 from hand_mask import skin_detector, hand_treatment, make_bitwise
 
 #Treat fingers
@@ -90,11 +89,8 @@ def treat_skeletton_points(skeletton, position, finger, rectangle, crop):
 
     palm_center =  position[0][0]
 
-    palm = [[position[5][0], position[9][0], position[13][0],
-             position[17][0], position[0][1]],
-
-            [position[5][0], position[9][0], position[13][0],
-             position[17][0], position[0][1]]]
+    palm = [position[5][0], position[9][0], position[13][0],
+             position[17][0], position[0][1]]
 
     #attribuate finger's to their initial detection
     thumb = position[1:4]
@@ -104,22 +100,21 @@ def treat_skeletton_points(skeletton, position, finger, rectangle, crop):
     auricular = position[17:20]
 
 
-    miss_points = no_finger_found(finger, thumb, index, major, annular, auricular)
 
-    #location of the thumb
-    thumb_localisation = thumb_location(thumb, index, major, annular, auricular, crop)
+
+    fingers = finger_found(finger, thumb, index, major, annular, auricular)
+    thumb_localisation = thumb_location(fingers, crop)
 
     if thumb_localisation is not False:
 
-        #area of the palm
-        fingers_direction = palm_analyse(thumb_localisation, palm_center, palm, rectangle, crop,
-                                         thumb, index, major, annular, auricular)
+
+        palm_analyse(thumb_localisation, palm_center, palm, rectangle, crop,
+                fingers)
 
         #Sort fingers
-        sorted_fingers = reorganize_phax_position(thumb, index, major, annular,
-                                                 auricular, crop, fingers_direction)
+        #sorted_fingers = reorganize_phax_position(fingers, crop)
 
-        sorted_fingers = delete_phax(sorted_fingers, LAST_FINGERS_RIGHT, crop)
+        sorted_fingers = delete_phax(fingers, LAST_FINGERS_RIGHT, crop)
 
 
         sorted_fingers = delete_finger(sorted_fingers, crop)
@@ -184,10 +179,11 @@ def hand(frame, detection_graph, sess, head_box):
 if __name__ == "__main__":
     
 
-    IM = 161
-    IM = 163
     IM = 167
+    IM = 1
 
+
+    
     image = r"C:\Users\jeanbaptiste\Desktop\hand_picture\a{}.jpg".format(str(IM))
     #image = r"C:\Users\jeanbaptiste\Desktop\hand_picture\{}.jpg".format(str(IM))
 

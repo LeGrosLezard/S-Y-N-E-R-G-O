@@ -1,37 +1,31 @@
 import cv2
-from scipy.spatial import distance as dist
 import numpy as np
-
-
-
-
-
-#=========================================================================== foyers
+from scipy.spatial import distance as dist
 
 
 def recuperate_distance(finger, copy):
+    """Recuperate distance from pair and pairs"""
 
-    distance_points = [dist.euclidean(finger[i], finger[i + 1])
-                       for i in range(len(finger)) if i < len(finger) - 1]
+    distance = [[dist.euclidean(finger[i], finger[i + 1])                       #Recuperate distance
+                for i in range(len(finger)) if i < len(finger) - 1]             #of pair
 
-    pair = [(finger[i], finger[i + 1]) for i in range(len(finger))
+    pair = [(finger[i], finger[i + 1]) for i in range(len(finger))              #Recuperate pairs
             if i < len(finger) - 1]
 
-    return pair, distance_points
+    return pair, distance
 
 
 def analyse_distance(distance_points):
+
     foyers = []
 
     for distance in distance_points:
         print(distance)
         if distance > 30:    foyers.append("far")
         elif distance < 30 : foyers.append("ok")
- 
+
     print("\n", foyers)
     return foyers
-
-
 
 def build_foyer(f, points, copy):
 
@@ -77,8 +71,8 @@ def associate_foyer_to_points(foyer1_mean, foyer2_mean, points, copy):
     cv2.imshow("copy_points", copy_points)
     cv2.waitKey(0)
 
-
     return foyer1, foyer2
+
 
 
 def analyse_foyers(foyers, pair, copy):
@@ -99,9 +93,10 @@ def analyse_foyers(foyers, pair, copy):
         print("premier liaison")
         foyer1_mean, foyer2_mean = build_foyer(1, points, copy)
 
-    if foyers != ["ok", "ok", "ok"]:
+    if foyers != ["ok", "ok", "ok"] and foyers != ["ok", "ok"]:
         foyer1, foyer2 = associate_foyer_to_points(foyer1_mean, foyer2_mean, points, copy)
         return foyer1, foyer2, foyer1_mean, foyer2_mean
+
     else:
         return None, None, None, None
 
@@ -128,8 +123,6 @@ def point_concentration(finger, last, copy):
     print("\npoint_concentration\n")
     print(finger)
 
-
-
     pair, distance_points = recuperate_distance(finger, copy)
     foyers = analyse_distance(distance_points)
     foyer1, foyer2, foyer1_mean, foyer2_mean = analyse_foyers(foyers, pair, copy)
@@ -137,13 +130,13 @@ def point_concentration(finger, last, copy):
         finger = determinate_foyer(last, foyer1, foyer2, foyer1_mean, foyer2_mean, finger)
         return finger
     else:
-        return None, None
+        return None
 
 
 
 
 
-#=========================================================================== delete_phax_points
+
 def delete_from_distance(sorted_fingers, crop):
 
     copy = crop.copy()
@@ -215,7 +208,6 @@ def delete_from_distance(sorted_fingers, crop):
 
 
 
-#=========================================================================== delete_phax
 
 def set_function(sorted_fingers):
     """Sometimes points have same position
