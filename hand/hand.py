@@ -19,7 +19,6 @@ from delete_phax import delete_phax
 from delete_finger import delete_finger
 from no_finger_found import no_finger_found
 from identify_fingers import identify_fingers
-from reorganize_finger import reorganize_finger
 from reorganize_phax_position import reorganize_phax_position
 from hand_mask import skin_detector, hand_treatment, make_bitwise
 
@@ -128,9 +127,8 @@ def treat_skeletton_points(skeletton, position, finger, rectangle, crop):
                                                             fingers_orientation, crop)
 
         
-        fingers = [[i, j[1]] for i, j in zip(sorted_fingers, fingers_orientation)]
-
-        finger_sorted = identify_fingers(fingers[0], fingers[1:], crop, rectangle, "", "")
+        fingers = [[i, j[1]] for i, j in zip(finger_sorted, fingers_orientation)]
+        finger_sorted = identify_fingers(fingers[0], fingers[1:], crop, rectangle)
 
 
         fingers_analyse(finger_sorted, crop)

@@ -1,9 +1,10 @@
 import cv2
-
+import numpy as np
 
 def make_line(thresh, margin):
     """We make line for detect more than one area
     with border, on eyelashes is paste to the border"""
+
     cv2.line(thresh, (0, 0), (0, thresh.shape[0]), (255, 255, 255), margin)
     cv2.line(thresh, (0, 0), (thresh.shape[1], 0), (255, 255, 255), margin)
     cv2.line(thresh, (thresh.shape[1], 0), (thresh.shape[1], thresh.shape[0]), (255, 255, 255), margin)
@@ -14,8 +15,11 @@ def skin_detector(region, frame, frame_copy):
 
     size_crop = 35
 
-    crop = frame[region[1] - size_crop:region[3] + size_crop, region[0] - size_crop:region[2] + size_crop]
-    copy = frame_copy[region[1] - size_crop:region[3] + size_crop, region[0] - size_crop:region[2] + size_crop]
+    crop = frame[region[1] - size_crop:region[3] + size_crop,
+                 region[0] - size_crop:region[2] + size_crop]
+
+    copy = frame_copy[region[1] - size_crop:region[3] + size_crop,
+                      region[0] - size_crop:region[2] + size_crop]
 
     min_YCrCb = np.array([0,140,85],np.uint8)
     max_YCrCb = np.array([240,180,130],np.uint8)

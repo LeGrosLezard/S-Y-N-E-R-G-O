@@ -65,7 +65,8 @@ def delete_finger(sorted_fingers, fingers_orientation, crop):
             print("correspondance : ", same_points_localisation, " / total pts: ", length1 * length2)
 
 
-            if same_points_localisation >= (int(length1 * length2) / 2) - 2 and length1 * length2 > 0:
+            if same_points_localisation >= (int(length1 * length2) / 2) - 2 and length1 * length2 > 0 and\
+               same_points_localisation > 0:
                 to_remove.append(i + 1)
                 [cv2.circle(copy_delete, j, 2, (0, 0, 0), 2) for j in sorted_fingers[i + 1]]
                 print("finger removed")

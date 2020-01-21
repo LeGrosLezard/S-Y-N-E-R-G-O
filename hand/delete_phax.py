@@ -24,7 +24,7 @@ def analyse_distance(distance_points):
     foyers = []
 
     for distance in distance_points:
-
+        print(distance)
         if distance > 30:    foyers.append("far")
         elif distance < 30 : foyers.append("ok")
  
@@ -33,18 +33,18 @@ def analyse_distance(distance_points):
 
 
 
-def build_foyer(f1, f2, points, copy):
+def build_foyer(f, points, copy):
 
     copy_foyer = copy.copy()
 
     #foyer1_mean = tuple(int(mean()))
-    foyer1 = points[:f1]
+    foyer1 = points[:f]
     foyer1_mean = tuple([int(np.mean([i[0] for i in foyer1])),
                    int(np.mean([i[1] for i in foyer1]))])
 
 
     #foyer2_mean = tuple(int(mean()))
-    foyer2 = points[f2:]
+    foyer2 = points[f:]
     foyer2_mean = tuple([int(np.mean([i[0] for i in foyer2])),
                    int(np.mean([i[1] for i in foyer2]))])
 
@@ -86,17 +86,18 @@ def analyse_foyers(foyers, pair, copy):
     points = list(set([j for i in pair for j in i if j != (0, 0)]))
     foyer1_mean = ""
 
-    if foyers == ["ok", "far", "ok"]:
+    if foyers == ["ok", "far", "ok"] or foyers == ["far", "far", "ok"] or\
+       foyers == ["ok", "ok", "far"]:
         print("deuxieme liaison far donc foyer apres 2 eme pts")
-        foyer1_mean, foyer2_mean = build_foyer(2, 2, points, copy)
+        foyer1_mean, foyer2_mean = build_foyer(2, points, copy)
 
     elif foyers == ["far", "ok", "ok"]:
         print("premiere liaison foyer apres 1er pts")
-        foyer1_mean, foyer2_mean = build_foyer(1, 1, points, copy)
+        foyer1_mean, foyer2_mean = build_foyer(1, points, copy)
 
     elif foyers == ["ok", "far"]:
         print("premier liaison")
-        foyer1_mean, foyer2_mean = build_foyer(1, 1, points, copy)
+        foyer1_mean, foyer2_mean = build_foyer(1, points, copy)
 
     if foyers != ["ok", "ok", "ok"]:
         foyer1, foyer2 = associate_foyer_to_points(foyer1_mean, foyer2_mean, points, copy)
@@ -200,7 +201,7 @@ def delete_from_distance(sorted_fingers, crop):
             if abs(distancex) >= 22 and lastx_sign != signx and lasty_sign != signy and lastx_sign != "" or\
                abs(distancey) >= 22 and lasty_sign != signy and lasty_sign != signy and lasty_sign != "" or\
                abs(distancex) >= 17 and abs(distancey) >= 12 or\
-               abs(distancey) >= 25:
+               abs(distancey) >= 20 or abs(distancex) >= 30:
 
                 cv2.circle(copy, finger[point + 1], 2, (255, 255, 255), 2)
                 remove.append(finger[point + 1])

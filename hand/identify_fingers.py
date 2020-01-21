@@ -126,9 +126,9 @@ def fingers_distance(distance, rectangle_w, rectangle_h, area_for_ratio,
 
 #========================================================================= identify_fingers()
 
-def printing(rectangle, thumb, fingers, direction, axis):
+def printing(rectangle, thumb, fingers):
     print("\nIDENTIFY FINGERS \n Box de la main est de: ",
-          rectangle, "\n", thumb, "\n", fingers, "\n", direction, axis)
+          rectangle, "\n", thumb, "\n", fingers, "\n")
 
 
 def ratio_choice(rectangle_w, rectangle_h):
@@ -190,7 +190,7 @@ def appropriate_finger_to_his_points(fingers, original_fingers):
 
 
 FINGER_ANNOTATION = ["I", "M", "An", "a"]
-def identify_fingers(thumb, fingers, crop, rectangle, direction, axis):
+def identify_fingers(thumb, fingers, crop, rectangle):
 
     global FINGER_ANNOTATION
 
@@ -198,7 +198,7 @@ def identify_fingers(thumb, fingers, crop, rectangle, direction, axis):
     copy = crop.copy()
     _, _, rectangle_w, rectangle_h = rectangle
 
-    printing(rectangle, thumb, fingers, direction, axis)
+    printing(rectangle, thumb, fingers)
 
 
     #Add None then replace by () my first lambda so let it
