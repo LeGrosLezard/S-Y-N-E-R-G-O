@@ -2,7 +2,7 @@
 
 - finir la mise en forme
 
-- faire un truk si y'a pas de doigt qui suppose ou est le doigt manauqnat ca ca pete via les mains qu'on a eu au paravant ca ca pete encore pluss et ensuite on entraine un model svm
+- faire un truk si y'a pas de doigt qui suppose ou est le doigt manauqnat  via les mains qu'on a eu au paravant et ensuite on entraine un model svm
 
 - finir les doigts
 
