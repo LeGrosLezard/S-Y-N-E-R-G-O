@@ -1,16 +1,8 @@
 # S-Y-N-E-R-G-O
 
--reorganisation phax sert a un truk ouuuuuuuuuuuuuuuuffffffff
+- finir la mise en forme et commencer les doigts
 
-- rendre tout propre
-
-- au tout début on laisse le (0, 0) mais on peut l'enlever voir si ca fait un truk
-
-- si ca ne marche pas avec les autres mains... essayer le resize juste avant le skeletton sinon mettre en avant son front
-
-
-- si on croit que le pouce est le petit doigt dès le début mais qu'avec la condition auriculaire < 50 degres et qu'on voit
-a un moment que ca depasse, recommencer la video en disant interchange = True
+- pouce, palm ca sert a que dal ^^ jpensai qu'a set() au lieu de not in ptin
 
 <br><br><br><br><br><br><br><br><br>
 
