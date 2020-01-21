@@ -4,6 +4,8 @@
 
 - pouce, palm ca sert a que dal ^^ jpensai qu'a set() au lieu de not in ptin
 
+- faire un truk si y'a pas de doigt qui suppose ou est le doigt manauqnat ca ca pete !
+
 <br><br><br><br><br><br><br><br><br>
 
 
