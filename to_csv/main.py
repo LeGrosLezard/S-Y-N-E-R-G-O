@@ -1,4 +1,5 @@
 import cv2
+import shutil
 
 from f_recuperate_informations_picture.hand_file.skeletton import hand_skelettor
 from f_recuperate_informations_picture.hand_file.hand import treat_skeletton_points
@@ -9,7 +10,7 @@ from f_recuperate_informations_picture.fingers_file.fingers_analyse import finge
 def reading_picture(image):
     IM = image
     
-    image = r"C:\Users\jeanbaptiste\Desktop\dougy_petit_pecs\a_images_to_read\a{}.jpg".format(str(IM))
+    image = r"C:\Users\jeanbaptiste\Desktop\dougy_petits_pecs\a_images_to_read\a{}.jpg".format(str(IM))
 
     img = cv2.imread(image)
     copy_img = img.copy()
@@ -21,20 +22,33 @@ def reading_picture(image):
     copy = img.copy()
     rectangle = cv2.boundingRect(contours[-1])
 
-    return copy_img, rectangle, img
+    return copy_img, rectangle, img, image
 
+
+def move_picture(sorted_fingers, path, image):
+
+    path_ok_picture = r"C:\Users\jeanbaptiste\Desktop\dougy_petits_pecs\b_stock_image_5_pts\a{}.jpg".format(str(image))
+
+    if len(sorted_fingers) == 5:
+        shutil.move(path, path_ok_picture)
 
 
 protoFile = r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\handa\models\pose_deploy.prototxt"
 weightsFile = r"C:\Users\jeanbaptiste\Desktop\jgfdposgj\handa\models\pose_iter_102000.caffemodel"
 
 if __name__ == "__main__":
-    
-    copy_img, rectangle, img = reading_picture(1)
+
+
+    image_reading = 1
+
+    copy_img, rectangle, img, path = reading_picture(image_reading)
 
 
     points, position, finger = hand_skelettor(copy_img, protoFile, weightsFile)
     sorted_fingers = treat_skeletton_points(points, position, finger, rectangle, img)
+
+    #move_picture(sorted_fingers, path, image_reading)
+
 
     fingers_analyse(sorted_fingers, img)
 
