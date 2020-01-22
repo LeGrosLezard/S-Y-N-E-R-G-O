@@ -58,13 +58,15 @@ def finger_phax_sens_width(fingers_dico, crop):
 
     for k, v in fingers_dico.items():
         print(k)
-        sens, width_phax = phalange_sens_width(k, v, copy)
+        sens, width = phalange_sens_width(k, v, copy)
 
-        sens_phax.append(sens)
-        width_phax.append(width_phax)
+        sens_phax.append((sens, k))
+        width_phax.append(width)
         print("")
 
     return sens_phax, width_phax
+
+
 
 if __name__ == "__main__":
 
@@ -72,8 +74,8 @@ if __name__ == "__main__":
     image = r"C:\Users\jeanbaptiste\Desktop\dougy_petits_pecs\a_images_to_read\a{}.jpg".format(str(1))
     img = cv2.imread(image)
 
-    phax_situation(fingers_dico, img)
-
+    sens_phax, width_phax = finger_phax_sens_width(fingers_dico, img)
+    print(sens_phax, width_phax)
 
 
 

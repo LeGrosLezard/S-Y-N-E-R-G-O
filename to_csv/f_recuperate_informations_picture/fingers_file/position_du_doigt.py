@@ -40,31 +40,31 @@ def defintion_to_angle(finger_name, angle, point_a, point_b):
 
     if 0 <= angle < 20:                                                 #Definition de l'angle
         print("0-20")
-        positon = ""
+        position = "0-20"
 
     elif 20 < angle < 60:
         print("20-60")
-        positon = ""
+        position = "20-60"
         
     elif 60 < angle < 80:
         print("60-80")
-        positon = ""
+        position = "60-80"
 
     elif 80 < angle < 110:
-        print("doigt droit")
-        position = "droit"
+        print("80-110")
+        position = "80-110"
 
     elif 110 < angle < 130:
         print("110 - 130")
-        positon = ""
+        position = "110-130"
 
     elif 130 < angle < 150:
-        print("130 - 150")
-        positon = ""
+        print("130-150")
+        position = "130-150"
 
     elif 150 < angle < 180:
-        print("150 - 180")
-        positon = ""
+        print("150-180")
+        position = "150-180"
 
     else:
         print("NO VALUEEEEEEEEEEEEEEEEEEEEEEEEEE")

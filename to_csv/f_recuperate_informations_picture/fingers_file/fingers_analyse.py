@@ -30,8 +30,29 @@ def fingers_analyse(sorted_fingers, crop):
     print("DICTIONNARY : ", fingers_dico)
     [print(k, v) for k, v in fingers_dico.items()]
 
-    #distance_fingers, angle_fingers = inter_espace_fingers(fingers_dico, crop)
-    #position_beetween_each_fingers(fingers_dico, crop)
-    #phax_number_distance_finger(fingers_dico, crop)
-    #sens_phax, width_phax = finger_phax_sens_width(fingers_dico, crop)
-    position_du_doigt(fingers_dico, crop)
+    distance_fingers, angle_fingers = inter_espace_fingers(fingers_dico, crop)
+    liste_position_doigt = position_beetween_each_fingers(fingers_dico, crop)
+    liste_phax_number, phax_dico = phax_number_distance_finger(fingers_dico, crop)
+    sens_phax, width_phax = finger_phax_sens_width(fingers_dico, crop)
+    position_fingers = position_du_doigt(fingers_dico, crop)
+
+
+    informations = [distance_fingers, angle_fingers, liste_position_doigt,
+                   liste_phax_number, phax_dico, sens_phax, width_phax,
+                   position_fingers]
+
+
+    return informations
+
+
+
+
+
+
+
+
+
+
+
+
+
