@@ -55,7 +55,11 @@ def verify_length_csv(name):                                        #verify_leng
     if data_number == 101:
         print("CSV rempli créez en un nouveau")
 
+def verify_header_present():
+    pass
 
+def add_label():
+    pass
 
 #===================================== Treatment information =============================
 #Conception problem, yes, but u didn't see the graph !
@@ -98,8 +102,8 @@ def transform_informations_to_data(informations):
             "angle3 An-a;":informations[2][3][2],
 
 
-            "position thumb-I;":informations[3][0], "position I-M;":informations[3][1],
-            "position M-An;":informations[3][2], "position An-a;":informations[3][3],
+            "position thumb-I;":informations[3][0][0], "position I-M;":informations[3][1][0],
+            "position M-An;":informations[3][2][0], "position An-a;":informations[3][3][0],
 
             
                                                                                                                         #Total length
@@ -145,8 +149,7 @@ def transform_informations_to_data(informations):
             "sens phax3 a;":informations[5][4][2],
 
 
-                                                                                                                        #Width phaxs
-
+                                                                                                                        #Width phax
             "width phax1 thumb;":informations[6][0][0], "width phax2 thumb;":informations[6][0][1],
             "width phax3 thumb;":informations[6][0][2], 
 
