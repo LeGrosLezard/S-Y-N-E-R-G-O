@@ -13,7 +13,7 @@ from d_stock_into_csv.stock_into_csv import main_csv
 def reading_picture(image):
     IM = image
     
-    image = r"C:\Users\jeanbaptiste\Desktop\dougy_petits_pecs\a_images_to_read\a{}.jpg".format(str(IM))
+    image = r"C:\Users\jeanbaptiste\Desktop\dougy_petits_pecs\a_images_to_read\{}.jpg".format(str(IM))
 
     img = cv2.imread(image)
     copy_img = img.copy()
@@ -30,8 +30,7 @@ def reading_picture(image):
 
 def move_picture(sorted_fingers, path, image):
 
-    path_ok_picture = r"C:\Users\jeanbaptiste\Desktop\dougy_petits_pecs\b_stock_image_5_pts\a{}.jpg".format(str(image))
-
+    path_ok_picture = r"C:\Users\jeanbaptiste\Desktop\dougy_petits_pecs\b_stock_image_5_pts\{}.jpg".format(str(image))
     shutil.move(path, path_ok_picture)
 
 
@@ -48,17 +47,23 @@ if __name__ == "__main__":
 
 
     for i in liste:
-        image_reading = i[1:-4]
+        image_reading = i[:-4]
+        print(image_reading)
 
         copy_img, rectangle, img, path = reading_picture(image_reading)
 
 
         points, position, finger = hand_skelettor(copy_img, protoFile, weightsFile)
 
-        if len(points) == 20 and len(finger) == 20:
+        print(len(points), len(finger))
+        if len(points) >= 18 and len(finger) >= 18:
 
             sorted_fingers = treat_skeletton_points(points, position, finger, rectangle, img)
-            #move_picture(sorted_fingers, path, image_reading)
+            move_picture(sorted_fingers, path, image_reading)
+            #rename picture to label
+            #recuperate skeleton
+            #make csv svm
+
             informations = fingers_analyse(sorted_fingers, img)
             main_csv(informations)
 
