@@ -38,13 +38,13 @@ def phalange_sens_width(name, points, copy):
             sens_phax.append(sens)                          #Append width, direction phax.
             width_phax.append(abs(x))
 
-    sens_phax.append(name)
+
     width_phax.append(name)
 
     print(sens_phax)
     print(width_phax)
 
-    return sens, width_phax
+    return sens_phax, width_phax
 
 
 
@@ -60,7 +60,7 @@ def finger_phax_sens_width(fingers_dico, crop):
         print(k)
         sens, width = phalange_sens_width(k, v, copy)
 
-        sens_phax.append((sens, k))
+        sens_phax.append(sens)
         width_phax.append(width)
         print("")
 
@@ -75,7 +75,7 @@ if __name__ == "__main__":
     img = cv2.imread(image)
 
     sens_phax, width_phax = finger_phax_sens_width(fingers_dico, img)
-    print(sens_phax, width_phax)
+    print(sens_phax, "\n", width_phax)
 
 
 

@@ -137,5 +137,12 @@ def inter_espace_fingers(dico, crop):
 
 
 
+if __name__ == "__main__":
 
+    fingers_dico = {'thumb': [(102, 97), (113, 89), (123, 79), (131, 68)], 'I': [(85, 72), (81, 57), (78, 50), (75, 44)], 'M': [(74, 79), (61, 65), (54, 64), (47, 62)], 'An': [(64, 89), (57, 82), (50, 75), (46, 71)], 'a': [(61, 104), (50, 100), (43, 96), (36, 93)]}
+    image = r"C:\Users\jeanbaptiste\Desktop\dougy_petits_pecs\a_images_to_read\a{}.jpg".format(str(1))
+    img = cv2.imread(image)
+
+    distance_fingers, angle_fingers = inter_espace_fingers(fingers_dico, img)
+    print(sens_phax, width_phax)
 
