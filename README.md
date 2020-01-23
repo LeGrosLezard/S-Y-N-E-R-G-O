@@ -1,5 +1,7 @@
 # S-Y-N-E-R-G-O
 
+bon ca m'a donné la gerbe ce joli cv, faire le bas ce soir
+
 - finir la mise en forme
 
 - faire un truk si y'a pas de doigt qui suppose ou est le doigt manauqnat  via les mains qu'on a eu au paravant et ensuite on entraine un model svm
