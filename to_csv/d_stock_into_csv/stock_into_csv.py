@@ -28,7 +28,7 @@ def writting_data(name_csv, liste_header, DICO):                    #Add into cs
 #===================================== Verify length of csv =============================
 import os
 
-PATH_OK_CSV = r"C:\Users\jeanbaptiste\Desktop\dougy_petits_pecs\c_csv_files\ok_data"
+PATH_OK_CSV = r"C:\Users\jeanbaptiste\Desktop\dougy_petits_pecs\c_csv_files"
 
 
 
@@ -205,7 +205,7 @@ def main_csv(informations):
         writting_data(csv_name, liste_header, DICO)
 
 
-
+    return label
 
 
 
@@ -230,7 +230,7 @@ if __name__ == "__main__":
     print(last_csv)
 
     if create_new is True:
-        print("1ICIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII")
+
         csv_name = PATH_OK_CSV + "/" + str(int(last_csv) + 1) + ".csv"
 
         label = "1"
@@ -240,15 +240,14 @@ if __name__ == "__main__":
 
 
     elif create_new is False:
-        print("LAAAAAAAAAAAAAAAAAAAA")
+
         csv_name = PATH_OK_CSV + "/" + str(last_csv) + ".csv"
         label = add_label(csv_name) + 1
         liste_header, DICO = transform_informations_to_data(informations, str(label))
         writting_data(csv_name, liste_header, DICO)
 
 
-    #liste_header, data = transform_informations_to_data(informations)
-    #writting_data("yoooo.csv", liste_header, data)
+
 
 
 
