@@ -1,12 +1,12 @@
 # S-Y-N-E-R-G-O
 
-- remplir les images
-
-- a la fin des treatment si on a pas tous les pts ne pas remplir et remplir les trou 'mais ca jviens dy' pensé refaire le txt
+- les ratio
 
 - faire kjb
 
 - faire le graphe 3d js
+
+- pts manquant (sté ca pts theorique -> faire un dossier pcque sinon faut changer le path / ok data)
 
 - puis le reste
 
