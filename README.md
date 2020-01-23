@@ -10,7 +10,7 @@
 
 - puis le reste
 
-
+- si ca marche pas le faire avec juste les distances entre chaque point
 
 
 
