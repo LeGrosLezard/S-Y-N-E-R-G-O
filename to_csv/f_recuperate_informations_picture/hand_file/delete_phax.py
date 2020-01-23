@@ -185,7 +185,9 @@ def delete_from_distance(sorted_fingers, crop):
                abs(distancey) >= 20 or abs(distancex) >= 30:
 
                 cv2.circle(copy, finger[point + 1], 2, (255, 255, 255), 2)
-                remove.append(finger[point + 1])
+                #remove.append(finger[point + 1])
+                #ICI FAIRE SELON LE RATIO
+                print("ratioooooooooooooooooooooooooooooooooooooooooooooooooo")
                 finger[point + 1] = finger[point]
 
             else:
