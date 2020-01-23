@@ -2,7 +2,7 @@
 
 - remplir les images
 
-- a la fin des treatment si on a pas tous les pts ne pas remplir et remplir les trou
+- a la fin des treatment si on a pas tous les pts ne pas remplir et remplir les trou 'mais ca jviens dy' pensé refaire le txt
 
 - faire kjb
 
