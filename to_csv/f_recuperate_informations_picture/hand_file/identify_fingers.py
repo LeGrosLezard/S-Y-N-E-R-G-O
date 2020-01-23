@@ -191,10 +191,10 @@ def appropriate_finger_to_his_points(fingers, original_fingers):
 
 
 
-FINGER_ANNOTATION = ["I", "M", "An", "a"]
+
 def identify_fingers(thumb, fingers, crop, rectangle):
 
-    global FINGER_ANNOTATION
+    FINGER_ANNOTATION = ["I", "M", "An", "a"]
 
     original_fingers = fingers
     copy = crop.copy()
@@ -251,6 +251,7 @@ def identify_fingers(thumb, fingers, crop, rectangle):
         draw_line_pts(copy, "P", thumb[-1], thumb[-1])
         cv2.imshow("only thumb", copy)
         cv2.waitKey(0)
+        cv2.destroyAllWindows()
 
 
     else:
