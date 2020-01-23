@@ -1,14 +1,14 @@
 # S-Y-N-E-R-G-O
 
-- pcque c trop chiant de découpé ces images de les étiquetté
+- remplir les images
 
-- en gros, on fait ratio
+- a la fin des treatment si on a pas tous les pts ne pas remplir et remplir les trou
 
-- si manque un doigt on va chercher si on en a un a peu pres un via les csv de 100 par 100 qu'on parcourt en thread pour que ce soit plus rapide
+- faire kjb
 
-- si on a pas de detection, on l'invente jusqu'a ce qu'on en trouve un, on efface le csv qui l'a inventé
+- faire le graphe 3d js
 
-fin un truk comme ca jcrois
+- puis le reste
 
 
 
