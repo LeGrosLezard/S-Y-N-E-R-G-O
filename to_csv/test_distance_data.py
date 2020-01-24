@@ -63,7 +63,7 @@ drawing_circle(blank_image, points2, 200, 200, (255, 0, 0))
 drawing_circle(blank_image, points3, 0, 200, (255, 0, 0))
 drawing_circle(blank_image, points4, 0, 0, (255, 0, 0))
 drawing_circle(blank_image, points5, 200, 0, (0, 255, 0))
-#cv2.imshow("blanck", blank_image)
+cv2.imshow("blanck", blank_image)
 
 
 
