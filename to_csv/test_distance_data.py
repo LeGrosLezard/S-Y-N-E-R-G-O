@@ -3,6 +3,38 @@ import cv2
 import math
 from scipy.spatial import distance as dist
 
+def drawing_circle(blank_image, points, a, b, color):
+    [cv2.circle(blank_image, (j[0] + a, j[1] + b) , 2, color, 2) for i in points for j in i]
+
+
+def collect_distances(points, ratio):
+
+    distances = []
+    for nb in range(len(points)):
+  
+        distance = dist.euclidean(points[nb][0], points[nb][1])
+        distances.append(distance)
+
+    dico = {"t" :distances[0:4], "i" : distances[5:8], "m" : distances[9:12], "an" : distances[13:16],
+            "a" : distances[17:20]}
+
+    return dico, ratio[2] * ratio[3]
+
+
+def determine_ratio(im1, im2):
+    if im1 > im2: norm = im1 / im2
+    else: norm = im2 / im1
+    return norm
+
+
+def compareason(dico_passation, dico_data, norm):
+
+    for k, v in dico_data.items():
+        print(k)
+        for i, j in zip(v, dico_passation[k]):
+            print(i * norm, j * norm)
+        print("")
+
 
 image1 = 1
 points1 = [((88, 103), (102, 97)), ((102, 97), (113, 89)), ((113, 89), (123, 79)), ((123, 79), (131, 68)), ((88, 103), (85, 72)), ((85, 72), (81, 57)), ((81, 57), (78, 50)), ((78, 50), (75, 44)), ((88, 103), (74, 79)), ((74, 79), (61, 65)), ((61, 65), (54, 64)), ((54, 64), (47, 62)), ((88, 103), (64, 89)), ((64, 89), (57, 82)), ((57, 82), (50, 75)), ((50, 75), (46, 71)), ((88, 103), (61, 104)), ((61, 104), (50, 100)), ((50, 100), (43, 96)), ((43, 96), (36, 93))]
@@ -20,188 +52,39 @@ image4 = 4
 points4 = [((86, 105), (100, 101)), ((100, 101), (115, 91)), ((115, 91), (122, 80)), ((122, 80), (126, 69)), ((86, 105), (86, 76)), ((86, 76), (83, 54)), ((83, 54), (83, 47)), ((83, 47), (83, 40)), ((86, 105), (72, 80)), ((72, 80), (65, 65)), ((65, 65), (65, 59)), ((65, 59), (69, 58)), ((86, 105), (65, 94)), ((65, 94), (51, 77)), ((51, 77), (51, 73)), ((51, 73), (51, 66)), ((86, 105), (61, 108)), ((61, 108), (44, 97)), ((44, 97), (40, 94)), ((40, 94), (41, 90))]
 ratio4 = (31, 31, 114, 111)
 
-
-
 image5 = "a"
 points5 = [((0, 0), (0, 0)), ((97, 105), (115, 94)), ((115, 94), (122, 79)), ((122, 79), (126, 69)), ((0, 0), (0, 0)), ((86, 76), (83, 55)), ((83, 55), (83, 47)), ((83, 47), (83, 40)), ((0, 0), (0, 0)), ((75, 79), (68, 55)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((51, 98), (44, 91)), ((44, 91), (40, 94)), ((40, 94), (41, 90))]
 ratio5 = (31, 31, 113, 109)
 
 
-
 blank_image = np.zeros((500, 500, 3), np.uint8)
-
-for i in points1:
-    for j in i:
-        cv2.circle(blank_image, (j[0], j[1] + 350) , 2, (0, 0, 255), 2)
-
-for i in points2:
-    for j in i:
-        cv2.circle(blank_image, (j[0] + 200, j[1] + 200) , 2, (0, 0, 255), 2)
-
-for i in points3:
-    for j in i:
-        cv2.circle(blank_image, (j[0], j[1] + 200) , 2, (0, 0, 255), 2)
-
-for i in points4:
-    for j in i:
-        cv2.circle(blank_image, j, 2, (0, 0, 255), 2)
-
-for i in points5:
-    for j in i:
-        cv2.circle(blank_image, (j[0] + 200, j[1]) , 2, (0, 0, 255), 2)
-
-
-
+drawing_circle(blank_image, points1, 0, 350, (255, 0, 0))
+drawing_circle(blank_image, points2, 200, 200, (255, 0, 0))
+drawing_circle(blank_image, points3, 0, 200, (255, 0, 0))
+drawing_circle(blank_image, points4, 0, 0, (255, 0, 0))
+drawing_circle(blank_image, points5, 200, 0, (0, 255, 0))
 #cv2.imshow("blanck", blank_image)
 
 
+
+dico5, echelle5 = collect_distances(points5, ratio5)
+for k, v in dico5.items():
+    print(k, v)
 print("")
 
 
 
-def pts(points):
-
-    x = []
-    y = []
-    distance_liste = []
-
-
-    for i in points:
-        for nb in range(len(i)):
-            if nb < len(i) - 1:
-
-                #cv2.line(blank_image, (i[nb]), (i[nb + 1]), (255, 255, 255), 2)
-
-                distance = dist.euclidean(i[nb], i[nb + 1])
-
-                distance_liste.append(distance)
-                x.append(i[nb][0] - i[nb + 1][0])
-                y.append(i[nb][1] - i[nb + 1][1])
-
-
-    px = x[0:4]
-    ix = x[5:8]
-    mx = x[9:12]
-    anx = x[13:16]
-    ax = x[17:20]
-    a = [px, ix, mx, anx, ax]
-
-
-
-
-    py = y[0:4]
-    iy = y[5:8]
-    my = y[9:12]
-    any = y[13:16]
-    ay = y[17:20]
-
-
-    distance_listep = distance_liste[0:4]
-    distance_listei = distance_liste[5:8]
-    distance_listem = distance_liste[9:12]
-    distance_listean = distance_liste[13:16]
-    distance_listea = distance_liste[17:20]
-
-
-    return a
-
-
-#
-liste = [points1, points2, points3, points4]
-yox = []
-for nb, i in enumerate(liste):
-    x = pts(i)
-    yox.append(x)
-#
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-x1 = []
-y1 = []
-distance_liste1 = []
-
-for i in points5:
-    for nb in range(len(i)):
-        if nb < len(i) - 1:
-
-            distance = dist.euclidean(i[nb], i[nb + 1])
-
-            distance_liste1.append(distance)
-            x1.append(i[nb][0] - i[nb + 1][0])
-            y1.append(i[nb][1] - i[nb + 1][1])
-
-
-for i in range(5):
-    print("")
-
-
-px1 = x1[0:4]
-ix1 = x1[5:8]
-mx1 = x1[9:12]
-anx1 = x1[13:16]
-ax1 = x1[17:20]
-
-a1 = [px1, ix1, mx1, anx1, ax1]
-
-py1 = y1[0:4]
-iy1 = y1[5:8]
-my1 = y1[9:12]
-any1 = y1[13:16]
-ay1 = y1[17:20]
-
-
-distance_listep1 = distance_liste1[0:4]
-distance_listei1 = distance_liste1[5:8]
-distance_listem1 = distance_liste1[9:12]
-distance_listean1 = distance_liste1[13:16]
-distance_listea1 = distance_liste1[17:20]
-
-
-
-
+dico, echelle4 = collect_distances(points4, ratio4)
+for k, v in dico.items():
+    print(k, v)
 print("")
 
 
+print("")
+norm = determine_ratio(echelle5, echelle4)
+print("")
 
-for i in yox:
-    retouchingX = []
-    for nb, j in enumerate(i):
-
-        print(j, "............", a1[nb])
-
-
-
-
-        E = 0
-        xxx = []
-        for k, l in zip(j, a1[nb]):
-            print(k, l, "******", abs(k-l))
-            E += abs(k-l)
-
-
-        retouchingX.append(E)
-        print("somme", E)
-        
-
-
-
-    print(retouchingX)
-    print("si points manquant peut etre faire le : ", retouchingX.index(min(retouchingX)))
-    print("")
-    print("")
-    print("")
-    print("")
+compareason(dico5, dico, norm)
 
 
 
@@ -210,6 +93,35 @@ for i in yox:
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+##dico, echelle2 = collect_distances(points1, ratio1)
+##for k, v in dico.items():
+##    print(k, v)
+##print("")
+##
+##
+##dico, echelle3 = collect_distances(points2, ratio2)
+##for k, v in dico.items():
+##    print(k, v)
+##print("")
+##
+##
+##dico, echelle4 = collect_distances(points3, ratio3)
+##for k, v in dico.items():
+##    print(k, v)
+##print("")
 
 
 
