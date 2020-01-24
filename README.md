@@ -4,13 +4,13 @@
 
 - on redessine les pts des doigts via les pts
 
-- on en fait un svm de picture auquel on associe les skelettons
+- on en fait un svm de picture auquel on associe les skelettons -> mais faut trouvé comment récuperer la probabilité si basse alors skeltton
 
 - on verifie la couleur de l'emplacement
 
 - on conserve le truk de csv
 
-
+- au fur a mesure du stockage ca devrait etre plus rapide nan ?
 
 
 
