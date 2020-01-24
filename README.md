@@ -1,20 +1,14 @@
 # S-Y-N-E-R-G-O
 
-- les ratio
+- recréer une branche
 
-- faire kjb
+- on redessine les pts des doigts via les pts
 
-- faire le graphe 3d js
+- on en fait un svm de picture auquel on associe les skelettons
 
-- pts manquant (sté ca pts theorique -> faire un dossier pcque sinon faut changer le path / ok data)
+- on verifie la couleur de l'emplacement
 
-- puis le reste
-
-- si ca marche pas le faire avec juste les distances entre chaque point
-
-
-
-
+- on conserve le truk de csv
 
 
 
