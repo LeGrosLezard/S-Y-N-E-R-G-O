@@ -28,12 +28,14 @@ def points_distance_fingers(name, name1, dico, copy):
         copy_line = copy.copy()
         drawing_line(f, f1, copy_line)
 
-        print(f1, f)
-
         liste_ditance.append(dist.euclidean(f, f1))                 #Euclidian distances
 
         cv2.imshow("copy_line", copy_line)
         cv2.waitKey(0)
+
+
+    for i in range(4 - len(liste_ditance)):
+        liste_ditance.append(None)
 
     liste_ditance.append((name, name1))                             #Name's points
 
@@ -77,10 +79,14 @@ def angle_points_fingers(name, name1, dico, copy):
 
     draw_circle(copy, finger, finger1)                              #Draw circles
 
-    liste_angle = []
-    for i in range(len(finger)):                                    #Run points
-        if i < len(finger) - 1:
+    if len(finger) < len(finger1):      length = len(finger)        #Choice minimum length
+    elif len(finger1) < len(finger):    length = len(finger1)
+    else: length = len(finger)
+        
 
+    liste_angle = []
+    for i in range(length):                                         #Run points
+        if i <  length - 1:
             copy_triangle = copy.copy()                             #Draw triangle
 
             if i == 2:                                              #Last point
@@ -106,6 +112,8 @@ def angle_points_fingers(name, name1, dico, copy):
             cv2.imshow("copy_triangle", copy_triangle)
             cv2.waitKey(0)
 
+    for i in range(3 - len(liste_angle)):
+        liste_angle.append(None)
     liste_angle.append((name, name1))                               #Add name fingers
 
     return liste_angle
@@ -149,10 +157,10 @@ def inter_espace_fingers(dico, crop):
 
 if __name__ == "__main__":
 
-    fingers_dico = {'thumb': [(61, 85), (47, 82), (31, 77), (25, 74)], 'I': [(79, 50), (85, 42), (90, 36)], 'M': [(82, 69), (101, 58), (112, 50), (123, 42)], 'An': [(93, 80), (115, 74), (128, 69), (142, 66)], 'a': [(98, 93), (115, 96), (126, 102), (139, 109)]}
-    image = r"C:\Users\jeanbaptiste\Desktop\dougy_petits_pecs\b_stock_image_5_pts\{}.jpg".format("o4")
+    fingers_dico = {'thumb': [(97, 105), (115, 94), (122, 79), (126, 69)], 'I': [(86, 76), (83, 55), (83, 47), (83, 40)], 'M': [(75, 79), (68, 55)], 'An': [], 'a': [(51, 98), (44, 91), (40, 94), (41, 90)]}
+    image = r"C:\Users\jeanbaptiste\Desktop\dougy_petits_pecs\a_images_to_read\{}.jpg".format("a")
     img = cv2.imread(image)
 
     distance_fingers, angle_fingers = inter_espace_fingers(fingers_dico, img)
-    print(sens_phax, width_phax)
+    print(distance_fingers, angle_fingers)
 

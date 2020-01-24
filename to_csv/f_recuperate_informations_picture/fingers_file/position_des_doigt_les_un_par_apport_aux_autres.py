@@ -38,6 +38,10 @@ def position_beetween_each_fingers(fingers_dico, crop):
 
     liste_position_doigt = []
 
+    for i in fingers_points:
+        if i == []:
+            fingers_points.remove(i)
+
     for nb in range(len(fingers_points)):                           #Run fingers
         if nb < len(fingers_points) - 1:
 
@@ -54,8 +58,23 @@ def position_beetween_each_fingers(fingers_dico, crop):
             liste_position_doigt.append((situation,                             #Add information to list
                                          (fingers_name[nb + 1], fingers_name[nb])))
 
-
+    if len(liste_position_doigt) < 4:
+        liste_position_doigt.append((   None, (None, None) ))
     for i in liste_position_doigt:
         print(i)
 
     return liste_position_doigt
+
+
+
+if __name__ == "__main__":
+
+    fingers_dico = {'thumb': [(97, 105), (115, 94), (122, 79), (126, 69)], 'I': [(86, 76), (83, 55), (83, 47), (83, 40)], 'M': [(75, 79), (68, 55)], 'An': [], 'a': [(51, 98), (44, 91), (40, 94), (41, 90)]}
+    image = r"C:\Users\jeanbaptiste\Desktop\dougy_petits_pecs\a_images_to_read\{}.jpg".format("a")
+    img = cv2.imread(image)
+
+    liste_position_doigt = position_beetween_each_fingers(fingers_dico, img)
+    print(liste_position_doigt)
+
+
+

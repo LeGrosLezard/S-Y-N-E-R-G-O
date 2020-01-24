@@ -113,7 +113,12 @@ def position_du_doigt(fingers_dico, crop):
             print("")
 
     for k, v in position_fingers.items():
+        if position_fingers[k] == []:
+            position_fingers[k] = None
+
+    for k, v in position_fingers.items():
         print(k, v)
+
 
     return position_fingers
 
@@ -130,8 +135,8 @@ def position_du_doigt(fingers_dico, crop):
 
 if __name__ == "__main__":
 
-    fingers_dico = {'thumb': [(102, 97), (113, 89), (123, 79), (131, 68)], 'I': [(85, 72), (81, 57), (78, 50), (75, 44)], 'M': [(74, 79), (61, 65), (54, 64), (47, 62)], 'An': [(64, 89), (57, 82), (50, 75), (46, 71)], 'a': [(61, 104), (50, 100), (43, 96), (36, 93)]}
-    image = r"C:\Users\jeanbaptiste\Desktop\dougy_petits_pecs\a_images_to_read\a{}.jpg".format(str(1))
+    fingers_dico = {'thumb': [(97, 105), (115, 94), (122, 79), (126, 69)], 'I': [(86, 76), (83, 55), (83, 47), (83, 40)], 'M': [(75, 79), (68, 55)], 'An': [], 'a': [(51, 98), (44, 91), (40, 94), (41, 90)]}
+    image = r"C:\Users\jeanbaptiste\Desktop\dougy_petits_pecs\a_images_to_read\{}.jpg".format("a")
     img = cv2.imread(image)
 
     position_du_doigt(fingers_dico, img)
