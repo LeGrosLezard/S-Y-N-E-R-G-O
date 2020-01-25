@@ -200,14 +200,16 @@ for i in liste:
 
 
 
-def search_points(to_search_pts, value):                    #pts phax et angle phax
+def search_points(to_search_pts, value_distance, value_angle):                    #pts phax et angle phax
 
     for i in  to_search_pts:#I = indexage
         if i != None:
 
-            print(value)
+            print(value_distance)
+            print(value_angle)
 
-            if i == len(value):                             #derniere phax
+
+            if i == len(value_distance):                             #derniere phax
                 print(i - 1)
 
             elif i not in (0, "None", "finger"):            #phax avec un avant apres
@@ -258,11 +260,13 @@ en gros on a fait les diff entre chauqe pts
 
 
 
-##for i in liste_informations_distance:           #phax la plus proche
-##    for k, v in i.items():
-##        search_points(searching_points[k], v)
-##
-##    print("")
+for i, j in zip(liste_informations_distance, liste_informations_angle):           #phax la plus proche
+    for (k, v), (k1, v1) in zip(i.items(), j.items()):
+        search_points(searching_points[k], v, v1)
+
+    print("")
+
+
 
 
 
@@ -274,11 +278,7 @@ for i in liste_informations_distance:           #doigt qui ressemble le pluss
 
     
 
-##for i in liste_informations_angle:              #angle le plus proche
-##    for k, v in i.items():
-##        search_points(searching_points[k], v)
-##
-##    print("")
+
 
 
 
