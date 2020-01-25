@@ -103,13 +103,6 @@ points5 = [((0, 0), (0, 0)), ((97, 105), (115, 94)), ((115, 94), (122, 79)), ((1
 ratio5 = (31, 31, 113, 109)
 
 
-blank_image = np.zeros((500, 500, 3), np.uint8)
-drawing_circle(blank_image, points1, 0, 350, (255, 0, 0))
-drawing_circle(blank_image, points2, 200, 200, (255, 0, 0))
-drawing_circle(blank_image, points3, 0, 200, (255, 0, 0))
-drawing_circle(blank_image, points4, 0, 0, (255, 0, 0))
-drawing_circle(blank_image, points5, 200, 0, (0, 255, 0))
-#cv2.imshow("blanck", blank_image)
 
 
 
@@ -128,7 +121,7 @@ dico_angle_current = points_to_angle(direction_current)
 liste = [(points1, ratio1, "im1"), (points2, ratio2, "im2"),
          (points3, ratio3, "im3"), (points4, ratio4, "im4")]
 
-liste = [(points1, ratio1, "im1"), (points2, ratio2, "im2")]
+#liste = [(points1, ratio1, "im1"), (points2, ratio2, "im2")]
 
 
 
@@ -214,14 +207,20 @@ def search_points(to_search_pts, value_distance, value_angle):                  
         if i != None:
 
             if i == len(value_distance):                             #derniere phax
-                liste.append((value_distance[nb + 1], value_angle[nb + 1]))
+                liste.append(value_distance[nb + 1])
+                liste.append(value_angle[nb + 1])
 
             elif i not in (0, "None", "finger"):            #phax avec un avant apres
-                liste.append((value_distance[nb + 1], value_distance[nb - 1],
-                              value_angle[nb + 1], value_angle[nb - 1]  ))
+                liste.append(value_distance[nb + 1])
+
+                liste.append(value_distance[nb - 1])
+                liste.append(value_angle[nb + 1])
+                liste.append(value_angle[nb - 1])
+
 
             elif i == 0:                                    #premiere phax (i + 1)
-                liste.append((value_distance[nb + 1], value_angle[nb + 1]))
+                liste.append(value_distance[nb + 1])
+                liste.append(value_angle[nb + 1])
 
 
             elif i in ("None", "finger"):
@@ -256,28 +255,25 @@ def finger_to_search(to_search_pts, value, dico, k):
     return liste
 
 
-"""
-en gros on a fait les diff entre chauqe pts
-"""
-
-
 
 
 
 distance_angle = {"t" :[], "i" : [], "m" : [], "an" : [], "a" : []}
 
 for i, j in zip(liste_informations_distance, liste_informations_angle):           #phax la plus proche
-    
+
     for (k, v), (k1, v1) in zip(i.items(), j.items()):
         angle_distance = search_points(searching_points[k], v, v1)
         distance_angle[k].append(angle_distance)
 
-
+mini_dist_angle = {"t" :[], "i" : [], "m" : [], "an" : [], "a" : []}
 
 for k, v in distance_angle.items():
-    for i in v:
+    for nb, i in enumerate(v):
         if i != []:
             print(k, i)
+            print(sum(i), nb)
+            mini_dist_angle[k].append((sum(i), nb))
 
     print("")
 
@@ -297,14 +293,70 @@ for i in liste_informations_distance:           #doigt qui ressemble le pluss
         fings = finger_to_search(searching_points[k], v, i, k)
         fingers[k].append(fings)
 
-
+mini_finger = {"t" :[], "i" : [], "m" : [], "an" : [], "a" : []}
 for k, v in fingers.items():
-    for i in v:
+    for nb, i in enumerate(v):
         if i != []:
-            print(k, i)
+            aa = []
+            for j in i:
+                aa.append(j)
+            aa = [j for i in aa for j in i]
+            mini_finger[k].append((sum(aa), nb))
+
+
+print("")
+print("")
+print("")
+print("")
+print("")
+print("")
+print("")
+print("")
+print("")
+print("")
+print("")
+print("")
+print("")
+print("")
+print("")
+print("")
+print("")
+print("")
 
 
 
+
+for k, v in mini_dist_angle.items():
+    if v != []:
+        print(k)
+        a = sorted(mini_dist_angle[k], key=lambda x: x[0])
+        print(a)
+
+
+
+
+print("")
+print("")
+
+for k, v in mini_finger.items():
+    if v != []:
+        print(k)
+        b = sorted(v, key=lambda x: x[0])
+        print(b)
+
+
+
+blank_image = np.zeros((500, 500, 3), np.uint8)
+
+drawing_circle(blank_image, points1, 0, 350, (255, 0, 255))
+drawing_circle(blank_image, points2, 200, 200, (255, 0, 0))
+drawing_circle(blank_image, points3, 0, 200, (0, 255, 0))
+drawing_circle(blank_image, points4, 0, 0, (0, 0, 255))
+
+
+drawing_circle(blank_image, points5, 200, 0, (0, 255, 0))
+
+cv2.imshow("blanck", blank_image)
 
 
 
