@@ -304,47 +304,22 @@ for k, v in fingers.items():
             mini_finger[k].append((sum(aa), nb))
 
 
-print("")
-print("")
-print("")
-print("")
-print("")
-print("")
-print("")
-print("")
-print("")
-print("")
-print("")
-print("")
-print("")
-print("")
-print("")
-print("")
-print("")
-print("")
 
 
 
-
+final_distance_angle = []
 for k, v in mini_dist_angle.items():
     if v != []:
-        print(k)
         a = sorted(mini_dist_angle[k], key=lambda x: x[0])
-        print(a)
+        final_distance_angle.append((a[0], k))
 
 
-
-
-print("")
-print("")
-
+final_finger = []
 for k, v in mini_finger.items():
     if v != []:
-        print(k)
+
         b = sorted(v, key=lambda x: x[0])
-        print(b)
-
-
+        final_finger.append((b[0], k))
 
 blank_image = np.zeros((500, 500, 3), np.uint8)
 
@@ -356,7 +331,96 @@ drawing_circle(blank_image, points4, 0, 0, (0, 0, 255))
 
 drawing_circle(blank_image, points5, 200, 0, (0, 255, 0))
 
-cv2.imshow("blanck", blank_image)
+#cv2.imshow("blanck", blank_image)
+
+
+
+
+
+dico_final_dst_angle = {"t" :[], "i" : [], "m" : [], "an" : [], "a" : []}
+for i in final_distance_angle:
+    dico_final_dst_angle[i[1]] = i[0][1]
+
+
+
+dico_final_finger= {"t" :[], "i" : [], "m" : [], "an" : [], "a" : []}
+for i in final_finger:
+    dico_final_finger[i[1]] = i[0][1]
+
+
+
+
+print(searching_points)
+
+def fingers_pts(finger, points_data, points_to_change, norm):
+    dico = {"t" :[0,4], "i" : [5,8], "m" : [9,12], "an" : [13,16], "a" : [17,20]}
+
+
+
+    new_liste = []
+    for i in points_data[dico[finger][0]:dico[finger][1]]:
+        new_liste.append(((int(i[0][0] * norm), int(i[0][1] * norm)), (int(i[1][0] * norm), int(i[1][1] * norm))))
+
+    to_change = points_to_change[dico[finger][0]:dico[finger][1]]
+
+
+    to_not_change1 = points_to_change[:dico[finger][0]]
+    to_not_change2 = points_to_change[dico[finger][1]:]
+
+    final = []
+    for i in to_not_change1:
+        final.append(i)
+
+    for i in new_liste:
+        final.append(i)
+
+    for i in to_not_change2:
+        final.append(i)
+
+    return final
+
+
+def phax_pts():
+    pass
+
+
+dico_for_liste = {"t" :0, "i" : 1, "m" : 2, "an" : 3, "a" : 4}
+for k, v in searching_points.items():
+    if searching_points[k] != ["None"]:
+        print(k, v)
+
+
+
+        if dico_final_dst_angle[k] != []:
+            print(dico_final_dst_angle[k])
+
+
+
+        if dico_final_finger[k] != []:
+            print(dico_final_finger[k])
+            points5 = fingers_pts(k, liste[dico_final_finger[k]][0], points5, norm)
+
+
+            #print(liste)
+
+            
+            #print(liste[dico_final_finger[k]][0][dico_for_liste[k]])
+
+
+        print("")
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
