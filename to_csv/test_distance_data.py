@@ -21,6 +21,16 @@ def collect_distances(points, ratio):
     return dico, ratio[2] * ratio[3]
 
 
+def collect_points(points):
+    abscisse = []
+    for nb in range(len(points)):
+        ptsX = points[nb][1][0] - points[nb][0][0]
+        ptsY = - (points[nb][1][1] - points[nb][0][1])
+
+        abscisse.append((ptsX, ptsY))
+
+    return abscisse
+
 def determine_ratio(im1, im2):
     if im1 > im2: norm = im1 / im2
     else: norm = im2 / im1
@@ -34,6 +44,31 @@ def compareason(dico_passation, dico_data, norm):
         for i, j in zip(v, dico_passation[k]):
             print(i * norm, j * norm)
         print("")
+
+
+
+def comparaison_pts(liste_passation, liste_data, norm):
+
+    print(liste_data)
+    print("")
+    print(liste_passation)
+
+    print("")
+    print("")
+    for i, j in zip(liste_data, liste_passation):
+        #print(i[0] * norm, i[1] * norm, j[0] * norm, j[1] * norm)
+
+        print(i[0], i[1])
+
+        
+        tan = math.atan((i[1] * norm) / (i[0] * norm))
+        print(math.degrees(tan))
+
+        print("")
+    print("")
+
+
+
 
 
 image1 = 1
@@ -68,26 +103,35 @@ cv2.imshow("blanck", blank_image)
 
 
 dico5, echelle5 = collect_distances(points5, ratio5)
+direction5 = collect_points(points5)
+
 for k, v in dico5.items():
     print(k, v)
 print("")
 
 
+liste = [(points1, ratio1, "im1"), (points2, ratio2, "im2"),
+         (points3, ratio3, "im3"), (points4, ratio4, "im4")]
 
-dico, echelle4 = collect_distances(points4, ratio4)
-for k, v in dico.items():
-    print(k, v)
-print("")
+liste = [(points1, ratio1, "im1")]
 
+for i in liste:
 
-print("")
-norm = determine_ratio(echelle5, echelle4)
-print("")
+    print(i[2])
 
-compareason(dico5, dico, norm)
+    dico, echelle = collect_distances(i[0], i[1])
 
+    norm = determine_ratio(echelle5, echelle)
+    compareason(dico5, dico, norm)
 
+    print("")
 
+    print("DIRECTION")
+    direction = collect_points(i[0])
+    comparaison_pts(direction5, direction, norm)
+
+    print("")
+    print("")
 
 
 
