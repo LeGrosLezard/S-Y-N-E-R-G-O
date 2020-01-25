@@ -349,7 +349,7 @@ for k, v in mini_finger.items():
 blank_image = np.zeros((500, 500, 3), np.uint8)
 
 drawing_circle(blank_image, points1, 0, 350, (255, 0, 255))
-drawing_circle(blank_image, points2, 200, 200, (255, 0, 0))
+drawing_circle(blank_image, points2, 200, 200, (0, 255, 0))
 drawing_circle(blank_image, points3, 0, 200, (0, 255, 0))
 drawing_circle(blank_image, points4, 0, 0, (0, 0, 255))
 
