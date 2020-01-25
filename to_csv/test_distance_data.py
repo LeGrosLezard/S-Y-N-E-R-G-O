@@ -58,11 +58,13 @@ def comparaison_pts(liste_passation, liste_data, norm):
     for i, j in zip(liste_data, liste_passation):
         #print(i[0] * norm, i[1] * norm, j[0] * norm, j[1] * norm)
 
-        print(i[0], i[1])
+        print((i[0], i[1]), (j[0], j[1]))
 
-        
         tan = math.atan((i[1] * norm) / (i[0] * norm))
-        print(math.degrees(tan))
+        angle = math.degrees(tan)
+        if angle < 0:
+            angle += 180
+        print(angle)
 
         print("")
     print("")
