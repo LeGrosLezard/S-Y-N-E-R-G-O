@@ -22,6 +22,7 @@ def collect_distances(points, ratio):
 
 
 def collect_points(points):
+
     abscisse = []
     for nb in range(len(points)):
         ptsX = points[nb][1][0] - points[nb][0][0]
@@ -31,43 +32,51 @@ def collect_points(points):
 
     return abscisse
 
+
+
+def points_to_angle(abscisse):
+
+    liste_angle = []
+
+    for i in abscisse:
+
+        if i[1] == 0 and i[0] != 0:
+            if i[0] > 0:
+                liste_angle.append(0)
+            elif i[0] < 0:
+                liste_angle.append(180)
+
+        elif i[0] == 0 and i[1] != 0:
+            if i[1] > 0:
+                liste_angle.append(90)
+            elif i[1] < 0:
+                liste_angle.append(-90)
+
+        elif i != (0, 0):
+
+            tan = math.atan(i[1] / i[0])
+            angle = math.degrees(tan)
+            if angle < 0: angle += 180
+            liste_angle.append(angle)
+
+
+        elif i == (0, 0):
+            liste_angle.append(None)
+
+
+    dico_angle = {"t" :liste_angle[0:4], "i" : liste_angle[5:8], "m" : liste_angle[9:12], "an" : liste_angle[13:16],
+                  "a" : liste_angle[17:20]}
+
+    return dico_angle
+
+
+
 def determine_ratio(im1, im2):
     if im1 > im2: norm = im1 / im2
     else: norm = im2 / im1
     return norm
 
 
-def compareason(dico_passation, dico_data, norm):
-
-    for k, v in dico_data.items():
-        print(k)
-        for i, j in zip(v, dico_passation[k]):
-            print(i * norm, j * norm)
-        print("")
-
-
-
-def comparaison_pts(liste_passation, liste_data, norm):
-
-    print(liste_data)
-    print("")
-    print(liste_passation)
-
-    print("")
-    print("")
-    for i, j in zip(liste_data, liste_passation):
-        #print(i[0] * norm, i[1] * norm, j[0] * norm, j[1] * norm)
-
-        print((i[0], i[1]), (j[0], j[1]))
-
-        tan = math.atan((i[1] * norm) / (i[0] * norm))
-        angle = math.degrees(tan)
-        if angle < 0:
-            angle += 180
-        print(angle)
-
-        print("")
-    print("")
 
 
 
@@ -104,12 +113,26 @@ cv2.imshow("blanck", blank_image)
 
 
 
-dico5, echelle5 = collect_distances(points5, ratio5)
-direction5 = collect_points(points5)
+dico_current, echelle_current = collect_distances(points5, ratio5)
+direction_current = collect_points(points5)
+dico_angle_current = points_to_angle(direction_current)
 
-for k, v in dico5.items():
+
+
+for k, v in dico_current.items():
     print(k, v)
+
 print("")
+
+for k, v in dico_angle_current.items():
+    print(k, v)
+
+for i in range(6):
+    print("")
+
+
+
+
 
 
 liste = [(points1, ratio1, "im1"), (points2, ratio2, "im2"),
@@ -117,20 +140,97 @@ liste = [(points1, ratio1, "im1"), (points2, ratio2, "im2"),
 
 liste = [(points1, ratio1, "im1")]
 
+
+
+
+
+
+def compareason(dico_passation1, dico_passation2, dico_data1, dico_data2, norm):
+
+    fingers = ["t", "i", "m", "an", "a"]
+
+    for fing in fingers:
+
+        print(fing)
+
+
+        liste_distance = []
+
+
+        print("distance")
+
+        print("data : ", dico_data1[fing])                  #distance
+        print("current :", dico_passation1[fing])
+
+        for i, j in zip(dico_data1[fing], dico_passation1[fing]):
+
+            if i == None:
+                liste_angle.append("to search")
+            elif j == None:
+                liste_angle.append("to search")
+            else:
+                liste_distance.append(abs(i - j))
+
+
+        moyenne = [i for i in liste_distance if type(i) != str]
+        if moyenne == []: moyenne = ["to search"]
+        else: moyenne = sum(moyenne)
+        print("result : ", liste_distance, "\nso", moyenne)
+
+
+
+        liste_angle = []
+
+        print("\nangle")
+
+        print("data : ", dico_data2[fing])                 #angle
+        print("current :", dico_passation2[fing])
+
+        for i, j in zip(dico_data2[fing], dico_passation2[fing]):
+            if i == None:
+                liste_angle.append("to search")
+            elif j == None:
+                liste_angle.append("to search")
+            else:
+                liste_angle.append(abs(i - j))
+
+        moyenne = [i for i in liste_angle if type(i) != str]
+        if moyenne == []:  moyenne = ["to search"]
+        else: moyenne = sum(moyenne)
+        print("result : ", liste_angle, "\nso", moyenne)
+
+        print("")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 for i in liste:
-
     print(i[2])
-
-    dico, echelle = collect_distances(i[0], i[1])
-
-    norm = determine_ratio(echelle5, echelle)
-    compareason(dico5, dico, norm)
-
     print("")
 
-    print("DIRECTION")
-    direction = collect_points(i[0])
-    comparaison_pts(direction5, direction, norm)
+    dico, echelle = collect_distances(i[0], i[1])
+    pts = collect_points(i[0])
+    angle = points_to_angle(pts)
+
+
+    norm = determine_ratio(echelle_current, echelle)
+
+    compareason(dico_current, dico_angle_current, dico, angle, norm)
+
+
 
     print("")
     print("")
