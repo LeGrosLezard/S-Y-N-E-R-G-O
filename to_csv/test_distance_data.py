@@ -228,7 +228,7 @@ def finger_to_search(to_search_pts, value, dico, k):
     for i in  to_search_pts:
         if i != None:
 
-            if i == "finger":
+            if i == "finger" and k not in("t", "a"):
                 fings = ["t", "i", "m", "an", "a"]
 
                 avant_doigt = fings.index(k) - 1
@@ -238,6 +238,14 @@ def finger_to_search(to_search_pts, value, dico, k):
                 print(dico[fings[avant_doigt]])
                 print(dico[fings[apres_doigt]])
 
+
+            elif i == "finger" and k in ("t"):
+                apres_doigt = fings.index(k) + 1
+                print(dico[fings[apres_doigt]])
+
+            elif i == "finger" and k in ("a"):
+                avant_doigt = fings.index(k) - 1
+                print(dico[fings[avant_doigt]])
 
 
 
@@ -250,11 +258,11 @@ en gros on a fait les diff entre chauqe pts
 
 
 
-for i in liste_informations_distance:           #phax la plus proche
-    for k, v in i.items():
-        search_points(searching_points[k], v)
-
-    print("")
+##for i in liste_informations_distance:           #phax la plus proche
+##    for k, v in i.items():
+##        search_points(searching_points[k], v)
+##
+##    print("")
 
 
 
@@ -266,11 +274,11 @@ for i in liste_informations_distance:           #doigt qui ressemble le pluss
 
     
 
-for i in liste_informations_angle:              #angle le plus proche
-    for k, v in i.items():
-        search_points(searching_points[k], v)
-
-    print("")
+##for i in liste_informations_angle:              #angle le plus proche
+##    for k, v in i.items():
+##        search_points(searching_points[k], v)
+##
+##    print("")
 
 
 
