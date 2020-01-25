@@ -109,7 +109,7 @@ drawing_circle(blank_image, points2, 200, 200, (255, 0, 0))
 drawing_circle(blank_image, points3, 0, 200, (255, 0, 0))
 drawing_circle(blank_image, points4, 0, 0, (255, 0, 0))
 drawing_circle(blank_image, points5, 200, 0, (0, 255, 0))
-cv2.imshow("blanck", blank_image)
+#cv2.imshow("blanck", blank_image)
 
 
 
@@ -138,7 +138,7 @@ for i in range(6):
 liste = [(points1, ratio1, "im1"), (points2, ratio2, "im2"),
          (points3, ratio3, "im3"), (points4, ratio4, "im4")]
 
-liste = [(points1, ratio1, "im1")]
+#liste = [(points1, ratio1, "im1")]
 
 
 
@@ -157,10 +157,10 @@ def compareason(dico_passation1, dico_passation2, dico_data1, dico_data2, norm):
         liste_distance = []
 
 
-        print("distance")
+        #print("distance")
 
-        print("data : ", dico_data1[fing])                  #distance
-        print("current :", dico_passation1[fing])
+        #print("data : ", dico_data1[fing])                  #distance
+        #print("current :", dico_passation1[fing])
 
         for i, j in zip(dico_data1[fing], dico_passation1[fing]):
 
@@ -172,32 +172,40 @@ def compareason(dico_passation1, dico_passation2, dico_data1, dico_data2, norm):
                 liste_distance.append(abs(i - j))
 
 
-        moyenne = [i for i in liste_distance if type(i) != str]
-        if moyenne == []: moyenne = ["to search"]
-        else: moyenne = sum(moyenne)
-        print("result : ", liste_distance, "\nso", moyenne)
+        moyenne_dist = [i for i in liste_distance if type(i) != str]
+        if moyenne_dist == []: moyenne_dist = ["to search"]
+        else: moyenne_dist = sum(moyenne_dist)
+
 
 
 
         liste_angle = []
 
-        print("\nangle")
+        #print("\nangle")
 
-        print("data : ", dico_data2[fing])                 #angle
-        print("current :", dico_passation2[fing])
-
+        #print("data : ", dico_data2[fing])                 #angle
+        #print("current :", dico_passation2[fing])
+        searching = 0
         for i, j in zip(dico_data2[fing], dico_passation2[fing]):
             if i == None:
                 liste_angle.append("to search")
+                searching += 1
             elif j == None:
                 liste_angle.append("to search")
+                searching += 1
             else:
                 liste_angle.append(abs(i - j))
 
-        moyenne = [i for i in liste_angle if type(i) != str]
-        if moyenne == []:  moyenne = ["to search"]
-        else: moyenne = sum(moyenne)
-        print("result : ", liste_angle, "\nso", moyenne)
+        moyenne_angle = [i for i in liste_angle if type(i) != str]
+        if moyenne_angle == []:  moyenne_angle = ["to search"]
+        else: moyenne_angle = sum(moyenne_angle)
+
+        if searching == 3:
+            print("here finger miss")
+        elif 3 > searching > 0:
+            print("here phax miss")
+        print("Rdistance: ", moyenne_dist)
+        print("Rangle: ", moyenne_angle)
 
         print("")
 
