@@ -57,11 +57,11 @@ def points_to_angle(abscisse):
             tan = math.atan(i[1] / i[0])
             angle = math.degrees(tan)
             if angle < 0: angle += 180
-            liste_angle.append(angle)
+            liste_angle.append(int(angle))
 
 
         elif i == (0, 0):
-            liste_angle.append(None)
+            liste_angle.append(0)
 
 
     dico_angle = {"t" :liste_angle[0:4], "i" : liste_angle[5:8], "m" : liste_angle[9:12], "an" : liste_angle[13:16],
@@ -128,46 +128,42 @@ dico_angle_current = points_to_angle(direction_current)
 liste = [(points1, ratio1, "im1"), (points2, ratio2, "im2"),
          (points3, ratio3, "im3"), (points4, ratio4, "im4")]
 
-#liste = [(points1, ratio1, "im1")]
+liste = [(points1, ratio1, "im1")]
 
 
 
 
 def to_search(dico_passation_distance):
 
-    fingers = ["t", "i", "m", "an", "a"]
+    dico = {"t" :[], "i" : [], "m" : [], "an" : [], "a" : []}
 
-    search_points = []
-
-    for fing in fingers:
+    for k, v in dico.items():
         phax = []
 
-        for nb, i in enumerate(dico_passation_distance[fing]):
+        for nb, i in enumerate(dico_passation_distance[k]):
             if i == 0.0: phax.append(nb)
 
-        if len(phax) == 3:       search_points.append("finger")
-        elif 3 > len(phax) > 0:  search_points.append(phax)
-        elif len(phax) == 0:     search_points.append("None")
-
-    return search_points
+        if len(phax) == 3:       dico[k].append("finger")
+        elif 3 > len(phax) > 0:  dico[k] += [i for i in phax]
+        elif len(phax) == 0:     dico[k].append("None")
 
 
+    return dico
 
-def prox_distance(dico_passation_distance, data_distance, norm):
 
-    dico_distance = {"t" :[], "i" : [], "m" : [], "an" : [], "a" : []}
-    
-    for k, v in dico_distance.items():
+
+def prox(dico_passation_distance, data_distance, norm):
+
+    dico = {"t" :[], "i" : [], "m" : [], "an" : [], "a" : []}
+
+    for k, v in dico.items():
         liste_working = []
         for i, j in zip(dico_passation_distance[k], data_distance[k]):
             liste_working.append(abs(i - j))
 
-        dico_distance[k].append([liste_working])
-    print(dico_distance)
+        dico[k] += [i for i in liste_working]
 
-
-def prox_angle(dico_passation_angle, data_angle):
-    fingers = ["t", "i", "m", "an", "a"]
+    return dico
 
 
 
@@ -175,14 +171,16 @@ def prox_angle(dico_passation_angle, data_angle):
 
 
 
+#[number] = phax miss
+#None = all fingers
+#finger = search finger miss
 searching_points = to_search(dico_distance_current)
-print(searching_points)
+print(searching_points, "\n")
 
-
+liste_informations_angle = []
+liste_informations_distance = []
 
 for i in liste:
-    print(i[2])
-    print("")
 
     #data treatment
     dico_distance, echelle = collect_distances(i[0], i[1])#---- distance echelle
@@ -191,38 +189,88 @@ for i in liste:
     angle = points_to_angle(pts)#------------------------------ angle
 
     norm = determine_ratio(echelle_current, echelle)#---------- norm beetween data and current passation
-    #data treatment
+
+
+    #Recup data
+    distance = prox(dico_distance_current, dico_distance, norm)
+    angle = prox(dico_angle_current, angle, 1)
+
+    liste_informations_distance.append(distance)
+    liste_informations_angle.append(angle)
+
+
+
+def search_points(to_search_pts, value):                    #pts phax et angle phax
+
+    for i in  to_search_pts:#I = indexage
+        if i != None:
+
+            print(value)
+
+            if i == len(value):                             #derniere phax
+                print(i - 1)
+
+            elif i not in (0, "None", "finger"):            #phax avec un avant apres
+                print(i)
+                print(i + 1)
+                print(i - 1)
+
+            elif i == 0:                                    #premiere phax
+                print(i + 1)
+
+        print("")
+
+
+
+
+def finger_to_search(to_search_pts, value, dico, k):
+
+    for i in  to_search_pts:
+        if i != None:
+
+            if i == "finger":
+                fings = ["t", "i", "m", "an", "a"]
+
+                avant_doigt = fings.index(k) - 1
+                apres_doigt = fings.index(k) + 1
+
+                print(fings[avant_doigt], fings[apres_doigt])
+                print(dico[fings[avant_doigt]])
+                print(dico[fings[apres_doigt]])
+
+
+
+
+"""
+en gros on a fait les diff entre chauqe pts
+"""
 
 
 
 
 
-    prox_distance(dico_distance_current, dico_distance, norm)
 
-
-
-
-
-
-
-
-
+for i in liste_informations_distance:           #phax la plus proche
+    for k, v in i.items():
+        search_points(searching_points[k], v)
 
     print("")
+
+
+
+for i in liste_informations_distance:           #doigt qui ressemble le pluss
+    for k, v in i.items():
+        finger_to_search(searching_points[k], v, i, k)
+
     print("")
 
+    
 
+for i in liste_informations_angle:              #angle le plus proche
+    for k, v in i.items():
+        search_points(searching_points[k], v)
 
-
-
-
-
-
-
-
-
-
-
+    print("")
 
 
 
