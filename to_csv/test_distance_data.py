@@ -113,22 +113,12 @@ drawing_circle(blank_image, points5, 200, 0, (0, 255, 0))
 
 
 
-dico_current, echelle_current = collect_distances(points5, ratio5)
+dico_distance_current, echelle_current = collect_distances(points5, ratio5)
 direction_current = collect_points(points5)
 dico_angle_current = points_to_angle(direction_current)
 
 
 
-for k, v in dico_current.items():
-    print(k, v)
-
-print("")
-
-for k, v in dico_angle_current.items():
-    print(k, v)
-
-for i in range(6):
-    print("")
 
 
 
@@ -143,71 +133,41 @@ liste = [(points1, ratio1, "im1"), (points2, ratio2, "im2"),
 
 
 
-
-
-def compareason(dico_passation1, dico_passation2, dico_data1, dico_data2, norm):
+def to_search(dico_passation_distance):
 
     fingers = ["t", "i", "m", "an", "a"]
 
+    search_points = []
+
     for fing in fingers:
+        phax = []
 
-        print(fing)
+        for nb, i in enumerate(dico_passation_distance[fing]):
+            if i == 0.0: phax.append(nb)
 
+        if len(phax) == 3:       search_points.append("finger")
+        elif 3 > len(phax) > 0:  search_points.append(phax)
+        elif len(phax) == 0:     search_points.append("None")
 
-        liste_distance = []
-
-
-        #print("distance")
-
-        #print("data : ", dico_data1[fing])                  #distance
-        #print("current :", dico_passation1[fing])
-
-        for i, j in zip(dico_data1[fing], dico_passation1[fing]):
-
-            if i == None:
-                liste_angle.append("to search")
-            elif j == None:
-                liste_angle.append("to search")
-            else:
-                liste_distance.append(abs(i - j))
-
-
-        moyenne_dist = [i for i in liste_distance if type(i) != str]
-        if moyenne_dist == []: moyenne_dist = ["to search"]
-        else: moyenne_dist = sum(moyenne_dist)
+    return search_points
 
 
 
+def prox_distance(dico_passation_distance, data_distance, norm):
 
-        liste_angle = []
+    dico_distance = {"t" :[], "i" : [], "m" : [], "an" : [], "a" : []}
+    
+    for k, v in dico_distance.items():
+        liste_working = []
+        for i, j in zip(dico_passation_distance[k], data_distance[k]):
+            liste_working.append(abs(i - j))
 
-        #print("\nangle")
+        dico_distance[k].append([liste_working])
+    print(dico_distance)
 
-        #print("data : ", dico_data2[fing])                 #angle
-        #print("current :", dico_passation2[fing])
-        searching = 0
-        for i, j in zip(dico_data2[fing], dico_passation2[fing]):
-            if i == None:
-                liste_angle.append("to search")
-                searching += 1
-            elif j == None:
-                liste_angle.append("to search")
-                searching += 1
-            else:
-                liste_angle.append(abs(i - j))
 
-        moyenne_angle = [i for i in liste_angle if type(i) != str]
-        if moyenne_angle == []:  moyenne_angle = ["to search"]
-        else: moyenne_angle = sum(moyenne_angle)
-
-        if searching == 3:
-            print("here finger miss")
-        elif 3 > searching > 0:
-            print("here phax miss")
-        print("Rdistance: ", moyenne_dist)
-        print("Rangle: ", moyenne_angle)
-
-        print("")
+def prox_angle(dico_passation_angle, data_angle):
+    fingers = ["t", "i", "m", "an", "a"]
 
 
 
@@ -215,13 +175,8 @@ def compareason(dico_passation1, dico_passation2, dico_data1, dico_data2, norm):
 
 
 
-
-
-
-
-
-
-
+searching_points = to_search(dico_distance_current)
+print(searching_points)
 
 
 
@@ -229,14 +184,27 @@ for i in liste:
     print(i[2])
     print("")
 
-    dico, echelle = collect_distances(i[0], i[1])
-    pts = collect_points(i[0])
-    angle = points_to_angle(pts)
+    #data treatment
+    dico_distance, echelle = collect_distances(i[0], i[1])#---- distance echelle
+
+    pts = collect_points(i[0])#-------------------------------- pts for angle
+    angle = points_to_angle(pts)#------------------------------ angle
+
+    norm = determine_ratio(echelle_current, echelle)#---------- norm beetween data and current passation
+    #data treatment
 
 
-    norm = determine_ratio(echelle_current, echelle)
 
-    compareason(dico_current, dico_angle_current, dico, angle, norm)
+
+
+    prox_distance(dico_distance_current, dico_distance, norm)
+
+
+
+
+
+
+
 
 
 
@@ -255,27 +223,6 @@ for i in liste:
 
 
 
-
-
-
-
-
-##dico, echelle2 = collect_distances(points1, ratio1)
-##for k, v in dico.items():
-##    print(k, v)
-##print("")
-##
-##
-##dico, echelle3 = collect_distances(points2, ratio2)
-##for k, v in dico.items():
-##    print(k, v)
-##print("")
-##
-##
-##dico, echelle4 = collect_distances(points3, ratio3)
-##for k, v in dico.items():
-##    print(k, v)
-##print("")
 
 
 
