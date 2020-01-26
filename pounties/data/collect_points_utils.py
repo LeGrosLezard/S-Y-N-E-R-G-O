@@ -45,6 +45,7 @@ LISTE_HEADER = ["label", "points", "ratio"]
 
 def last_csv_into_folder():                     #Last csv name
     global PATH_OK_CSV
+
     liste_csv = sorted([int(i[:-4]) for i in os.listdir(PATH_OK_CSV)])
     
     if liste_csv == []:                                             
@@ -56,7 +57,7 @@ def last_csv_into_folder():                     #Last csv name
 def create_csv_header(name_csv):                #Create header
 
     global LISTE_HEADER
-
+    global PATH_OK_CSV
     name_csv = PATH_OK_CSV + "/" + name_csv
 
     with open(name_csv, 'w') as csvfile:
@@ -68,9 +69,10 @@ def create_csv_header(name_csv):                #Create header
 def writting_data(name_csv, label, points, ratio):      #add data csv
 
     global LISTE_HEADER
-    
+    global PATH_OK_CSV
+
     dico_data = {"label":label, "points":points, "ratio":ratio}
-  
+    name_csv = PATH_OK_CSV + "/" + name_csv
     with open(name_csv, 'a') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=LISTE_HEADER)
         writer.writerow(dico_data)

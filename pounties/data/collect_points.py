@@ -1,25 +1,25 @@
 import csv
-from collect_points_utils import verify_length_csv
-from collect_points_utils import new_label
-from collect_points_utils import last_csv_into_folder
-from collect_points_utils import writting_data
-from collect_points_utils import create_csv_header
+from .collect_points_utils import verify_length_csv
+from .collect_points_utils import new_label
+from .collect_points_utils import last_csv_into_folder
+from .collect_points_utils import writting_data
+from .collect_points_utils import create_csv_header
 
 
 
-def collect_points(points, ratio, image):
+def collect_points(points, ratio):
 
     #verification last csv
     last_csv_folder = last_csv_into_folder()
-    print(last_csv_folder)
 
     if last_csv_folder is None:
         #create csv
         create_csv_header("1.csv")
+        last_csv_folder = 1
+
 
     #verification label (only 100 by csv)
     create_new_csv = verify_length_csv(str(last_csv_folder) + ".csv")
-    print(create_new_csv)
 
     if create_new_csv is True:
         #create new_csv
@@ -28,8 +28,6 @@ def collect_points(points, ratio, image):
 
         last_csv_folder = new_name_csv
 
-
-    print(last_csv_folder)
 
     #Verify label
     label = new_label(str(last_csv_folder) + ".csv")
