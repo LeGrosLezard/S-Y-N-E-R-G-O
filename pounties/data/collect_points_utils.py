@@ -7,7 +7,7 @@ def verify_length_csv(name):                    #Longueur csv
 
     global PATH_OK_CSV
 
-    path = PATH_OK_CSV + "/" + str(name) + ".csv"
+    path = PATH_OK_CSV + "/" + str(name)
 
     data_number = 0
     with open(path, "r") as csvfile:
@@ -24,15 +24,20 @@ def verify_length_csv(name):                    #Longueur csv
 
 
 def new_label(csv_name):                        #Label csv
+    global PATH_OK_CSV
 
+    csv_name = PATH_OK_CSV + "/" + csv_name
     liste = []
     with open(csv_name, newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         for i in reader:
             liste.append(i["label"])
 
-    last_label = liste[-1]
-    return int(last_label) + 1
+    if liste == []:
+        return 1
+    else:
+        last_label = liste[-1]
+        return int(last_label) + 1
 
 
 
@@ -52,17 +57,19 @@ def create_csv_header(name_csv):                #Create header
 
     global LISTE_HEADER
 
+    name_csv = PATH_OK_CSV + "/" + name_csv
+
     with open(name_csv, 'w') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=LISTE_HEADER)
         writer.writeheader()
 
 
 
-def writting_data(name_csv, image, points, ratio):      #add data csv
+def writting_data(name_csv, label, points, ratio):      #add data csv
 
     global LISTE_HEADER
     
-    dico_data = {"label":image, "points":points, "ratio":ratio}
+    dico_data = {"label":label, "points":points, "ratio":ratio}
   
     with open(name_csv, 'a') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=LISTE_HEADER)
