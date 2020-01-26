@@ -102,6 +102,7 @@ image5 = "a"
 points5 = [((0, 0), (0, 0)), ((97, 105), (115, 94)), ((115, 94), (122, 79)), ((122, 79), (126, 69)), ((0, 0), (0, 0)), ((86, 76), (83, 55)), ((83, 55), (83, 47)), ((83, 47), (83, 40)), ((0, 0), (0, 0)), ((75, 79), (68, 55)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((51, 98), (44, 91)), ((44, 91), (40, 94)), ((40, 94), (41, 90))]
 ratio5 = (31, 31, 113, 109)
 
+print(points5)
 
 
 
@@ -400,9 +401,6 @@ def phax_pts(k, norm, data_liste, data_index, phax, current_data):
     current_finger_data = current_data[dico[k][0]:dico[k][1]]
     data_finger = data_liste[data_index][0][dico[k][0]:dico[k][1]]
 
-    print(current_data)
-    print("")
-
 
     
     for i in phax:
@@ -441,9 +439,8 @@ def phax_pts(k, norm, data_liste, data_index, phax, current_data):
         new_liste += [i for i in to_add3]
         
 
-    
-    print(new_liste)
 
+    return new_liste
 
 ##    a = 0
 ##    b = 0
@@ -462,9 +459,6 @@ def phax_pts(k, norm, data_liste, data_index, phax, current_data):
 
 
 
-    for i in range(10):
-        print("")
-
     
 
 dico_for_liste = {"t" :0, "i" : 1, "m" : 2, "an" : 3, "a" : 4}
@@ -476,8 +470,8 @@ for k, v in searching_points.items():
 
         if dico_final_dst_angle[k] != []:
             print(dico_final_dst_angle[k])
-            phax_pts(k, norm, liste, dico_final_dst_angle[k], v, points5)
-
+            points5 = phax_pts(k, norm, liste, dico_final_dst_angle[k], v, points5)
+            print(points5)
 
         if dico_final_finger[k] != []:
             print(dico_final_finger[k])
@@ -490,13 +484,15 @@ for k, v in searching_points.items():
 
 
 
+print(points5)
 
 
-
-
-
-
-
+a = 0
+b = 0
+blank_image1 = np.zeros((500, 500, 3), np.uint8)
+[cv2.circle(blank_image1, (j[0] + a, j[1] + b) , 2, (0, 0, 255), 2) for i in points5 for j in i]
+cv2.imshow("blanck", blank_image1)
+cv2.waitKey(0)
 
 
 
