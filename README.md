@@ -1,5 +1,7 @@
 # S-Y-N-E-R-G-O
 
+c'est de la merde mais ca fera une belle doc !
+
 ici on reconstruit les pts via les anciens en plus du stockage de pts
 
 ne pas oublié de mettre collect point dans truk théorique
