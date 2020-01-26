@@ -1,0 +1,12 @@
+hand -> petits points rouge tant que couleur = peau
+     -> donc limite importante
+     -> (on peut mélanger yrcb et l'autre trucks (masked))
+
+puis apres via les petits points (comme dlib truk bizzare pour la reconnaissance facile)
+via les csv on déduit le skelettor !!!!
+ratio !
+
+
+ratio = ti1 / ti2
+taille = ti
+dist = ratio * t
