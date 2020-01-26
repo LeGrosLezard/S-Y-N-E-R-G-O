@@ -377,12 +377,95 @@ def fingers_pts(finger, points_data, points_to_change, norm):
     for i in to_not_change2:
         final.append(i)
 
+
+##    a = 0
+##    b = 0
+##    blank_image = np.zeros((500, 500, 3), np.uint8)
+##    [cv2.circle(blank_image, (j[0] + a, j[1] + b) , 2, (0, 0, 255), 2) for i in points_to_change for j in i]
+##    cv2.imshow("blanck", blank_image)
+##    cv2.waitKey(0)
+##    
+##    blank_image1 = np.zeros((500, 500, 3), np.uint8)
+##    [cv2.circle(blank_image1, (j[0] + a, j[1] + b) , 2, (0, 0, 255), 2) for i in final for j in i]
+##    cv2.imshow("blanck", blank_image1)
+##    cv2.waitKey(0)
+    
     return final
 
 
-def phax_pts():
-    pass
+def phax_pts(k, norm, data_liste, data_index, phax, current_data):
+    dico = {"t" :[0,4], "i" : [5,8], "m" : [9,12], "an" : [13,16], "a" : [17,20]}
 
+
+    current_finger_data = current_data[dico[k][0]:dico[k][1]]
+    data_finger = data_liste[data_index][0][dico[k][0]:dico[k][1]]
+
+    print(current_data)
+    print("")
+
+
+    
+    for i in phax:
+
+        new_liste = []
+
+        phax_interest = current_finger_data[i]
+        data_phax_ = data_finger[i]
+
+        x_data = (data_phax_[1][0] * norm )- (data_phax_[0][0] * norm)
+        y_data = - ( (data_phax_[1][1] * norm) - (data_phax_[0][1] * norm)  )
+
+
+
+
+        if i < len(current_finger_data) - 1 and current_finger_data[i + 1][0] != (0, 0):
+            a = (current_finger_data[i + 1][0][0] - int(x_data), current_finger_data[i + 1][0][1] - int(y_data))
+            b = current_finger_data[i + 1][0]
+
+        else:
+            a = current_finger_data[i - 1][1]
+            b = (current_finger_data[i - 1][1][0] - int(x_data), current_finger_data[i - 1][1][1] - int(y_data))
+
+
+        current_finger_data[i] = (a, b)
+
+
+        to_add1 = current_data[:dico[k][0]]
+        to_add2 = current_finger_data
+        to_add3 = current_data[dico[k][1]:]
+
+
+
+        new_liste += [i for i in to_add1]
+        new_liste += [i for i in to_add2]
+        new_liste += [i for i in to_add3]
+        
+
+    
+    print(new_liste)
+
+
+##    a = 0
+##    b = 0
+##    blank_image = np.zeros((500, 500, 3), np.uint8)
+##    [cv2.circle(blank_image, (j[0] + a, j[1] + b) , 2, (0, 0, 255), 2) for i in current_data for j in i]
+##    cv2.imshow("blanck", blank_image)
+##    cv2.waitKey(0)
+##    
+##    blank_image1 = np.zeros((500, 500, 3), np.uint8)
+##    [cv2.circle(blank_image1, (j[0] + a, j[1] + b) , 2, (0, 0, 255), 2) for i in new_liste for j in i]
+##    cv2.imshow("blanck", blank_image1)
+##    cv2.waitKey(0)
+
+
+
+
+
+
+    for i in range(10):
+        print("")
+
+    
 
 dico_for_liste = {"t" :0, "i" : 1, "m" : 2, "an" : 3, "a" : 4}
 for k, v in searching_points.items():
@@ -393,18 +476,12 @@ for k, v in searching_points.items():
 
         if dico_final_dst_angle[k] != []:
             print(dico_final_dst_angle[k])
-
+            phax_pts(k, norm, liste, dico_final_dst_angle[k], v, points5)
 
 
         if dico_final_finger[k] != []:
             print(dico_final_finger[k])
             points5 = fingers_pts(k, liste[dico_final_finger[k]][0], points5, norm)
-
-
-            #print(liste)
-
-            
-            #print(liste[dico_final_finger[k]][0][dico_for_liste[k]])
 
 
         print("")
