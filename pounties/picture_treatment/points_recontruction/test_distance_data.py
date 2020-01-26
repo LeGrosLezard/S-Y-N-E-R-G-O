@@ -119,8 +119,8 @@ dico_angle_current = points_to_angle(direction_current)
 
 
 
-liste = [(points1, ratio1, "im1"), (points2, ratio2, "im2"),
-         (points3, ratio3, "im3"), (points4, ratio4, "im4")]
+liste = [(points1, ratio1), (points2, ratio2),
+         (points3, ratio3), (points4, ratio4)]
 
 #liste = [(points1, ratio1, "im1"), (points2, ratio2, "im2")]
 
