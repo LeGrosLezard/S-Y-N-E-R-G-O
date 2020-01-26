@@ -1,6 +1,6 @@
 # S-Y-N-E-R-G-O
 
-ici on reconstruit les pts via les anciens
+ici on reconstruit les pts via les anciens en plus du stockage de pts
 
 
 
