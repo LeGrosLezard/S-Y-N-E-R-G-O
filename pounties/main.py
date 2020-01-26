@@ -1,20 +1,13 @@
 import cv2
 
-
-from hands.hand_detection.hand_detection import hands_detections
-from hands.hand_detection.hand_detection import detect_objects
 from hands.hand_detection.hand_detection import load_inference_graph
-
-from hands.hand_treatment.hand_mask import skin_detector
-from hands.hand_treatment.hand_mask import hand_treatment
-from hands.hand_treatment.hand_mask import make_bitwise
-
-
-from hands.hand_treatment.skeletton import hand_skelettor
+from hands.hand_treatment.skeletton.skeletton import hand_skelettor
 
 from main_utils import hand_dection_part
 from main_utils import hand_isolation_part
+from main_utils import treat_skeletton_points
 
+from data.collect_points import collect_points
 
 
 path_to_ckpt = r"C:\Users\jeanbaptiste\Desktop\frozen_inference_graph.pb"
@@ -40,24 +33,53 @@ while True:
     frame = cv2.resize(frame, (int(width / nb), int(height / nb)))
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-    detections = hand_dection_part(frame, detection_graph, sess)
+    detections, frame_copy = hand_dection_part(frame, detection_graph, sess)
 
     for nb, hand in enumerate(detections):
 
         hand_masked, rectangle = hand_isolation_part(hand, frame, frame_copy)
 
-        _, points, _ = hand_skelettor(hand_masked, protoFile, weightsFile)
+        points, position, finger = hand_skelettor(hand_masked, protoFile, weightsFile)
 
-        print(points)
+        if len(points) >= 20 and len(finger) >= 20:
+            palm_center, points_sorted = treat_skeletton_points(points, position, finger,
+                                                                rectangle, hand_masked)
+
+            reorganize_by_pair = retreat_points(palm_center, points_sorted)
+
+            if len(reorganize_by_pair) >= 20:
+                collect_points(points, rectangle)
+
+            else:
+                print("reconstruction to doo mais faut mettre des (0, 0) ou on efface")
 
 
+        else:
+            print("TODOOOOOOOOOOOOOOOO")
 
-    
+
     if cv2.waitKey(0) & 0xFF == ord('q'):
         break
  
 cap.release()
 cv2.destroyAllWindows()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
