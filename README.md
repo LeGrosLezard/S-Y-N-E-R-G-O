@@ -2,7 +2,7 @@
 
 - ici on voulait faire recontruction de pts avec les données des doigts mais ca ne marche pas
 
-
+- mais c pas grave, on a les info sur les doigts pour les signes (pour apres apres pcque faut trouvé un truk qui allie rebuilt et point et point et le truk des mains)
 
 
 
