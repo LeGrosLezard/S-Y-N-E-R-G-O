@@ -1,8 +1,11 @@
 # S-Y-N-E-R-G-O
 
-ici avec assez de pts on refait les skelettons points sans le model
+ici avec assez de pts dans les csv on refait les skelettons points sans le model
 
-(les petits points dans les mains)
+(les petits points dans les mains) via le blanc (zone delimitation) des threshold donc juste a faire thresold
+
+
+
 
 <br><br><br><br><br><br><br><br><br>
 
