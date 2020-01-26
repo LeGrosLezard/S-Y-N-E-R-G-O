@@ -4,7 +4,21 @@ ici avec assez de pts dans les csv on refait les skelettons points sans le model
 
 (les petits points dans les mains) via le blanc (zone delimitation) des threshold donc juste a faire thresold
 
+        faudra mettre le truk ici, si on a un truk avec distance petite:
+            iciiiiiiiii
+            
+        sinon:
+              points, position, finger = hand_skelettor(hand_masked, protoFile, weightsFile)
 
+              if len(points) >= 20 and len(finger) >= 20:
+                  palm_center, points_sorted = treat_skeletton_points(points, position, finger,
+                                                                      rectangle, hand_masked)
+
+                  reorganize_by_pair = retreat_points(palm_center, points_sorted)
+
+                  if len(reorganize_by_pair) >= 20:
+                      collect_points(points, rectangle)
+                      
 
 
 <br><br><br><br><br><br><br><br><br>
