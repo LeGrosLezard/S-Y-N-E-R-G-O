@@ -1,19 +1,6 @@
 # S-Y-N-E-R-G-O
 
-- recréer une branche
-
-- on redessine les pts des doigts via les pts
-
-- on en fait un svm de picture auquel on associe les skelettons
-
-- on verifie la couleur de l'emplacement
-
-- on conserve le truk de csv
-
-- au fur a mesure du stockage ca devrait etre plus rapide nan ?
-
-- mais y manque ce truk qui pete...
-
+- ici on voulait faire recontruction de pts avec les données des doigts mais ca ne marche pas
 
 
 
