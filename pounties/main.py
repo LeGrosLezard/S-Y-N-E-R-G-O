@@ -7,6 +7,9 @@ from main_utils import hand_dection_part
 from main_utils import hand_isolation_part
 from main_utils import treat_skeletton_points
 
+from main_utils import retreatement_points
+
+
 from data.collect_points import collect_points
 
 
@@ -20,12 +23,12 @@ detection_graph, sess = load_inference_graph(path_to_ckpt)
 
 
 
-
-
+import os
+liste_video = os.listdir(r"C:\Users\jeanbaptiste\Desktop\pounties\videos")
 cap = cv2.VideoCapture("videos/a.mp4")
 
 nb = 2
-
+c = 0
 while True:
 
     _, frame = cap.read()
@@ -41,24 +44,35 @@ while True:
 
         points, position, finger = hand_skelettor(hand_masked, protoFile, weightsFile)
 
-        if len(points) >= 20 and len(finger) >= 20:
-            palm_center, points_sorted = treat_skeletton_points(points, position, finger,
-                                                                rectangle, hand_masked)
+        try:
 
-            reorganize_by_pair = retreat_points(palm_center, points_sorted)
+            if len(points) >= 20 and len(finger) >= 20:
+                palm_center, points_sorted = treat_skeletton_points(points, position, finger,
+                                                                    rectangle, hand_masked)
 
-            if len(reorganize_by_pair) >= 20:
-                collect_points(points, rectangle)
+                reorganize_by_pair = retreatement_points(palm_center, points_sorted)
+
+                if len(reorganize_by_pair) >= 20:
+                    collect_points(position, rectangle)
+
+                else:
+                    print("reconstruction to doo mais faut mettre des (0, 0) ou on efface")
+
 
             else:
-                print("reconstruction to doo mais faut mettre des (0, 0) ou on efface")
+                print("TODOOOOOOOOOOOOOOOO")
+                #collect_points THEORIQUE(points, rectangle)
 
 
-        else:
-            print("TODOOOOOOOOOOOOOOOO")
+        except:
+            path = r"C:\Users\jeanbaptiste\Desktop\pounties\data\error\{}.jpg"
+            picture = str(c) + ".jpg"
+            cv2.imwrite(path.format(picture), crop)
 
 
-    if cv2.waitKey(0) & 0xFF == ord('q'):
+
+
+    if cv2.waitKey(1) & 0xFF == ord('q'):
         break
  
 cap.release()
