@@ -1,9 +1,5 @@
 # S-Y-N-E-R-G-O
 
-c'est peut etre pas super mais au moins ca fera une belle doc continuer la nouvelle mise en forme
+essayer avec : le doigt entier pour les phax
 
-relancer pendant la nuit (ca a bugué...)
-
-collect point dans un autre dossier ou on dessine les pts comme ca ca fait deux fois plus de point
-
-finir de mettre au propre
+pour reconstruire faut pas reprendre les pts, mais la distance et l'angle pas les pts  !
