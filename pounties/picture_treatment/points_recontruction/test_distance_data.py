@@ -122,6 +122,11 @@ dico_angle_current = points_to_angle(direction_current)
 liste = [(points1, ratio1), (points2, ratio2),
          (points3, ratio3), (points4, ratio4)]
 
+print("iciiiiiiii")
+print(liste)
+for i in liste:
+    print(i)
+
 #liste = [(points1, ratio1, "im1"), (points2, ratio2, "im2")]
 
 
@@ -491,8 +496,61 @@ a = 0
 b = 0
 blank_image1 = np.zeros((500, 500, 3), np.uint8)
 [cv2.circle(blank_image1, (j[0] + a, j[1] + b) , 2, (0, 0, 255), 2) for i in points5 for j in i]
-cv2.imshow("blanck", blank_image1)
-cv2.waitKey(0)
+#cv2.imshow("blanck", blank_image1)
+#cv2.waitKey(0)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+a =(  [
+    ((105, 94), (106, 77)),
+    ((106, 77), (112, 61)),
+    ((112, 61), (112, 38)),
+    ((112, 38), (116, 25)),
+    ((105, 94), (73, 100)),
+    ((73, 100), (57, 87)),
+    ((57, 87), (47, 81)),
+    ((47, 81), (37, 74)),
+    ((105, 94), (83, 90)),
+    ((83, 90), (60, 74)),
+    ((60, 74), (50, 64)),
+    ((50, 64), (37, 54)),
+    ((105, 94), (86, 77)),
+    ((86, 77), (67, 64)),
+    ((67, 64), (57, 54)),
+    ((57, 54), (47, 48)),
+    ((105, 94), (90, 67)),
+    ((90, 67), (76, 54)),
+    ((76, 54), (67, 47)),
+    ((67, 47), (57, 41))
+    
+    ],
+
+
+ (31, 15, 98, 105)
+
+
+)
+
+
+
+
+
+
+
+
 
 
 
