@@ -6,4 +6,4 @@ ah non c pour les doigts ptin mais, en gros récupérer la distance et l'angle e
 
 et le faire les truk sur les doigts de la passation
 
-en plus tu t'es trompé de github si un recruteur va se balader la bas et qu'il essaie bonjour (sinon supprimer le lien)
+
