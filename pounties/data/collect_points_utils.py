@@ -15,7 +15,7 @@ def verify_length_csv(name):                    #Longueur csv
         for i in csvfile:
             data_number += 1
 
-    if data_number == 101:
+    if data_number >= 101:
         print("CSV rempli créez en un nouveau")
         return True
 
@@ -76,3 +76,8 @@ def writting_data(name_csv, label, points, ratio):      #add data csv
     with open(name_csv, 'a') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=LISTE_HEADER)
         writer.writerow(dico_data)
+
+
+if __name__ == "__main__":
+    a = verify_length_csv("1.csv")
+    print(a)
