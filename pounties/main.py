@@ -9,7 +9,6 @@ from main_utils import treat_skeletton_points
 
 from main_utils import retreatement_points
 
-
 from data.collect_points import collect_points
 
 
@@ -22,59 +21,61 @@ detection_graph, sess = load_inference_graph(path_to_ckpt)
 
 
 
-
+#raise
 import os
 liste_video = os.listdir(r"C:\Users\jeanbaptiste\Desktop\pounties\videos")
-cap = cv2.VideoCapture("videos/a.mp4")
+for video in liste_video:
+#raise
 
-nb = 2
-c = 0
-while True:
+    cap = cv2.VideoCapture("videos/{}".format(video))
 
-    _, frame = cap.read()
-    height, width = frame.shape[:2]
-    frame = cv2.resize(frame, (int(width / nb), int(height / nb)))
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    nb = 2
+    c = 0
+    while True:
 
-    detections, frame_copy = hand_dection_part(frame, detection_graph, sess)
+        _, frame = cap.read()
 
-    for nb, hand in enumerate(detections):
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-        hand_masked, rectangle = hand_isolation_part(hand, frame, frame_copy)
+        detections, frame_copy = hand_dection_part(frame, detection_graph, sess)
 
-        points, position, finger = hand_skelettor(hand_masked, protoFile, weightsFile)
+        for nb, hand in enumerate(detections):
 
-        try:
+            hand_masked, rectangle = hand_isolation_part(hand, frame, frame_copy)
 
-            if len(points) >= 20 and len(finger) >= 20:
-                palm_center, points_sorted = treat_skeletton_points(points, position, finger,
-                                                                    rectangle, hand_masked)
+            points, position, finger = hand_skelettor(hand_masked, protoFile, weightsFile)
 
-                reorganize_by_pair = retreatement_points(palm_center, points_sorted)
+            try:
 
-                if len(reorganize_by_pair) >= 20:
-                    collect_points(position, rectangle)
+                if len(points) >= 20 and len(finger) >= 20:
+                    palm_center, points_sorted = treat_skeletton_points(points, position, finger,
+                                                                        rectangle, hand_masked)
+
+                    reorganize_by_pair = retreatement_points(palm_center, points_sorted)
+
+                    if len(reorganize_by_pair) >= 20:
+                        collect_points(position, rectangle)
+
+                    else:
+                        print("reconstruction to doo mais faut mettre des (0, 0) ou on efface")
+
 
                 else:
-                    print("reconstruction to doo mais faut mettre des (0, 0) ou on efface")
+                    print("TODOOOOOOOOOOOOOOOO")
+                    #collect_points THEORIQUE(points, rectangle)
+
+            #raise
+            except:
+                path = r"C:\Users\jeanbaptiste\Desktop\pounties\data\error\{}.jpg"
+                picture = str(c) + ".jpg"
+                cv2.imwrite(path.format(picture), crop)
+
+                c += 1
 
 
-            else:
-                print("TODOOOOOOOOOOOOOOOO")
-                #collect_points THEORIQUE(points, rectangle)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
 
-
-        except:
-            path = r"C:\Users\jeanbaptiste\Desktop\pounties\data\error\{}.jpg"
-            picture = str(c) + ".jpg"
-            cv2.imwrite(path.format(picture), crop)
-
-
-
-
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
- 
 cap.release()
 cv2.destroyAllWindows()
 
