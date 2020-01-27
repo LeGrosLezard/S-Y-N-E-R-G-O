@@ -16,6 +16,27 @@ from utils_reconstruction import collect_distances
 from utils_reconstruction import *
 
 
+
+def recuperate_data():
+    pass
+
+def Treatement_passation():
+    pass
+
+def compare_passation_data():
+    pass
+
+def minimum_distance_angle_passation_data():
+    pass
+
+
+def minimum_finger_distance():
+    pass
+
+def remplacing_passation_points():
+    pass
+
+
 def reconstruction(points, ratio, image):
 
     #=============================
@@ -61,6 +82,38 @@ def reconstruction(points, ratio, image):
         #Stock data
         liste_informations_distance.append(distance)
         liste_informations_angle.append(angle)
+
+
+    #=======================================================
+    """Search the minimum distance angle for rebuilt phax"""
+    #=======================================================
+
+    distance_angle = melting_angle_distance(liste_informations_distance,
+                           liste_informations_angle, searching_points)
+
+    sum_dist_angle = recuperate_sum_distance_angle(distance_angle)
+    minimum_distance_angle = recuperate_minimum_distance_dist_angle(sum_dist_angle)
+
+    dico_final_dst_angle = put_informations_to_dictionnary(final_distance_angle)
+
+
+    #======================================================
+    """Search the minimum distance from finger not found"""
+    #======================================================
+
+    fingers = recuperate_fingers_interest(liste_informations_distance, searching_points)
+    sum_distance_finger = make_sum_finger_interest(fingers)
+    minimum_finger = minimum_fingers(sum_distance_finger)
+
+    dico_final_finger = put_informations_to_dictionnary(minimum_finger)
+
+
+
+    #======================================================
+    """Replace old points to new points"""
+    #======================================================
+
+
 
 
 
