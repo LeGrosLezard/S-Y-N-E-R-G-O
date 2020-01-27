@@ -93,11 +93,12 @@ def collect_points(points):
 
     return abscisse
 
+
 def points_to_angle(abscisse):
     """Here we determinate arctangeante angle of from last abscisse
     difference in a rectangle triangle ABC:
     
-                         -1
+                 ^       -1
         - angle acb = tan   (cb / ab)
         - if Y = 0 and X > 0 -> angle = 0°
         - if Y = 0 and X < 0 -> angle = 180°
@@ -149,7 +150,6 @@ def what_we_need_to_search(dico_passation_distance):
     #[number] as [1, 2] = phax miss
     #None = we already have all fingers
     #finger = search finger miss
-
     """
 
     dico = {"t" :[], "i" : [], "m" : [], "an" : [], "a" : []}
@@ -176,16 +176,14 @@ def what_we_need_to_search(dico_passation_distance):
 def determine_ratio(scale1, scale2):
     """Here make a ratio for nomalise distance,
     we need to determine the highter scale
-    from the two scales and apply:
 
+    from the two scales and apply:
         norm = highter scale / seconde scale
     """
 
     if scale1 > scale2: norm = scale1 / scale2
     else: norm = scale2 / scale1
     return norm
-
-
 
 
 def proximum_distance(dico_passation_distance, data_distance, norm):
@@ -200,6 +198,171 @@ def proximum_distance(dico_passation_distance, data_distance, norm):
         dico[k] += [i for i in liste_working]
 
     return dico
+
+
+
+#============================================
+"""Search points from none detection from
+    our skeletton to re built"""
+#============================================
+
+def search_points(to_search_pts, value_distance, value_angle):  
+
+
+    liste = []
+
+    for nb, i in  enumerate(to_search_pts):
+
+        if i != None:
+
+            if i == len(value_distance):                           
+                liste.append(value_distance[nb + 1])
+                liste.append(value_angle[nb + 1])
+
+            elif i not in (0, "None", "finger"):
+                liste.append(value_distance[nb + 1])
+                liste.append(value_distance[nb - 1])
+                liste.append(value_angle[nb + 1])
+                liste.append(value_angle[nb - 1])
+
+            elif i == 0:                                    
+                liste.append(value_distance[nb + 1])
+                liste.append(value_angle[nb + 1])
+
+            elif i in ("None", "finger"):
+                pass
+
+    return liste
+
+
+
+def finger_to_search(to_search_pts, value, dico, k):
+
+    liste = []
+    fings = ["t", "i", "m", "an", "a"]
+    for i in  to_search_pts:
+        if i != None:
+
+            if i == "finger" and k not in("t", "a"):
+                avant_doigt = fings.index(k) - 1
+                apres_doigt = fings.index(k) + 1
+                liste.append(dico[fings[avant_doigt]])
+                liste.append(dico[fings[apres_doigt]])
+
+            elif i == "finger" and k in ("t"):
+                apres_doigt = fings.index(k) + 1
+                liste.append(dico[fings[apres_doigt]])
+
+            elif i == "finger" and k in ("a"):
+                avant_doigt = fings.index(k) - 1
+                liste.append(dico[fings[avant_doigt]])
+
+    return liste
+
+
+
+
+#===================================================
+"""Search points from none detection from
+    our skeletton to re built, PHAX ANGLE SECTION"""
+#===================================================
+
+def melting_angle_distance(liste_distance, liste_angle, searching_points):
+
+    distance_angle = {"t" :[], "i" : [], "m" : [], "an" : [], "a" : []}
+
+    for dist, angle in zip(liste_distance, liste_angle):
+
+        for (k1, v1), (k2, v2) in zip(dist.items(), angle.items()):
+            angle_distance = search_points(searching_points[k1], v1, v2)
+            distance_angle[k1].append(angle_distance)
+
+    return distance_angle
+
+
+def recuperate_sum_distance_angle(distance_angle):
+
+    sum_dist_angle = {"t" :[], "i" : [], "m" : [], "an" : [], "a" : []}
+
+    for key, value in distance_angle.items():
+        for nb, val in enumerate(value):
+            if val != []:
+                sum_dist_angle[key].append((sum(val), nb))
+
+    return sum_dist_angle
+
+
+def recuperate_minimum_distance_dist_angle(sum_dist_angle):
+
+    minimum_distance_angle = []
+
+    for k, v in sum_dist_angle.items():
+        if v != []:
+            a = sorted(sum_dist_angle[k], key=lambda x: x[0])
+            minimum_distance_angle.append((a[0], k))
+
+    return minimum_distance_angle
+
+def put_informations_to_dictionnary(liste):
+
+    info = {"t" :[], "i" : [], "m" : [], "an" : [], "a" : []}
+
+    for i in liste:
+        info[i[1]] = i[0][1]
+
+    return info
+
+
+
+#===================================================
+"""Search points from none detection from
+    our skeletton to re built, FINGERS SECTION"""
+#===================================================
+
+def recuperate_fingers_interest(liste_distance, searching_points):
+
+    fingers = {"t" :[], "i" : [], "m" : [], "an" : [], "a" : []}
+    for dist in liste_distance:           
+        for key, value in i.items():
+            fings = finger_to_search(searching_points[key], value, dist, key)
+            fingers[k].append(fings)
+
+    return fingers
+
+
+
+def make_sum_finger_interest(fingers):
+
+    sum_distance_finger = {"t" :[], "i" : [], "m" : [], "an" : [], "a" : []}
+
+    for key, value in fingers.items():
+        for nb, val in enumerate(value):
+
+            if val != []:
+                liste_working = []
+
+                for v in val:
+                    liste_working.append(v)
+       
+                liste_working = [j for i in liste_working for j in i]
+                sum_distance_finger[key].append((sum(liste_working), nb))
+
+
+    return sum_distance_finger
+
+
+def minimum_fingers(sum_distance_finger):
+
+    minimum_finger = []
+
+    for k, v in sum_distance_finger.items():
+        if v != []:
+
+            b = sorted(v, key=lambda x: x[0])
+            minimum_finger.append((b[0], k))
+
+    return minimum_finger
+
 
 
 
