@@ -97,6 +97,10 @@ for info in search_points:
     liste_metablockant = sorted(liste_metablockant, key=lambda x: x[0])
     liste_1 = sorted(liste_1, key=lambda x: x[0])
 
+    for i, j in zip(liste_metablockant, liste_1):
+        print(i, j)
+
+
     minimum_distance = liste_metablockant[0]
     index_minimum_distance = minimum_distance[1]
 
@@ -104,8 +108,12 @@ for info in search_points:
     index_minimum_angle = minimum_angle[1]
 
 
-    #print(points_current[finger_name])
 
+
+
+
+    #print(points_current[finger_name])
+    print(index_minimum_distance, index_minimum_angle)
     print(liste_distance[index_minimum_distance][finger_name][phax_interest])
     print(liste_angle[index_minimum_angle][finger_name][phax_interest])
 
@@ -116,37 +124,129 @@ for info in search_points:
     if phax_interest == 0:
         points_current[finger_name][0][1] = points_current[finger_name][1][0]
 
+        print(points_current[finger_name])
+
+        distance = liste_distance[index_minimum_distance][finger_name][phax_interest]
+        angle = liste_angle[index_minimum_angle][finger_name][phax_interest]
+
+        a = points_current[finger_name][0][1]
+        print(a)
+        x = a[0] - int(distance * math.cos(angle))
+        y = a[1] - int(distance * math.sin(angle))
+
+
+    
+        points_current[finger_name][0][0] = (x, y)
+        print(points_current[finger_name])
+
+
+
+
+
+        
+
     elif phax_interest == len(points_current[finger_name]) - 1:
         points_current[finger_name][phax_interest][0] = points_current[finger_name][phax_searching][1]
+
+
+        print(points_current[finger_name])
+
+        distance = liste_distance[index_minimum_distance][finger_name][phax_interest]
+        angle = liste_angle[index_minimum_angle][finger_name][phax_interest]
+
+        a = points_current[finger_name][phax_interest][0]
+
+        x = a[0] - int(distance * math.cos(angle))
+        y = a[1] - int(distance * math.sin(angle))
+
+        print(x, y)
+
+        points_current[finger_name][phax_interest][1] = (x, y)
+        print(points_current[finger_name])
+
+
+
+        
 
     else:
         points_current[finger_name][phax_interest][0] = points_current[finger_name][phax_searching][1]
 
 
-    print(points_current[finger_name])
+        print(points_current[finger_name])
 
+        distance = liste_distance[index_minimum_distance][finger_name][phax_interest]
+        angle = liste_angle[index_minimum_angle][finger_name][phax_interest]
+
+        a = points_current[finger_name][phax_interest][0]
+        print(a, int(distance * math.cos(angle)), int(distance * math.sin(angle)))
+            
+        x = a[0] + int(distance * math.cos(angle))
+        y = a[1] + int(distance * math.sin(angle))
+
+        print(x, y)
+
+
+        points_current[finger_name][phax_interest][1] = (x, y)
+
+        print(points_current[finger_name])
 
     
 
 
 
 
-
     print("")
     print("")
     print("")
     print("")
-    
 
 
-#print(data_csv[4])
+olé = []
+for k, v in points_current.items():
+    for i in v:
+        olé.append(tuple(i))
+
+print(olé)
+
+
+for i in range(10):
+    print("")
+
+aa= 1
+blank_image = np.zeros((500, 500, 3), np.uint8)
+for i in olé:
+    for j in i:
+        print(i)
+        cv2.circle(blank_image, (int(j[0]/aa), int(j[1]/aa)) , 2, (0, 0, 255), 2)
+        cv2.line(blank_image, (i[0]), (i[1]), (0, 255, 0), 2)
+        cv2.imshow("blank_imagea", blank_image)
+        cv2.waitKey(0)
+
+for i in data_csv:
+    blank_image = np.zeros((500, 500, 3), np.uint8)
+    try:
+        for j in i:
+            for k in j:
+                cv2.circle(blank_image, k[0] , 2, (0, 0, 255), 2)
+                cv2.circle(blank_image, k[1] , 2, (0, 0, 255), 2)
+                cv2.line(blank_image, (k[0]), (k[1]), (0, 255, 0), 2)
+    except:pass
+
+    cv2.imshow("blank_imagea", blank_image)
+    cv2.waitKey(0)
 
 
 
 
 
+#print(data_csv[30])
 
 
+a = [((88, 112), (97, 105)), ((97, 105), (115, 94)), ((115, 94), (122, 79)), ((122, 79), (126, 69)),
+    ((86, 76), (83, 55)), ((83, 55), (83, 47)), ((83, 47), (83, 40)),
+    ((75, 79), (68, 55)), ((79, 46), (0, 0)), ((-3, 0), (0, 0)),
+    ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)),
+    ((51, 98), (44, 91)), ((44, 91), (40, 94)), ((40, 94), (41, 90))]
 
 
 
