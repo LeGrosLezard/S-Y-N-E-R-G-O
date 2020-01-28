@@ -30,27 +30,34 @@ for k,v in miss.items():
 
         print(k, v)
         for i in v:
+            liste = []
 
             if i == len(distance_current[k]) - 1:
                 for nb, dist_data in enumerate(minimal_distance):
                     a = dist_data[k][i]
                     b = distance_current[k][i - 1]
-                    to_add[k].append((abs(a - b), nb))
+                    liste.append((abs(a - b), nb))
             else:
                 for nb, dist_data in enumerate(minimal_distance):
                     a = dist_data[k][i]
                     b = distance_current[k][i + 1]
-                    to_add[k].append((abs(a - b), nb))
+                    liste.append((abs(a - b), nb))
+
+            to_add[k].append(liste)
         print("")
 
 
 
 minimum_finger = []
 for k, v in to_add.items():
+    print(k)
     if v != []:
-        b = sorted(v, key=lambda x: x[0])
-        minimum_finger.append((b[0], k))
-        print(b)
+        for i in range(len(v)):
+
+            b = sorted(v[i], key=lambda x: x[0])
+            minimum_finger.append((b[0], k))
+            print(b)
+            print("")
 
 
 
