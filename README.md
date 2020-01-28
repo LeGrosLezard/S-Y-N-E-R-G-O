@@ -1,9 +1,9 @@
 # S-Y-N-E-R-G-O
 
-essayer avec : le doigt entier pour les phax
+phax : faire diff passataion pts[0] / current pts[1] et la c'est bon ! + l'angle
 
-ah non c pour les doigts ptin mais, en gros récupérer la distance et l'angle entre du doigt prochain, et du doigt dapres
+doigt = current = doigt non mais avant apres oui
 
-et le faire les truk sur les doigts de la passation
+donc data = doigt apres et avant meme position que nos doigts -> on effectue distance et angle via nos doigts sur le doigt manquaunt !
 
 
