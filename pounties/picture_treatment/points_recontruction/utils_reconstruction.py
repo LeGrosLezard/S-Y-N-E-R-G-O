@@ -26,6 +26,7 @@ def csv_files():
 
     return number_csv
 
+
 def recuperate_data_in_csv(csv_name):
     """From csv we recuperate points data"""
 
@@ -81,9 +82,9 @@ def collect_distances(points, ratio):
 def collect_points(points):
     """Collect points and make a différence for recuperate angles
         where:   x = Xi+1 - Xi
-                 y = -( Yi+1 - Yi)
+                 y = - ( Yi+1 - Yi)
     """
-
+    print(points)
     abscisse = []
     for nb in range(len(points)):
         ptsX = points[nb][1][0] - points[nb][0][0]
@@ -94,10 +95,10 @@ def collect_points(points):
     return abscisse
 
 
-def points_to_angle(abscisse):
+def points_to_angle(i):
     """Here we determinate arctangeante angle of from last abscisse
     difference in a rectangle triangle ABC:
-    
+
                  ^       -1
         - angle acb = tan   (cb / ab)
         - if Y = 0 and X > 0 -> angle = 0°
@@ -105,38 +106,53 @@ def points_to_angle(abscisse):
         - if if X = 0 and Y > 0 -> angle = 90°
         - if X = 0 and Y < 0 -> angle = -90°
 
-    - if angle < 0: angle + 180
-    
+    - if angle < 0: angle + 180°
     """
 
-    liste_angle = []
+    angle = 0
 
-    for i in abscisse:
+    if i[1] == 0 and i[0] != 0:
+        if i[0] > 0:    angle = 0
+        elif i[0] < 0:  angle = 180
 
-        if i[1] == 0 and i[0] != 0:
-            if i[0] > 0:    liste_angle.append(0)
-            elif i[0] < 0:  liste_angle.append(180)
+    elif i[0] == 0 and i[1] != 0:
+        if i[1] > 0:    angle = 90
+        elif i[1] < 0:  angle = -90
 
-        elif i[0] == 0 and i[1] != 0:
-            if i[1] > 0:    liste_angle.append(90)
-            elif i[1] < 0:  liste_angle.append(-90)
+    elif i != (0, 0):
+        tan = math.atan(i[1] / i[0])
+        angle = math.degrees(tan)
+        if angle < 0: angle += 180
+        angle = int(angle)
 
-        elif i != (0, 0):
+    elif i == (0, 0):
+        angle = 0
 
-            tan = math.atan(i[1] / i[0])
-            angle = math.degrees(tan)
-            if angle < 0: angle += 180
-            liste_angle.append(int(angle))
-
-        elif i == (0, 0):
-            liste_angle.append(0)
+    return angle
 
 
-    dico_angle = {"t" :liste_angle[0:4], "i" : liste_angle[5:8], "m" : liste_angle[9:12], "an" : liste_angle[13:16],
-                  "a" : liste_angle[17:20]}
 
-    return dico_angle
+def points_to_fingers(points):
+    """Collect Euclidean distance from each point.
+    Repartite to finger's"""
 
+    points_treat = []
+    for i in points:
+        points_treat.append(list(i))
+
+    dico = {"t" :points_treat[0:4], "i" : points_treat[5:8], "m" : points_treat[9:12],
+            "an" : points_treat[13:16], "a" : points_treat[17:20]}
+
+    return dico
+
+
+def distance_of_phaxs_data(data_csv):
+    distance_data = []
+    for nb, i in enumerate(data_csv):
+        distance, echelle = collect_distances(i[0], i[1])
+        distance_data.append(distance)
+
+    return distance_data
 
 #============================================
 """Here's the hand need to be reconstructed
@@ -191,6 +207,7 @@ def proximum_distance(dico_passation_distance, data_distance, norm):
     dico = {"t" :[], "i" : [], "m" : [], "an" : [], "a" : []}
 
     for k, v in dico.items():
+
         liste_working = []
         for i, j in zip(dico_passation_distance[k], data_distance[k]):
             liste_working.append(abs(i - j))
@@ -207,7 +224,6 @@ def proximum_distance(dico_passation_distance, data_distance, norm):
 #============================================
 
 def search_points(to_search_pts, value_distance, value_angle):  
-
 
     liste = []
 
@@ -233,7 +249,6 @@ def search_points(to_search_pts, value_distance, value_angle):
                 pass
 
     return liste
-
 
 
 def finger_to_search(to_search_pts, value, dico, k):
@@ -303,6 +318,7 @@ def recuperate_minimum_distance_dist_angle(sum_dist_angle):
 
     return minimum_distance_angle
 
+
 def put_informations_to_dictionnary(liste):
 
     info = {"t" :[], "i" : [], "m" : [], "an" : [], "a" : []}
@@ -323,12 +339,11 @@ def recuperate_fingers_interest(liste_distance, searching_points):
 
     fingers = {"t" :[], "i" : [], "m" : [], "an" : [], "a" : []}
     for dist in liste_distance:           
-        for key, value in i.items():
+        for key, value in dist.items():
             fings = finger_to_search(searching_points[key], value, dist, key)
-            fingers[k].append(fings)
+            fingers[key].append(fings)
 
     return fingers
-
 
 
 def make_sum_finger_interest(fingers):
@@ -362,6 +377,104 @@ def minimum_fingers(sum_distance_finger):
             minimum_finger.append((b[0], k))
 
     return minimum_finger
+
+
+
+
+#===============================================
+"""Built none dectected points of passation."""
+#===============================================
+
+def drawing(before, after):
+
+    blank_image = np.zeros((500, 500, 3), np.uint8)
+    [cv2.circle(blank_image, (j[0], j[1]) , 2, (0, 0, 255), 2) for i in before for j in i]
+    cv2.imshow("before", blank_image)
+    cv2.waitKey(0)
+
+    blank_image1 = np.zeros((500, 500, 3), np.uint8)
+    [cv2.circle(blank_image1, (j[0], j[1]) , 2, (0, 0, 255), 2) for i in after for j in i]
+    cv2.imshow("after", blank_image1)
+    cv2.waitKey(0)
+
+
+
+def fingers_points(finger, points_data, points_to_change, norm):
+
+    """
+        
+    """
+
+    new_liste = []
+    dico = {"t" :[0,4], "i" : [5,8], "m" : [9,12], "an" : [13,16], "a" : [17,20]}
+
+
+    for i in points_data[dico[finger][0]:dico[finger][1]]:
+
+        pair1 = (int(i[0][0] * norm), int(i[0][1] * norm))
+        pair2 = (int(i[1][0] * norm), int(i[1][1] * norm))
+
+        new_liste.append((pair1, pair2))
+
+    to_change = points_to_change[dico[finger][0]:dico[finger][1]]
+
+    to_not_change1 = points_to_change[:dico[finger][0]]
+    to_not_change2 = points_to_change[dico[finger][1]:]
+
+    final = []
+    final += [i for i in to_not_change1]
+    final += [i for i in new_liste]
+    final += [i for i in to_not_change2]
+
+    #draw
+    
+    return final
+
+
+def phax_points(k, norm, data_liste, data_index, phax, current_data):
+    dico = {"t" :[0,4], "i" : [5,8], "m" : [9,12], "an" : [13,16], "a" : [17,20]}
+
+
+    current_finger_data = current_data[dico[k][0]:dico[k][1]]
+    data_finger = data_liste[data_index][0][dico[k][0]:dico[k][1]]
+
+    for i in phax:
+
+        new_liste = []
+
+        phax_interest = current_finger_data[i]
+        data_phax_ = data_finger[i]
+
+        x_data = (data_phax_[1][0] * norm )- (data_phax_[0][0] * norm)
+        y_data = - ( (data_phax_[1][1] * norm) - (data_phax_[0][1] * norm)  )
+
+        if i < len(current_finger_data) - 1 and\
+           current_finger_data[i + 1][0] != (0, 0):
+
+            a1 = current_finger_data[i + 1][0][0]
+            a2 = current_finger_data[i + 1][0][1]
+
+            pair1 = (a1 - int(x_data), a2 - int(y_data))
+            pair2 = current_finger_data[i + 1][0]
+
+        else:
+            pair1 = current_finger_data[i - 1][1]
+
+            a1 = current_finger_data[i - 1][1][0]
+            a2 = current_finger_data[i - 1][1][1]
+            pair2 = (a1 - int(x_data), a2 - int(y_data))
+
+
+        current_finger_data[i] = (pair1, pair2)
+
+        new_liste += [i for i in current_data[:dico[k][0]]]
+        new_liste += [i for i in current_finger_data]
+        new_liste += [i for i in current_data[dico[k][1]:]]
+
+    return new_liste
+
+
+
 
 
 
