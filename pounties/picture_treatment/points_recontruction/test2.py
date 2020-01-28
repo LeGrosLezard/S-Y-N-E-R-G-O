@@ -12,7 +12,7 @@ ratio = (31, 31, 113, 109)
 data_csv = recuperate_data_in_csv(1)
 distance_current, echelle = collect_distances(points, ratio)
 miss = what_we_need_to_search(distance_current)
-print(miss)
+
 ##print(distance_current)
 ##print("")
 
@@ -25,10 +25,10 @@ for nb, i in enumerate(data_csv):
 
 to_add = {"t" :[], "i" : [], "m" : [], "an" : [], "a" : []}
 for k,v in miss.items():
-
+    
     if v not in (["None"], ["finger"]):
 
-        print(k, v)
+        
         for i in v:
             liste = []
 
@@ -42,37 +42,70 @@ for k,v in miss.items():
                     a = dist_data[k][i]
                     b = distance_current[k][i + 1]
                     liste.append((abs(a - b), nb))
-
+    
             to_add[k].append(liste)
-        print("")
 
 
 
 minimum_finger = []
 for k, v in to_add.items():
-    print(k)
+    #print(k)
+
+    liste_w = []
     if v != []:
         for i in range(len(v)):
-
             b = sorted(v[i], key=lambda x: x[0])
-            minimum_finger.append((b[0], k))
-            print(b)
-            print("")
+            liste_w.append((b[0], k))
+            #print(b)
+            #print("")
 
+    minimum_finger.append(liste_w)
 
 
 #ON recupere la minimal distance, puis l'angle associé
 """
-#On doit récupérer l'angle de la plus petite distance et non pas les coordonées
-abscisse_list = []
-for nb, i in enumerate(data_csv):
-    abscisse = collect_points(i[0])
-    dico_angle = points_to_angle(abscisse)
-    print(dico_angle)
-
+On doit récupérer l'angle de la plus petite distance et non pas les coordonées
 """
 
 
+angle_list = []
+for nb, i in enumerate(data_csv):
+    abscisse = collect_points(i[0])
+    dico_angle = points_to_angle(abscisse)
+    angle_list.append([dico_angle])
+
+
+
+oki = []
+for i in minimum_finger:
+    if i != []:
+
+        for j in range(len(i)):
+
+
+
+            index_pos_list = i[j][0][1]
+            finger = i[j][1]
+
+            print(index_pos_list)
+            print(finger)
+
+            miss_points = miss[finger][j]
+
+            print(miss_points)
+
+
+
+            if miss_points == len(distance_current[finger]) - 1:
+                print(angle_list[index_pos_list][0][finger])
+                print(angle_list[index_pos_list][0][finger][miss_points - 1])
+                print("")
+
+            else:
+                print(angle_list[index_pos_list][0][finger])
+                print(angle_list[index_pos_list][0][finger][miss_points + 1])
+     
+            print("")
 
 
 
