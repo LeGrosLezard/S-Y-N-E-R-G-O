@@ -44,7 +44,7 @@ def collect_distances(points, which, norm, mode):
             if which == 1:#The data picture highter
                 distance = distance / norm
 
-            elif which == 2:#The data picther smaller
+            elif which == 2:#The data picture smaller
                 distance = distance * norm
 
         elif mode is "current":
@@ -148,6 +148,54 @@ def what_we_need_to_search(dico_passation_distance):
         elif 3 > len(phax) > 0:  dico[k] += [i for i in phax]
         elif len(phax) == 0:     dico[k].append("None")
 
+
+    return dico
+
+
+def conditions_so_we_search(phax_to_search, phax, search_points, finger_name, points_current):
+
+    if phax_to_search[phax] == 0 and len(phax_to_search) == 1:   #First phax
+        search_points.append((finger_name, 1, 0))
+
+    elif phax_to_search[phax] == 0 and\
+         phax_to_search[phax + 1] == phax_to_search[phax] + 1: # [0, 1]
+        print("probleme")
+
+    else:   #Other
+        search_points.append((finger_name, phax_to_search[phax] - 1, phax_to_search[phax]))
+
+
+
+def so_we_search(miss_points, points_current):
+
+    search_points = []
+    for finger_name, phax_to_search in miss_points.items():
+
+        if phax_to_search not in (["finger"], ["None"]): #Phax
+
+            for phax in range(len(phax_to_search)):
+                conditions_so_we_search(phax_to_search, phax, search_points, finger_name, points_current)
+
+
+    return search_points
+
+    
+
+#=================================
+"""Compare data and our points"""
+#=================================
+
+def proximum_distance(dico_passation_distance, data_distance):
+
+    dico = {"t" :[], "i" : [], "m" : [], "an" : [], "a" : []}
+
+    for k, v in dico.items():
+
+        liste_working = []
+        for i, j in zip(dico_passation_distance[k], data_distance[k]):
+            liste_working.append(abs(i - j))
+
+        dico[k] += [i for i in liste_working]
 
     return dico
 
