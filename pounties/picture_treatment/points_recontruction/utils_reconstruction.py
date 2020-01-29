@@ -10,6 +10,44 @@ from scipy.spatial import distance as dist
 
 
 #==============================
+"""CSV TREATMENT"""
+#==============================
+
+PATH_FOLDER_CSV = r"C:\Users\jeanbaptiste\Desktop\pounties\data\csv"
+
+
+def number_csv_file():
+
+    global PATH_FOLDER_CSV
+    csv_list = os.listdir(PATH_FOLDER_CSV)
+    number_csv = len(csv_list)
+
+    return number_csv
+
+
+def recuperate_data_in_csv(csv_name):
+    """From csv we recuperate points data"""
+
+    global PATH_FOLDER_CSV
+
+    path = PATH_FOLDER_CSV + "/" + str(csv_name) + ".csv"
+
+    data_list = []
+    with open(path, newline='') as csvfile:
+        reader = csv.DictReader(csvfile)
+
+        for information in reader:
+            points = ast.literal_eval(information["points"])
+            ratio =  ast.literal_eval(information["ratio"])
+            label =  ast.literal_eval(information["label"])
+
+            data_list.append((points, ratio, label))
+
+    return data_list
+
+
+
+#==============================
 """NORMALIZE DISTANCES"""
 #==============================
 
@@ -62,7 +100,7 @@ def collect_distances(points, which, norm, mode):
 """RECUPERATE ANGLES"""
 #============================================
 
-def collect_abscisse(points):
+def collect_coordinate(points):
     """Collect points and make a différence for recuperate angles
         where:   x = Xi+1 - Xi
                  y = - ( Yi+1 - Yi)
@@ -77,45 +115,35 @@ def collect_abscisse(points):
     return abscisse
 
 
-def points_to_angle(abscisse):
+def points_to_angle(coordinates):
     """Here we determinate arctangeante angle of from last abscisse
-    difference in a rectangle triangle ABC:
+        difference in a rectangle triangle ABC:
+        angle acb = atan   (cb / ab)"""
 
-                 ^       -1
-        - angle acb = tan   (cb / ab)
-        - if Y = 0 and X > 0 -> angle = 0°
-        - if Y = 0 and X < 0 -> angle = 180°
-        - if if X = 0 and Y > 0 -> angle = 90°
-        - if X = 0 and Y < 0 -> angle = -90°
+    angulus_list = []
 
-    - if angle < 0: angle + 180°
-    """
+    for points in coordinates:
+        x, y = points[0], points[1]
 
-    liste_angle = []
+        if y == 0 and x != 0:
+            if x > 0:    angulus_list.append(0)
+            elif x < 0:  angulus_list.append(180)
 
-    for i in abscisse:
+        elif x == 0 and y != 0:
+            if y > 0:    angulus_list.append(90)
+            elif y < 0:  angulus_list.append(-90)
 
-        if i[1] == 0 and i[0] != 0:
-            if i[0] > 0:    liste_angle.append(0)
-            elif i[0] < 0:  liste_angle.append(180)
-
-        elif i[0] == 0 and i[1] != 0:
-            if i[1] > 0:    liste_angle.append(90)
-            elif i[1] < 0:  liste_angle.append(-90)
-
-        elif i != (0, 0):
-            tan = math.atan(i[1] / i[0])
-            angle = math.degrees(tan)
+        elif points != (0, 0):
+            angle = math.degrees(math.atan(y / x))
             if angle < 0: angle += 180
-            liste_angle.append(int(angle))
+            angulus_list.append(int(angle))
 
-        elif i == (0, 0):
-            liste_angle.append(0)
+        elif points == (0, 0):
+            angulus_list.append(0)
 
-
-    dico_angle = {"t" : liste_angle[0:4],  "i" : liste_angle[5:8],
-                  "m" : liste_angle[9:12], "an" : liste_angle[13:16],
-                  "a" : liste_angle[17:20]}
+    dico_angle = {"t" : angulus_list[0:4],  "i"  : angulus_list[5:8],
+                  "m" : angulus_list[9:12], "an" : angulus_list[13:16],
+                  "a" : angulus_list[17:20]}
 
     return dico_angle
 
@@ -123,24 +151,17 @@ def points_to_angle(abscisse):
 
 
 #============================================
-"""Here's the hand need to be reconstructed
-so we search points to reconstruct"""
+"""TO RECONSTRUCT"""
 #============================================
 
 def what_we_need_to_search(dico_passation_distance):
-    """Here we need to localised what we search.
-    A finger ? a phax ? nothing ?
-
-    #[number] as [1, 2] = phax miss
-    #None = we already have all fingers
-    #finger = search finger miss
-    """
+    """ phax miss = [1, 2], finger = search finger miss,
+        None = ok."""
 
     dico = {"t" :[], "i" : [], "m" : [], "an" : [], "a" : []}
 
     for k, v in dico.items():
         phax = []
-
         for nb, i in enumerate(dico_passation_distance[k]):
             if i == 0.0: phax.append(nb)
 
@@ -148,12 +169,7 @@ def what_we_need_to_search(dico_passation_distance):
         elif 3 > len(phax) > 0:  dico[k] += [i for i in phax]
         elif len(phax) == 0:     dico[k].append("None")
 
-
     return dico
-
-
-
-
 
 
 def so_we_search(none_points, points):
@@ -185,9 +201,56 @@ def so_we_search(none_points, points):
 
 
 
-#==============================
-"""Transformation of data"""
-#==============================
+
+#========================================
+"""COMPAREASON OF DISTANCES"""
+#========================================
+def compare_distance(distance_list, distance, finger_name, phax_searching):
+
+    compareason_list = []
+    for index_data, data_dist in enumerate(distance_list):
+
+        from_data = data_dist[finger_name][phax_searching]
+
+        from_passation = distance[finger_name][phax_searching]
+
+        difference = abs(from_data - from_passation)
+
+        compareason_list.append((difference, index_data))
+
+    return compareason_list
+
+
+
+#========================================
+"""COMPAREASON OF ANGULUS"""
+#========================================
+
+def compare_angle(angulus_list, angulus, finger_name, phax_searching):
+
+
+    compareason_list = []
+    for index_data, data_angulus in enumerate(angulus_list):
+
+        from_data = data_angulus[finger_name][phax_searching]
+
+        from_passation = angulus[finger_name][phax_searching]
+
+        distance_difference = abs(from_data - from_passation)
+
+        compareason_list.append((distance_difference, index_data))
+
+    return compareason_list
+
+
+
+
+
+
+
+#========================================
+"""TRANSFORMATION DATA TO DICTIONNARY"""
+#========================================
 
 def points_to_fingers_dict(points):
     """
