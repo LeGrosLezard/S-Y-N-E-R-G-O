@@ -117,6 +117,7 @@ def reconstruction(points, ratio):
 
         #Informations for changed angulus/distances to coordinates.
         a, b = (phax_interest, phax_search)
+
         info1 = (distance_list, index_distance, finger_name, phax_interest)
         info2 = (angulus_list, index_angulus, finger_name, phax_interest)
 
@@ -132,9 +133,14 @@ def reconstruction(points, ratio):
             index_dist, index_angle = minimums_data
 
             #Replace current points by data given
-            informations = (points, finger_name, phax_interest, index_dist, index_angle, 1)
+            informations = (points, finger_name, phax_interest, index_dist, index_angle, 1, phax_search)
 
-            replace_point(informations, "minus")
+            x = points[finger_name][0][1][0] + int(index_dist * math.cos(index_angle))
+            y = points[finger_name][0][1][1] + int(index_dist * math.sin(index_angle))
+            
+            points[finger_name][0][0] = (x, y)
+
+            
 
 
         #[0 0 x]
@@ -148,10 +154,14 @@ def reconstruction(points, ratio):
             index_dist, index_angle = minimums_data
 
             #Replace current points by data given
-            informations = (points, finger_name, phax_interest, index_dist, index_angle, 0)
+            informations = (points, finger_name, phax_interest, index_dist, index_angle, 0, phax_search)
 
-            replace_point(informations, "minus")
+            #replace_point(informations, "minus")
 
+            x = points[finger_name][2][0][0] + int(index_dist * math.cos(index_angle))
+            y = points[finger_name][2][0][1] + int(index_dist * math.sin(index_angle))
+
+            points[finger_name][2][1] = (x, y)
 
 
         #[0 x 0]
@@ -166,13 +176,37 @@ def reconstruction(points, ratio):
 
 
             #Replace current points by data given
-            informations = (points, finger_name, phax_interest, index_dist, index_angle, 0)
+            informations = (points, finger_name, phax_interest, index_dist, index_angle, 0, phax_search)
 
-            replace_point(informations, "add")
+            #replace_point(informations, "add")
+
+            x = points[finger_name][1][0][0] + int(index_dist * math.cos(index_angle))
+            y = points[finger_name][1][0][1] + int(index_dist * math.sin(index_angle))
+
+
+            points[finger_name][1][1] = (x, y)
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+    for k,v in points.items():
+        print(k, v)
+        if k != "t" and v != [[(0, 0), (0, 0)], [(0, 0), (0, 0)], [(0, 0), (0, 0)]]:
+            points[k].insert(0, [points["t"][0][0], points[k][0][0]])
+
+
+
+    #print(data_lists[0][0])
     points_draw = []
     for k, v in points.items():
         print(v)
