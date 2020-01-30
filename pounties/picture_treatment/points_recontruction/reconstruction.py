@@ -79,6 +79,7 @@ def data_treatment(ratio_current):
 
 
 
+
 def reconstruction(points, ratio):
 
     #Passation treatment.
@@ -87,46 +88,105 @@ def reconstruction(points, ratio):
     print(distance, angle, ratio)
 
     #Define points to search in data.
-    actual_searching = points_to_search(distance1, points)
-    search_points, fingers_points = actual_searching
+    actual_searching = points_to_search(distance, points)
+    search_points, points = actual_searching
 
     #Data treatment in function of passation info.
     data_lists = data_treatment(ratio)
     angulus_list, distance_list = data_lists
 
 
-
+    #In none phax we search:
     for search in search_points:
 
+        #finger name, if none phax 0 (interest), search phax 1
         finger_name, phax_search, phax_interest = search
 
+        #Compare distances (data and passation).
         distance_compareason = compare_distance(distance_list, distance,
                                                 finger_name, phax_search)
 
-        angulus_compareason = compare_angle(angulus_list, angulus,
+        #Compare angulus (data and passation).
+        angulus_compareason = compare_angle(angulus_list, angle,
                                             finger_name, phax_search)
 
+        #Recuperate minimums distances and minimums angulus.
+        minimums = minimum_values(distance_compareason, angulus_compareason)
+        index_distance, index_angulus = minimums
+
+        #Informations for changed angulus/distances to coordinates.
+        a, b = (phax_interest, phax_search)
+        info1 = (distance_list, index_distance, finger_name, phax_interest)
+        info2 = (angulus_list, index_angulus, finger_name, phax_interest)
+
+
+        #[x 0 0]
+        if phax_interest == 0:
+
+            #Replace passation points pairs.
+            points[finger_name][a][1] = points[finger_name][b][0]
+
+            #Recuperate mini's data coordinates from csv.
+            minimums_data = recuperate_angle_distance(info1, info2)
+            index_dist, index_angle = minimums_data
+
+            #Replace current points by data given
+            informations = (points, finger_name, phax_interest, index_dist, index_angle, 1)
+
+            replace_point(informations, "minus")
+
+
+        #[0 0 x]
+        elif phax_interest == len(points[finger_name]) - 1:
+
+            #Replace passation points
+            points[finger_name][a][0] = points[finger_name][b][1]
+
+            #Recuperate mini's data coordinates from csv.
+            minimums_data = recuperate_angle_distance(info1, info2)
+            index_dist, index_angle = minimums_data
+
+            #Replace current points by data given
+            informations = (points, finger_name, phax_interest, index_dist, index_angle, 0)
+
+            replace_point(informations, "minus")
+
+
+
+        #[0 x 0]
+        else:
+
+            #Replace passation points
+            points[finger_name][a][0] = points[finger_name][b][1]
+
+            #Recuperate mini's data coordinates from csv.
+            minimums_data = recuperate_angle_distance(info1, info2)
+            index_dist, index_angle = minimums_data
+
+
+            #Replace current points by data given
+            informations = (points, finger_name, phax_interest, index_dist, index_angle, 0)
+
+            replace_point(informations, "add")
 
 
 
 
+    points_draw = []
+    for k, v in points.items():
+        for i in v:
+            points_draw.append(tuple(i))
 
 
 
+    blank_image = np.zeros((500, 500, 3), np.uint8)
+    for i in points_draw:
+        for j in i:
+            cv2.circle(blank_image, (int(j[0]), int(j[1])) , 2, (0, 0, 255), 2)
+            cv2.line(blank_image, (i[0]), (i[1]), (0, 255, 0), 2)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    cv2.imshow("blank_imageaaa", blank_image)
+    cv2.waitKey(0)
 
 
 
@@ -151,13 +211,6 @@ if __name__ == "__main__":
 
 
     reconstruction(points, ratio)
-
-
-
-
-
-
-
 
 
 
