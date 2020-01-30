@@ -1,6 +1,6 @@
 # S-Y-N-E-R-G-O
 
-bon tout est juste mais c'est la norm qui peut etre l'est pas ^^ mais y'a écrit de partout que knn c'est pour les débutants... 
+finir, (phax (faire les 2 modes)) faire les doigts, faire les mains rempli de rond et trouvé un skelette adéquat
 
 donc data = doigt apres et avant meme position que nos doigts -> on effectue distance et angle via nos doigts sur le doigt manquaunt !
 
