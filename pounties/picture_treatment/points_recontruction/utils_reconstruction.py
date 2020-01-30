@@ -67,7 +67,7 @@ def normalisation(ratio1, ratio2):
         norm = ratio2 / ratio1
         which = 2
 
-    return norm, which
+    return (norm, which)
 
 
 def collect_distances(points, which, norm, mode):
@@ -199,6 +199,23 @@ def so_we_search(none_points, points):
     return search_points
 
 
+def replace_point(informations, sign):
+
+    #informations :
+    #current points, name finger, phax, distance, angle, position (x, y)
+
+
+    current = informations[0][informations[1]][informations[2]][0]
+
+    if sign == "minus":
+        x = current[0] - int(informations[3] * math.cos(informations[4]))
+        y = current[1] - int(informations[3] * math.sin(informations[4]))
+    elif sign == "add":
+        x = current[0] + int(informations[3] * math.cos(informations[4]))
+        y = current[1] + int(informations[3] * math.sin(informations[4]))
+
+    informations[0][informations[1]][informations[2]][informations[5]] = (x, y)
+
 
 
 
@@ -245,7 +262,36 @@ def compare_angle(angulus_list, angulus, finger_name, phax_searching):
 
 
 
+#========================================
+"""RECUPERATE MINIMUM VALUES"""
+#========================================
 
+def minimum_values(distance_list, anglulus_list):
+
+    #Sorted list composed by data and index data list
+    distance_list = sorted(distance_list, key=lambda x: x[0])
+    anglulus_list = sorted(anglulus_list, key=lambda x: x[0])
+
+    minimum_distance, index_distance = distance_list[0]
+    minimum_angle, index_angle = anglulus_list[0]
+
+    #Recuperate index.
+    informations = (index_distance, index_angle)
+
+    return informations
+
+
+def recuperate_angle_distance(info1, info2):
+
+    #info1 = data liste distance
+    #info2 = data liste angulus
+
+    distance = info1[0][info1[1]][info1[2]][info1[3]]
+    angle = info2[0][info2[1]][info2[2]][info2[3]]
+
+    informations = (distance, angle)
+
+    return informations
 
 
 #========================================
