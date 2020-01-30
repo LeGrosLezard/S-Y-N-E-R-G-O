@@ -8,99 +8,81 @@ import numpy as np
 import auto_write_thread
 from scipy.spatial import distance as dist
 
-
-#==============================
-"""CSV TREATMENT"""
-#==============================
-
 PATH_FOLDER_CSV = r"C:\Users\jeanbaptiste\Desktop\pounties\data\csv"
-
-
-def number_csv_file():
-
-    global PATH_FOLDER_CSV
-    csv_list = os.listdir(PATH_FOLDER_CSV)
-    number_csv = len(csv_list)
-
-    return number_csv
-
-
 def recuperate_data_in_csv(csv_name):
     """From csv we recuperate points data"""
 
-    global PATH_FOLDER_CSV
-
     path = PATH_FOLDER_CSV + "/" + str(csv_name) + ".csv"
 
-    data_list = []
+    liste_data = []
+
     with open(path, newline='') as csvfile:
         reader = csv.DictReader(csvfile)
+        for i in reader:
+            liste_data.append((ast.literal_eval(i["points"]),
+                               ast.literal_eval(i["ratio"]),
+                               ast.literal_eval(i["label"])))
 
-        for information in reader:
-            points = ast.literal_eval(information["points"])
-            ratio =  ast.literal_eval(information["ratio"])
-            label =  ast.literal_eval(information["label"])
-
-            data_list.append((points, ratio, label))
-
-    return data_list
+    return liste_data
 
 
 
 #==============================
-"""NORMALIZE DISTANCES"""
+"""Normalize distance"""
 #==============================
 
 def make_ratio(ratio):
-    """width picture* hight picture"""
-    return ratio[2] * ratio[3]
+    w = ratio[2]
+    h = ratio[3]
+    return w *h
 
-def normalisation(ratio1, ratio2):
-    """Make the ratio.
-    Define the highter picture -> choice '/' or '*'."""
+def normalisation(ratio_data, ratio_current):
 
-    if ratio1 > ratio2:
-        norm = ratio1 / ratio2
+    if ratio_data > ratio_current:
+        norm = ratio_data / ratio_current
         which = 1
 
-    elif ratio2 > ratio1:
-        norm = ratio2 / ratio1
+    elif ratio_current > ratio_data:
+        norm = ratio_current / ratio_data
         which = 2
 
-    return (norm, which)
+    return norm, which
 
 
 def collect_distances(points, which, norm, mode):
     """Collect Euclidean distance from each point.
     Repartite to finger's"""
 
+
     distances = []
     for nb in range(len(points)):
-
+  
         distance = dist.euclidean(points[nb][0], points[nb][1])
 
         if mode is "data":
-            #The data picture highter
-            if which == 1:      distance = distance / norm
-            #The data picture smaller
-            elif which == 2:    distance = distance * norm
+            if which == 1:#The data picture highter
+                distance = distance / norm
+
+            elif which == 2:#The data picture smaller
+                distance = distance * norm
+
+        elif mode is "current":
+            pass
+
         distances.append(distance)
 
-    dico = {"t" : distances[0:4],  "i" : distances[5:8],
-            "m" : distances[9:12], "an" : distances[13:16],
+    dico = {"t" :distances[0:4], "i" : distances[5:8], "m" : distances[9:12], "an" : distances[13:16],
             "a" : distances[17:20]}
 
     return dico
 
 
 
-
-
 #============================================
-"""RECUPERATE ANGLES"""
+"""Recuperate angles"""
 #============================================
 
-def collect_coordinate(points):
+def collect_abscisse(points):
     """Collect points and make a différence for recuperate angles
         where:   x = Xi+1 - Xi
                  y = - ( Yi+1 - Yi)
@@ -110,58 +92,71 @@ def collect_coordinate(points):
     for nb in range(len(points)):
         ptsX = points[nb][1][0] - points[nb][0][0]
         ptsY = - (points[nb][1][1] - points[nb][0][1])
+
         abscisse.append((ptsX, ptsY))
 
     return abscisse
 
-
-def points_to_angle(coordinates):
+def points_to_angle(abscisse):
     """Here we determinate arctangeante angle of from last abscisse
-        difference in a rectangle triangle ABC:
-        angle acb = atan   (cb / ab)"""
+    difference in a rectangle triangle ABC:
+                 ^       -1
+        - angle acb = tan   (cb / ab)
+        - if Y = 0 and X > 0 -> angle = 0°
+        - if Y = 0 and X < 0 -> angle = 180°
+        - if if X = 0 and Y > 0 -> angle = 90°
+        - if X = 0 and Y < 0 -> angle = -90°
+    - if angle < 0: angle + 180°
+    """
 
-    angulus_list = []
+    liste_angle = []
 
-    for points in coordinates:
-        x, y = points[0], points[1]
+    for i in abscisse:
 
-        if y == 0 and x != 0:
-            if x > 0:    angulus_list.append(0)
-            elif x < 0:  angulus_list.append(180)
+        if i[1] == 0 and i[0] != 0:
+            if i[0] > 0:    liste_angle.append(0)
+            elif i[0] < 0:  liste_angle.append(180)
 
-        elif x == 0 and y != 0:
-            if y > 0:    angulus_list.append(90)
-            elif y < 0:  angulus_list.append(-90)
+        elif i[0] == 0 and i[1] != 0:
+            if i[1] > 0:    liste_angle.append(90)
+            elif i[1] < 0:  liste_angle.append(-90)
 
-        elif points != (0, 0):
-            angle = math.degrees(math.atan(y / x))
+        elif i != (0, 0):
+            tan = math.atan(i[1] / i[0])
+            angle = math.degrees(tan)
             if angle < 0: angle += 180
-            angulus_list.append(int(angle))
+            liste_angle.append(int(angle))
 
-        elif points == (0, 0):
-            angulus_list.append(0)
+        elif i == (0, 0):
+            liste_angle.append(0)
 
-    dico_angle = {"t" : angulus_list[0:4],  "i"  : angulus_list[5:8],
-                  "m" : angulus_list[9:12], "an" : angulus_list[13:16],
-                  "a" : angulus_list[17:20]}
+
+    dico_angle = {"t" :liste_angle[0:4], "i" : liste_angle[5:8],
+                  "m" : liste_angle[9:12], "an" : liste_angle[13:16],
+                  "a" : liste_angle[17:20]}
 
     return dico_angle
 
 
 
-
 #============================================
-"""TO RECONSTRUCT"""
+"""Here's the hand need to be reconstructed
+so we search points to reconstruct"""
 #============================================
 
 def what_we_need_to_search(dico_passation_distance):
-    """ phax miss = [1, 2], finger = search finger miss,
-        None = ok."""
+    """Here we need to localised what we search.
+    A finger ? a phax ? nothing ?
+    #[number] as [1, 2] = phax miss
+    #None = we already have all fingers
+    #finger = search finger miss
+    """
 
     dico = {"t" :[], "i" : [], "m" : [], "an" : [], "a" : []}
 
     for k, v in dico.items():
         phax = []
+
         for nb, i in enumerate(dico_passation_distance[k]):
             if i == 0.0: phax.append(nb)
 
@@ -169,150 +164,207 @@ def what_we_need_to_search(dico_passation_distance):
         elif 3 > len(phax) > 0:  dico[k] += [i for i in phax]
         elif len(phax) == 0:     dico[k].append("None")
 
+
     return dico
 
 
-def so_we_search(none_points, points):
+def conditions_so_we_search(phax_to_search, phax, search_points, finger_name, points_current):
+
+    if phax_to_search[phax] == 0 and len(phax_to_search) == 1:   #First phax
+        search_points.append((finger_name, 1, 0))
+
+    elif phax_to_search[phax] == 0 and\
+         phax_to_search[phax + 1] == phax_to_search[phax] + 1: # [0, 1]
+        print("probleme")
+
+    else:   #Other
+        search_points.append((finger_name, phax_to_search[phax] - 1, phax_to_search[phax]))
+
+
+
+def so_we_search(miss_points, points_current):
 
     search_points = []
-    to_not_search = (["finger"], ["None"])
+    for finger_name, phax_to_search in miss_points.items():
 
-    for finger, searching in none_points.items():
-        if searching not in to_not_search:
+        if phax_to_search not in (["finger"], ["None"]): #Phax
 
-            for phax in range(len(searching)):
+            for phax in range(len(phax_to_search)):
+                conditions_so_we_search(phax_to_search, phax, search_points, finger_name, points_current)
 
-                #First phax
-                if searching[phax] == 0 and len(searching) == 1:
-                    search_points.append((finger, 1, 0))
-
-                #[0, 1]
-                elif searching[phax] == 0 and\
-                     searching[phax + 1] == searching[phax] + 1:
-                    print("probleme")
-
-                #Other
-                else:
-                    point = searching[phax]
-                    search_points.append((finger, point - 1, point))
 
     return search_points
 
+    
 
-def replace_point(informations, sign):
+#=================================
+"""Compare data and our points"""
+#=================================
 
-    #informations :
-    #current points, name finger, phax, distance, angle, position (x, y)
+def proximum_distance(dico_passation_distance, data_distance):
 
+    dico = {"t" :[], "i" : [], "m" : [], "an" : [], "a" : []}
 
-    current = informations[0][informations[1]][informations[2]][0]
+    for k, v in dico.items():
 
-    if sign == "minus":
-        x = current[0] - int(informations[3] * math.cos(informations[4]))
-        y = current[1] - int(informations[3] * math.sin(informations[4]))
-    elif sign == "add":
-        x = current[0] + int(informations[3] * math.cos(informations[4]))
-        y = current[1] + int(informations[3] * math.sin(informations[4]))
+        liste_working = []
+        for i, j in zip(dico_passation_distance[k], data_distance[k]):
+            liste_working.append(abs(i - j))
 
-    informations[0][informations[1]][informations[2]][informations[5]] = (x, y)
+        dico[k] += [i for i in liste_working]
 
-
-
-
-#========================================
-"""COMPAREASON OF DISTANCES"""
-#========================================
-def compare_distance(distance_list, distance, finger_name, phax_searching):
-
-    compareason_list = []
-    for index_data, data_dist in enumerate(distance_list):
-
-        from_data = data_dist[finger_name][phax_searching]
-
-        from_passation = distance[finger_name][phax_searching]
-
-        difference = abs(from_data - from_passation)
-
-        compareason_list.append((difference, index_data))
-
-    return compareason_list
+    return dico
 
 
 
-#========================================
-"""COMPAREASON OF ANGULUS"""
-#========================================
+#==============================
+"""Transformation of data"""
+#==============================
 
-def compare_angle(angulus_list, angulus, finger_name, phax_searching):
+def points_to_fingers(points):
 
+    points_treat = []
+    for i in points:
+        points_treat.append(list(i))
 
-    compareason_list = []
-    for index_data, data_angulus in enumerate(angulus_list):
-
-        from_data = data_angulus[finger_name][phax_searching]
-
-        from_passation = angulus[finger_name][phax_searching]
-
-        distance_difference = abs(from_data - from_passation)
-
-        compareason_list.append((distance_difference, index_data))
-
-    return compareason_list
-
-
-
-
-#========================================
-"""RECUPERATE MINIMUM VALUES"""
-#========================================
-
-def minimum_values(distance_list, anglulus_list):
-
-    #Sorted list composed by data and index data list
-    distance_list = sorted(distance_list, key=lambda x: x[0])
-    anglulus_list = sorted(anglulus_list, key=lambda x: x[0])
-
-    minimum_distance, index_distance = distance_list[0]
-    minimum_angle, index_angle = anglulus_list[0]
-
-    #Recuperate index.
-    informations = (index_distance, index_angle)
-
-    return informations
-
-
-def recuperate_angle_distance(info1, info2):
-
-    #info1 = data liste distance
-    #info2 = data liste angulus
-
-    distance = info1[0][info1[1]][info1[2]][info1[3]]
-    angle = info2[0][info2[1]][info2[2]][info2[3]]
-
-    informations = (distance, angle)
-
-    return informations
-
-
-#========================================
-"""TRANSFORMATION DATA TO DICTIONNARY"""
-#========================================
-
-def points_to_fingers_dict(points):
-    """
-        1) - ( (0, 0), (0, 0) ) - > [ (0, 0), (0, 0) ]
-        2) - { t: points, i: points ... }
-    """
-
-    points_treat = [list(i) for i in points]
-
-    dico = {"t" : points_treat[0:4],  "i" : points_treat[5:8],
-            "m" : points_treat[9:12], "an" : points_treat[13:16],
-            "a" : points_treat[17:20]}
+    dico = {"t" :points_treat[0:4], "i" : points_treat[5:8], "m" : points_treat[9:12],
+            "an" : points_treat[13:16], "a" : points_treat[17:20]}
 
     return dico
 
 
 
 
+#==============================
+"""To clear to comment, tp forget"""
+#==============================
+def passation_treatment(points_current, ratio_current):
 
+
+    #OUR POINTS
+    ratio_current = make_ratio(ratio_current)
+    distance_current = collect_distances(points_current, "", "", "current")
+    #print(distance_current)
+
+    abscisse_current = collect_abscisse(points_current)
+    angle_current = points_to_angle(abscisse_current)
+    #print(angle_current)
+
+
+    miss_points = what_we_need_to_search(distance_current)
+    points_current = points_to_fingers(points_current)
+    search_points = so_we_search(miss_points, points_current)
+
+    for k, v in points_current.items():
+        print("finger ", k.upper(), v)
+
+    print("")
+    print(miss_points)
+    print(search_points, "\n\n\n\n")
+
+    return ratio_current, distance_current, angle_current, search_points, points_current
+
+
+
+def data_treatment(number, ratio_current):
+    #CSV POINTS
+
+    liste_angle = []
+    liste_distance = []
+
+    for csv_name in range(1, number):
+        data_csv = recuperate_data_in_csv(csv_name)
+
+        for data in data_csv:
+
+            points_data, ratio_data = data[0], data[1]
+            
+            #collect normalize distances
+            ratio_data = make_ratio(ratio_data)
+
+            norm, which = normalisation(ratio_data, ratio_current)
+            distance_data = collect_distances(points_data, which, norm, "data")
+
+            #collect angles
+            abscisse = collect_abscisse(points_data)
+            angle_data = points_to_angle(abscisse)
+
+            liste_angle.append(angle_data)
+            liste_distance.append(distance_data)
+
+    return liste_angle, liste_distance
+
+
+def compare_distance(liste_distance, distance_current, finger_name, phax_searching):
+    #DISTANCE
+    liste_metablockant = []
+    for index, element in enumerate(liste_distance):
+
+        from_data = element[finger_name][phax_searching]
+        from_passation = distance_current[finger_name][phax_searching]
+
+        distance_difference = abs(from_data - from_passation)
+
+        liste_metablockant.append((distance_difference, index))
+
+    #print(liste_metablockant)
+    return liste_metablockant
+
+
+
+def compare_angle(liste_angle, angle_current, finger_name, phax_searching):
+
+    #ANGLE
+    liste_1 = []
+    for index, element in enumerate(liste_angle):
+
+        from_data = element[finger_name][phax_searching]
+        from_passation = angle_current[finger_name][phax_searching]
+
+        distance_difference = abs(from_data - from_passation)
+
+        liste_1.append((distance_difference, index))
+
+    #print(liste_1)
+    return liste_1
+
+
+
+def recuperate_minimums_values(liste_metablockant, liste_1):
+
+    #RECUPERATE LOWER DATA
+    liste_metablockant = sorted(liste_metablockant, key=lambda x: x[0])
+    liste_1 = sorted(liste_1, key=lambda x: x[0])
+
+
+    minimum_distance = liste_metablockant[0]
+    index_minimum_distance = minimum_distance[1]
+
+    minimum_angle = liste_1[0]
+    index_minimum_angle = minimum_angle[1]
+
+    return index_minimum_distance, index_minimum_angle
+
+
+def replace_point(pts1, pts2, pts3, sign, points_current, finger_name, distance, angle):
+
+
+    current = points_current[finger_name][pts1][pts2]
+
+    if sign == "add":
+        x = current[0] + int(distance * math.cos(angle))
+        y = current[1] + int(distance * math.sin(angle))
+    elif sign == "minus":
+        x = current[0] - int(distance * math.cos(angle))
+        y = current[1] - int(distance * math.sin(angle))
+    points_current[finger_name][pts1][pts3] = (x, y)
+
+
+
+def recuperate_angle_distance(liste_distance, liste_angle, index_minimum_angle,
+                              index_minimum_distance, finger_name, phax_interest):
+
+    distance = liste_distance[index_minimum_distance][finger_name][phax_interest]
+    angle = liste_angle[index_minimum_angle][finger_name][phax_interest]
+
+    return distance, angle
