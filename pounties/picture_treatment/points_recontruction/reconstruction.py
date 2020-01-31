@@ -50,7 +50,9 @@ def reconstruction(points, scale):
     d = distance_list
     a = angulus_list
     s = scale_data
-    knn_list = []
+    knn_dist_list = []
+
+
     for nb, (dist, ang, sca) in enumerate(zip(d, a, s)):
 
         if sca > scale:
@@ -61,8 +63,8 @@ def reconstruction(points, scale):
 
         
 
-        knn = math.sqrt((distances - dist)**2 + (angulus - ang)**2)
-        knn_list.append(knn)
+        knn_dist = math.sqrt((distances - dist)**2 + (angulus - ang)**2)
+        knn_dist_list.append(knn_dist)
 
 
 
