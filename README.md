@@ -1,6 +1,6 @@
 # S-Y-N-E-R-G-O
 
-finir, (phax (faire les 2 modes)) faire les doigts, faire les mains rempli de rond et trouvé un skelette adéquat
+ouais fin 4 essais avant que ce soit propre et la chui au max
 
 donc data = doigt apres et avant meme position que nos doigts -> on effectue distance et angle via nos doigts sur le doigt manquaunt !
 
