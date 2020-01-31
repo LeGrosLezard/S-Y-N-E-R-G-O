@@ -38,7 +38,7 @@ def collect_angulus(points):
         x2, y2 = pts2
 
         if x1 > 0 and x2 > 0:
-            side = y1 - y2 / x2 - x1
+            side = y2 - y1 / x2 - x1
             angulus.append(math.degrees(math.atan(side)))
         else:
             angulus.append(None)
