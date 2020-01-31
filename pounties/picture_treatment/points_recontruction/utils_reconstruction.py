@@ -80,6 +80,18 @@ def make_scale(ratio):
     return ratio[2] * ratio[3]
 
 
+def normalise(scale_data, scale_passation, dist_data, dist_passation):
+
+
+    if scale_data > scale_passation:
+        dist_data = dist_data / (scale_data / scale_passation)
+
+
+    elif scale_passation > scale_data:
+        dist_passation = dist_passation / (scale_passation / scale_data)  
+
+    return (dist_passation, dist_data)
+
 
 
 
