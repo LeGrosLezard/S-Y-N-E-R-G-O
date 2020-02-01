@@ -186,11 +186,10 @@ def a(distance_list, angulus_list, scale_list, key, index, angulus, distances, s
     for nb, (i, j) in enumerate(zip(distance_list, angulus_list)):
         i = element_to_dict(i)
         j = element_to_dict(j)
-        k = scale_list[nb]
 
         i = i[key][index]
         j = j[key][index]
-
+        aa = scale_list[nb]
         if i != None and j != None:
 
             list1.append([i, nb])
@@ -202,10 +201,13 @@ def a(distance_list, angulus_list, scale_list, key, index, angulus, distances, s
     n = scale
 
     list3 = []
+    k = scale_list
     for i, j in zip(list1, list2):
 
-        if k > n:   i = [i[0] / (k/n), i[1]]
-        else:       l = l / (n/k)
+        ind = i[1]
+
+        if k[ind] > n:   i = [i[0] / (k[ind]/n), i[1]]
+        else:       l = l / (n/k[ind])
 
         #print(l, i[0], m, j[0])
 
@@ -213,7 +215,7 @@ def a(distance_list, angulus_list, scale_list, key, index, angulus, distances, s
         deux = (m - j[0]) ** 2
 
         form = math.sqrt(un + deux)
-        list3.append((form, i[1]))
+        list3.append((form, ind))
 
 
     list3 = sorted(list3, key=lambda x: x[0])
@@ -232,7 +234,6 @@ def b(distance_list, angulus_list, scale_list, key, index, angulus, distances, s
     for nb, (i, j) in enumerate(zip(distance_list, angulus_list)):
         i = element_to_dict(i)
         j = element_to_dict(j)
-        k = scale_list[nb]
 
         i = i[key][index]
         j = j[key][index]
@@ -248,22 +249,25 @@ def b(distance_list, angulus_list, scale_list, key, index, angulus, distances, s
     n = scale
 
 
-
     list3 = []
     list4 = []
+    k = scale_list
+
     for i, j in zip(list1, list2):
 
-        if k > n:   i = [i[0] / (k/n), i[1]]
-        else:       l = l / (n/k)
+        ind = i[1]
+
+        if k[ind] > n:   i = [i[0] / (k[ind]/n), i[1]]
+        else:       l = l / (n/k[ind])
 
         un = (l - i[0]) ** 2
         deux = (m - j[0]) ** 2
 
         form = math.sqrt(un)
-        list3.append((form, i[1]))
+        list3.append((form, ind))
 
         form1 = math.sqrt(deux)
-        list4.append((form1, i[1]))
+        list4.append((form1, ind))
 
 
     list3 = sorted(list3, key=lambda x: x[0])
@@ -281,42 +285,157 @@ def b(distance_list, angulus_list, scale_list, key, index, angulus, distances, s
 
 
 #all other points
-def c(distance_list, angulus_list, scale_list, value, angulus, distances, scale):
+def c(distance_list, angulus_list, scale_list, value, angulus, distances, scale, key):
 
     index = [nb for nb, i in enumerate(value) if i != ((0, 0), (0, 0))]
-    #print(index)
+    print(index, key)
 
+    list1 = []
+    list2 = []
 
     for nb, (i, j) in enumerate(zip(distance_list, angulus_list)):
 
         i = element_to_dict(i)
         j = element_to_dict(j)
-        k = scale_list[nb]
 
-        
+        i = i[key]
+        j = j[key]
 
+ 
+        list_w = [i[ind] for ind in index]
+        list_w1 = [j[ind] for ind in index]
 
-
-
-
-
-
-
-
+        list1.append((list_w, nb))
+        list2.append((list_w1, nb))
 
 
-
-
-
-
+    
+    l = [distances[key][ind] for ind in index]
+    m = [angulus[key][ind] for ind in index]
+    n = scale
 
 
 
 
+    list3 = []
+    k = scale_list
+    for i, j in zip(list1, list2):
+
+        ind = i[1]
+
+        list_w = []
+        list_w1 = []
+        for ii, jj, kk, ll in zip(i[0], j[0], l, m):
+
+            if ii != None and jj != None:
+
+                if k[ind] > n:   ii = ii / (k[ind]/n)
+                else:       ll = ll / (n/k[ind])
+
+                list_w.append(((kk - ii) ** 2, ind))
+                list_w1.append(((ll - jj) ** 2, ind))
+
+        if len(index) == len(list_w):
+
+            ind = list_w[0][1]
+
+            ok1 = sum([i[0] for i in list_w])
+            ok2 = sum([i[0] for i in list_w1])
+ 
+
+            form = math.sqrt(ok1 + ok2)
+            list3.append((form, ind))
+
+
+    list3 = sorted(list3, key=lambda x: x[0])
+    print(list3[0])
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+#all other points better ang, better dist
+def d(distance_list, angulus_list, scale_list, value, angulus, distances, scale, key):
+
+
+    index = [nb for nb, i in enumerate(value) if i != ((0, 0), (0, 0))]
+    print(index, key)
+
+    list1 = []
+    list2 = []
+
+    for nb, (i, j) in enumerate(zip(distance_list, angulus_list)):
+
+        i = element_to_dict(i)
+        j = element_to_dict(j)
+
+        i = i[key]
+        j = j[key]
+
+ 
+        list_w = [i[ind] for ind in index]
+        list_w1 = [j[ind] for ind in index]
+
+        list1.append((list_w, nb))
+        list2.append((list_w1, nb))
+
+
+    
+    l = [distances[key][ind] for ind in index]
+    m = [angulus[key][ind] for ind in index]
+    n = scale
+
+
+    list3 = []
+    list4 = []
+    k = scale_list
+    for i, j in zip(list1, list2):
+
+        ind = i[1]
+
+        list_w = []
+        list_w1 = []
+        for ii, jj, kk, ll in zip(i[0], j[0], l, m):
+
+            if ii != None and jj != None:
+
+                if k[ind] > n:   ii = ii / (k[ind]/n)
+                else:       ll = ll / (n/k[ind])
+
+                list_w.append(((kk - ii) ** 2, ind))
+                list_w1.append(((ll - jj) ** 2, ind))
+
+        if len(index) == len(list_w):
+
+            ind = list_w[0][1]
+
+            ok1 = sum([i[0] for i in list_w])
+            ok2 = sum([i[0] for i in list_w1])
+ 
+
+            form1 = math.sqrt(ok1)
+            list3.append((form1, ind))
+
+            form2 = math.sqrt(ok2)
+            list4.append((form2, ind))
+
+
+
+    list3 = sorted(list3, key=lambda x: x[0])
+    print(list3[0])
+
+    list4 = sorted(list4, key=lambda x: x[0])
+    print(list4[0])
 
 
 
