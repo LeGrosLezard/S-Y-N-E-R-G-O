@@ -1,39 +1,20 @@
 from reconstruction_utils import *
 
+points = [((0, 0), (0, 0)), ((97, 105), (115, 94)), ((115, 94), (122, 79)), ((122, 79), (126, 69)), ((0, 0), (0, 0)), ((86, 76), (83, 55)), ((83, 55), (83, 47)), ((83, 47), (83, 40)), ((0, 0), (0, 0)), ((75, 79), (68, 55)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((51, 98), (44, 91)), ((44, 91), (40, 94)), ((40, 94), (41, 90))]
+scale = (31, 31, 113, 109)
 
-
-
-
-##def recuperate_knn(distance_knn, angulus_knn):
-##
-##
-##    knn_dist_list = []
-##
-##    for distance, angulus in zip(distance_knn, angulus_knn):
-##
-##        liste_of_liste = []
-##
-##        for d, a in zip(distance, angulus):
-##
-##            if d == None or a == None:
-##                liste_of_liste.append(None)
-##
-##            else:
-##                liste_of_liste.append(math.sqrt((d)**2 + (a)**2))
-##
-##
-##        knn_dist_list.append(liste_of_liste)
-##
-##    return knn_dist_list
-
-
-
-def reconstruction(points, scale):
+def recuperate_points_passation(points, scale):
 
     angulus = collect_angulus(points)
     distances = collect_distances(points)
     scale = make_scale(scale)
 
+    return angulus, distances, scale
+
+
+
+
+def recuperate_points_data():
 
     scale_list = []
     angulus_list = []
@@ -55,18 +36,7 @@ def reconstruction(points, scale):
         angulus_list.append(anglulus_data)
 
 
-
-    distance_knn = recuperate_distance(distance_list, scale_list, distances, scale)
-    angulus_knn = recuperate_angulus(angulus_list, angulus)
-
-    #knn_list = recuperate_knn(distance_knn, angulus_knn)
-
-
-
-    dict_points = list_to_dict(points)
-    dict_points = search_none_detections(dict_points)
-
-    recuperate_data_for_knn(dict_points, distance_knn, angulus_knn)
+    return distance_list, angulus_list, scale_list, data_csv
 
 
 
@@ -74,6 +44,38 @@ def reconstruction(points, scale):
 
 
 
+angulus, distances, scale = recuperate_points_passation(points, scale)
+distance_list, angulus_list, scale_list, data = recuperate_points_data()
+
+
+
+#distances = element_to_dict(distances)
+
+kk = []
+for nb, (dist_data, ang_data) in enumerate(zip(distance_list, angulus_list)):
+
+    scale_data = scale_list[nb]
+
+    if angulus[1] != None and distances[1] != None and\
+       dist_data[1] != None and ang_data[1] != None
+    if scale_data > scale:
+        dist_data[1] = dist_data[1] / (scale_data/scale)
+    elif scale > scale_data:
+        distances[1] = distances[1] / (scale/scale_data)
+
+    print(dist_data[1], ang_data[1], scale_data)
+    print(angulus[1], distances[1], scale)
+
+
+    kk.append((math.sqrt((distances[1] - dist_data[1])**2 + (angulus[1] - ang_data[1])**2), nb))
+
+    print("")
+
+
+
+
+aaaaa = sorted(kk, key=lambda x: x[0])
+print(aaaaa)
 
 
 
@@ -93,9 +95,13 @@ def reconstruction(points, scale):
 
 
 
-if __name__ == "__main__":
-    points = [((0, 0), (0, 0)), ((97, 105), (115, 94)), ((115, 94), (122, 79)), ((122, 79), (126, 69)), ((0, 0), (0, 0)), ((86, 76), (83, 55)), ((83, 55), (83, 47)), ((83, 47), (83, 40)), ((0, 0), (0, 0)), ((75, 79), (68, 55)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((51, 98), (44, 91)), ((44, 91), (40, 94)), ((40, 94), (41, 90))]
-    ratio = (31, 31, 113, 109)
 
 
-    reconstruction(points, ratio)
+
+
+
+
+
+
+
+
