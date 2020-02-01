@@ -249,14 +249,27 @@ def b(distance_list, angulus_list, scale_list, key, index, angulus, distances, s
 
 
 
-
+    list3 = []
+    list4 = []
     for i, j in zip(list1, list2):
 
         if k > n:   i = [i[0] / (k/n), i[1]]
         else:       l = l / (n/k)
 
+        un = (l - i[0]) ** 2
+        deux = (m - j[0]) ** 2
+
+        form = math.sqrt(un)
+        list3.append((form, i[1]))
+
+        form1 = math.sqrt(deux)
+        list4.append((form1, i[1]))
 
 
+    list3 = sorted(list3, key=lambda x: x[0])
+    list4 = sorted(list4, key=lambda x: x[0])
+    print(list3[0])
+    print(list4[0])
 
 
 
