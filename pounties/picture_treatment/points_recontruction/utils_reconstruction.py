@@ -106,7 +106,6 @@ def normalise(scale_data, scale_passation, dist_data, dist_passation):
     if scale_data > scale_passation:
         dist_data = dist_data / (scale_data / scale_passation)
 
-
     elif scale_passation > scale_data:
         dist_passation = dist_passation / (scale_passation / scale_data)  
 
@@ -156,41 +155,90 @@ def list_to_dict(points):
 
     points_treat = [list(i) for i in points]
 
-    return {"t" : points_treat[0:4],  "i" : points_treat[4:8],
-            "m" : points_treat[8:12], "an" : points_treat[12:16],
-            "a" : points_treat[16:20]}
+    return {"t" : points_treat[0:4],  "i" : points_treat[5:8],
+            "m" : points_treat[9:12], "an" : points_treat[13:16],
+            "a" : points_treat[17:20]}
 
 
 def element_to_dict(points):
 
-    return {"t" : points[0:4],  "i" : points[4:8],
-            "m" : points[8:12], "an" : points[12:16],
-            "a" : points[16:20]}
+    return {"t" : points[0:4],  "i" : points[5:8],
+            "m" : points[9:12], "an" : points[13:16],
+            "a" : points[17:20]}
+
+def dict_to_list(points):
+    liste = []
+    for k, v in points.items():
+        for i in v:
+            try:
+                liste.append(tuple(i))
+            except:
+                pass
+    return liste
+
+#==============================
+"""REPLACING POINTS"""
+#==============================
+
+def recuperation_of_points(informations):
+
+    distance_list, angulus_list, scale_list, scale,\
+                   minimal, index, finger_name = informations
+
+    if minimal != None:
+        minimal_index_data = minimal[1]
+
+        distance_points = element_to_dict(distance_list[minimal_index_data])
+        angulus_points = element_to_dict(angulus_list[minimal_index_data])
+
+        phax_distance = distance_points[finger_name][index]
+        phax_angulus = angulus_points[finger_name][index]
+
+        scale_data = scale_list[minimal_index_data]
+
+        if scale_data > scale:
+            phax_distance = phax_distance / (scale_data/scale)
+        else:
+            phax_distance = phax_distance * (scale_data/scale)
+
+        return (phax_distance, phax_angulus)
+    else:
+        return None
+
+
+def convert(dict_points, key, index, points_to_convert):
+
+    phax_distance, phax_angulus = points_to_convert
+
+
+    to_change = dict_points[key][index]
+    #reference = dict_points[key][index + 1][0]
+    reference = dict_points[key][index - 1][0]
+    coordX = int(phax_distance * math.cos(phax_angulus))
+    coordY = int(phax_distance * math.sin(phax_angulus))
+
+    print(coordX)
+    print(coordY)
+
+    #x = dict_points[key][index + 1][0][0] + coordX
+    #y = dict_points[key][index + 1][0][1] + coordY
+
+    x = dict_points[key][index - 1][0][0] - coordX
+    y = dict_points[key][index - 1][0][1] - coordY
+
+
+    to_change = ((x, y), reference)
+
+    dict_points[key][index] = to_change
+
+    print(dict_points[key])
+
+    print("")
+
 
 #============================================
 """SEARCH CLOSES POINTS"""
 #============================================
-
-
-def recuperate_data_for_knn(dictionnary, distance_knn, angulus_knn):
-
-    for key, value in dictionnary.items():
-        print(key, value)
-        for index, element in enumerate(value):
-
-            if element == None and index == 0:
-                print("case one")
-                case(distance_knn, angulus_knn, key, "case_one")
-
-            elif element == None and index == len(value) - 1:
-                print("case two")
-                case(distance_knn, angulus_knn, key, "case_two")
-
-            elif element == None and index not in (0, len(value) - 1):
-                print("case three")
-                case_three(distance_knn, angulus_knn, key, index)
-   
-
 
 
 def case(distance_knn, angulus_knn, key, case):
@@ -231,21 +279,23 @@ def case_three(distance_knn, angulus_knn, key, index):
         distance1 = distance[key][index - 1]
         angulus1 = angulus[key][index - 1]
 
-        distance2 = distance[key][index + 1]
-        angulus2 = angulus[key][index + 1]
+        if distance1 != None and angulus1 != None:
 
-        if distance1 != None and angulus1 != None and\
-           distance2 != None and angulus2 != None:
-
-
-            formula = math.sqrt( (distance1 ** 2) + (angulus1 ** 2) +\
-                                 (distance2 ** 2) + (angulus2 ** 2) )
-     
+            formula = math.sqrt( (distance1 ** 2) + (angulus1 ** 2))
+            
             knn_list.append( (formula, nb) )
 
     return knn_list
 
 
+
+def minimal_distance_knn(knn_list):
+
+    minimal_distance = sorted(knn_list, key=lambda x: x[0])
+    if len(minimal_distance) > 0:
+        return minimal_distance[0]
+    else:
+        return None
 
 
 
