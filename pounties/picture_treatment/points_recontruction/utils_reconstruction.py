@@ -219,9 +219,13 @@ def a(distance_list, angulus_list, scale_list, key, index, angulus, distances, s
 
 
     list3 = sorted(list3, key=lambda x: x[0])
-    print(list3[0])
 
+    ind = list3[0][1]
 
+    print("")
+    print(list1[ind][0])
+    print(list2[ind][0])
+    print("")
 
  
 #better ang, dist
@@ -272,14 +276,15 @@ def b(distance_list, angulus_list, scale_list, key, index, angulus, distances, s
 
     list3 = sorted(list3, key=lambda x: x[0])
     list4 = sorted(list4, key=lambda x: x[0])
-    print(list3[0])
-    print(list4[0])
 
 
+    ind1 = list3[0][1]
+    ind2 = list4[0][1]
 
+    print(list1[ind1][0])
+    print(list2[ind2][0])
 
-
-
+    print("")
 
 
 
@@ -348,11 +353,13 @@ def c(distance_list, angulus_list, scale_list, value, angulus, distances, scale,
 
 
     list3 = sorted(list3, key=lambda x: x[0])
-    print(list3[0])
 
 
+    ind = list3[0][1]
 
-
+    print(list1[ind][0])
+    print(list2[ind][0])
+    print("")
 
 
 
@@ -432,16 +439,18 @@ def d(distance_list, angulus_list, scale_list, value, angulus, distances, scale,
 
 
     list3 = sorted(list3, key=lambda x: x[0])
-    print(list3[0])
+
 
     list4 = sorted(list4, key=lambda x: x[0])
-    print(list4[0])
 
 
 
 
+    ind1 = list3[0][1]
+    ind2 = list4[0][1]
 
-
+    print(list1[ind1][0])
+    print(list2[ind2][0])
 
 
 
