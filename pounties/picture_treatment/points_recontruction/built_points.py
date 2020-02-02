@@ -5,15 +5,19 @@ from convert_variable import *
 """RECUPERATE INFORMATIONS"""
 #============================
 
-def treat_information(data, finger_name, index_pair, index, liste):
+def treat_information(data, finger_name, value, index, liste):
+
+    #Recuperate points of fingers if (0, 0)
+    none = ((0, 0), (0, 0))
+    index_pair = [nb for nb, i in enumerate(value) if i == none]
 
     #Ratio distance
     ratio = data[index][1]
 
-    #Recuperate distance treated indexed.
+    #Recuperate distance/angulus treated indexed.
     info = liste[index]
 
-    #distance list to dictionnary.
+    #distance/angulus list to dictionnary.
     info = element_to_dict(info)
 
     #Fingers interest.
@@ -23,28 +27,6 @@ def treat_information(data, finger_name, index_pair, index, liste):
     info_search = [(i, nb) for nb, i in enumerate(info) for j in index_pair if j == nb]
 
     return info, info_search
-
-
-
-def recuperate_informations(first_part):
-
-    data, index_distance, index_angulus,\
-    distance_list, angulus_list, finger_name, value = first_part
-
-    #Recuperate points of fingers if (0, 0)
-    none = ((0, 0), (0, 0))
-    index_pair = [nb for nb, i in enumerate(value) if i == none]
-    print(index_pair)
-
-
-    distance, distance_search = treat_information(data, finger_name, index_pair,
-                                                  index_distance, distance_list)
-
-    angulus, angulus_search = treat_information(data, finger_name, index_pair,
-                                                index_angulus, angulus_list)
-
-
-    return distance_search, angulus_search, distance, angulus
 
 
 
@@ -87,8 +69,17 @@ def transform_to_coordinate(points, finger_name, index, value,
 
 def modify_points(first_part, points, finger_name, index, value):
 
-    informations = recuperate_informations(first_part)
-    distance_search, angulus_search, distance, angulus = informations
+
+    data, index_distance, index_angulus,\
+    distance_list, angulus_list, finger_name, value = first_part
+
+    #Recuperate distance and the phax to replace
+    distance, distance_search = treat_information(data, finger_name, value,
+                                                  index_distance, distance_list)
+
+    #Recuperate angulus and the phax to replace
+    angulus, angulus_search = treat_information(data, finger_name, value,
+                                                index_angulus, angulus_list)
 
 
     print(distance_search)
