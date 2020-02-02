@@ -21,6 +21,8 @@ def list_to_tuple(points):
     return [tuple(i) for i in points]
 
 def dictionnary_tuple_to_list(points):
+    """Transform value of a dictionnary to
+    list value on the second dictionnary"""
 
     dico_list = {"t" : [],  "i" : [], "m" : [], "an" : [],
                  "a" : []}
