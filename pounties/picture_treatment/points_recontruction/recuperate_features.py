@@ -1,24 +1,29 @@
-
-
 import math
 from scipy.spatial import distance as dist
+
 
 #============================================
 """RECUPERATE ANGLES"""
 #============================================
 
 def collect_angulus(points):
-    
+    """We have 2 pairs of coordinates (x1, y1) (x2, y2)
+    So we use arctan of rectangle triangle
+    for have angulus of orientation formula's:
+    angulus = tan ^ -1(opposite side / adjacent)"""
+
     angulus = []
     for (pts1, pts2) in points:
 
         x1, y1 = pts1
         x2, y2 = pts2
 
+        #can't divide by 0
         if (x1 - x2) != 0:
             side = (y2 - y1) / (x2 - x1)
             angulus.append(math.atan(side))
 
+        #None points as (0, 0) or divide by 0
         else:
             angulus.append(None)
 
@@ -32,10 +37,13 @@ def collect_angulus(points):
 
 def collect_distances(points):
     """Collect Euclidean distance from each point.
-    Repartite to finger's"""
+    formula's :
+    a = (x2 - x1) ** 2
+    b = (y2 - y1) ** 2
+    dist = sqrt(a + b)
+    """
 
     distances = []
-
 
     for (pts1, pts2) in points:
 
@@ -48,7 +56,11 @@ def collect_distances(points):
 
     return distances
 
+
 def make_scale(ratio):
+    """We need a scale for obtient same distance
+    our scale is the area of the contour of the hand"""
+
     return ratio[2] * ratio[3]
 
 
@@ -57,8 +69,9 @@ def make_scale(ratio):
 """RECUPERATE FEATURE FROM PASSATION"""
 #============================================
 
-
 def passation_informations(points, scale):
+    """Recuperate angulus, distance of each pairs
+    and the scale of our picture"""
 
     #Angulus
     angulus = collect_angulus(points)
@@ -75,9 +88,12 @@ def passation_informations(points, scale):
 #============================================
 """RECUPERATE FEATURE FROM DATA CSV"""
 #============================================
+#Recuperate data informations from csv
 from csv_treatment import recuperate_data_in_csv
-def data_informations():
 
+def data_informations():
+    """Our csv area compose as:"""
+    
     scale_list = []
     angulus_list = []
     distance_list = []
