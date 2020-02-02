@@ -1,5 +1,5 @@
 from knn import *
-from csv_treatment import recuperate_data_in_csv
+
 from recuperate_features import *
 from convert_variable import *
 from recuperate_points import searching_points
@@ -11,55 +11,6 @@ scale = (31, 31, 113, 109)
 
 #points = [((0, 0), (0, 0)), ((120, 153), (147, 132)), ((147, 132), (158, 104)), ((158, 104), (169, 83)), ((93, 170), (99, 105)), ((99, 105), (110, 78)), ((110, 78), (132, 62)), ((132, 62), (83, 61)), ((93, 170), (83, 110)), ((83, 110), (50, 100)), ((50, 100), (24, 93)), ((24, 93), (152, 45)), ((93, 170), (77, 126)), ((77, 126), (50, 121)), ((50, 121), (29, 115)), ((29, 115), (126, 45)), ((93, 170), (77, 137)), ((77, 137), (56, 143)), ((56, 143), (45, 137)), ((45, 137), (35, 132))]
 #scale = (3, 17, 194, 214)
-
-def passation_informations(points, scale):
-
-    #Angulus
-    angulus = collect_angulus(points)
-
-    #Distance
-    distances = collect_distances(points)
-
-    #Scale
-    scale = make_scale(scale)
-
-    return angulus, distances, scale
-
-
-def data_informations():
-
-    scale_list = []
-    angulus_list = []
-    distance_list = []
-    
-    data_csv = recuperate_data_in_csv()
-
-    for nb, data in enumerate(data_csv):
-
-        pts_data, scale_data = data[0], data[1]
-
-        #Scale
-        scale_data = make_scale(scale_data)
-        scale_list.append(scale_data)
-
-        #Distance
-        distances_data = collect_distances(pts_data)
-        distance_list.append(distances_data)
-
-        #Angulus
-        anglulus_data = collect_angulus(pts_data)
-        angulus_list.append(anglulus_data)
-
-
-    return distance_list, angulus_list, scale_list, data_csv
-
-
-
-
-
-
-
-
 
 
 
