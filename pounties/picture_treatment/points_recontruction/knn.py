@@ -64,6 +64,8 @@ def make_difference_to_square(i, j, l, m, k, n, ind):
         (data points)i - (passation points)i to square
     """
 
+    #QUOTE: i prefere variable like it
+
     list_w = []
     list_w1 = []
 
