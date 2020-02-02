@@ -41,21 +41,16 @@ def transform_to_coordinate(informations_for_replace):
 
     points, finger_name, index, value, distance_search, angulus_search = informations_for_replace
 
-
+    #Transform dictionnary value to list (can modify informations).
     points = dictionnary_tuple_to_list(points)
 
-    if index == 0:  #First phax
-
-        #index => ((0), (1)) =  index + 1  => ((0), (1))
-
+    if index == 0:  
+        #pair 2 of the current index is pair 1 of the index + 1 where pair = (0, 1)
         points[finger_name][index][1] = points[finger_name][index + 1][0]
         print(points[finger_name])
 
-
-
-
-    else:
-        #index - 1 = ((0), (1)) = index = ((0), (1))
+    elif index != 0:
+        #pair 1 of the current index is pair 2 of the index - 1 where pair = (0, 1)
         points[finger_name][index][0] = points[finger_name][index - 1][1]
         print(points[finger_name])
 
@@ -95,7 +90,10 @@ def modify_points(first_part, points, finger_name, index, value):
     print(angulus_search)
 
     #2) - Replace value in passation data.
+
+    #Data need for replace
     informations_for_replace = points, finger_name, index, value, distance_search, angulus_search
+    
     transform_to_coordinate(informations_for_replace)
 
 
