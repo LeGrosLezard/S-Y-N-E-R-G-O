@@ -9,7 +9,8 @@ def searching_points(points):
     form is like a dictionnary:
     t : {((1, 1),(1, 1)), ((2, 2), (2, 2)), ((0, 0), (0, 0))}
     we recupera index 0 and 1, index 2 is none point.
-    In case there are no points into the finger don't
+    In case there are no points into the finger or all points
+    into the finger don't
     search it in this part.
     """
 
