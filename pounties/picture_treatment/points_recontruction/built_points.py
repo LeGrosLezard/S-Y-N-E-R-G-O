@@ -5,7 +5,9 @@ from convert_variable import *
 """RECUPERATE INFORMATIONS"""
 #============================
 
-def treat_information(data, finger_name, value, index, liste):
+def treat_information(informations):
+
+    data, finger_name, value, index, liste = informations
 
     #Recuperate points of fingers if (0, 0)
     none = ((0, 0), (0, 0))
@@ -35,8 +37,9 @@ def treat_information(data, finger_name, value, index, liste):
 """TRANSFORM POINTS TO COORDINATES"""
 #====================================
 
-def transform_to_coordinate(points, finger_name, index, value,
-                            distance_search, angulus_search):
+def transform_to_coordinate(informations_for_replace):
+
+    points, finger_name, index, value, distance_search, angulus_search = informations_for_replace
 
 
     points = dictionnary_tuple_to_list(points)
@@ -69,25 +72,31 @@ def transform_to_coordinate(points, finger_name, index, value,
 
 def modify_points(first_part, points, finger_name, index, value):
 
+    #All data need
+    data, index_distance, index_angulus, distance_list, angulus_list, finger_name, value = first_part
 
-    data, index_distance, index_angulus,\
-    distance_list, angulus_list, finger_name, value = first_part
+
+    #1) - Recuperate informations of the Phax interest
+
+    #Data distance need
+    distance_informations = data, finger_name, value, index_distance, distance_list
+
+    #Data Angulus need.
+    angulus_informations = data, finger_name, value, index_angulus, angulus_list
 
     #Recuperate distance and the phax to replace
-    distance, distance_search = treat_information(data, finger_name, value,
-                                                  index_distance, distance_list)
+    distance, distance_search = treat_information(distance_informations)
 
     #Recuperate angulus and the phax to replace
-    angulus, angulus_search = treat_information(data, finger_name, value,
-                                                index_angulus, angulus_list)
+    angulus, angulus_search = treat_information(angulus_informations)
 
 
     print(distance_search)
     print(angulus_search)
 
-
-    transform_to_coordinate(points, finger_name, index, value,
-                            distance_search, angulus_search)
+    #2) - Replace value in passation data.
+    informations_for_replace = points, finger_name, index, value, distance_search, angulus_search
+    transform_to_coordinate(informations_for_replace)
 
 
 
