@@ -92,7 +92,8 @@ def passation_informations(points, scale):
 from csv_treatment import recuperate_data_in_csv
 
 def data_informations():
-    """Our csv area compose as:"""
+    """Our csv area compose as:
+    label, pairs, points of rectangle."""
     
     scale_list = []
     angulus_list = []
@@ -104,15 +105,15 @@ def data_informations():
 
         pts_data, scale_data = data[0], data[1]
 
-        #Scale
+        #Scale (points of rectangle)
         scale_data = make_scale(scale_data)
         scale_list.append(scale_data)
 
-        #Distance
+        #Distance (Make euclidean distance)
         distances_data = collect_distances(pts_data)
         distance_list.append(distances_data)
 
-        #Angulus
+        #Angulus (Recuperate arctan)
         anglulus_data = collect_angulus(pts_data)
         angulus_list.append(anglulus_data)
 
