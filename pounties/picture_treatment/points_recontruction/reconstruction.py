@@ -2,8 +2,8 @@ from knn import *
 
 from recuperate_features import *
 from convert_variable import *
-from recuperate_points import searching_points
-
+from recuperate_points_to_search import searching_points
+from built_points import *
 
 
 points = [((0, 0), (0, 0)), ((97, 105), (115, 94)), ((115, 94), (122, 79)), ((122, 79), (126, 69)), ((0, 0), (0, 0)), ((86, 76), (83, 55)), ((83, 55), (83, 47)), ((83, 47), (83, 40)), ((0, 0), (0, 0)), ((75, 79), (68, 55)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((51, 98), (44, 91)), ((44, 91), (40, 94)), ((40, 94), (41, 90))]
@@ -44,8 +44,17 @@ for k, v in to_search.items():
             if i == none:
 
                 print("phax :", nb)
-                a, b = dddddddd(distance_list, angulus_list, scale_list, v, angulus, distances, scale, k)
-                print(a, b)
+                a, b = recuperate_minimal_informations(distance_list, angulus_list, scale_list,
+                                                        v, angulus, distances, scale, k)
+                dist_index, angulus_index = a, b
+
+                print(dist_index, angulus_index)
+
+
+                first_part = (data, dist_index, angulus_index, distance_list,
+                              angulus_list, k, v)
+
+                transform_to_coordinate(first_part)
 
                 print("")
                 
