@@ -1,4 +1,10 @@
-from reconstruction_utils import *
+from knn import *
+from csv_treatment import recuperate_data_in_csv
+from recuperate_features import *
+from convert_variable import *
+from recuperate_points import searching_points
+
+
 
 points = [((0, 0), (0, 0)), ((97, 105), (115, 94)), ((115, 94), (122, 79)), ((122, 79), (126, 69)), ((0, 0), (0, 0)), ((86, 76), (83, 55)), ((83, 55), (83, 47)), ((83, 47), (83, 40)), ((0, 0), (0, 0)), ((75, 79), (68, 55)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((51, 98), (44, 91)), ((44, 91), (40, 94)), ((40, 94), (41, 90))]
 scale = (31, 31, 113, 109)
@@ -63,8 +69,6 @@ angulus, distances, scale = passation_informations(points, scale)
 #Data
 distance_list, angulus_list, scale_list, data = data_informations()
 
-#print(data[94][0])
-#print("")
 
 #to dict
 angulus = element_to_dict(angulus)
@@ -73,50 +77,26 @@ points = element_to_dict(points)
 
 
 
-
-
-
-none = ((0, 0), (0, 0))
-
-
-yo = points
-delete_points = delete_points(points)
-print(delete_points)
+to_search = searching_points(points)
+print(to_search)
 
 print("")
 
-for k, v in delete_points.items():
+none = ((0, 0), (0, 0))
+for k, v in to_search.items():
 
     if v != []:
         print(k)
         
         for nb, i in enumerate(v):
 
-            if i == none and nb < len(v) - 1 and v[nb + 1] != none:
+            if i == none:
 
                 print("phax :", nb)
-                a, b = d(distance_list, angulus_list, scale_list, v, angulus, distances, scale, k)
+                a, b = dddddddd(distance_list, angulus_list, scale_list, v, angulus, distances, scale, k)
                 print(a, b)
-
-##                points["m"][1] = ((5, 15), (5, 25))
-##                angulus["m"][1] = 10
-##                distances["m"][1] = 20
-
-
 
                 print("")
-
-
-            elif i == none and v[nb - 1] != none:
-
-                print("phax :", nb)
-
-                a, b = d(distance_list, angulus_list, scale_list, v, angulus, distances, scale, k)
-                print(a, b)
-
-##                points["m"][1] = ((5, 15), (5, 25))
-##                angulus["m"][1] = 10
-##                distances["m"][1] = 20
                 
 
 
