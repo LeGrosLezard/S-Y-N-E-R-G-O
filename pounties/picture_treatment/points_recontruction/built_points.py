@@ -7,25 +7,34 @@ import math
 
 def treat_information(informations):
 
+    """1) - We recuperate variable from informations.
+       2) - Recuperate none point detection.
+       3) - Recuperate ratio and points.
+       4) - Make our points to annotated finger dictionnary.
+       5) - Recuperate finger.
+       6) - Recuperate information from data csv (distance/angulus) 
+    """
+
+    #1) - Variable from informations
     data, finger_name, value, index, liste = informations
 
-    #Recuperate points of fingers if (0, 0)
+    #2) - Recuperate points of fingers if (0, 0)
     none = ((0, 0), (0, 0))
     index_pair = [nb for nb, i in enumerate(value) if i == none]
 
-    #Ratio distance
+    #3) - Ratio distance
     ratio = data[index][1]
 
-    #Recuperate distance/angulus treated indexed.
+    #3) - Recuperate distance/angulus treated indexed.
     info = liste[index]
 
-    #distance/angulus list to dictionnary.
+    #4) - distance/angulus list to dictionnary.
     info = element_to_dict(info)
 
-    #Fingers interest.
+    #5) - Fingers interest.
     info = info[finger_name]
 
-    #Phax interest.
+    #6) - Phax interest.
     info_search = [(i, nb) for nb, i in enumerate(info) for j in index_pair if j == nb]
 
     return info, info_search
@@ -38,8 +47,15 @@ def treat_information(informations):
 #====================================
 
 def angle_distance_to_coordinate(distance, angulus, index):
+    """Match distance and angulus index (many none detections in finger)
+    with the current none point finger.
+    Establish coordinate by:
 
+    x = r * cos(alpha)
+    y = r * sin(alpha)"""
 
+    #dist = distance/index
+    #ang = angulus/index
     for dist, ang in zip(distance, angulus):
         if dist[1] == index and ang[1] == index:
 
@@ -47,6 +63,8 @@ def angle_distance_to_coordinate(distance, angulus, index):
             y = dist[0] * math.sin(ang[0])
 
             return x, y
+
+
 
 def changed_points(to_change, x, y):
     x = round(x)
