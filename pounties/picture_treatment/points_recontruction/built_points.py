@@ -66,11 +66,35 @@ def angle_distance_to_coordinate(distance, angulus, index):
 
 
 
-def changed_points(to_change, x, y):
-    x = round(x)
-    y = round(y)
+def changed_points(to_change, ptx, pty, pair1, pair2):
+    """For example we have ((0, 0), (0, 0)) ((10, 20), (30, 40))
+                            1) - replace (0, 0) by (10, 20)
+                            2) - make dist * cos/sin(angulus)
+                            3  - difference 10 - (2)
 
-    print(x, y)
+    for the case point = 0""" 
+
+
+    #Recuperate points of pair next/last.
+    x = to_change[pair2][0]
+    y = to_change[pair2][1]
+
+    #Round to r*cos/sin(angulus) superior
+    ptx = int(round(ptx))
+    pty = int(round(pty))
+
+    #Minus or add points coordinate given from phax detected.
+    if pair1 == 0:  #Point = 0
+        x = x - ptx
+        y = y - pty
+
+    elif pair1 == 1:#Point > 0
+        x = x + ptx
+        y = y + pty
+
+    #Change pair to coordiante
+    to_change[pair1] = (x, y)
+
 
 
 def transform_to_coordinate(informations_for_replace):
@@ -85,26 +109,31 @@ def transform_to_coordinate(informations_for_replace):
         #pair 2 of the current index is pair 1 of the index + 1 where pair = ((0, 1), (0, 1))
         points[finger_name][index][1] = points[finger_name][index + 1][0]
 
-        x, y = angle_distance_to_coordinate(distance_search, angulus_search, index)
+        #Transform distance-angulus to coordinate
+        ptx, pty = angle_distance_to_coordinate(distance_search, angulus_search, index)
+
+        #Recuperate finger index none detection
         to_change = points[finger_name][index]
 
-        print(to_change, x, y)
-        changed_points(to_change, x, y)
+        #Change informations to coordinate
+        changed_points(to_change, ptx, pty, 0, 1)
+
+
 
     elif index != 0:
         #pair 1 of the current index is pair 2 of the index - 1 where pair = ((0, 1), (0, 1))
         points[finger_name][index][0] = points[finger_name][index - 1][1]
 
-        x, y = angle_distance_to_coordinate(distance_search, angulus_search, index)
+        #Transform distance-angulus to coordinate
+        ptx, pty = angle_distance_to_coordinate(distance_search, angulus_search, index)
+
+        #Recuperate finger index none detection
         to_change = points[finger_name][index]
 
-        print(to_change, x, y)
+        #Change informations to coordinate
+        changed_points(to_change, ptx, pty, 1, 0)
 
-
-
-
-
-    print("")
+    return points
 
 
 
@@ -142,10 +171,12 @@ def modify_points(first_part, points, finger_name, index, value):
 
     #Data need for replace
     informations_for_replace = points, finger_name, index, value, distance_search, angulus_search
-    
-    transform_to_coordinate(informations_for_replace)
+
+    #Transform distance and angulus to coordinate in function of the last-next coordinates.    
+    points = transform_to_coordinate(informations_for_replace)
 
 
+    return points
 
 
 
