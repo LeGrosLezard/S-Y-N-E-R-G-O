@@ -1,7 +1,7 @@
 #==============================
-"""SEARCHING POINTS"""
+"""INDENTIFY POINTS OF PHAXS"""
 #==============================
-def searching_points(points):
+def identify_phaxs_points(points):
     """We need to identify points presents or not
     if one point's is egal to ((0, 0), (0, 0))
     don't recuperate index into the list.
@@ -15,6 +15,7 @@ def searching_points(points):
     """
 
     to_delete = []  #Phax to delete from points.
+    finger = []
     for k, v in points.items():
 
         c = 0 #None points
@@ -24,13 +25,14 @@ def searching_points(points):
                 c += 1
 
         if c == len(v): #All points is None so we have no points
+            finger.append(k)
             to_delete.append(k)
 
         elif c == 0: #One points is None
             to_delete.append(k)
 
     """This dictionnary is phax missing to search"""
-    new = {"t" : [],  "i" : [],  "m" :[], "an" : [], "a" : []}
+    phax = {"t" : [],  "i" : [],  "m" :[], "an" : [], "a" : []}
 
     for k, v in points.items():
         nan = False
@@ -40,6 +42,51 @@ def searching_points(points):
                 nan = True
 
         if nan is False: #There are max one none
-            new[k] = v
+            phax[k] = v
 
-    return new
+    return phax, finger
+
+
+
+
+
+
+#==============================
+"""SEARCHING POINTS OF PHAXS"""
+#==============================
+
+
+
+def indentify_finger_points(finger):
+
+    liste_index = ["t", "i", "m", "an", "a"]
+
+    to_search = []
+
+    for name in finger:
+
+        if name is "t":
+            searching = liste_index[1]
+            to_search.append(searching)
+
+        elif name is "a":
+            searching = liste_index[-2]
+            to_search.append(searching)
+
+        elif name not in ("t", "a"):
+            searching = liste_index.index(name)
+            searching = [liste_index[searching - 1], liste_index[searching + 1]]
+            to_search.append(searching)
+
+
+    return to_search
+
+
+
+
+
+
+
+
+
+
