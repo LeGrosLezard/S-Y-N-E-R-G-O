@@ -96,7 +96,7 @@ def make_square_root(list3, list4, list_distance, list_angulus, index_data):
 
     #Make the sum of the last difference to square of all points
     distance = sum([i[0] for i in list_distance])
-    angulus = sum([i[0] for i in list_angulus])
+    angulus =  sum([i[0] for i in list_angulus])
 
     #Make the square root (apply euclidean distance)
     distance_square_root = math.sqrt(distance)  #Distance
@@ -123,7 +123,7 @@ def recuperate_index_on_data_csv(list3, list4):
     dist_distance = list3[0][0]   #Distance of the minimal distance
     dist_angulus = list4[0][0]
 
-    #print(dist_distance, dist_angulus)
+    print(dist_distance, dist_angulus)
 
     return index_distance, index_angulus
 
@@ -166,6 +166,7 @@ def recuperate_minimal(informations):
 
     #7) - Recuperate index on csv data from the minimal euclidean distance/angulus
     ind1, ind2 = recuperate_index_on_data_csv(list3, list4)
+
 
     return ind1, ind2
 

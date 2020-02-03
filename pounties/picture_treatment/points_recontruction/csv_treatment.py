@@ -30,7 +30,7 @@ def recuperate_data_in_csv():
         with open(PATH.format(file), newline='') as csvfile:
             reader = csv.DictReader(csvfile)
 
-            #Recyoerate data with their initial type
+            #Recuperate data with their initial type
             for information in reader:
                 points = ast.literal_eval(information["points"])
                 ratio =  ast.literal_eval(information["ratio"])

@@ -1,5 +1,8 @@
-from convert_variable import *
+import cv2
 import math
+import numpy as np
+from convert_variable import *
+
 
 #============================
 """RECUPERATE INFORMATIONS"""
@@ -46,7 +49,7 @@ def treat_information(informations):
 """TRANSFORM POINTS TO COORDINATES"""
 #====================================
 
-def angle_distance_to_coordinate(distance, angulus, index):
+def angle_distance_to_coordinate(distance, angulus, index, scale, data_scale):
     """Match distance and angulus index (many none detections in finger)
     with the current none point finger.
     Establish coordinate by:
@@ -59,8 +62,16 @@ def angle_distance_to_coordinate(distance, angulus, index):
     for dist, ang in zip(distance, angulus):
         if dist[1] == index and ang[1] == index:
 
-            x = dist[0] * math.cos(ang[0])
-            y = dist[0] * math.sin(ang[0])
+            #Make ratio for normalize the distance.
+            if scale > data_scale:
+                ratio = scale/data_scale
+                dist = dist[0] * ratio
+            elif data_scale > scale:
+                ratio = data_scale/scale
+                dist = dist[0] / ratio
+
+            x = dist * math.cos(ang[0])
+            y = dist * math.sin(ang[0])
 
             return x, y
 
@@ -84,22 +95,33 @@ def changed_points(to_change, ptx, pty, pair1, pair2):
     pty = int(round(pty))
 
     #Minus or add points coordinate given from phax detected.
-    if pair1 == 0:  #Point = 0
-        x = x - ptx
-        y = y - pty
-
-    elif pair1 == 1:#Point > 0
-        x = x + ptx
-        y = y + pty
+    x = x - ptx
+    y = y - pty
 
     #Change pair to coordiante
     to_change[pair1] = (x, y)
 
+def drawing(points):
+
+
+    points = dict_to_list(points)
+    blank_image = np.zeros((500, 500, 3), np.uint8)
+
+
+    for pts in points:
+        for p in pts:
+
+            cv2.circle(blank_image, (p) , 2, (0, 0, 255), 2)
+            cv2.line(blank_image, pts[0], pts[1], (0, 0, 255), 2)
+            
+    cv2.imshow("dza", blank_image)
+    cv2.waitKey(0)
 
 
 def transform_to_coordinate(informations_for_replace):
 
-    points, finger_name, index, value, distance_search, angulus_search = informations_for_replace
+    points, finger_name, index, value, distance_search,\
+            angulus_search, scale, data_scale = informations_for_replace
 
     #Transform dictionnary value to list (can modify informations).
     points = dictionnary_tuple_to_list(points)
@@ -110,7 +132,8 @@ def transform_to_coordinate(informations_for_replace):
         points[finger_name][index][1] = points[finger_name][index + 1][0]
 
         #Transform distance-angulus to coordinate
-        ptx, pty = angle_distance_to_coordinate(distance_search, angulus_search, index)
+        ptx, pty = angle_distance_to_coordinate(distance_search, angulus_search,
+                                                index, scale, data_scale)
 
         #Recuperate finger index none detection
         to_change = points[finger_name][index]
@@ -125,7 +148,8 @@ def transform_to_coordinate(informations_for_replace):
         points[finger_name][index][0] = points[finger_name][index - 1][1]
 
         #Transform distance-angulus to coordinate
-        ptx, pty = angle_distance_to_coordinate(distance_search, angulus_search, index)
+        ptx, pty = angle_distance_to_coordinate(distance_search, angulus_search,
+                                                index, scale, data_scale)
 
         #Recuperate finger index none detection
         to_change = points[finger_name][index]
@@ -133,16 +157,20 @@ def transform_to_coordinate(informations_for_replace):
         #Change informations to coordinate
         changed_points(to_change, ptx, pty, 1, 0)
 
+
+    
+    drawing(points)
+
     return points
 
 
 
 
-#============================
+#===================
 """MODIFY POINTS"""
-#============================
+#===================
 
-def modify_points(first_part, points, finger_name, index, value):
+def modify_points(first_part, points, finger_name, index, value, scale):
 
     #All data need
     data, index_distance, index_angulus, distance_list, angulus_list, finger_name, value = first_part
@@ -170,7 +198,9 @@ def modify_points(first_part, points, finger_name, index, value):
     #2) - Replace value in passation data.
 
     #Data need for replace
-    informations_for_replace = points, finger_name, index, value, distance_search, angulus_search
+    data_scale = data[index_distance][1][2] * data[index_distance][1][3]
+    informations_for_replace = points, finger_name, index,\
+                               value, distance_search, angulus_search, scale, data_scale
 
     #Transform distance and angulus to coordinate in function of the last-next coordinates.    
     points = transform_to_coordinate(informations_for_replace)

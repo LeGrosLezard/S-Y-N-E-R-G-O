@@ -10,7 +10,7 @@ def collect_angulus(points):
     """We have 2 pairs of coordinates (x1, y1) (x2, y2)
     So we use arctan of rectangle triangle
     for have angulus of orientation formula's:
-    angulus = tan ^ -1(opposite side / adjacent)"""
+    angulus = tan ^ -1(opposite side / adjacent) in radians"""
 
     angulus = []
     for (pts1, pts2) in points:
@@ -59,8 +59,8 @@ def collect_distances(points):
 
 def make_scale(ratio):
     """We need a scale for obtient same distance
-    our scale is the area of the contour of the hand"""
-
+    our scale is the area of the contour of the hand
+    from: Length*Width in pixel"""
     return ratio[2] * ratio[3]
 
 
