@@ -1,4 +1,3 @@
-
 import cv2
 import math
 import importlib
@@ -36,7 +35,7 @@ def recuperate_distance_angulus_data(index_pair, distance_list, angulus_list, fi
 
         #Add dist, ang and index of data.
         list_distance_treat.append((list_w, index_data))
-        list_angulus_treat.append(( list_w1, index_data))
+        list_angulus_treat.append((list_w1, index_data))
 
 
     return list_distance_treat, list_angulus_treat
@@ -102,7 +101,7 @@ def make_square_root(list3, list4, list_distance, list_angulus, index_data):
     #Make the square root (apply euclidean distance)
     distance_square_root = math.sqrt(distance)  #Distance
     angulus_square_root =  math.sqrt(angulus)  #Angulus
-    
+
     #Append it to a list with data index
     list3.append((distance_square_root, index_data)) #Distance
     list4.append((angulus_square_root,  index_data)) #Angulus
@@ -121,27 +120,30 @@ def recuperate_index_on_data_csv(list3, list4):
     index_distance = list3[0][1]  #Index of the csv data
     index_angulus = list4[0][1]
 
-    dist_distance = list3[0][0] #Distance of the minimal distance
+    dist_distance = list3[0][0]   #Distance of the minimal distance
     dist_angulus = list4[0][0]
 
-    print(dist_distance, dist_angulus)
+    #print(dist_distance, dist_angulus)
 
     return index_distance, index_angulus
 
     
-def recuperate_minimal_informations(distance_list, angulus_list, scale_list,
-                                    value, angulus, distances, scale, key):
+def recuperate_minimal(informations):
+
+    #Data needed
+    distance_list, angulus_list, scale_list, pts,\
+                   angulus, distances, scale, finger_name = informations
 
     #1) - Recuperate points of fingers if not (0, 0)
     none = ((0, 0), (0, 0))
-    index_pair = [nb for nb, i in enumerate(value) if i != none]
+    index_pair = [nb for nb, i in enumerate(pts) if i != none]
 
     #2) - Distance/angulus from phax points from index_pair DATA (1)
     list1, list2 = recuperate_distance_angulus_data(index_pair, distance_list,
-                                                    angulus_list, key)
+                                                    angulus_list, finger_name)
 
     #3) - Recuperate distance/angle from phax points PASSATION
-    distances, angulus = points_interests(key, index_pair, distances, angulus)
+    distances, angulus = points_interests(finger_name, index_pair, distances, angulus)
 
 
     #4) - Run points interest from (2) and compare them with (3)
