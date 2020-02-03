@@ -1,5 +1,5 @@
 from convert_variable import *
-
+import math
 
 #============================
 """RECUPERATE INFORMATIONS"""
@@ -37,22 +37,47 @@ def treat_information(informations):
 """TRANSFORM POINTS TO COORDINATES"""
 #====================================
 
+def angle_distance_to_coordinate(distance, angulus, index):
+
+
+    for dist, ang in zip(distance, angulus):
+        if dist[1] == index and ang[1] == index:
+
+            x = dist[0] * math.cos(ang[0])
+            y = dist[0] * math.sin(ang[0])
+
+            return x, y
+
+def changed_points():
+    pass
+
 def transform_to_coordinate(informations_for_replace):
 
     points, finger_name, index, value, distance_search, angulus_search = informations_for_replace
 
     #Transform dictionnary value to list (can modify informations).
     points = dictionnary_tuple_to_list(points)
+    
 
     if index == 0:  
         #pair 2 of the current index is pair 1 of the index + 1 where pair = (0, 1)
         points[finger_name][index][1] = points[finger_name][index + 1][0]
-        print(points[finger_name])
+
+        x, y = angle_distance_to_coordinate(distance_search, angulus_search, index)
+        to_change = points[finger_name][index]
+
+        print(to_change, x, y)
 
     elif index != 0:
         #pair 1 of the current index is pair 2 of the index - 1 where pair = (0, 1)
         points[finger_name][index][0] = points[finger_name][index - 1][1]
-        print(points[finger_name])
+
+        x, y = angle_distance_to_coordinate(distance_search, angulus_search, index)
+        to_change = points[finger_name][index]
+
+        print(to_change, x, y)
+
+
 
 
 
@@ -85,9 +110,10 @@ def modify_points(first_part, points, finger_name, index, value):
     #Recuperate angulus and the phax to replace
     angulus, angulus_search = treat_information(angulus_informations)
 
+    #print(distance_search)
+    #print(angulus_search)
 
-    print(distance_search)
-    print(angulus_search)
+
 
     #2) - Replace value in passation data.
 
