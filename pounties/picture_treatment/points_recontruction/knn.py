@@ -10,11 +10,13 @@ from scipy.spatial import distance as dist
 """RECUPERATE CLOSED POINTS"""
 #==============================
 
-def recuperate_distance_angulus_data(index_pair, distance_list, angulus_list, finger_name):
+def recuperate_distance_angulus_data(informations_searching):
 
     """1) Here we order points in dictionnary annoted by finger name's.
        2) We recuperate distance and angulus from the finger interest.
        3) Append it to list with data indexed"""
+
+    index_pair, distance_list, angulus_list, finger_name = informations_searching
 
     list_distance_treat = []
     list_angulus_treat = []
@@ -138,8 +140,8 @@ def recuperate_minimal(informations):
     index_pair = [nb for nb, i in enumerate(pts) if i != ((0, 0), (0, 0))]
 
     #2) - Distance/angulus from phax points from index_pair DATA (1)
-    list1, list2 = recuperate_distance_angulus_data(index_pair, distance_list,
-                                                    angulus_list, finger_name)
+    informations_searching = index_pair, distance_list, angulus_list, finger_name
+    listDistance, listAngulus = recuperate_distance_angulus_data(informations_searching)
 
     #3) - Recuperate distance/angle from phax points PASSATION
     distances, angulus = points_interests(finger_name, index_pair, distances, angulus)
@@ -148,7 +150,7 @@ def recuperate_minimal(informations):
     #4) - Run points interest from (2) and compare them with (3)
     list3 = []
     list4 = []
-    for i, j in zip(list1, list2):
+    for i, j in zip(listDistance, listAngulus):
 
         index_data1 = i[1] #i[0] is points, i[1] is index in data csv
 
