@@ -54,10 +54,12 @@ for k, v in to_search.items():
                 first_part = (data, dist_index, angulus_index, distance_list,
                               angulus_list, k, v)
 
-                transform_to_coordinate(first_part)
+    
+                points = modify_points(first_part, points, k, nb, v)
 
                 print("")
-                
+
+print(points)
 
 
 
