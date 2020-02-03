@@ -51,8 +51,8 @@ def angle_distance_to_coordinate(distance, angulus, index):
     with the current none point finger.
     Establish coordinate by:
 
-    x = r * cos(alpha)
-    y = r * sin(alpha)"""
+    x = distance * cos(alpha)
+    y = distance * sin(alpha)"""
 
     #dist = distance/index
     #ang = angulus/index
@@ -82,7 +82,7 @@ def transform_to_coordinate(informations_for_replace):
 
 
     if index == 0:  
-        #pair 2 of the current index is pair 1 of the index + 1 where pair = (0, 1)
+        #pair 2 of the current index is pair 1 of the index + 1 where pair = ((0, 1), (0, 1))
         points[finger_name][index][1] = points[finger_name][index + 1][0]
 
         x, y = angle_distance_to_coordinate(distance_search, angulus_search, index)
@@ -92,7 +92,7 @@ def transform_to_coordinate(informations_for_replace):
         changed_points(to_change, x, y)
 
     elif index != 0:
-        #pair 1 of the current index is pair 2 of the index - 1 where pair = (0, 1)
+        #pair 1 of the current index is pair 2 of the index - 1 where pair = ((0, 1), (0, 1))
         points[finger_name][index][0] = points[finger_name][index - 1][1]
 
         x, y = angle_distance_to_coordinate(distance_search, angulus_search, index)
