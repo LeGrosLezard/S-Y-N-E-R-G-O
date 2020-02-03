@@ -48,8 +48,12 @@ def angle_distance_to_coordinate(distance, angulus, index):
 
             return x, y
 
-def changed_points():
-    pass
+def changed_points(to_change, x, y):
+    x = round(x)
+    y = round(y)
+
+    print(x, y)
+
 
 def transform_to_coordinate(informations_for_replace):
 
@@ -57,7 +61,7 @@ def transform_to_coordinate(informations_for_replace):
 
     #Transform dictionnary value to list (can modify informations).
     points = dictionnary_tuple_to_list(points)
-    
+
 
     if index == 0:  
         #pair 2 of the current index is pair 1 of the index + 1 where pair = (0, 1)
@@ -67,6 +71,7 @@ def transform_to_coordinate(informations_for_replace):
         to_change = points[finger_name][index]
 
         print(to_change, x, y)
+        changed_points(to_change, x, y)
 
     elif index != 0:
         #pair 1 of the current index is pair 2 of the index - 1 where pair = (0, 1)
