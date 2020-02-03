@@ -132,11 +132,10 @@ def recuperate_minimal(informations):
 
     #Data needed
     distance_list, angulus_list, scale_list, pts,\
-                   angulus, distances, scale, finger_name = informations
+    angulus, distances, scale, finger_name = informations
 
     #1) - Recuperate points of fingers if not (0, 0)
-    none = ((0, 0), (0, 0))
-    index_pair = [nb for nb, i in enumerate(pts) if i != none]
+    index_pair = [nb for nb, i in enumerate(pts) if i != ((0, 0), (0, 0))]
 
     #2) - Distance/angulus from phax points from index_pair DATA (1)
     list1, list2 = recuperate_distance_angulus_data(index_pair, distance_list,
