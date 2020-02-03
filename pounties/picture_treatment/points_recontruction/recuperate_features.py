@@ -23,6 +23,24 @@ def collect_angulus(points):
             side = (y2 - y1) / (x2 - x1)
             angulus.append(math.atan(side))
 
+        #90 degres only y != 0
+        elif (y1 - y2) != 0 and (x1 - x2) == 0 and\
+             (y1 - y2) > 0:
+            angulus.append(1)
+
+        elif (y1 - y2) != 0 and (x1 - x2) == 0 and\
+             (y1 - y2) < 0:
+            angulus.append(-1)
+    
+        elif (y1 - y2) == 0 and (x1 - x2) != 0 and\
+             (x1 - x2) > 0:
+            angulus.append(1)
+
+        elif (y1 - y2) == 0 and (x1 - x2) != 0 and\
+             (x1 - x2) < 0:
+            angulus.append(-1)
+
+
         #None points as (0, 0) or divide by 0
         else:
             angulus.append(None)
