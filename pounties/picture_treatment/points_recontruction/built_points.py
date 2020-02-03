@@ -66,9 +66,13 @@ def angle_distance_to_coordinate(distance, angulus, index, scale, data_scale):
             if scale > data_scale:
                 ratio = scale/data_scale
                 dist = dist[0] * ratio
+
             elif data_scale > scale:
                 ratio = data_scale/scale
                 dist = dist[0] / ratio
+
+            elif data_scale == scale:
+                dist = dist[0]
 
             x = dist * math.cos(ang[0])
             y = dist * math.sin(ang[0])
@@ -127,7 +131,7 @@ def transform_to_coordinate(informations_for_replace):
     points = dictionnary_tuple_to_list(points)
 
 
-    if index == 0:  
+    if index == 0:
         #pair 2 of the current index is pair 1 of the index + 1 where pair = ((0, 1), (0, 1))
         points[finger_name][index][1] = points[finger_name][index + 1][0]
 
