@@ -23,7 +23,7 @@ def less_one_points_detected(informations1):
     #Data needed
     distance_list, angulus_list, scale_list,\
     pts, angulus, distances, scale, finger_name, data, points = informations1
-
+    #print("data", data[26])
 
     #Run points into the finger
     for nb, i in enumerate(pts):
@@ -47,10 +47,8 @@ def less_one_points_detected(informations1):
                           angulus_list, finger_name, pts)
 
             #Rebuilt points
-            points = modify_points(second_part, points, finger_name, nb, pts)
+            points = modify_points(second_part, points, finger_name, nb, pts, scale)
 
-
-    print(points)
 
 
     return points
@@ -124,14 +122,12 @@ if __name__ == "__main__":
     points = [((0, 0), (0, 0)), ((97, 105), (115, 94)), ((115, 94), (122, 79)), ((122, 79), (126, 69)), ((0, 0), (0, 0)), ((86, 76), (83, 55)), ((83, 55), (83, 47)), ((83, 47), (83, 40)), ((0, 0), (0, 0)), ((75, 79), (68, 55)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((51, 98), (44, 91)), ((44, 91), (40, 94)), ((40, 94), (41, 90))]
     scale = (31, 31, 113, 109)
 
-    #points = [((0, 0), (0, 0)), ((120, 153), (147, 132)), ((147, 132), (158, 104)), ((158, 104), (169, 83)), ((93, 170), (99, 105)), ((99, 105), (110, 78)), ((110, 78), (132, 62)), ((132, 62), (83, 61)), ((93, 170), (83, 110)), ((83, 110), (50, 100)), ((50, 100), (24, 93)), ((24, 93), (152, 45)), ((93, 170), (77, 126)), ((77, 126), (50, 121)), ((50, 121), (29, 115)), ((29, 115), (126, 45)), ((93, 170), (77, 137)), ((77, 137), (56, 143)), ((56, 143), (45, 137)), ((45, 137), (35, 132))]
-    #scale = (3, 17, 194, 214)
+
+
+
 
 
     reconstruction_points(points, scale)
-
-
-
 
 
 
