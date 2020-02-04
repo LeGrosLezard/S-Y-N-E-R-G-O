@@ -90,6 +90,8 @@ def no_points_detected(informations):
             after_pts = points[finger_name_after]
 
 
+
+
             #0 x 0 
             if len(before_pts) == 3 and len(after_pts) == 3:
 
@@ -97,19 +99,63 @@ def no_points_detected(informations):
                 index_pair = [0, 1, 2]
 
 
-                informations = (distance_list, angulus_list, scale_list, angulus,
-                                distances, scale, finger_name_before, index_pair)
+                #CURRENT POINTS 
+                p_distances_before = distances[finger_name_before]#before
+                p_angulus_before = angulus[finger_name_before]
 
-                a, b = recuperate_minimal(informations)
-                print(a, b)
+                p_distances_after = distances[finger_name_after]#after
+                p_angulus_after = angulus[finger_name_after]
+
+
+                #DATA
+                informations_before = (index_pair, distance_list, angulus_list, finger_name_before)
+                before_dist, before_ang = recuperate_distance_angulus_data(informations_before)
+
+                informations_after = (index_pair, distance_list, angulus_list, finger_name_after)
+                after_dist, after_ang = recuperate_distance_angulus_data(informations_after)
+
+                listed1 = []
+                listea2 = []
+                for i, j in zip(before_dist, before_ang):
+                    index_data1 = i[1]
+
+                    informations = (i, j, p_distances_before, p_angulus_before,
+                                    scale_list, scale, index_data1)
+
+                    list_w, list_w1 = make_difference_to_square(informations)
+                    liste1.append(list_w)
+                    liste2.append(list_w1)
+
+                listed3 = []
+                listea4 = []
+                for i, j in zip(after_dist, after_ang):
+                    index_data1 = i[1]
+
+                    informations = (i, j, p_distances_after, p_angulus_after,
+                                    scale_list, scale, index_data1)
+    
+                    list_w, list_w1 = make_difference_to_square(informations)
+                    liste3.append(list_w)
+                    liste4.append(list_w1)
+
+
+                for i, j, k, l in zip(listed1, listea2, listed3, listea4):
+                    print(i)
+                    print(j)
+                    print(k)
+                    print(l)
 
 
 
-                informations2 = (distance_list, angulus_list, scale_list, angulus,
-                                distances, scale, finger_name_after, index_pair)
 
-                a, b = recuperate_minimal(informations2)
-                print(a, b)
+
+
+
+
+
+
+
+
 
 
 
