@@ -176,16 +176,18 @@ def no_points_detected(informations):
                 finger_name_current = finger_to_search[nb] #finger name current
                 
 
+                #Point as deaparture
+                palm_center = points["t"][0][0])
 
-                print(points["t"][0][0])
-
-
+                #Recuperate finger distance/ang from csv
                 first_phax_dist = data[index_distance][0]
                 first_phax_ang = data[index_angulus][0]
 
+                #Recuperate all points of finger (palm center-first phax include)
                 first_phax_dist = element_to_dict_all_pts(first_phax_dist)
                 first_phax_ang = element_to_dict_all_pts(first_phax_ang)
 
+                #Recuperate phaxs interests.
                 finger_distance = first_phax_dist[finger_name_current]
                 finger_angulus = first_phax_ang[finger_name_current]
                 data_scale = make_scale(data[index_distance][1])
@@ -197,7 +199,7 @@ def no_points_detected(informations):
                 print(scale)
 
 
-
+                #Make distance, angulus ratio operation
                 finger_distance = collect_distances(finger_distance)
                 finger_angulus = collect_angulus(finger_angulus)
 
