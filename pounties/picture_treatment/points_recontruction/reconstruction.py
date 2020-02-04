@@ -6,7 +6,7 @@ from recuperate_features import passation_informations
 #
 from knn import recuperate_minimal
 from knn import recuperate_distance_angulus_data
-
+from knn import make_difference_to_square
 
 #
 from convert_variable import element_to_dict
@@ -58,9 +58,15 @@ def less_one_points_detected(informations1):
 
 
 
-def no_points_detected(finger_to_search, points, distance_list, angulus_list, scale_list, scale):
+def no_points_detected(informations):
 
+    finger_to_search, points, distance_list, angulus_list,\
+                       scale_list, scale, distances, angulus = informations
+
+
+    #finger search
     searching = indentify_finger_points(finger_to_search)
+
 
     for finger_name in searching:
         print(finger_name)
@@ -69,42 +75,141 @@ def no_points_detected(finger_to_search, points, distance_list, angulus_list, sc
             pass
 
 
-        elif len(finger_name) == 2:
+        elif len(finger_name) == 2: #other
 
             index_pair = [0, 1, 2]
 
+            #current
             finger_name_before = finger_name[0]
             finger_name_after = finger_name[1]
 
             before_pts = points[finger_name_before]
             after_pts = points[finger_name_after]
 
+            p_distances_before = distances[finger_name_before]
+            p_angulus_before = angulus[finger_name_before]
+
+            p_distances_after = distances[finger_name_after]
+            p_angulus_after = angulus[finger_name_after]
+            
+    
+
+
+
+            #0 x 0 
             if len(before_pts) == 3 and len(after_pts) == 3:
 
                 index_pair = [0, 1, 2]
 
-
+                #Finger search
                 informations_before = (index_pair, distance_list, angulus_list, finger_name_before)
                 before_distance, before_angulus = recuperate_distance_angulus_data(informations_before)
 
                 informations_after = (index_pair, distance_list, angulus_list, finger_name_after)
                 after_distance, after_angulus = recuperate_distance_angulus_data(informations_after)
 
-                for i, j in zip(listDistance, listAngulus):
-                    pass
+                #(before - passation before) **2
+                list_wa = []
+                list_w1b = []
+                for i, j in zip(before_distance, before_angulus):
 
-                for i, j in zip(listDistance, listAngulus):
-                    pass
+                    ind = i[1]
+
+                    informations = (i, j, p_distances_before,
+                                    p_angulus_before, scale_list, scale, ind)
+
+                    a, b = make_difference_to_square(informations)
+                    list_wa.append(a)
+                    list_w1b.append(b)
+
+
+                #(after - passation after) **2
+                list_wc = []
+                list_w1d = []
+                for i, j in zip(after_distance, after_angulus):
+
+                    ind = i[1]
+
+                    informations = (i, j, p_distances_after,
+                                    p_angulus_after, scale_list, scale, ind)
+
+                    a, b = make_difference_to_square(informations)
+                    list_wc.append(a)
+                    list_w1d.append(b)
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            #0 x x
             elif len(before_pts) == 3 and len(after_pts) < 3:
-                print("nan")
+    
+                index_pair = [0, 1, 2]
+
+                #Finger search
+                informations_before = (index_pair, distance_list, angulus_list, finger_name_before)
+                before_distance, before_angulus = recuperate_distance_angulus_data(informations_before)
+
+                #(before - passation before) **2
+                list_wa = []
+                list_w1b = []
+                for i, j in zip(before_distance, before_angulus):
+
+                    ind = i[1]
+
+                    informations = (i, j, p_distances_before,
+                                    p_angulus_before, scale_list, scale, ind)
+
+                    a, b = make_difference_to_square(informations)
+                    list_wa.append(a)
+                    list_w1b.append(b)
 
 
+
+            #x x 0
             elif len(before_pts) < 3 and len(after_pts) == 3:
-                print("ici")
+                index_pair = [0, 1, 2]
+
+                #Finger search
+                informations_after = (index_pair, distance_list, angulus_list, finger_name_after)
+                after_distance, after_angulus = recuperate_distance_angulus_data(informations_after)
+
+                #(after - passation after) **2
+                list_wc = []
+                list_w1d = []
+                for i, j in zip(after_distance, after_angulus):
+
+                    ind = i[1]
+
+                    informations = (i, j, p_distances_after,
+                                    p_angulus_after, scale_list, scale, ind)
+
+                    a, b = make_difference_to_square(informations)
+                    list_wc.append(a)
+                    list_w1d.append(b)
+
+
+
 
 
 
@@ -155,7 +260,10 @@ def reconstruction_points(points, scale):
 
 
     #TWO B) - All points of finger are none.
-    no_points_detected(finger_to_search, points, distance_list, angulus_list, scale_list, scale)
+
+    informations = (finger_to_search, points, distance_list, angulus_list,
+                       scale_list, scale, distances, angulus)
+    no_points_detected(informations)
 
 
 
