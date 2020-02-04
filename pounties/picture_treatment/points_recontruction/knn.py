@@ -16,7 +16,7 @@ def recuperate_distance_angulus_data(informations_searching):
        2) We recuperate distance and angulus from the finger interest.
        3) Append it to list with data indexed"""
 
-    index_pair, distance_list, angulus_list, finger_name = informations_searching
+    (index_pair, distance_list, angulus_list, finger_name) = informations_searching
 
     list_distance_treat = []
     list_angulus_treat = []
@@ -66,7 +66,7 @@ def make_difference_to_square(informations):
     """
 
     i, j, l, m, k, n, ind = informations
-    
+
     list_w = []
     list_w1 = []
 
@@ -168,5 +168,3 @@ def recuperate_minimal(informations):
 
 
     return ind1, ind2
-
-
