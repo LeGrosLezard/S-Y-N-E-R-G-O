@@ -55,7 +55,7 @@ def points_interests(finger_name, indexed_points, distances, angulus):
     return distance_indexed, angulus_indexed
 
 
-def make_difference_to_square(i, j, l, m, k, n, ind):
+def make_difference_to_square(informations):
     """ (i) distance_data        (l) distance passation
         (j) angulus_data         (m) angulus passation
         (k) scale data           (n) scale passation
@@ -65,8 +65,8 @@ def make_difference_to_square(i, j, l, m, k, n, ind):
         (data points)i - (passation points)i to square
     """
 
-    #QUOTE: i prefere variable like it
-
+    i, j, l, m, k, n, ind = informations
+    
     list_w = []
     list_w1 = []
 
@@ -129,15 +129,12 @@ def recuperate_index_on_data_csv(list3, list4):
 
     return index_distance, index_angulus
 
-    
+
 def recuperate_minimal(informations):
 
     #Data needed
-    distance_list, angulus_list, scale_list, pts,\
-    angulus, distances, scale, finger_name = informations
-
-    #1) - Recuperate points of fingers if not (0, 0)
-    index_pair = [nb for nb, i in enumerate(pts) if i != ((0, 0), (0, 0))]
+    distance_list, angulus_list, scale_list,\
+    angulus, distances, scale, finger_name, index_pair = informations
 
     #2) - Distance/angulus from phax points from index_pair DATA (1)
     informations_searching = index_pair, distance_list, angulus_list, finger_name
@@ -156,8 +153,8 @@ def recuperate_minimal(informations):
 
         #5) - Compare data and passation informations.
         #Make difference to square.
-        list_w, list_w1 = make_difference_to_square(i, j, distances, angulus,
-                                                    scale_list, scale, index_data1)
+        informations = (i, j, distances, angulus, scale_list, scale, index_data1)
+        list_w, list_w1 = make_difference_to_square(informations)
 
         #Filter if we got a none detection
         if len(index_pair) == len(list_w):
