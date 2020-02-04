@@ -7,7 +7,8 @@ from recuperate_features import passation_informations
 from knn import recuperate_minimal
 from knn import recuperate_distance_angulus_data
 from knn import make_difference_to_square
-
+from knn import make_square_root
+from knn import recuperate_index_on_data_csv
 #
 from convert_variable import element_to_dict
 #
@@ -123,8 +124,8 @@ def no_points_detected(informations):
                                     scale_list, scale, index_data1)
 
                     list_w, list_w1 = make_difference_to_square(informations)
-                    liste1.append(list_w)
-                    liste2.append(list_w1)
+                    listed1.append(list_w)
+                    listea2.append(list_w1)
 
                 listed3 = []
                 listea4 = []
@@ -135,19 +136,24 @@ def no_points_detected(informations):
                                     scale_list, scale, index_data1)
     
                     list_w, list_w1 = make_difference_to_square(informations)
-                    liste3.append(list_w)
-                    liste4.append(list_w1)
+                    listed3.append(list_w)
+                    listea4.append(list_w1)
 
 
-                for i, j, k, l in zip(listed1, listea2, listed3, listea4):
-                    print(i)
-                    print(j)
-                    print(k)
-                    print(l)
+                listD = []
+                listA = []
+                for d1, a1, d2, a2 in zip(listed1, listea2, listed3, listea4):
+
+                    index_data = d1[0][1]
+                    d = d1 + d2
+                    a = a1 + a2
+
+                    listD, listA = make_square_root(listD, listA, d, a, index_data)
 
 
-
-
+                
+                index_distance, index_angulus = recuperate_index_on_data_csv(listD, listA)
+                print(index_distance, index_angulus)
 
 
 
