@@ -47,11 +47,49 @@ def collect_angulus(points):
 
     return angulus
 
+"""FINGER PART"""
+
+def angulus_beetween_points(points1, points2):
+    angulus = []
+
+    for pts1, pts2 in zip(points1, points2):
+        x1, y1 = pts1
+        x2, y2 = pts2
+
+        #can't divide by 0
+        if (x1 - x2) != 0:
+            side = (y2 - y1) / (x2 - x1)
+            angulus.append(math.atan(side))
+
+        #90 degres only y != 0
+        elif (y1 - y2) != 0 and (x1 - x2) == 0 and\
+             (y1 - y2) > 0:
+            angulus.append(1)
+
+        elif (y1 - y2) != 0 and (x1 - x2) == 0 and\
+             (y1 - y2) < 0:
+            angulus.append(-1)
+    
+        elif (y1 - y2) == 0 and (x1 - x2) != 0 and\
+             (x1 - x2) > 0:
+            angulus.append(1)
+
+        elif (y1 - y2) == 0 and (x1 - x2) != 0 and\
+             (x1 - x2) < 0:
+            angulus.append(-1)
+
+
+        #None points as (0, 0) or divide by 0
+        else:
+            angulus.append(None)
+
+    return angulus
+
+
 
 #============================================
 """RECUPERATE DISTANCE"""
 #============================================
-
 
 def collect_distances(points):
     """Collect Euclidean distance from each point.
@@ -81,6 +119,28 @@ def make_scale(ratio):
     from: Length*Width in pixel"""
     return ratio[2] * ratio[3]
 
+
+
+def normalize(scale1, scale2, dist1):
+
+    if scale1 > scale2:
+        dist1 = dist1 / (scale1/scale2)
+    else:
+        dist1 = dist1 * (scale2/scale1)
+
+    return dist1
+
+
+""" FINGER PART """
+
+def distance_beetween_points(points1, points2):
+
+    liste = []
+    for pts1, pts2 in zip(points1, points2):
+        eucli = dist.euclidean((pts1), (pts2))
+        liste.append(eucli)
+
+    return liste
 
 
 #============================================
