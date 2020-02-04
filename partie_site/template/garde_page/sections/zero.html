@@ -1,3 +1,5 @@
+
+
 <div class="home-section-services home-section full-section" data-section-name="home-services" data-colour="#1a1a1a" id="section3">
     <div class="home-section-services-inner h-100 d-flex align-items-center">
 
@@ -6,47 +8,117 @@
   
                 <div class="col-12 home-section-service-intro mb-0 text-left">
                     <p>
-                        Par ce site web nous voulons visualiser toutes les parties du corps.
-                        Par différentes techniques & outils. De nombreux développeurs y ont contribué indirectement.
+                        Nos techniques.
                     </p>
                 </div>
 
-                <div class="service-section pt-2 pt-lg-25 col-12 col-lg-4 d-flex align-items-start justify-content-start flex-column text-left">
-                    <h4>Les Yeux</h4>
+                <div class="service-section pt-2 pt-lg-25 col-12 col-lg-4 d-flex align-items-start
+                    justify-content-start flex-column text-left">
+
+                    <a href="#eyesSection" class="scroll">Les Yeux</a>
                     <ul>
                         <li>Détection de la pupille</li>
                         <li>Clignement des yeux</li>
                         <li>Suivis des mouvements des yeux</li>
-                        <li>Analyse des ces mouvements</li>
                     </ul>
                 </div>
 
-                <div class="service-section pt-2 pt-lg-25 col-12 col-lg-4 d-flex align-items-start justify-content-start flex-column text-left">
-                    <h4>La figure</h4>
+                <div class="service-section pt-2 pt-lg-25 col-12 col-lg-4 d-flex align-items-start
+                    justify-content-start flex-column text-left">
+    
+                    <h4 href="">La tête</h4>
                     <ul>
-                        <li>Art Direction</li>
-                        <li>Brand Identity</li>
-                        <li>Brand Strategy</li>
-                        <li>Tone of Voice</li>
-                        <li>Graphic Design</li>
-                        <li>Print Design</li>
-                        <li>Illustration & Infographics</li>
-                        <li>Packaging Design</li>
+                        <li>Inclinaison</li>
+                        <li>Mouvements verticaux et horrizontaux</li>
+                        <li>Zones extérieurs de la tête</li>
+                    </ul>
+                </div>
+
+
+                <div class="service-section
+                    pt-2 pt-lg-25 col-12 col-lg-4 d-flex
+                    align-items-start justify-content-start flex-column text-left">
+                    
+                    <h4 href="">La figure</h4>
+                    <ul>
+                        <li>Découpage de la figure en zone</li>
+                        <li>Détection du toucher dans ces zones</li>
+                        <li>Détection des émotions</li>
+                        <li>Les Rides</li>
+                    </ul>
+                </div>
+
+    
+                <div class="service-section
+                    pt-2 pt-lg-25 col-12 col-lg-4 d-flex align-items-start
+                    justify-content-start flex-column text-left">
+
+                    <h4 href="">Les mains</h4>
+                    <ul>
+                        <li>Détection de la main</li>
+                        <li>Traitement du squelette</li>
+                        <li>Application du squelette</li>
+                        <li>Analyse des doigts</li>
+
+                    </ul>
+                </div>
+
+
+                <div class="service-section pt-2 pt-lg-25 col-12 col-lg-4 d-flex align-items-start
+                    justify-content-start flex-column text-left">
+
+                    <h4>Le langage</h4>
+                    <ul>
+                        <li>None</li>
+                        <li>None</li>
+                        <li>None</li>
+                        <li>None</li>
+                        
                     </ul>
                 </div>
                 <div class="service-section pt-2 pt-lg-25 col-12 col-lg-4 d-flex align-items-start justify-content-start flex-column text-left">
-                    <h4>Les gestes</h4>
+                    <h4 href="">Croisement des données</h4>
                     <ul>
-                        <li>Digital Marketing Campaigns</li>
-                        <li>Social Media Marketing</li>
-                        <li>Email Marketing</li>
-                        <li>Online Advertising / PPC</li>
-                        <li>Search Engine Optimising</li>
-                        <li>Marketing strategy</li>
-                        <li>Content creation</li>
+                        <li>None</li>
+                        <li>None</li>
+                        <li>None</li>
+                        <li>None</li>
                     </ul>
                 </div>
+
+
+ 
             </div>
         </div>
     </div>
 </div>
+
+
+
+<script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
+
+
+<script>
+
+$(document).ready(function(){
+    // au clic sur un lien
+    $('a[href^="#"]').click(function(evt){
+       // bloquer le comportement par défaut: on ne rechargera pas la page
+       evt.preventDefault(); 
+       // enregistre la valeur de l'attribut  href dans la variable target
+ var target = $(this).attr('href');
+       /* le sélecteur $(html, body) permet de corriger un bug sur chrome 
+       et safari (webkit) */
+ $('html, body')
+       // on arrête toutes les animations en cours 
+       .stop()
+       /* on fait maintenant l'animation vers le haut (scrollTop) vers 
+        notre ancre target */
+       .animate({scrollTop: $(target).offset().top}, 1000 );
+    });
+});
+
+</script>
