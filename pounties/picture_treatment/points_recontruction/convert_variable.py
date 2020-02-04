@@ -55,6 +55,14 @@ def element_to_dict(points):
             "a" : points[17:20]}
 
 
+def element_to_dict_all_pts(points):
+    """Element already in element list form, so modifiable
+    annotated them by finger name.
+    Like [[0, 0], [0, 0]] -> t: [[0, 0], [0, 0]]"""
+
+    return {"t" : points[0:4],  "i" : points[4:8],
+            "m" : points[8:12], "an" : points[12:16],
+            "a" : points[16:20]}
 
 def dict_to_list(points):
     """Transform variable dictionnary to list
