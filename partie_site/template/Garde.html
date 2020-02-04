@@ -1,10 +1,14 @@
 {% load static %}
+
 <!DOCTYPE html>
     <html lang="en-GB" prefix="og: http://ogp.me/ns#" class="js">
         
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+            <meta meta name="viewport" content="width=device-width, user-scalable=no" />
+
+            
             {% include "garde_page/header/Garde_header.html" %}
         </head>
 
@@ -21,14 +25,14 @@
 
                                                                                                                                                                                                       
             <div class="home-section-top home-section full-section" data-section-name="home-top"
-                data-colour="#1a1a1a" id="section1">
+                data-colour="#1a1a1a" id="home">
 
-                <div class="home-intro">                                                                                                                                                                                                                       
-                    <h1>S Y N E R G O </h1>                                                                                                                                                                                                                           
+                <div class="home-intro">                                                                                                                                                                        
+                    <h1>S Y N E R G O </h1>
                 </div>
             </div>
 
-
+            
             <div class="next-slide">
                 <svg viewBox="0 0 49.5 10.06"><line class="a" y1="5.03" x2="48.3" y2="5.03" />
                     <path class="b"
@@ -39,33 +43,41 @@
 
 
             {% include "garde_page/sections/zero.html" %}
-            {% include "garde_page/sections/zero_bis.html" %}
-            
 
+            <div class="projects" data-position="0">
 
+                {% include "garde_page/sections/one.html" %}
+                {% include "garde_page/sections/two.html" %}
+                {% include "garde_page/sections/three.html" %}
+                {% include "garde_page/sections/fourth.html" %}
+                {% include "garde_page/sections/five.html" %}
+                {% include "garde_page/sections/six.html" %}
+                {% include "garde_page/sections/seven.html" %}
 
-<div class="projects" data-position="0">
-
-    {% include "garde_page/sections/one.html" %}
-    {% include "garde_page/sections/two.html" %}
-    {% include "garde_page/sections/three.html" %}
-    {% include "garde_page/sections/fourth.html" %}
-    {% include "garde_page/sections/five.html" %}
-    {% include "garde_page/sections/six.html" %}
-    {% include "garde_page/sections/seven.html" %}
+            </div>
 
 
 
 
+                                                                                                                                                                                           
+        </body>
+    </html>
 
-                                                                                                                                                                                                                  
+
+<script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
+
 <script>
+
   var _gaq=[["_setAccount","UA-24231875-1"],["_trackPageview"]];
   (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;
   g.src=("https:"==location.protocol?"//ssl":"//www")+".google-analytics.com/ga.js";
   s.parentNode.insertBefore(g,s)}(document,"script"));
 </script>
-<script>
+
+
   var chimpPopupLoader = document.createElement("script");
   chimpPopupLoader.src = 'https://downloads.mailchimp.com/js/signup-forms/popup/embed.js';
   chimpPopupLoader.setAttribute('data-dojo-config', 'usePlainJson: true, isDebug: false');
@@ -81,13 +93,30 @@
       showMailingPopUp();
     });
   });
+
+
+
+
+
+$(document).ready(function(){
+    // au clic sur un lien
+    $('a[href^="#"]').click(function(evt){
+       // bloquer le comportement par défaut: on ne rechargera pas la page
+       evt.preventDefault(); 
+       // enregistre la valeur de l'attribut  href dans la variable target
+ var target = $(this).attr('href');
+       /* le sélecteur $(html, body) permet de corriger un bug sur chrome 
+       et safari (webkit) */
+ $('html, body')
+       // on arrête toutes les animations en cours 
+       .stop()
+       /* on fait maintenant l'animation vers le haut (scrollTop) vers 
+        notre ancre target */
+       .animate({scrollTop: $(target).offset().top}, 1000 );
+    });
+});
+
 </script>
-</body>
-</html>
-
-
-
-
 
 
 <style type="text/css" id="wp-custom-css">
