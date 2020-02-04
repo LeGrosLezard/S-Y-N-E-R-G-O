@@ -6,6 +6,9 @@ from recuperate_features import passation_informations
 from recuperate_features import make_scale
 from recuperate_features import collect_angulus
 from recuperate_features import collect_distances
+from recuperate_features import normalize
+from recuperate_features import distance_beetween_points
+from recuperate_features import angulus_beetween_points
 
 #
 from knn import recuperate_minimal
@@ -93,10 +96,6 @@ def no_points_detected(informations):
     for nb, finger_name in enumerate(searching):
 
 
-        print(finger_to_search[nb], finger_name)
-
-
-
         index_pair = [0, 1, 2]
 
         #current name before/after
@@ -179,7 +178,6 @@ def no_points_detected(informations):
             index_distance, index_angulus = recuperate_index_on_data_csv(listD, listA)
             print(index_distance, index_angulus)
 
-
             #finger name current
             finger_name_current = finger_to_search[nb]
 
@@ -188,85 +186,62 @@ def no_points_detected(informations):
             first_phax_dist = data[index_distance][0]
             first_phax_ang = data[index_angulus][0]
 
-            #Recuperate all points of finger (palm center-first phax include)
-            first_phax_dist = element_to_dict_all_pts(first_phax_dist)
-            first_phax_ang = element_to_dict_all_pts(first_phax_ang)
+            distance_phax = element_to_dict(first_phax_dist)
+            angulus_phax = element_to_dict(first_phax_ang)
 
-            #Recuperate phaxs interests.
-            finger_distance = first_phax_dist[finger_name_current]
-            finger_angulus = first_phax_ang[finger_name_current]
-            data_scale = make_scale(data[index_distance][1])
-
-
-            #Make distance, angulus ratio operation
-            finger_distance = collect_distances(finger_distance)
-            finger_angulus = collect_angulus(finger_angulus)
-
-
-
-            liste = []
-            for dist, ang in zip(finger_distance, finger_angulus):
-
-                #Make ratio for normalize the distance.
-                if scale > data_scale:
-                    ratio = scale/data_scale
-                    dist = dist * ratio
-
-                elif data_scale > scale:
-                    ratio = data_scale/scale
-                    dist = dist / ratio
-
-
-                x = dist * math.cos(ang)
-                y = dist * math.sin(ang)
-
-                liste.append((x, y))
-
-            print(liste)
-
-            #Point as deaparture
-            x, y = points["t"][0][0]
-            print(x, y)
-
-            points = dictionnary_tuple_to_list(points)
-            print(points)
             print("")
-            liste1 = []
-            for nb, i in enumerate(liste):
-                ptx, pty = i
-                #Round to r*cos/sin(angulus) superior
-                ptx = int(round(ptx))
-                pty = int(round(pty))
-
-                #Minus or add points coordinate given from phax detected.
-                x = x - ptx
-                y = y - pty
-
-                if nb == 0:
-                    #Change pair to coordiante
-                    points[finger_name_current][0][0] = (x, y)
-                elif nb == 1:
-                    points[finger_name_current][0][1] = (x, y)
-                else:
-                    print(nb)
-                    points[finger_name_current][nb - 1][0] = points[finger_name_current][nb - 2][1]
-                    points[finger_name_current][nb - 1][1] = (x, y)
-
-            print(points)
 
 
-            drawing(points)
+            finger_before = finger_name[0]
+            finger_after  = finger_name[1]
+
+            distance_finger_before  = distance_phax[finger_before]
+            distance_finger_current = distance_phax[finger_name_current]
+            distance_finger_after   = distance_phax[finger_after]
+
+            angulus_finger_before  = angulus_phax[finger_before]
+            angulus_finger_current = angulus_phax[finger_name_current]
+            angulus_finger_after   = angulus_phax[finger_after]
+
+            
+            def establish_points(points):
+
+                liste = []
+                for i in points:
+                    liste.append(i[0])
+
+                liste.append(points[-1][1])
+                return liste
+
+            a = establish_points(distance_finger_before)
+            b = establish_points(distance_finger_current)
+            c = establish_points(distance_finger_after)
+
+            d = establish_points(angulus_finger_before)
+            e = establish_points(angulus_finger_current)
+            f = establish_points(angulus_finger_after)
 
 
+            d1 = angulus_beetween_points(a, b)
+            d2 = distance_beetween_points(b, c)
+
+            a1 = angulus_beetween_points(d, e)
+            a2 = angulus_beetween_points(e, f)
+            
+            print(d1)
+            print(d2)
+            print(a1)
+            print(a2)
+            print("")
 
 
+            distance_passation_before  = points[finger_before]
+            distance_passation_current = points[finger_name_current]
+            distance_passation_after   = points[finger_after]
 
-
-
-
-
-
-
+            angulus_passation_before  = points[finger_before]
+            angulus_passation_current = points[finger_name_current]
+            angulus_passation_after   = points[finger_after]
 
 
 
@@ -323,7 +298,7 @@ def reconstruction_points(points, scale):
 
     #Data treatment.
     distance_list, angulus_list, scale_list, data = data_informations()
-
+    #print(data[44][0])
     #Passatation data to dictionnary. Annotations of fingers.
     angulus = element_to_dict(angulus)
     distances = element_to_dict(distances)
