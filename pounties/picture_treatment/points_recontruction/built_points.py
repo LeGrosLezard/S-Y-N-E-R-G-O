@@ -122,8 +122,8 @@ def drawing(points):
             cv2.circle(blank_image, (p) , 2, (0, 0, 255), 2)
             cv2.line(blank_image, pts[0], pts[1], (0, 0, 255), 2)
             
-    cv2.imshow("dza", blank_image)
-    cv2.waitKey(0)
+            cv2.imshow("dza", blank_image)
+            cv2.waitKey(0)
 
 
 def transform_to_coordinate(informations_for_replace):
