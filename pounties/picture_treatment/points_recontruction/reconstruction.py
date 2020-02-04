@@ -3,19 +3,27 @@
 from recuperate_features import data_informations
 #
 from recuperate_features import passation_informations
+from recuperate_features import make_scale
+from recuperate_features import collect_angulus
+from recuperate_features import collect_distances
+
 #
 from knn import recuperate_minimal
 from knn import recuperate_distance_angulus_data
 from knn import make_difference_to_square
 from knn import make_square_root
 from knn import recuperate_index_on_data_csv
+
 #
 from convert_variable import element_to_dict
+from convert_variable import element_to_dict_all_pts
 #
 from recuperate_points_to_search import identify_phaxs_points
 from recuperate_points_to_search import indentify_finger_points
 #
 from built_points import modify_points
+from built_points import treat_information
+from built_points import angle_distance_to_coordinate
 
 
 def less_one_points_detected(informations1):
@@ -38,10 +46,10 @@ def less_one_points_detected(informations1):
 
             #1) - Recuperate points of fingers if not (0, 0)
             index_pair = [nb for nb, i in enumerate(pts) if i != ((0, 0), (0, 0))]
-            
+
             #Collect variable for recuperate_minimal()
-            first_part = first_part = distance_list, angulus_list, scale_list,\
-                         angulus, distances, scale, finger_name, index_pair
+            first_part = (distance_list, angulus_list, scale_list,
+                          angulus, distances, scale, finger_name, index_pair)
 
             #Recuperate distance/angulus with the minimal distance of our passation
             dist_index, angulus_index = recuperate_minimal(first_part)
@@ -50,10 +58,12 @@ def less_one_points_detected(informations1):
 
             #Collect data for re built our passation points
             second_part = (data, dist_index, angulus_index, distance_list,
-                          angulus_list, finger_name, pts)
+                           angulus_list, finger_name, pts)
+
+            third_part = (points, finger_name, nb, scale)
 
             #Rebuilt points
-            points = modify_points(second_part, points, finger_name, nb, pts, scale)
+            points = modify_points(second_part, third_part)
 
 
 
@@ -63,15 +73,14 @@ def less_one_points_detected(informations1):
 
 def no_points_detected(informations):
 
-    finger_to_search, points, distance_list, angulus_list,\
-                       scale_list, scale, distances, angulus = informations
-
+    (finger_to_search, points, distance_list, angulus_list,
+     scale_list, scale, distances, angulus, data) = informations
 
     #finger search
     searching = indentify_finger_points(finger_to_search)
 
 
-    for finger_name in searching:
+    for nb, finger_name in enumerate(searching):
         print(finger_name)
 
         if len(finger_name) == 1:   #Thumb or annular = 1 finger
@@ -115,6 +124,7 @@ def no_points_detected(informations):
                 informations_after = (index_pair, distance_list, angulus_list, finger_name_after)
                 after_dist, after_ang = recuperate_distance_angulus_data(informations_after)
 
+
                 #Recuperate dist/angulus from before finger (diff with passation)
                 listed1 = []
                 listea2 = []
@@ -128,6 +138,7 @@ def no_points_detected(informations):
                     listed1.append(list_w)
                     listea2.append(list_w1)
 
+
                 #Recuperate dist/angulus from after finger (diff with passation)
                 listed3 = []
                 listea4 = []
@@ -136,7 +147,7 @@ def no_points_detected(informations):
 
                     informations = (i, j, p_distances_after, p_angulus_after,
                                     scale_list, scale, index_data1)
-    
+
                     list_w, list_w1 = make_difference_to_square(informations)
                     listed3.append(list_w)
                     listea4.append(list_w1)
@@ -160,6 +171,41 @@ def no_points_detected(informations):
                 print(index_distance, index_angulus)
 
 
+                #Informations need
+
+                finger_name_current = finger_to_search[nb] #finger name current
+                
+
+
+                print(points["t"][0][0])
+
+
+                first_phax_dist = data[index_distance][0]
+                first_phax_ang = data[index_angulus][0]
+
+                first_phax_dist = element_to_dict_all_pts(first_phax_dist)
+                first_phax_ang = element_to_dict_all_pts(first_phax_ang)
+
+                finger_distance = first_phax_dist[finger_name_current]
+                finger_angulus = first_phax_ang[finger_name_current]
+                data_scale = make_scale(data[index_distance][1])
+
+
+                print(finger_distance)
+                print(finger_angulus)
+                print(data_scale)
+                print(scale)
+
+
+
+                finger_distance = collect_distances(finger_distance)
+                finger_angulus = collect_angulus(finger_angulus)
+
+
+
+                print(finger_distance)
+                print(finger_angulus)
+
 
 
 
@@ -171,8 +217,8 @@ def no_points_detected(informations):
 
 
             #0 x x
-            elif len(before_pts) == 3 and len(after_pts) < 3:
-    
+            elif len(before_pts) == 3 and len(after_pts) < 3:   #before
+
                 index_pair = [0, 1, 2]
                 informations = (distance_list, angulus_list, scale_list, angulus,
                                 distances, scale, finger_name_before, index_pair)
@@ -183,9 +229,8 @@ def no_points_detected(informations):
 
 
 
-
             #x x 0
-            elif len(before_pts) < 3 and len(after_pts) == 3:
+            elif len(before_pts) < 3 and len(after_pts) == 3:   #after
                 index_pair = [0, 1, 2]
 
                 informations2 = (distance_list, angulus_list, scale_list, angulus,
@@ -248,7 +293,7 @@ def reconstruction_points(points, scale):
     #TWO B) - All points of finger are none.
 
     informations = (finger_to_search, points, distance_list, angulus_list,
-                       scale_list, scale, distances, angulus)
+                       scale_list, scale, distances, angulus, data)
     no_points_detected(informations)
 
 
