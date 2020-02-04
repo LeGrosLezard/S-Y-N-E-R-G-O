@@ -49,13 +49,15 @@ def treat_information(informations):
 """TRANSFORM POINTS TO COORDINATES"""
 #====================================
 
-def angle_distance_to_coordinate(distance, angulus, index, scale, data_scale):
+def angle_distance_to_coordinate(informations):
     """Match distance and angulus index (many none detections in finger)
     with the current none point finger.
     Establish coordinate by:
 
     x = distance * cos(alpha)
     y = distance * sin(alpha)"""
+
+    (distance, angulus, index, scale, data_scale) = informations
 
     #dist = distance/index
     #ang = angulus/index
@@ -105,6 +107,8 @@ def changed_points(to_change, ptx, pty, pair1, pair2):
     #Change pair to coordiante
     to_change[pair1] = (x, y)
 
+
+
 def drawing(points):
 
 
@@ -124,8 +128,8 @@ def drawing(points):
 
 def transform_to_coordinate(informations_for_replace):
 
-    points, finger_name, index, value, distance_search,\
-            angulus_search, scale, data_scale = informations_for_replace
+    points, finger_name, index, scale, distance_search,\
+            angulus_search, data_scale = informations_for_replace
 
     #Transform dictionnary value to list (can modify informations).
     points = dictionnary_tuple_to_list(points)
@@ -136,8 +140,8 @@ def transform_to_coordinate(informations_for_replace):
         points[finger_name][index][1] = points[finger_name][index + 1][0]
 
         #Transform distance-angulus to coordinate
-        ptx, pty = angle_distance_to_coordinate(distance_search, angulus_search,
-                                                index, scale, data_scale)
+        informations = (distance_search, angulus_search, index, scale, data_scale)
+        ptx, pty = angle_distance_to_coordinate(informations)
 
         #Recuperate finger index none detection
         to_change = points[finger_name][index]
@@ -152,8 +156,8 @@ def transform_to_coordinate(informations_for_replace):
         points[finger_name][index][0] = points[finger_name][index - 1][1]
 
         #Transform distance-angulus to coordinate
-        ptx, pty = angle_distance_to_coordinate(distance_search, angulus_search,
-                                                index, scale, data_scale)
+        informations = (distance_search, angulus_search, index, scale, data_scale)
+        ptx, pty = angle_distance_to_coordinate(informations)
 
         #Recuperate finger index none detection
         to_change = points[finger_name][index]
@@ -174,19 +178,20 @@ def transform_to_coordinate(informations_for_replace):
 """MODIFY POINTS"""
 #===================
 
-def modify_points(first_part, points, finger_name, index, value, scale):
+def modify_points(first_part, second_part):
 
-    #All data need
-    data, index_distance, index_angulus, distance_list, angulus_list, finger_name, value = first_part
+    #All data need for first part
+    (data, index_distance, index_angulus,
+     distance_list, angulus_list, finger_name, value) = first_part
 
 
     #1) - Recuperate informations of the Phax interest
 
     #Data distance need
-    distance_informations = data, finger_name, value, index_distance, distance_list
+    distance_informations = (data, finger_name, value, index_distance, distance_list)
 
     #Data Angulus need.
-    angulus_informations = data, finger_name, value, index_angulus, angulus_list
+    angulus_informations = (data, finger_name, value, index_angulus, angulus_list)
 
     #Recuperate distance and the phax to replace
     distance, distance_search = treat_information(distance_informations)
@@ -203,11 +208,13 @@ def modify_points(first_part, points, finger_name, index, value, scale):
 
     #Data need for replace
     data_scale = data[index_distance][1][2] * data[index_distance][1][3]
-    informations_for_replace = points, finger_name, index,\
-                               value, distance_search, angulus_search, scale, data_scale
+
+    #Second part vairable need
+    (points, finger_name, index, scale) = second_part
+    second_part = (points, finger_name, index, scale, distance_search, angulus_search, data_scale)
 
     #Transform distance and angulus to coordinate in function of the last-next coordinates.    
-    points = transform_to_coordinate(informations_for_replace)
+    points = transform_to_coordinate(second_part)
 
 
     return points
