@@ -101,20 +101,21 @@ def no_points_detected(informations):
 
 
                 #CURRENT POINTS 
-                p_distances_before = distances[finger_name_before]#before
+                p_distances_before = distances[finger_name_before]  #before
                 p_angulus_before = angulus[finger_name_before]
 
-                p_distances_after = distances[finger_name_after]#after
+                p_distances_after = distances[finger_name_after]    #after
                 p_angulus_after = angulus[finger_name_after]
 
 
-                #DATA
+                #DATA before
                 informations_before = (index_pair, distance_list, angulus_list, finger_name_before)
                 before_dist, before_ang = recuperate_distance_angulus_data(informations_before)
-
+                #DATA after
                 informations_after = (index_pair, distance_list, angulus_list, finger_name_after)
                 after_dist, after_ang = recuperate_distance_angulus_data(informations_after)
 
+                #Recuperate dist/angulus from before finger (diff with passation)
                 listed1 = []
                 listea2 = []
                 for i, j in zip(before_dist, before_ang):
@@ -127,6 +128,7 @@ def no_points_detected(informations):
                     listed1.append(list_w)
                     listea2.append(list_w1)
 
+                #Recuperate dist/angulus from after finger (diff with passation)
                 listed3 = []
                 listea4 = []
                 for i, j in zip(after_dist, after_ang):
@@ -140,6 +142,7 @@ def no_points_detected(informations):
                     listea4.append(list_w1)
 
 
+                #Melt and add  before/after - dist/angulus
                 listD = []
                 listA = []
                 for d1, a1, d2, a2 in zip(listed1, listea2, listed3, listea4):
@@ -148,10 +151,11 @@ def no_points_detected(informations):
                     d = d1 + d2
                     a = a1 + a2
 
+                    #Make square root
                     listD, listA = make_square_root(listD, listA, d, a, index_data)
 
 
-                
+                #recuperate index
                 index_distance, index_angulus = recuperate_index_on_data_csv(listD, listA)
                 print(index_distance, index_angulus)
 
