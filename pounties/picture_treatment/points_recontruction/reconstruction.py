@@ -17,6 +17,7 @@ from knn import recuperate_index_on_data_csv
 #
 from convert_variable import element_to_dict
 from convert_variable import element_to_dict_all_pts
+from convert_variable import dictionnary_tuple_to_list
 #
 from recuperate_points_to_search import identify_phaxs_points
 from recuperate_points_to_search import indentify_finger_points
@@ -24,7 +25,13 @@ from recuperate_points_to_search import indentify_finger_points
 from built_points import modify_points
 from built_points import treat_information
 from built_points import angle_distance_to_coordinate
+from built_points import drawing
 
+
+
+
+
+import math
 
 def less_one_points_detected(informations1):
 
@@ -80,133 +87,175 @@ def no_points_detected(informations):
     searching = indentify_finger_points(finger_to_search)
 
 
+    
+
+
     for nb, finger_name in enumerate(searching):
-        print(finger_name)
-
-        if len(finger_name) == 1:   #Thumb or annular = 1 finger
-            pass
 
 
-        elif len(finger_name) == 2: #other
+        print(finger_to_search[nb], finger_name)
 
+
+
+        index_pair = [0, 1, 2]
+
+        #current name before/after
+        finger_name_before = finger_name[0]
+        finger_name_after = finger_name[1]
+
+        #finger's current points
+        before_pts = points[finger_name_before]
+        after_pts = points[finger_name_after]
+
+
+
+
+        #0 x 0 
+        if len(before_pts) >= 3 and len(after_pts) >= 3:
+
+            #pts to search
             index_pair = [0, 1, 2]
 
-            #current name before/after
-            finger_name_before = finger_name[0]
-            finger_name_after = finger_name[1]
 
-            #finger's current points
-            before_pts = points[finger_name_before]
-            after_pts = points[finger_name_after]
+            #CURRENT POINTS 
+            p_distances_before = distances[finger_name_before]  #before
+            p_angulus_before = angulus[finger_name_before]
 
-
+            p_distances_after = distances[finger_name_after]    #after
+            p_angulus_after = angulus[finger_name_after]
 
 
-            #0 x 0 
-            if len(before_pts) == 3 and len(after_pts) == 3:
+            #DATA before
+            informations_before = (index_pair, distance_list, angulus_list, finger_name_before)
+            before_dist, before_ang = recuperate_distance_angulus_data(informations_before)
 
-                #pts to search
-                index_pair = [0, 1, 2]
-
-
-                #CURRENT POINTS 
-                p_distances_before = distances[finger_name_before]  #before
-                p_angulus_before = angulus[finger_name_before]
-
-                p_distances_after = distances[finger_name_after]    #after
-                p_angulus_after = angulus[finger_name_after]
+            #DATA after
+            informations_after = (index_pair, distance_list, angulus_list, finger_name_after)
+            after_dist, after_ang = recuperate_distance_angulus_data(informations_after)
 
 
-                #DATA before
-                informations_before = (index_pair, distance_list, angulus_list, finger_name_before)
-                before_dist, before_ang = recuperate_distance_angulus_data(informations_before)
-                #DATA after
-                informations_after = (index_pair, distance_list, angulus_list, finger_name_after)
-                after_dist, after_ang = recuperate_distance_angulus_data(informations_after)
+            #Recuperate dist/angulus from before finger (diff with passation)
+            listed1 = []
+            listea2 = []
+            for i, j in zip(before_dist, before_ang):
+                index_data1 = i[1]
+
+                informations = (i, j, p_distances_before, p_angulus_before,
+                                scale_list, scale, index_data1)
+
+                list_w, list_w1 = make_difference_to_square(informations)
+                listed1.append(list_w)
+                listea2.append(list_w1)
 
 
-                #Recuperate dist/angulus from before finger (diff with passation)
-                listed1 = []
-                listea2 = []
-                for i, j in zip(before_dist, before_ang):
-                    index_data1 = i[1]
+            #Recuperate dist/angulus from after finger (diff with passation)
+            listed3 = []
+            listea4 = []
+            for i, j in zip(after_dist, after_ang):
+                index_data1 = i[1]
 
-                    informations = (i, j, p_distances_before, p_angulus_before,
-                                    scale_list, scale, index_data1)
+                informations = (i, j, p_distances_after, p_angulus_after,
+                                scale_list, scale, index_data1)
 
-                    list_w, list_w1 = make_difference_to_square(informations)
-                    listed1.append(list_w)
-                    listea2.append(list_w1)
-
-
-                #Recuperate dist/angulus from after finger (diff with passation)
-                listed3 = []
-                listea4 = []
-                for i, j in zip(after_dist, after_ang):
-                    index_data1 = i[1]
-
-                    informations = (i, j, p_distances_after, p_angulus_after,
-                                    scale_list, scale, index_data1)
-
-                    list_w, list_w1 = make_difference_to_square(informations)
-                    listed3.append(list_w)
-                    listea4.append(list_w1)
+                list_w, list_w1 = make_difference_to_square(informations)
+                listed3.append(list_w)
+                listea4.append(list_w1)
 
 
-                #Melt and add  before/after - dist/angulus
-                listD = []
-                listA = []
-                for d1, a1, d2, a2 in zip(listed1, listea2, listed3, listea4):
+            #Melt and add  before/after - dist/angulus
+            listD = []
+            listA = []
+            for d1, a1, d2, a2 in zip(listed1, listea2, listed3, listea4):
 
-                    index_data = d1[0][1]
-                    d = d1 + d2
-                    a = a1 + a2
+                index_data = d1[0][1]
+                d = d1 + d2
+                a = a1 + a2
 
-                    #Make square root
-                    listD, listA = make_square_root(listD, listA, d, a, index_data)
-
-
-                #recuperate index
-                index_distance, index_angulus = recuperate_index_on_data_csv(listD, listA)
-                print(index_distance, index_angulus)
+                #Make square root
+                listD, listA = make_square_root(listD, listA, d, a, index_data)
 
 
-                #Informations need
-
-                finger_name_current = finger_to_search[nb] #finger name current
-                
-
-                #Point as deaparture
-                palm_center = points["t"][0][0])
-
-                #Recuperate finger distance/ang from csv
-                first_phax_dist = data[index_distance][0]
-                first_phax_ang = data[index_angulus][0]
-
-                #Recuperate all points of finger (palm center-first phax include)
-                first_phax_dist = element_to_dict_all_pts(first_phax_dist)
-                first_phax_ang = element_to_dict_all_pts(first_phax_ang)
-
-                #Recuperate phaxs interests.
-                finger_distance = first_phax_dist[finger_name_current]
-                finger_angulus = first_phax_ang[finger_name_current]
-                data_scale = make_scale(data[index_distance][1])
+            #recuperate index
+            index_distance, index_angulus = recuperate_index_on_data_csv(listD, listA)
+            print(index_distance, index_angulus)
 
 
-                print(finger_distance)
-                print(finger_angulus)
-                print(data_scale)
-                print(scale)
+            #finger name current
+            finger_name_current = finger_to_search[nb]
 
 
-                #Make distance, angulus ratio operation
-                finger_distance = collect_distances(finger_distance)
-                finger_angulus = collect_angulus(finger_angulus)
+            #Recuperate finger distance/ang from csv
+            first_phax_dist = data[index_distance][0]
+            first_phax_ang = data[index_angulus][0]
+
+            #Recuperate all points of finger (palm center-first phax include)
+            first_phax_dist = element_to_dict_all_pts(first_phax_dist)
+            first_phax_ang = element_to_dict_all_pts(first_phax_ang)
+
+            #Recuperate phaxs interests.
+            finger_distance = first_phax_dist[finger_name_current]
+            finger_angulus = first_phax_ang[finger_name_current]
+            data_scale = make_scale(data[index_distance][1])
+
+
+            #Make distance, angulus ratio operation
+            finger_distance = collect_distances(finger_distance)
+            finger_angulus = collect_angulus(finger_angulus)
 
 
 
-                print(finger_distance)
-                print(finger_angulus)
+            liste = []
+            for dist, ang in zip(finger_distance, finger_angulus):
+
+                #Make ratio for normalize the distance.
+                if scale > data_scale:
+                    ratio = scale/data_scale
+                    dist = dist * ratio
+
+                elif data_scale > scale:
+                    ratio = data_scale/scale
+                    dist = dist / ratio
+
+
+                x = dist * math.cos(ang)
+                y = dist * math.sin(ang)
+
+                liste.append((x, y))
+
+            print(liste)
+
+            #Point as deaparture
+            x, y = points["t"][0][0]
+            print(x, y)
+
+            points = dictionnary_tuple_to_list(points)
+            print(points)
+            print("")
+            liste1 = []
+            for nb, i in enumerate(liste):
+                ptx, pty = i
+                #Round to r*cos/sin(angulus) superior
+                ptx = int(round(ptx))
+                pty = int(round(pty))
+
+                #Minus or add points coordinate given from phax detected.
+                x = x - ptx
+                y = y - pty
+
+                if nb == 0:
+                    #Change pair to coordiante
+                    points[finger_name_current][0][0] = (x, y)
+                elif nb == 1:
+                    points[finger_name_current][0][1] = (x, y)
+                else:
+                    print(nb)
+                    points[finger_name_current][nb - 1][0] = points[finger_name_current][nb - 2][1]
+                    points[finger_name_current][nb - 1][1] = (x, y)
+
+            print(points)
+
+
+            drawing(points)
 
 
 
@@ -218,30 +267,40 @@ def no_points_detected(informations):
 
 
 
-            #0 x x
-            elif len(before_pts) == 3 and len(after_pts) < 3:   #before
-
-                index_pair = [0, 1, 2]
-                informations = (distance_list, angulus_list, scale_list, angulus,
-                                distances, scale, finger_name_before, index_pair)
-
-                a, b = recuperate_minimal(informations)
-                print(a, b)
 
 
 
 
-            #x x 0
-            elif len(before_pts) < 3 and len(after_pts) == 3:   #after
-                index_pair = [0, 1, 2]
-
-                informations2 = (distance_list, angulus_list, scale_list, angulus,
-                                distances, scale, finger_name_after, index_pair)
-
-                a, b = recuperate_minimal(informations2)
-                print(a, b)
 
 
+
+
+
+
+        #0 x x
+        elif len(before_pts) == 3 and len(after_pts) < 3:   #before
+            index_pair = [0, 1, 2]
+            informations = (distance_list, angulus_list, scale_list, angulus,
+                            distances, scale, finger_name_before, index_pair)
+
+            a, b = recuperate_minimal(informations)
+            print(a, b)
+
+
+
+
+        #x x 0
+        elif len(before_pts) < 3 and len(after_pts) == 3:   #after
+            index_pair = [0, 1, 2]
+
+            informations2 = (distance_list, angulus_list, scale_list, angulus,
+                            distances, scale, finger_name_after, index_pair)
+
+            a, b = recuperate_minimal(informations2)
+            print(a, b)
+
+        else:
+            print(len(before_pts), len(after_pts))
 
 
 
@@ -323,11 +382,11 @@ if __name__ == "__main__":
 
     scale = (31, 31, 113, 109)
 
-##    points = [((81, 115), (97, 105)), ((97, 105), (115, 94)), ((115, 94), (122, 79)), ((122, 79), (126, 69)),
-##              ((0, 0), (0, 0)), ((86, 76), (83, 55)), ((83, 55), (83, 47)), ((83, 47), (83, 40)),
+##    points = [((81, 115), (97, 105)),((97, 105), (115, 94)), ((115, 94), (122, 79)), ((122, 79), (126, 69)),
 ##              ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)),
+##              ((0, 0), (0, 0)), ((75, 79), (68, 55)), ((68, 55), (57, 44)), ((57, 44), (50, 37)),
 ##              ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)), ((0, 0), (0, 0)),
-##              ((81, 115), (97, 105)), ((97, 105), (115, 94)), ((115, 94), (122, 79)), ((122, 79), (126, 69))]
+##              ((0, 0), (0, 0)), ((51, 98), (44, 91)), ((44, 91), (40, 94)),  ((40, 94), (41, 90))]
 
 
     reconstruction_points(points, scale)
