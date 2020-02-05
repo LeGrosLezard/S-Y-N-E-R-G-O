@@ -26,19 +26,19 @@ def collect_angulus(points):
         #90 degres only y != 0
         elif (y1 - y2) != 0 and (x1 - x2) == 0 and\
              (y1 - y2) > 0:
-            angulus.append(1)
+            angulus.append(math.pi/2)
 
         elif (y1 - y2) != 0 and (x1 - x2) == 0 and\
              (y1 - y2) < 0:
-            angulus.append(-1)
+            angulus.append(- (math.pi / 2))
     
         elif (y1 - y2) == 0 and (x1 - x2) != 0 and\
              (x1 - x2) > 0:
-            angulus.append(1)
+            angulus.append(math.pi)
 
         elif (y1 - y2) == 0 and (x1 - x2) != 0 and\
              (x1 - x2) < 0:
-            angulus.append(-1)
+            angulus.append(2 * math.pi)
 
 
         #None points as (0, 0) or divide by 0
@@ -64,19 +64,22 @@ def angulus_beetween_points(points1, points2):
         #90 degres only y != 0
         elif (y1 - y2) != 0 and (x1 - x2) == 0 and\
              (y1 - y2) > 0:
-            angulus.append(1)
+            angulus.append(math.pi/2)
 
+        #-90
         elif (y1 - y2) != 0 and (x1 - x2) == 0 and\
              (y1 - y2) < 0:
-            angulus.append(-1)
-    
+            angulus.append(- (math.pi / 2))
+
+        #droite
         elif (y1 - y2) == 0 and (x1 - x2) != 0 and\
              (x1 - x2) > 0:
-            angulus.append(1)
-
+            angulus.append(math.pi)
+  
+        #gauche
         elif (y1 - y2) == 0 and (x1 - x2) != 0 and\
              (x1 - x2) < 0:
-            angulus.append(-1)
+            angulus.append(2 * math.pi)
 
 
         #None points as (0, 0) or divide by 0
@@ -136,6 +139,8 @@ def normalize(scale1, scale2, dist1):
 def distance_beetween_points(points1, points2):
 
     liste = []
+
+
     for pts1, pts2 in zip(points1, points2):
         eucli = dist.euclidean((pts1), (pts2))
         liste.append(eucli)
