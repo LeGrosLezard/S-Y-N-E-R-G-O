@@ -22,22 +22,22 @@
             </div>
 
             <div class="section" id="2" style="background:blue;">
-                <a href="#1">a</a>
-                <a href="#3">a</a>
+                <a href="#1" id="to1">a</a>
+                <a href="#3" id="to3">a</a>
             </div>
 
             <div class="section" id="3" style="background:green;">
-                <a href="#2">a</a>
-                <a href="#4">a</a>
+                <a href="#2" id="to2">a</a>
+                <a href="#4" id="to4">a</a>
             </div>
 
             <div class="section" id="4" style="background:white;">
-                <a href="#3">a</a>
-                <a href="#5">a</a>
+                <a href="#3" id="to3">a</a>
+                <a href="#5" id="to5">a</a>
             </div>
 
             <div class="section" id="5" style="background:yellow">
-                <a href="#4">a</a>
+                <a href="#4" id="to4">a</a>
             </div>
 
 
@@ -115,7 +115,7 @@
            .stop()
            /* on fait maintenant l'animation vers le haut (scrollTop) vers 
             notre ancre target */
-           .animate({scrollTop: $(target).offset().top}, 800 );
+           .animate({scrollTop: $(target).offset().top}, 1);
         });
     });
 
@@ -127,14 +127,8 @@
 
     //SCROLL SECTION
 
-    //A) - We recuperate current position on scrolling.
-    function current_position(){
-        var current_position = $(window).scrollTop()
-        return current_position
-    };
 
-
-    //B) - We recuperate position in Y of our sections list.
+    //A) - We recuperate position in Y of our sections list.
     SECTIONS = ["#1", "#2", "#3", "#4", "#5"]
     function recuperate_element_position(){
 
@@ -146,6 +140,15 @@
             positions.push(localisation)
         };
         return positions
+    };
+
+
+
+
+    //B) - We recuperate current position on scrolling.
+    function current_position(){
+        var current_position = $(window).scrollTop()
+        return current_position
     };
 
 
@@ -166,7 +169,6 @@
                 minimum_index = difference;
             };
         };
-
         return indexage
     };
 
@@ -198,34 +200,52 @@
         }else if(section == 0 && direction == -1){
             document.getElementById("to2").click();
         }
-
-
+        else if(section == 1 && direction == -1){
+            document.getElementById("to1").click();
+        }
+        else if(section == 1 && direction == 1){
+            document.getElementById("to2").click();
+        }
     };
 
 
 
 
     //ON SCROLL
+    AUTORISED_SCROLL = 0
     $( window ).scroll(function() {
 
+        if (AUTORISED_SCROLL == 0){
+
+            //1) - Recuperate positions of section.
+            positions = recuperate_element_position();
+            //console.log(positions)
+
+            //2) - Identify current section.
+            current_pos = current_position()
+            //console.log(current_pos)
+
+            //3) - Identify the current position
+            indexage = on_scroll(positions, current_pos)
+            //console.log("la section la plus proche est :", indexage)
+
+            //4) - Identify scroll direction.
+            direction = sens_of_scroll()
+            //if(direction == -1){console.log("bas")};
+            //if(direction == 1){console.log("haut")};
+
+            //5) scroll smooth.
+            go_to_next_section_effect_smooooth(indexage, direction);
+
+
+            if(current_pos == positions[1]){
+                AUTORISED_SCROLL = 0
+            }else if(current_pos != positions[1]){
+                AUTORISED_SCROLL = 1
+            }
+            console.log(AUTORISED_SCROLL)
+        };
         
-        //1) - Recuperate positions of section.
-        positions = recuperate_element_position();
-             
-        //2) - Identify current section.
-        current_pos = current_position()
-
-        //3) - Identify the current position
-        indexage = on_scroll(positions, current_pos)
-        //console.log("la section la plus proche est :", indexage)
-
-        //4) - Identify scroll direction.
-        direction = sens_of_scroll()
-        //if(direction == -1){console.log("bas")};
-        //if(direction == 1){console.log("haut")};
-
-        //5) scroll smooth.
-        go_to_next_section_effect_smooooth(indexage, direction)
     });
  
 </script>
