@@ -18,7 +18,7 @@
 
 
             <div class="section" id="1" style="background:red;">
-                <a href="#2">a</a>
+                <a href="#2" id="to2">a</a>
             </div>
 
             <div class="section" id="2" style="background:blue;">
@@ -127,14 +127,14 @@
 
     //SCROLL SECTION
 
-    //We recuperate current position on scrolling.
+    //A) - We recuperate current position on scrolling.
     function current_position(){
         var current_position = $(window).scrollTop()
         return current_position
     };
 
 
-    //We recuperate position in Y of our sections list.
+    //B) - We recuperate position in Y of our sections list.
     SECTIONS = ["#1", "#2", "#3", "#4", "#5"]
     function recuperate_element_position(){
 
@@ -150,7 +150,7 @@
 
 
 
-    //Compare current position with section position.
+    //C) - Compare current position with section position.
     function on_scroll(positions, current_position){
 
 
@@ -161,33 +161,72 @@
         for (var index = 0; index < positions.length; index ++){
 
             difference = Math.abs(positions[index] - current_position);
-            console.log("diff", difference, index)
             if (difference < minimum_index){
                 indexage = index;
                 minimum_index = difference;
             };
         };
 
-        console.log(indexage);
         return indexage
     };
 
     
-    //When user scroll we recuperate the min index for scroll smooth.
+    //D) - DIRECTION OF SCROLL
+
+    var LASTSCROLL = 0;
+    function sens_of_scroll(){
+
+       var sens = 0
+
+       var current_scroll = $(this).scrollTop();
+
+       if (current_scroll > LASTSCROLL){sens = -1}
+       else {sens = 1}
+
+       LASTSCROLL = current_scroll;
+
+       return sens
+    };
+
+
+
+
+    //E) - CLICK CLICK
+    function go_to_next_section_effect_smooooth(section, direction){
+        if(section == 0 && direction == 1){
+            {}
+        }else if(section == 0 && direction == -1){
+            document.getElementById("to2").click();
+        }
+
+
+    };
+
+
+
+
+    //ON SCROLL
     $( window ).scroll(function() {
 
+        
+        //1) - Recuperate positions of section.
         positions = recuperate_element_position();
-
+             
+        //2) - Identify current section.
         current_pos = current_position()
-        console.log(positions, current_pos)
 
+        //3) - Identify the current position
         indexage = on_scroll(positions, current_pos)
-        console.log("le plus proche est :", indexage)
+        //console.log("la section la plus proche est :", indexage)
 
+        //4) - Identify scroll direction.
+        direction = sens_of_scroll()
+        //if(direction == -1){console.log("bas")};
+        //if(direction == 1){console.log("haut")};
+
+        //5) scroll smooth.
+        go_to_next_section_effect_smooooth(indexage, direction)
     });
-
-
-
  
 </script>
 
