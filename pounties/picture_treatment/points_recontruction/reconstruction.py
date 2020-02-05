@@ -199,9 +199,9 @@ def no_points_detected(informations):
             distance_finger_current = distance_phax[finger_name_current]
             distance_finger_after   = distance_phax[finger_after]
 
-            angulus_finger_before  = angulus_phax[finger_before]
-            angulus_finger_current = angulus_phax[finger_name_current]
-            angulus_finger_after   = angulus_phax[finger_after]
+            angulus_finger_before   = angulus_phax[finger_before]
+            angulus_finger_current  = angulus_phax[finger_name_current]
+            angulus_finger_after    = angulus_phax[finger_after]
 
             
             def establish_points(points):
@@ -213,35 +213,89 @@ def no_points_detected(informations):
                 liste.append(points[-1][1])
                 return liste
 
-            a = establish_points(distance_finger_before)
-            b = establish_points(distance_finger_current)
-            c = establish_points(distance_finger_after)
+            #Recupere one points of pairs of distance               #Data
+            dista = establish_points(distance_finger_before)
+            distb = establish_points(distance_finger_current)
+            distc = establish_points(distance_finger_after)
 
-            d = establish_points(angulus_finger_before)
-            e = establish_points(angulus_finger_current)
-            f = establish_points(angulus_finger_after)
+            #Recupere one points of pairs of angulus
+            anga = establish_points(angulus_finger_before)
+            angb = establish_points(angulus_finger_current)
+            angc = establish_points(angulus_finger_after)
 
 
-            d1 = angulus_beetween_points(a, b)
-            d2 = distance_beetween_points(b, c)
+            #Make distance beetween a b 
+            d1 = distance_beetween_points(dista, distb)
+            #Make angulus beetween a b 
+            a1 = angulus_beetween_points(anga, angb)
 
-            a1 = angulus_beetween_points(d, e)
-            a2 = angulus_beetween_points(e, f)
-            
-            print(d1)
-            print(d2)
-            print(a1)
-            print(a2)
+            #Make distance beetween b c
+            d2 = distance_beetween_points(distb, distc)
+            #Make angulus beetween b c
+            a2 = angulus_beetween_points(angb, angc)
+
+
+
+            #Recuperate scale
+            scale_data = scale_list[index_distance]
+
+            #Normalise distance data in function of passation
+            d1_normalised = []
+            d2_normalised = []
+    
+            for i, j, k, l in zip(d1, d2, a1, a2):
+                o = normalize(scale_data, scale, i)
+                p = normalize(scale_data, scale, j)
+
+                d1_normalised.append((o, k))
+                d2_normalised.append((p, l))
+
+
+            data_before = d1_normalised
+            data_after = d2_normalised
+
+
+            points_before  = points[finger_before]
+            points_after   = points[finger_after]
+
+
+
+            points_before = establish_points(points_before)
+            points_after = establish_points(points_after)
+
+
+
+            for i, pts in zip(data_before, points_before):
+                dist, ang = i
+
+                x = int(round(dist * math.cos(ang)))
+                y = int(round(dist * math.sin(ang)))
+
+                print(x,y, pts)
+
+
+
             print("")
 
+            for i, pts in zip(data_after, points_after):
+                dist, ang = i
 
-            distance_passation_before  = points[finger_before]
-            distance_passation_current = points[finger_name_current]
-            distance_passation_after   = points[finger_after]
+                x = int(round(dist * math.cos(ang)))
+                y = int(round(dist * math.sin(ang)))
 
-            angulus_passation_before  = points[finger_before]
-            angulus_passation_current = points[finger_name_current]
-            angulus_passation_after   = points[finger_after]
+                print(x,y, pts)
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -298,7 +352,7 @@ def reconstruction_points(points, scale):
 
     #Data treatment.
     distance_list, angulus_list, scale_list, data = data_informations()
-    #print(data[44][0])
+    print(data[159][0])
     #Passatation data to dictionnary. Annotations of fingers.
     angulus = element_to_dict(angulus)
     distances = element_to_dict(distances)
