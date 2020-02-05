@@ -1,56 +1,66 @@
-
-{% load static %}
-
 <!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 
-    <html lang="fr-FR">
-        
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
-            <meta meta name="viewport" content="width=device-width, user-scalable=no" />
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Active Slide - fullPage.js</title>
+    <meta name="author" content="Matthew Howell" />
+    <meta name="description" content="fullPage continuous scrolling demo." />
+    <meta name="keywords"  content="fullpage,jquery,demo,scroll,loop,continuous" />
+    <meta name="Resource-type" content="Document" />
+</head>
 
+<body>
+
+
+
+    <div id="fullpage">
+
+
+        <div class="section" id="section1">
+
+            <span id="site_acces">Accès au site</span>
+
+            <div class="navebarre">
+                {% include "home_composition/navebarre/navebarre_logo.html" %}
+            </div>
+
+            <span id="menu">M E N U</span>
             
-
-        </head>
-
-        <body>
-
-
-            <div class="section" id="1" style="background:red;">
-                <a href="#2" id="to2">a</a>
-            </div>
-
-            <div class="section" id="2" style="background:blue;">
-                <a href="#1" id="to1">a</a>
-                <a href="#3" id="to3">a</a>
-            </div>
-
-            <div class="section" id="3" style="background:green;">
-                <a href="#2" id="to2">a</a>
-                <a href="#4" id="to4">a</a>
-            </div>
-
-            <div class="section" id="4" style="background:white;">
-                <a href="#3" id="to3">a</a>
-                <a href="#5" id="to5">a</a>
-            </div>
-
-            <div class="section" id="5" style="background:yellow">
-                <a href="#4" id="to4">a</a>
-            </div>
+            <center><h1 id="section1_h1">SYNERGO</h1></center>
+        </div>
 
 
 
 
 
+        <div class="section" id="section2">
+            <h1>YOOOOOOOOO</h1>
+        </div>
+
+        <div class="section" id="section3">
+            <h1>YOOOOOOOOO</h1>
+        </div>
+
+        <div class="section" id="section4">
+            <h1>YOOOOOOOOO</h1>
+        </div>
+
+        <div class="section" id="section5">
+            <h1>YOOOOOOOOO</h1>
+        </div>
+
+        <div class="section" id="section6">
+            <h1>coucou</h1>
+        </div>
 
 
+        <div class="section" id="section7">
+            <h1>Section 3</h1>
+        </div>
 
-        </body>
 
-
-    </html>
+    </div>
 
 
 
@@ -61,6 +71,8 @@
 
 
 
+</body>
+</html>
 
 
 
@@ -70,199 +82,92 @@
 
 
 <style>
-    body{
-        font-family: proxima nova w15;
-        font-size: 1rem;
-        line-height: 25px;
-        font-weight: 100;
 
-    }
 
-    html {
-      scroll-behavior: smooth;
-    }
-    .section{
-        width:100%;
-        height:625px;
-    }
+body{
+    font-family: playfair display;
+    width:100%;
+    height:100%;
+    margin:0;
+    padding:0;
+}
+
+
+.section{
+    text-align:center;
+    width:100%;
+    border:1px solid transparent;
+}
+
+#section1{
+    position:static;
+    width:100%;
+    height:100%;
+    padding:0;
+    margin:0;
+    color:white;
+}
+
+#section1_h1{
+    margin-top:200px;
+    font-size: 2.353rem;
+    font-weight: bold;
+    letter-spacing: 5px;
+    color:white;
+    font-size: 2em;
+    width:200px;
+    height:35px;
+}
+
+
+
+.navebarre{
+    position:absolute;
+    top:0;
+    left:0;
+    padding:10px;
+    width:50px;
+
+}
+#site_acces{
+    position: fixed;
+    right:30px;
+    top:30px;
+    width:200px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    padding-bottom: 7px;
+    overflow: hidden;
+
+}
+#menu{
+    position:absolute;
+    top:25px;
+    left:70px;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
 </style>
 
 
 
 
-<script
-  src="https://code.jquery.com/jquery-3.4.1.js"
-  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
-  crossorigin="anonymous"></script>
 
 
-<script>
-    //DEFILEMENT DE LA PAGE
+<script type="text/javascript" src="/static/Home/js/fullpage.js"></script>
 
-    $(document).ready(function(){
-        // au clic sur un lien
-        $('a[href^="#"]').click(function(evt){
-           // bloquer le comportement par défaut: on ne rechargera pas la page
-           evt.preventDefault(); 
-           // enregistre la valeur de l'attribut  href dans la variable target
+<script type="text/javascript">
+    var myFullpage = new fullpage('#fullpage', {
+        sectionsColor: ['#1A1A1A', '#4BBFC3', '#7BAABE', 'whitesmoke', '#ccddff'],
+        anchors: ['firstPage', 'secondPage', '3rdPage', '4thpage', 'lastPage'],
 
-     var target = $(this).attr('href');
-           /* le sélecteur $(html, body) permet de corriger un bug sur chrome 
-           et safari (webkit) */
 
-     $('html, body')
-           // on arrête toutes les animations en cours 
-           .stop()
-           /* on fait maintenant l'animation vers le haut (scrollTop) vers 
-            notre ancre target */
-           .animate({scrollTop: $(target).offset().top}, 1);
-        });
     });
-
-</script>
-
-
-
-<script>
-
-    //SCROLL SECTION
-
-
-    //A) - We recuperate position in Y of our sections list.
-    SECTIONS = ["#1", "#2", "#3", "#4", "#5"]
-    function recuperate_element_position(){
-
-        positions = []
-        for (var i = 0; i < SECTIONS.length; i ++){
-
-            //position of sections
-            var localisation = jQuery(SECTIONS[i]).offset().top;
-            positions.push(localisation)
-        };
-        return positions
-    };
-
-
-
-
-    //B) - We recuperate current position on scrolling.
-    function current_position(){
-        var current_position = $(window).scrollTop()
-        return current_position
-    };
-
-
-
-    //C) - Compare current position with section position.
-    function on_scroll(positions, current_position){
-
-
-        //We all sections position
-        var minimum_index = 100000
-        var indexage = 0
-
-        for (var index = 0; index < positions.length; index ++){
-
-            difference = Math.abs(positions[index] - current_position);
-            if (difference < minimum_index){
-                indexage = index;
-                minimum_index = difference;
-            };
-        };
-        return indexage
-    };
-
     
-    //D) - DIRECTION OF SCROLL
-
-    var LASTSCROLL = 0;
-    function sens_of_scroll(){
-
-       var sens = 0
-
-       var current_scroll = $(this).scrollTop();
-
-       if (current_scroll > LASTSCROLL){sens = -1}
-       else {sens = 1}
-
-       LASTSCROLL = current_scroll;
-
-       return sens
-    };
-
-
-
-
-    //E) - CLICK CLICK
-    function go_to_next_section_effect_smooooth(section, direction){
-        if(section == 0 && direction == 1){
-            {}
-        }else if(section == 0 && direction == -1){
-            document.getElementById("to2").click();
-        }
-        else if(section == 1 && direction == -1){
-            document.getElementById("to1").click();
-        }
-        else if(section == 1 && direction == 1){
-            document.getElementById("to2").click();
-        }
-    };
-
-
-
-
-    //ON SCROLL
-    AUTORISED_SCROLL = 0
-    $( window ).scroll(function() {
-
-        if (AUTORISED_SCROLL == 0){
-
-            //1) - Recuperate positions of section.
-            positions = recuperate_element_position();
-            //console.log(positions)
-
-            //2) - Identify current section.
-            current_pos = current_position()
-            //console.log(current_pos)
-
-            //3) - Identify the current position
-            indexage = on_scroll(positions, current_pos)
-            //console.log("la section la plus proche est :", indexage)
-
-            //4) - Identify scroll direction.
-            direction = sens_of_scroll()
-            //if(direction == -1){console.log("bas")};
-            //if(direction == 1){console.log("haut")};
-
-            //5) scroll smooth.
-            go_to_next_section_effect_smooooth(indexage, direction);
-
-
-            if(current_pos == positions[1]){
-                AUTORISED_SCROLL = 0
-            }else if(current_pos != positions[1]){
-                AUTORISED_SCROLL = 1
-            }
-            console.log(AUTORISED_SCROLL)
-        };
-        
-    });
- 
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
