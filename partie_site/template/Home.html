@@ -19,7 +19,14 @@
 
         <div class="section" id="section1">
 
-            <span id="site_acces">Accès au site</span>
+            <span id="site_acces" onmouseover=""><a href="#">Accès au site</a></span>
+            
+            <svg id="site_acces_line"
+                width="200" height="250" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                <line x1="20" x2="320" y1="1" y2="1" stroke="white" fill="transparent" stroke-width="2"/>
+                <path fill="none" stroke="blue" stroke-width="5"/>
+            </svg>
+
 
             <div class="navebarre">
                 {% include "home_composition/navebarre/navebarre_logo.html" %}
@@ -28,6 +35,18 @@
             <span id="menu">M E N U</span>
             
             <center><h1 id="section1_h1">SYNERGO</h1></center>
+
+
+            <div id="arrow">{% include "home_composition/arrow/arrow.html" %}</div>
+
+
+
+
+
+
+
+
+
         </div>
 
 
@@ -98,7 +117,10 @@ body{
     width:100%;
     border:1px solid transparent;
 }
-
+a{
+    color:white;
+    text-decoration:none;
+}
 #section1{
     position:static;
     width:100%;
@@ -110,12 +132,11 @@ body{
 
 #section1_h1{
     margin-top:200px;
-    font-size: 2.353rem;
     font-weight: bold;
     letter-spacing: 5px;
     color:white;
-    font-size: 2em;
-    width:200px;
+    font-size: 2.5em;
+    width:250px;
     height:35px;
 }
 
@@ -127,8 +148,8 @@ body{
     left:0;
     padding:10px;
     width:50px;
-
 }
+
 #site_acces{
     position: fixed;
     right:30px;
@@ -140,7 +161,22 @@ body{
     letter-spacing: 4px;
     padding-bottom: 7px;
     overflow: hidden;
+}
+#site_acces:hover + #site_acces_line{
+    display:block;
+    stroke-dashoffset: 0;
+}
+#site_acces_line{
+    position: fixed;
+    right:40px;
+    top:50px;
+    height:20px;
+    display:block;
+    stroke-dasharray: 185;
+    stroke-dashoffset: 185;
+    transition: 0.5s;
 
+    
 }
 #menu{
     position:absolute;
@@ -149,6 +185,20 @@ body{
     font-size: 1rem;
     text-transform: uppercase;
     letter-spacing: 1px;
+}
+
+#arrow{
+    position:absolute;
+    bottom:0;
+    right:0;
+    padding-bottom:30px;
+    padding-right:15px;
+    height:80px;
+    width:40px;
+
+}
+#arrow1{
+    display:none;
 }
 </style>
 
