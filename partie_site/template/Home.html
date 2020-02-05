@@ -37,7 +37,10 @@
             <center><h1 id="section1_h1">SYNERGO</h1></center>
 
 
-            <div id="arrow">{% include "home_composition/arrow/arrow.html" %}</div>
+            <div id="arrow">
+                <a href="home#3rdPage">{% include "home_composition/arrow/arrow1.html" %}</a>
+                <a href="home#secondPage">{% include "home_composition/arrow/arrow2.html" %}</a>  
+            </div>
 
 
 
@@ -55,10 +58,12 @@
 
         <div class="section" id="section2">
             <h1>YOOOOOOOOO</h1>
+            
         </div>
 
         <div class="section" id="section3">
             <h1>YOOOOOOOOO</h1>
+            <a href="#section1">{% include "home_composition/arrow/arrow1.html" %}</a>
         </div>
 
         <div class="section" id="section4">
@@ -193,9 +198,8 @@ a{
     right:0;
     padding-bottom:30px;
     padding-right:15px;
-    height:80px;
+    height:90px;
     width:40px;
-
 }
 #arrow1{
     display:none;
@@ -212,7 +216,7 @@ a{
 <script type="text/javascript">
     var myFullpage = new fullpage('#fullpage', {
         sectionsColor: ['#1A1A1A', '#4BBFC3', '#7BAABE', 'whitesmoke', '#ccddff'],
-        anchors: ['firstPage', 'secondPage', '3rdPage', '4thpage', 'lastPage'],
+        anchors: ['firstPage', 'secondPage', '3rdPage', '4thpage', 'dzad', 'cxwcw', 'lastPage'],
 
 
     });
@@ -221,3 +225,30 @@ a{
 
 
 
+<script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
+
+<script>
+    //DEFILEMENT DE LA PAGE
+
+    $(document).ready(function(){
+        // au clic sur un lien
+        $('a[href^="#"]').click(function(evt){
+           // bloquer le comportement par défaut: on ne rechargera pas la page
+           evt.preventDefault(); 
+           // enregistre la valeur de l'attribut  href dans la variable target
+     var target = $(this).attr('href');
+           /* le sélecteur $(html, body) permet de corriger un bug sur chrome 
+           et safari (webkit) */
+     $('html, body')
+           // on arrête toutes les animations en cours 
+           .stop()
+           /* on fait maintenant l'animation vers le haut (scrollTop) vers 
+            notre ancre target */
+           .animate({scrollTop: $(target).offset().top}, 1000 );
+        });
+    });
+
+</script>
