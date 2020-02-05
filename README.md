@@ -1,12 +1,8 @@
 # S-Y-N-E-R-G-O
 
-bon ca m'a donné la gerbe ce joli cv, faire le bas ce soir
+ok on peut mettre des gif en video animation et on peut faire bouger les ligne faut aussi mettre des media (image en plein ecran) et verifier le truk des mains et faire la doc
 
-- finir la mise en forme
-
-- faire un truk si y'a pas de doigt qui suppose ou est le doigt manauqnat  via les mains qu'on a eu au paravant et ensuite on entraine un model svm
-
-- finir les doigts
+essayer de changer des trucks (les fleches c'est bien !)
 
 <br><br><br><br><br><br><br><br><br>
 
