@@ -212,11 +212,15 @@
             liste = ['line_eye1', 'line_eye2', 'line_eye3', 'line_head1', 'line_head2', 'line_head3',
                      'line_face1', 'line_face2', 'line_face3', 'line_face4']
 
+            ofset_list = ['150', '250', '250', '150', '250', '250', '280', '280', '200', '100']
+
             for (var i = 0; i < liste.length; i++){
-                console.log(liste[i])
+
                 var visible = document.getElementById(liste[i]).style.strokeDashoffset;
                 if (visible == 0){
-                    document.getElementById(liste[i]).style.strokeDashoffset > "100";
+                    console.log(liste[i])
+                    console.log(document.getElementById(liste[i]).style.strokeDashoffset)
+                    document.getElementById(liste[i]).style.strokeDashoffset = ofset_list[i];
                 };
             };
         };
