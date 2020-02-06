@@ -1,0 +1,87 @@
+<center>
+    <div class="in_square">
+
+        <h3 id="face"  onmouseover="active('line_face1', 'line_face2', 'line_face3', 'line_face4')"
+                      onmouseout="deactive('line_face1', 'line_face2', 'line_face3', 'line_face4',
+                                           '280', '280', '200', '100')">
+            <a href="#">LA FIGURE</a>
+        </h3>
+
+        <svg class="line_under_h3" id="line_face"
+            width="200" height="2" version="1.1" xmlns="http://www.w3.org/2000/svg">
+            <line x1="20" x2="320" y1="1" y2="1" stroke="white" fill="transparent" stroke-width="2"/>
+            <path fill="none" stroke="blue" stroke-width="5"/>
+        </svg>
+
+
+
+        <ul>
+            <li>Découpage de la figure en zone</li>
+            <svg class="line_under_h3_1" id="line_face1"
+                width="280" height="2" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                <line x1="20" x2="280" y1="1" y2="1" stroke="white" fill="transparent" stroke-width="2"/>
+                <path fill="none" stroke="blue" stroke-width="5"/>
+            </svg>
+
+
+            <li>Détection du toucher dans ces zones</li>
+            <svg class="line_under_h3_1" id="line_face2"
+                width="280" height="2" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                <line x1="20" x2="280" y1="1" y2="1" stroke="white" fill="transparent" stroke-width="2"/>
+                <path fill="none" stroke="blue" stroke-width="5"/>
+            </svg>
+
+
+            <li>Détection des émotions</li>
+            <svg class="line_under_h3_1" id="line_face3"
+                width="200" height="2" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                <line x1="20" x2="200" y1="1" y2="1" stroke="white" fill="transparent" stroke-width="2"/>
+                <path fill="none" stroke="blue" stroke-width="5"/>
+            </svg>
+
+
+            <li>Les Rides</li>
+            <svg class="line_under_h3_1" id="line_face4"
+                width="100" height="2" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                <line x1="20" x2="100" y1="1" y2="1" stroke="white" fill="transparent" stroke-width="2"/>
+                <path fill="none" stroke="blue" stroke-width="5"/>
+            </svg>
+
+
+        </ul>
+    </div>
+</center>
+
+
+
+<style>
+    #face:hover + #line_face{
+        color:red;
+        visibility:visible;
+        stroke-dashoffset: 0;
+    }
+    #line_face{
+        visibility:hidden;
+        stroke-dasharray: 320;
+        stroke-dashoffset: 320;
+        transition: 1.5s;
+    }
+    #line_face1,
+    #line_face2{
+        stroke-dasharray: 280;
+        stroke-dashoffset: 280;
+        transition: 1.5s;
+    }
+    #line_face3{
+        stroke-dasharray: 200;
+        stroke-dashoffset: 200;
+        transition: 1.5s;
+    }
+    #line_face4{
+        stroke-dasharray: 100;
+        stroke-dashoffset: 100;
+        transition: 1.5s;
+    }
+</style>
+
+
