@@ -1,0 +1,36 @@
+<center>
+    <div class="in_square">
+
+
+        <h3 id="langage">
+            <a href="#">LE LANGAGE</a>
+        </h3>
+
+        <svg class="line_under_h3" id="line_langage"
+            width="200" height="2" version="1.1" xmlns="http://www.w3.org/2000/svg">
+            <line x1="20" x2="320" y1="1" y2="1" stroke="white" fill="transparent" stroke-width="2"/>
+            <path fill="none" stroke="blue" stroke-width="5"/>
+        </svg>
+
+        <ul>
+            <li>None</li>
+            <li>None</li>
+            <li>None</li>
+        </ul>
+    </div>
+</center>
+
+
+<style>
+    #langage:hover + #line_langage{
+        color:red;
+        visibility:visible;
+        stroke-dashoffset: 0;
+    }
+    #line_langage{
+        visibility:hidden;
+        stroke-dasharray: 320;
+        stroke-dashoffset: 320;
+        transition: 1.5s;
+    }
+</style>
