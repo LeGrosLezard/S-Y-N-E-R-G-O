@@ -17,52 +17,6 @@
     <div id="fullpage">
 
 
-
-        <svg width="300" height="300" version="1.1" xmlns="http://www.w3.org/2000/svg" id="cercle5"
-            style="z-index: 3;position:absolute;margin-left:600px;margin-top:200px;">
-
-            <circle cx="50" cy="90" r="50" stroke="white" fill="transparent"
-                stroke-width="2" style="z-index: 3"/>
-        </svg>
-
-
-        <svg width=150" height="310" version="1.1" xmlns="http://www.w3.org/2000/svg" id="cercle4"
-            style="z-index: 5;position:absolute;margin-left:400px;margin-top:190px;">
-
-            <circle cx="250" cy="100" r="100" stroke="white" fill="transparent"
-                stroke-width="2" style="z-index: 3;" />
-        </svg>
-
-
-        <svg width=150" height="400" version="1.1" xmlns="http://www.w3.org/2000/svg" id="cercle3"
-            style="z-index: 3;position:absolute;margin-left:400px;margin-top:100px;">
-
-            <circle cx="250" cy="190" r="150" stroke="white" fill="transparent"
-                stroke-width="2" style="z-index: 3;" />
-        </svg>
-
-
-        <svg width=150" height="450" version="1.1" xmlns="http://www.w3.org/2000/svg" id="cercle2"
-            style="z-index: 3;position:absolute;margin-left:400px;margin-top:50px;">
-
-            <circle cx="250" cy="240" r="200" stroke="white" fill="transparent"
-                stroke-width="2" style="z-index: 3;" />
-        </svg>
-
-
-        <svg width=150" height="600" version="1.1" xmlns="http://www.w3.org/2000/svg" id="cercle1"
-            style="z-index: 3;position:absolute;margin-left:350px;margin-top:10px;">
-
-            <circle cx="300" cy="280" r="250" stroke="white" fill="transparent"
-                stroke-width="2" style="z-index: 3;" />
-        </svg>
-
-
-
-
-
-
-
         <div class="section" id="section1">
 
             <span id="site_acces" onmouseover=""><a href="#">Accès au site</a></span>
@@ -259,31 +213,6 @@ a{
     stroke-dashoffset: 185;
     transition: 1.5s;
 }
-#cercle1{
-    stroke-dasharray: 185;
-    stroke-dashoffset: 185;
-    transition: 1.5s;
-}
-#cercle2{
-    stroke-dasharray: 185;
-    stroke-dashoffset: 185;
-    transition: 0.5s;
-}
-#cercle3{
-    stroke-dasharray: 185;
-    stroke-dashoffset: 185;
-    transition: 0.5s;
-}
-#cercle4{
-    stroke-dasharray: 185;
-    stroke-dashoffset: 185;
-    transition: 0.5s;
-}
-#cercle5{
-    stroke-dasharray: 185;
-    stroke-dashoffset: 320;
-    transition: 0.5s;
-}
 #line_animation{
     margin-left:120px;
     z-index: 200;
@@ -292,7 +221,6 @@ a{
     stroke-dasharray: 410;
     stroke-dashoffset: 410;
     transition: 1s;
-
 }
 #menu{
     position:absolute;
@@ -394,14 +322,12 @@ a{
 
 
 <script>
-    setTimeout(function(){
-        liste = ["cercle1", "cercle2", "cercle3", "cercle4", "cercle5"]
 
-        for (var i = 0; i < liste.length; i++){
-            document.getElementById(liste[i]).style.display = "none";
-        }
-        document.getElementById("line_animation").style.strokeDashoffset = "0";
-    }, 300);
+    document.getElementById("line_animation").style.strokeDashoffset = "0";
+
+    setTimeout(function(){
+        document.getElementById("line_animation").style.strokeDashoffset = "410";
+    }, 1000);
 
  
 
