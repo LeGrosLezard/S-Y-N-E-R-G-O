@@ -32,7 +32,7 @@
                         </svg>
 
 
-                        
+
                         <ul>
                             <li>dza</li>
                             <svg class="line_under_h3_1" id="line_eye1"
@@ -321,6 +321,15 @@
 
 <script>
 
+
+    //PART ANIMATION OF LINE UNDER ELEMENTS.
+
+
+
+    var ACTIVATION = 0 // it define if we must auto raise line
+
+
+    //Make the line at time !
     function animate(element, time){
 
         setTimeout(function(){
@@ -328,31 +337,58 @@
                 document.getElementById(element).style.strokeDashoffset = "0";
                 document.getElementById(element).style.transition = "1s";
 
-            }, time)
+            }, time);
     };
 
+    //function onmouse OVER.
     function active(id1, id2, id3){
+
+        ACTIVATION = 1
+
         animate(id1, 500);
+
         animate(id2, 700);
+
         animate(id3, 900);
 
     };
 
 
+    //onmouse OUT deactive all.
     function deactive(id1, id2, id3){
+
+        ACTIVATION = 0
+
         liste = [id1, id2, id3]
+
         for (var i = 0; i < liste.length; i++){
-            console.log(liste[i])
-            document.getElementById(liste[i]).style.visibility = "visible";
+            document.getElementById(liste[i]).style.visibility = "hidden";
             document.getElementById(liste[i]).style.strokeDashoffset = "150";
             document.getElementById(liste[i]).style.transition = "0.3s";
         };
     };
 
 
+    //Verify line isn't present and user onmouse OUT, clear it.
+    function verify(){
+
+        console.log(ACTIVATION)
+
+        if (ACTIVATION == 0){
+
+            liste = ['line_eye1', 'line_eye2', 'line_eye3']
+            for (var i = 0; i < liste.length; i++){
+                console.log(liste[i])
+                var visible = document.getElementById(liste[i]).style.strokeDashoffset;
+                if (visible == 0){
+                    document.getElementById(liste[i]).style.strokeDashoffset = "150";
+                };
+            };
+        };
+    };
 
 
-
+    setInterval("verify()", 2000);
 
 
 
