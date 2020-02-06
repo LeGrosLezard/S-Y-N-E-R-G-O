@@ -1,8 +1,6 @@
 # S-Y-N-E-R-G-O
 
-ok on peut mettre des gif en video animation et on peut faire bouger les ligne faut aussi mettre des media (image en plein ecran) et verifier le truk des mains et faire la doc
-
-essayer de changer des trucks (les fleches c'est bien !)
+y faut que les textes s'affichent mtn genre pouf avant la ligne 
 
 <br><br><br><br><br><br><br><br><br>
 
