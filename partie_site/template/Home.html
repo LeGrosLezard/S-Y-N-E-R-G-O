@@ -49,7 +49,7 @@
 
                     <svg id="line_animation"
                         width="500" height="2" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                        <line x1="20" x2="420" y1="1" y2="1" stroke="white" fill="transparent" stroke-width="3"/>
+                        <line x1="20" x2="300" y1="1" y2="1" stroke="white" fill="transparent" stroke-width="3"/>
                         <path fill="none" stroke="white" stroke-width="50"/>
                     </svg>
  
@@ -218,8 +218,8 @@ a{
     z-index: 200;
     position: absolute;
     margin-top:50px;
-    stroke-dasharray: 410;
-    stroke-dashoffset: 410;
+    stroke-dasharray: 300;
+    stroke-dashoffset: 300;
     transition: 1s;
 }
 #menu{
@@ -259,6 +259,7 @@ a{
     float:left;
     margin-left:90px;
     margin-top:45px;
+    visibility:hidden;
 }
 #section1_part3{
     position:relative;
@@ -267,6 +268,7 @@ a{
     margin-left:100px;
     height:40px;
     width:300px;
+    visibility:hidden;
 }
 
 </style>
@@ -326,12 +328,53 @@ a{
     document.getElementById("line_animation").style.strokeDashoffset = "0";
 
     setTimeout(function(){
-        document.getElementById("line_animation").style.strokeDashoffset = "410";
+        document.getElementById("line_animation").style.strokeDashoffset = "300";
+        document.getElementById("line_animation").style.transition = "0.3s";
     }, 1000);
 
- 
+
 
 </script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/baffle@0.3.6/dist/baffle.min.js"></script>
+
+<script>
+
+    setTimeout(function(){
+
+        document.getElementById("section1_part2").style.visibility = "visible";
+        document.getElementById("section1_part3").style.visibility = "visible";
+
+        const text1 = baffle("#section1_part2")
+        text1.set({
+            characters : ">>░/▒░░ ▓▓>< ▓▓▒▓",
+            speed: 1
+        });
+        text1.start();
+        text1.reveal(4000);
+
+
+        const text2 = baffle("#section1_part3")
+        text2.set({
+            characters : ">>▓░█ ▒▒▒▓▒ ░>▒▒/ >░░ ▓█▒░█ ░▓░░ ▓▓░ █░▒▓ ░▒▒<",
+            speed: 100
+        });
+        text2.start();
+        text2.reveal(5000);
+
+    }, 1800);
+
+</script>
+
+
+
+
+
+
+
+
 
 
 
