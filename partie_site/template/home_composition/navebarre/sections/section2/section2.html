@@ -26,7 +26,8 @@
 
 
             <div class="square">
-                {% include "home_composition/sections/section2/sections_2/sectionc.html" %}
+
+               {% include "home_composition/sections/section2/sections_2/sectionc.html" %}
             </div>
 
 
@@ -48,25 +49,33 @@
 
     
 
+    <div id="arrow">
+        <div id="arrow1">
+            <a href="/#firstPage">{% include "home_composition/arrow/arrow1.html" %}</a>
+        </div>
+        <div id="arrow2">
+            <a href="/#secondPage">{% include "home_composition/arrow/arrow2.html" %}</a>
+        </div>
+    </div>
+
+
 
 </div>
 
 
-
-
-
-
-
-
-
-<script>
-
-</script>
-
-
-
-
 <style>
+    #arrow{
+        position:absolute;
+        bottom:0;
+        right:0;
+        padding-bottom:30px;
+        padding-right:15px;
+        height:100px;
+        width:40px;
+    }
+    #arrow2{
+        margin-top:20px;
+    }
     #section2{
         position: relative;
         color:white;
@@ -126,7 +135,7 @@
         font-size: 30px;
         font-weight: 700;
         font-family: playfair display;
-        margin-top: 100px;
+        margin-top: 60px;
         margin-left: 100px;
         width:300px;
     }
@@ -210,9 +219,11 @@
         if (ACTIVATION == 0){
 
             liste = ['line_eye1', 'line_eye2', 'line_eye3', 'line_head1', 'line_head2', 'line_head3',
-                     'line_face1', 'line_face2', 'line_face3', 'line_face4']
+                     'line_face1', 'line_face2', 'line_face3', 'line_face4', 'line_hand1', 'line_hand2',
+                     'line_hand3', 'line_hand4']
 
-            ofset_list = ['150', '250', '250', '150', '250', '250', '280', '280', '200', '100']
+            ofset_list = ['150', '250', '250', '150', '250', '250',
+                          '280', '280', '200', '100', '280', '280', '200', '150']
 
             for (var i = 0; i < liste.length; i++){
 
