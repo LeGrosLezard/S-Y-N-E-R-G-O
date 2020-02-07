@@ -1,6 +1,6 @@
 # S-Y-N-E-R-G-O
 
-y faut que les textes s'affichent mtn genre pouf avant la ligne 
+faudra faire les animations via le scroll
 
 <br><br><br><br><br><br><br><br><br>
 
