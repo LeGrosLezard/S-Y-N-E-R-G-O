@@ -1,60 +1,109 @@
 <div id="container">
 
+
     <div id="transition">
-    
 
-        <div id="text_transition">
-
-            <div id="text1">
+        <div class="text_transition">
+            <div id="down">
+                <div id="down_transition"></div>
             </div>
 
-            <div id="text2">
-            </div>
-        
-            <div id="text3">
-            </div>
-
-            <div id="text4">
-            </div>
+                <div id="text">
+                    <div id="text1"></div>
+                    <div id="text2"></div>
+                    <div id="text3"></div>
+                    <div id="text4"></div>
+                </div>
 
         </div>
+
+
+
+        <div class="text_transition" id="transition_container2">
+            <div id="page"></div>
+            <div id="page2">
+                <div id="eyes_sections_transition">
+                    EYES SECTIONS
+                </div>
+             </div>
+        </div>
+
+
     </div>
 
-    <div id="transition1">
 
-        <!-- <img id="transition_gif"
-            src="static/home_composition/section3/section3/images/transition.gif"> -->
-    </div>
-
-
-
-    <div id="visible" style="display:none;">
-
+    <div id="visible">
         <img id="image"
             src="static/home_composition/section3/section3/images/a.png">
-
-
-
-        <div id="link_to">
-
-        </div>
-
+        <div id="link_to"></div>
     </div>
 
 
 
+<!--
+<div id="status"></div>
+<center>
+    <div id="dzdaz" style="writing-mode: vertical-rl;font-size:4em;
+        margin-left:-500px;margin-top:200px;">
+    
+        S Y NE R G O
+    
+    </div>
 
-
-
-
-
-
-
-
-
+    <div id="aaa" style="writing-mode: vertical-lr;font-size:4em;margin-top:-600px;">EYES SECTIONS</div>
+</center>
+-->
 
 </div>
 
+
+
+
+
+
+
+<style>
+
+    #transition1{
+        position: relative;
+        width:100%;
+        height:100%;
+        overflow:hidden;
+    }
+    #transition_gif{
+        margin-left:31%;
+        margin-top:8%;
+    }
+    #link_to{
+        position:relative;
+        width:25%;
+        height:250px;
+        margin-top:160px;
+        margin-left:10%;
+    }
+    #image{
+        position:relative;
+        display:block;
+        text-align:center;
+        position:relative;
+        overflow: hidden;
+        width:43%;
+        height:250px;
+        margin-top:0;
+        float:right;
+        margin-right:10%;
+        z-index:1;
+    }
+    #container{
+        background-image: linear-gradient('#4C3420', '#69543F','#BEAE99', '#4C3420');
+        position:absolute;
+        padding:0;
+        margin:0;
+        width:100%;
+        height:100%;
+    }
+
+</style>
 
 <style>
     #text1{
@@ -108,57 +157,57 @@
         overflow:hidden;
         background:black;
     }
-    #text_transition{
-        width:45%;
+    #text{
+        width:90%;
         height:100%;
     }
-    #transition1{
+    #page{
+        width:100%;
+        height:100%;
+        background:black;
+    }
+    #page2{
+        width:100%;
+        height:100%;
+        background:#4C3420;
+        writing-mode: vertical-lr;
+        text-orientation: mixed;
+        font-size:4em;
+        letter-spacing:3px;
+
+    }
+    .text_transition{
         position: relative;
-        width:100%;
+        width:50%;
         height:100%;
-        overflow:hidden;
+        float:left;
     }
-    #transition_gif{
-        margin-left:31%;
-        margin-top:8%;
-    }
-    #link_to{
-        position:relative;
-        width:25%;
-        height:250px;
-        margin-top:160px;
-        margin-left:10%;
-        //border:1px solid black;
-    }
-    #image{
-        position:relative;
-        display:block;
-        text-align:center;
-        position:relative;
-        overflow: hidden;
-        width:43%;
-        height:250px;
-        margin-top:10%;
-        float:right;
-        margin-right:10%;
-        z-index:1;
-    }
-    #container{
-        
-        background-image: linear-gradient('#4C3420', '#69543F','#BEAE99', '#4C3420');
-        position:absolute;
-        padding:0;
-        margin:0;
-        width:100%;
+    #down{
         height:100%;
+        width:100%;
+        position: relative;
+        float:left;
+        background:#4C3420;
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
+        font-size:4em;
+        letter-spacing:10px;
+        display:none;
     }
+
 </style>
 
-
-
-
+<script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
 
 <script>
+
+
+
+    var DISPLAYING = 0;
+
     var text1 = "S Y N E R G O,";
     var text2 = "Nous,"
     var text3 = "pouvons voir.";
@@ -176,31 +225,49 @@
             document.getElementById('text1').innerHTML += text1_treat.shift();
         }
         timeLooper = setTimeout('write1()', 50);
-    }
+    };
     function write2(){
         if (text2_treat.length > 0){
             document.getElementById('text2').innerHTML += text2_treat.shift();
         }
         timeLooper = setTimeout('write2()', 50);
-    }
+    };
     function write3(){
         if (text3_treat.length > 0){
             document.getElementById('text3').innerHTML += text3_treat.shift();
         }
         timeLooper = setTimeout('write3()', 50);
-    }
+
+        if (document.getElementById('text3').innerHTML.length == 30){
+            DISPLAYING = 1
+        };
+    };
 
     function write4(){
         if (text4_treat.length > 0){
             document.getElementById('text4').innerHTML += text4_treat.shift();
         }
         timeLooper = setTimeout('write4()', 50);
-    }
+    };
 
     setTimeout('write1()', 1000);
     setTimeout('write4()', 500);
     setTimeout('write2()', 2200);
     setTimeout('write3()', 2200);
+
+
+
+    setTimeout(function(){ $("#page").slideUp(1000).delay(2400);}, 3500);
+
+    setTimeout(function(){ document.getElementById('text').style.display = "none";}, 3500);
+    setTimeout(function(){ $("#down").hide().slideDown(1000).delay(2400);}, 3500);
+
+    setTimeout(function(){document.getElementById("down_transition").innerHTML = "S Y N E R G O";}, 4350);
+
+
+
+    setTimeout(function(){document.getElementById("transition").style.display = "none";}, 6000);
+
 
 
 
