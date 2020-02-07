@@ -19,17 +19,15 @@
 
         <!--{% include "home_composition/sections/section1/section1.html" %}-->
 
-        {% include "home_composition/sections/section2/section2.html" %}
+        <!--{% include "home_composition/sections/section2/section2.html" %}-->
 
 
 
         <div class="section" id="section3">
-            <h1>YOOOOOOOOO</h1>
-            <a href="#section1">{% include "home_composition/arrow/arrow1.html" %}</a>
+            {% include "home_composition/sections/section3/section3.html" %}
         </div>
 
         <div class="section" id="section4">
-            <h1>YOOOOOOOOO</h1>
         </div>
 
         <div class="section" id="section5">
@@ -99,8 +97,9 @@ a{
 <script type="text/javascript" src="/static/Home/js/fullpage.js"></script>
 
 <script type="text/javascript">
+    //sectionsColor: ['#1A1A1A', '#1A1A1A', '#7BAABE', 'whitesmoke', '#ccddff'],
     var myFullpage = new fullpage('#fullpage', {
-        sectionsColor: ['#1A1A1A', '#1A1A1A', '#7BAABE', 'whitesmoke', '#ccddff'],
+        sectionsColor: ['#05191B', '#1A1A1A', '#7BAABE', 'whitesmoke', '#ccddff'],
         anchors: ['firstPage', 'secondPage', '3rdPage', '4thpage', 'dzad', 'cxwcw', 'lastPage'],
 
 
@@ -137,10 +136,3 @@ a{
     });
 
 </script>
-
-
-
-
-
-
-
