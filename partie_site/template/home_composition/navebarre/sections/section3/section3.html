@@ -1,15 +1,45 @@
 <div id="container">
 
-    <div id="image">
-        <img id="oeil_image"src="static/home_composition/section3/section3/images/d.jpg">
+    <div id="transition">
+    
+
+        <div id="text_transition">
+
+            <div id="text1">
+            </div>
+
+            <div id="text2">
+            </div>
+        
+            <div id="text3">
+            </div>
+
+            <div id="text4">
+            </div>
+
+        </div>
+    </div>
+
+    <div id="transition1">
+
+        <!-- <img id="transition_gif"
+            src="static/home_composition/section3/section3/images/transition.gif"> -->
     </div>
 
 
-    <div id="link_to">
-        <a href="eyes_sections">apppuie bb</a>
+
+    <div id="visible" style="display:none;">
+
+        <img id="image"
+            src="static/home_composition/section3/section3/images/a.png">
+
+
+
+        <div id="link_to">
+
+        </div>
+
     </div>
-
-
 
 
 
@@ -27,29 +57,95 @@
 
 
 <style>
-    #oeil_image{
+    #text1{
+        margin-top:25%;
+        font-size:3em;
+        color:white;
+        text-align:left;
+        margin-left:50px;
+        height:60px;
+    }
+    #text2{
+        margin-top:5%;
+        font-size:5em;
+        color:white;
+        margin-left:8%;
+        float:left;
+    }
+    #text3{
+        text-align:center;
+        height:10%;
+        margin-top:12%;
+        font-size:2em;
+        color:white;
+        letter-spacing:10px;
+        float:left;
+        margin-left:3%;
+        width:56%;
+    }
+    #text4{
+        text-align:center;
+        margin-top:5%;
+        font-size:1.5em;
+        color:white;
+        margin-left:70%;
+        height:10%;
+        margin-top:30%;
+        font-style:italic;
+    }
+    #text1{
+        margin-top:25%;
+        font-size:3em;
+        color:white;
+        text-align:left;
+        margin-left:50px;
+        height:60px;
+    }
+    #transition{
+        position: relative;
         width:100%;
+        height:100%;
+        overflow:hidden;
+        background:black;
+    }
+    #text_transition{
+        width:45%;
+        height:100%;
+    }
+    #transition1{
+        position: relative;
+        width:100%;
+        height:100%;
+        overflow:hidden;
+    }
+    #transition_gif{
+        margin-left:31%;
+        margin-top:8%;
     }
     #link_to{
         position:relative;
         width:25%;
         height:250px;
-        margin-top:210px;
+        margin-top:160px;
         margin-left:10%;
-        border:1px solid black;
+        //border:1px solid black;
     }
     #image{
+        position:relative;
+        display:block;
         text-align:center;
         position:relative;
         overflow: hidden;
-        width:45%;
+        width:43%;
         height:250px;
-        margin-top:160px;
+        margin-top:10%;
         float:right;
         margin-right:10%;
-        border:1px solid black;
+        z-index:1;
     }
     #container{
+        
+        background-image: linear-gradient('#4C3420', '#69543F','#BEAE99', '#4C3420');
         position:absolute;
         padding:0;
         margin:0;
@@ -57,3 +153,69 @@
         height:100%;
     }
 </style>
+
+
+
+
+
+<script>
+    var text1 = "S Y N E R G O,";
+    var text2 = "Nous,"
+    var text3 = "pouvons voir.";
+    var text4 = "Synergo";
+
+    var text1_treat = text1.split("");
+    var text2_treat = text2.split("");
+    var text3_treat = text3.split("");
+    var text4_treat = text4.split("");
+
+    var timeLooper;
+
+    function write1(){
+        if (text1_treat.length > 0){
+            document.getElementById('text1').innerHTML += text1_treat.shift();
+        }
+        timeLooper = setTimeout('write1()', 50);
+    }
+    function write2(){
+        if (text2_treat.length > 0){
+            document.getElementById('text2').innerHTML += text2_treat.shift();
+        }
+        timeLooper = setTimeout('write2()', 50);
+    }
+    function write3(){
+        if (text3_treat.length > 0){
+            document.getElementById('text3').innerHTML += text3_treat.shift();
+        }
+        timeLooper = setTimeout('write3()', 50);
+    }
+
+    function write4(){
+        if (text4_treat.length > 0){
+            document.getElementById('text4').innerHTML += text4_treat.shift();
+        }
+        timeLooper = setTimeout('write4()', 50);
+    }
+
+    setTimeout('write1()', 1000);
+    setTimeout('write4()', 500);
+    setTimeout('write2()', 2200);
+    setTimeout('write3()', 2200);
+
+
+
+
+
+
+
+
+
+</script>
+
+
+
+
+
+
+
+
