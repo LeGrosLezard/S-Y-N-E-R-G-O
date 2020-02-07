@@ -40,19 +40,7 @@
 
 
 
-<!--
-<div id="status"></div>
-<center>
-    <div id="dzdaz" style="writing-mode: vertical-rl;font-size:4em;
-        margin-left:-500px;margin-top:200px;">
-    
-        S Y NE R G O
-    
-    </div>
 
-    <div id="aaa" style="writing-mode: vertical-lr;font-size:4em;margin-top:-600px;">EYES SECTIONS</div>
-</center>
--->
 
 </div>
 
@@ -193,6 +181,7 @@
         font-size:4em;
         letter-spacing:10px;
         display:none;
+        color:white;
     }
 
 </style>
@@ -201,6 +190,8 @@
   src="https://code.jquery.com/jquery-3.4.1.js"
   integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
   crossorigin="anonymous"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 <script>
 
@@ -264,15 +255,24 @@
 
     setTimeout(function(){document.getElementById("down_transition").innerHTML = "S Y N E R G O";}, 4350);
 
+    setTimeout(function(){fade(transition)}, 6350);
+    setTimeout(function(){document.getElementById("transition").style.display = "none";}, 7000);
+
+    
 
 
-    setTimeout(function(){document.getElementById("transition").style.display = "none";}, 6000);
-
-
-
-
-
-
+    function fade(element) {
+        var op = 1;  // initial opacity
+        var timer = setInterval(function () {
+            if (op <= 0.1){
+                clearInterval(timer);
+                element.style.display = 'none';
+            }
+            element.style.opacity = op;
+            element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+            op -= op * 0.1;
+        }, 50);
+    }
 
 
 
