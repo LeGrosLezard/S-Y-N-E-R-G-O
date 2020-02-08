@@ -1,8 +1,8 @@
 # S-Y-N-E-R-G-O
 
-faudra faire les animations via le scroll
+responsive
 
-la page 3 y'a un o qui se rajoute
+faudra faire les animations via le scroll
 
 y manque le truk qui fait classe... (pteptre mettre le gif) et ca fait trop page !
 
