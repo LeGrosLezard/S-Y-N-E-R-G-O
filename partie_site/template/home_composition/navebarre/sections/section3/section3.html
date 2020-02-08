@@ -1,17 +1,29 @@
 <div id="container">
 
+    <!--%{ include "home_composition/sections/section3/animations/animation1.html" }-->
 
-    {% include "home_composition/sections/section3/animations/animation1.html" %}
-
-    <!-- -->
     <div id="visible">
+
         <img id="image"
             src="static/home_composition/section3/section3/images/a.png">
-        <div id="link_to"></div>
+
+
+        <div id="link_to">
+            <h2>Eyes sections</h2>
+
+        <div id="project_view">V I E W<br>P R O J E C T</div>
+        <center>
+            <svg width="202" height="250" class="carre">
+                <a href="#">
+                    <rect x="1" y="1" id="squarebabs" width="200" height="65" stroke="white" fill="transparent" stroke-width="2"/>
+                </a>
+            </svg>
+        </center>
+
+
+        
+
     </div>
-
-
-
 
 
 </div>
@@ -20,10 +32,37 @@
 
 
 
-
-
 <style>
-
+    #project_view{
+        position:absolute;
+        letter-spacing:2px;
+        vertical-align: middle;
+        width:50%;
+        margin-top:18%;
+        margin-left:24%;
+    }
+    .carre{
+        position:relative;
+        margin-top:13%;
+        stroke-dasharray: 530;
+        transition: 0.5s;
+        height:75px;
+    }
+    .carre:hover {
+        stroke-dashoffset: 530;
+    }
+    #squarebabs:hover{
+        stroke:#D7FFAB;
+    }
+    #link_to{
+        position:absolute;
+        width:25%;
+        height:250px;
+        margin-top:15%;
+        margin-left:10%;
+        font-family: playfair display;
+        color:white;
+    }
     #transition1{
         position: relative;
         width:100%;
@@ -34,28 +73,20 @@
         margin-left:31%;
         margin-top:8%;
     }
-    #link_to{
-        position:relative;
-        width:25%;
-        height:250px;
-        margin-top:160px;
-        margin-left:10%;
-    }
     #image{
-        position:relative;
-        display:block;
+        position:absolute;
         text-align:center;
         position:relative;
         overflow: hidden;
         width:43%;
         height:250px;
-        margin-top:0;
+        margin-top:10%;
         float:right;
         margin-right:10%;
         z-index:1;
     }
     #container{
-        background-image: linear-gradient('#4C3420', '#69543F','#BEAE99', '#4C3420');
+        background:#7BAABE;
         position:absolute;
         padding:0;
         margin:0;
