@@ -4,19 +4,43 @@
 
     <div id="visible">
 
-        <img id="image"
-            src="static/home_composition/section3/section3/images/a.png">
+        <div id="container_image">
 
+            <img id="image"
+                src="static/home_composition/section3/section3/images/a.png"
+                onmouseOver='progress()';
+                onmouseOut='unprogress()';>
+
+
+            <img id="image2"
+                src="static/home_composition/section3/section3/images/b.png">
+
+
+
+            <p id="github">
+                <span href="" onclick="appear()">
+                    Github
+                </span>
+                <a href="https://github.com/JeanBaptisteServais/SYNERGO/tree/master/eye"
+                    id="link_github_eyes">
+                    : https://github.com/JeanBaptisteServais/SYNERGO/tree/master/eye
+                </a>
+            </p>
+
+
+        </div>
 
         <div id="link_to">
             <center>
+
                 <h2 id="eyes_explication">Eyes sections</h2>
                 <p id="explication">Venez voir notre détecteur d'iris à l'aide d'OpenCV !</p>
                 <div id="project_view">V I E W &nbsp; P R O J E C T</div>
 
                 <svg width="240" height="50" class="carre">
                     <a href="#">
-                        <rect x="1" y="1" id="squarebabs" width="238" height="50" stroke="white" fill="transparent" stroke-width="2"/>
+                        <rect x="1" y="1" id="squarebabs" width="238" height="50"
+                            stroke="white" fill="transparent" stroke-width="2"/>
                     </a>
                 </svg>
 
@@ -35,6 +59,50 @@
 
 
 <style>
+    #container_image{
+        position:fixed;
+        height:50%;
+        width:100%;
+        margin-top:11%;
+        overflow:hidden;
+    }
+    #link_github_eyes{
+        font-size:0.86em;
+        opacity:0;
+        -webkit-transition: opacity 2s;
+        -moz-transition: opacity 2s;
+        -o-transition: opacity 2s;
+        transition: opacity 2s;
+        position:relative;
+    }
+    #github{
+        position:relative;
+        color:white;
+        cursor:pointer;
+        margin-left:30%;
+    }
+    #image{
+        position:relative;
+        width:39%;
+        height:78%;
+        margin-left:30%;
+        z-index:10;
+
+        opacity:1;
+        -webkit-transition: opacity 2s;
+        -moz-transition: opacity 2s;
+        -o-transition: opacity 2s;
+        transition: opacity 2s;
+    }
+    #image2{
+        position:absolute;
+        width:39%;
+        height:78%;
+        left : 45.5%;
+        bottom : 21.5%;
+        z-index:1;
+
+    }
     #explication{
         position:absolute;
         margin-top:35%;
@@ -90,18 +158,6 @@
         margin-left:31%;
         margin-top:8%;
     }
-    #image{
-        position:absolute;
-        text-align:center;
-        position:relative;
-        overflow: hidden;
-        width:43%;
-        height:250px;
-        margin-top:10%;
-        float:right;
-        margin-right:10%;
-        z-index:1;
-    }
     #container{
         background:#7BAABE;
         position:absolute;
@@ -110,8 +166,42 @@
         width:100%;
         height:100%;
     }
-
+    #visible{
+        width:100%;
+        overflow:hidden;
+    }
 </style>
+
+
+
+<script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
+
+<script>
+
+    //Onclick github link make appear link
+    function appear(){
+        document.getElementById("link_github_eyes").style.opacity = 1;
+        document.getElementById("image").style.opacity = 0;
+        setTimeout(function(){document.getElementById("image").style.opacity = 1;}, 1000);
+    };
+
+    //Switch Eyes picture to Progress picture
+    function progress(){
+        document.getElementById("image").style.opacity = 0;
+    };
+    //Switch Progress picture to Eyes picture
+    function unprogress(){
+        document.getElementById("image").style.opacity = 1;
+    };
+
+
+
+</script>
+
+
 
 
 
