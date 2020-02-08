@@ -10,7 +10,7 @@ la page 3 y'a un o qui se rajoute
 
 pour les traits et les bug baisser le timout
 
-y manque le truk qui fait classe...
+y manque le truk qui fait classe... (pteptre mettre le gif) et ca fait trop page !
 
 <br><br><br><br><br><br><br><br><br>
 
