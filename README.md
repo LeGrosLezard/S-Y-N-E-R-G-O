@@ -12,6 +12,8 @@ pour les traits et les bug baisser le timout
 
 y manque le truk qui fait classe... (pteptre mettre le gif) et ca fait trop page !
 
+le carré est trop rgos
+
 <br><br><br><br><br><br><br><br><br>
 
 
