@@ -1,8 +1,6 @@
 # S-Y-N-E-R-G-O
 
-| 
- p
-|
+finir le truk des classes mais ca m'a mis un peu raplapla la
 
 faire un todoo pcque sinon le type s'amuse a faire des polygones
 
