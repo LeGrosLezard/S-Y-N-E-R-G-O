@@ -9,17 +9,19 @@
 
 
         <div id="link_to">
-            <h2>Eyes sections</h2>
+            <center>
+                <h2 id="eyes_explication">Eyes sections</h2>
+                <p id="explication">Venez voir notre détecteur d'iris à l'aide d'OpenCV !</p>
+                <div id="project_view">V I E W<br>P R O J E C T</div>
 
-        <div id="project_view">V I E W<br>P R O J E C T</div>
-        <center>
-            <svg width="202" height="250" class="carre">
-                <a href="#">
-                    <rect x="1" y="1" id="squarebabs" width="200" height="65" stroke="white" fill="transparent" stroke-width="2"/>
-                </a>
-            </svg>
-        </center>
+                <svg width="202" height="250" class="carre">
+                    <a href="#">
+                        <rect x="1" y="1" id="squarebabs" width="200" height="65" stroke="white" fill="transparent" stroke-width="2"/>
+                    </a>
+                </svg>
 
+            </center>
+        </div>
 
         
 
@@ -33,17 +35,32 @@
 
 
 <style>
+    #explication{
+        position:absolute;
+        margin-top:32%;
+        width:60%;
+        text-align:center;
+        margin-left:20%;
+        font-weight:bold;
+    }
+    #eyes_explication{
+        margin-top:15%;
+        position:absolute;
+        font-size:2em;
+        width:100%;
+        letter-spacing:3px;        
+        
+    }
     #project_view{
         position:absolute;
         letter-spacing:2px;
         vertical-align: middle;
-        width:50%;
-        margin-top:18%;
-        margin-left:24%;
+        width:100%;
+        margin-top:56%;
     }
     .carre{
         position:relative;
-        margin-top:13%;
+        margin-top:52%;
         stroke-dasharray: 530;
         transition: 0.5s;
         height:75px;
@@ -52,13 +69,13 @@
         stroke-dashoffset: 530;
     }
     #squarebabs:hover{
-        stroke:#D7FFAB;
+        stroke:#47A025;
     }
     #link_to{
         position:absolute;
         width:25%;
-        height:250px;
-        margin-top:15%;
+        height:300px;
+        margin-top:10%;
         margin-left:10%;
         font-family: playfair display;
         color:white;
