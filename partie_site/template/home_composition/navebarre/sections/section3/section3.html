@@ -1,4 +1,14 @@
+
 <div id="container">
+
+    <span id="site_acces1"><a href="#">Accès au site</a></span>
+    
+    <svg id="site_acces_line1"
+        width="200" height="250" version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <line x1="20" x2="320" y1="1" y2="1" stroke="white" fill="transparent" stroke-width="2"/>
+        <path fill="none" stroke="blue" stroke-width="5"/>
+    </svg>
+
 
 
     <div class="navebarre">
@@ -8,68 +18,66 @@
     <span id="menu">M E N U</span>
 
 
-    <span id="site_acces"><a href="#">Accès au site</a></span>
-    
-    <svg id="site_acces_line"
-        width="200" height="250" version="1.1" xmlns="http://www.w3.org/2000/svg">
-        <line x1="20" x2="320" y1="1" y2="1" stroke="white" fill="transparent" stroke-width="2"/>
-        <path fill="none" stroke="blue" stroke-width="5"/>
-    </svg>
-
-
-
     <!--{ include "home_composition/sections/section3/animations/animation1.html" }-->
 
     <div id="visible">
 
         <div id="container_image">
-
-            <img id="image"
-                src="static/home_composition/section3/section3/images/a.png"
-                onmouseOver='progress()';
-                onmouseOut='unprogress()';>
+            
+            <div id="container_image1">
 
 
-            <img id="image2"
-                src="static/home_composition/section3/section3/images/b.png">
+                    <img id="image"
+                        src="static/home_composition/section3/section3/images/a.png">
+
+                    <div id="github">
+                        <span href="" onclick="appear()">
+                            Github
+                        </span>
+                        <a href="https://github.com/JeanBaptisteServais/SYNERGO/tree/master/eye"
+                            id="link_github_eyes">
+                            : https://github.com/JeanBaptisteServais/SYNERGO/tree/master/eye
+                        </a>
+                    </div>
 
 
 
-            <p id="github">
-                <span href="" onclick="appear()">
-                    Github
-                </span>
-                <a href="https://github.com/JeanBaptisteServais/SYNERGO/tree/master/eye"
-                    id="link_github_eyes">
-                    : https://github.com/JeanBaptisteServais/SYNERGO/tree/master/eye
-                </a>
-            </p>
+            </div>
 
+
+
+
+            <div id="container_image_2">
+
+
+                    <div id="to_project">
+                        <h2 id="eyes_part_title">Eyes sections</h2>
+                        <center>
+                            <p id="eyes_explication">Venez voir notre détecteur d'iris à l'aide d'OpenCV !</p>
+                        </center>
+
+                        <div id="carre">
+
+                            <svg width="240" height="50" class="svg_square">
+                                <a href="#yoyo">
+                                    <rect x="1" y="1" id="squarebabs" width="238" height="48"
+                                        stroke="white" fill="transparent" stroke-width="2"/>
+                                    <text x="20" y="30" font-family="playfair display"
+                                        font-size="15" fill="white" id="project_view">
+                                        V I E W &nbsp; P R O J E C T
+                                    </text>
+                                </a>
+                            </svg>
+                        </div>
+                    </div>
+
+
+
+
+            </div>
 
         </div>
-
-        <div id="link_to">
-            <center>
-
-                <h2 id="eyes_explication">Eyes sections</h2>
-                <p id="explication">Venez voir notre détecteur d'iris à l'aide d'OpenCV !</p>
-                <div id="project_view">V I E W &nbsp; P R O J E C T</div>
-
-                <svg width="240" height="50" class="carre">
-                    <a href="#">
-                        <rect x="1" y="1" id="squarebabs" width="238" height="50"
-                            stroke="white" fill="transparent" stroke-width="2"/>
-                    </a>
-                </svg>
-
-            </center>
-        </div>
-
-        
-
     </div>
-
-
 </div>
 
 
@@ -77,12 +85,15 @@
 
 
 <style>
-    #container_image{
-        position:fixed;
-        height:50%;
-        width:100%;
-        margin-top:11%;
-        overflow:hidden;
+
+
+    #container_image1{
+        width:50%;
+        float:right;
+        height:100%;
+        position:static;
+        text-align:left;
+        padding-top:1%;
     }
     #link_github_eyes{
         font-size:0.86em;
@@ -93,78 +104,105 @@
         transition: opacity 2s;
         position:relative;
     }
-    #github{
-        position:relative;
-        color:white;
-        cursor:pointer;
-        margin-left:30%;
-    }
     #image{
-        position:relative;
-        width:39%;
-        height:78%;
-        margin-left:30%;
-        z-index:10;
+        width:80%;
+        height:80%;
 
         opacity:1;
         -webkit-transition: opacity 2s;
         -moz-transition: opacity 2s;
         -o-transition: opacity 2s;
         transition: opacity 2s;
+        
     }
-    #image2{
-        position:absolute;
-        width:39%;
-        height:78%;
-        left : 45.5%;
-        bottom : 21.5%;
-        z-index:1;
+    #github{
+
+        color:white;
+        cursor:pointer;
 
     }
-    #explication{
-        position:absolute;
-        margin-top:35%;
-        width:90%;
-        text-align:center;
-        margin-left:5%;
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    #container_image_2{
+        width:50%;
+        height:100%;
+        position:relative;
+    }
+    #to_project{
+        width:50%;
+        height:100%;
+        margin-left:25%;
+        margin-top:12%;
+    }
+    #eyes_part_title{
+        color:white;
+        margin-top:10%;
         font-weight:bold;
+        letter-spacing:1px;
+        padding-bottom:2%;
     }
     #eyes_explication{
-        margin-top:15%;
-        position:absolute;
-        font-size:2em;
-        width:100%;
-        letter-spacing:3px;
+        color:white;
+        font-weight:bold;
+        width:80%;
+        padding-bottom:8%;
     }
-    #project_view{
-        position:absolute;
-        letter-spacing:1px;
-        vertical-align: middle;
+    #carre{
         width:100%;
-        margin-top:67%;
-        font-size:0.8em;
-    }
-    .carre{
         position:relative;
-        margin-top:60%;
-        stroke-dasharray: 600;
-        transition: 1.5s;
         height:75px;
     }
-    .carre:hover {
+
+    .svg_square:hover {
         stroke-dashoffset: 600;
+        stroke:#2D3142;
+    }
+    .svg_square{
+        position:relative;
+        stroke-dasharray: 600;
+        transition: 1.5s;
     }
     #squarebabs:hover{
         stroke:#2D3142;
     }
-    #link_to{
-        position:absolute;
-        width:25%;
-        height:300px;
-        margin-top:11.5%;
-        margin-left:10%;
-        font-family: playfair display;
+    #project_view{
         color:white;
+        letter-spacing:2px;
+        position:fixed;
+        
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    #container_image{
+        position:absolute;
+        height:50%;
+        width:100%;
+        margin-top:11%;
+        overflow:hidden;
     }
     #transition1{
         position: relative;
@@ -177,17 +215,18 @@
         margin-top:8%;
     }
     #container{
-        background:#7BAABE;
         position:absolute;
         padding:0;
         margin:0;
         width:100%;
         height:100%;
+        background:#7BAABE;
     }
     #visible{
         width:100%;
         overflow:hidden;
         margin-top:4%;
+        height:90%;
     }
 
 
@@ -243,7 +282,41 @@
         color:white;
     }
 
-
+    #site_acces1{
+        position: absolute;
+        right:30px;
+        top:30px;
+        width:200px;
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        padding-bottom: 7px;
+        overflow: hidden;
+    }
+    #site_acces1:hover + #site_acces_line1{
+        display:block;
+        stroke-dashoffset: 0;
+    }
+    #site_acces_line1{
+        position: absolute;
+        right:40px;
+        top:50px;
+        height:20px;
+        display:block;
+        stroke-dasharray: 185;
+        stroke-dashoffset: 185;
+        transition: 1.5s;
+    }
+    #line_animation1{
+        margin-left:120px;
+        z-index: 200;
+        position: absolute;
+        margin-top:50px;
+        stroke-dasharray: 300;
+        stroke-dashoffset: 300;
+        transition: 1s;
+    }
 </style>
 
 
