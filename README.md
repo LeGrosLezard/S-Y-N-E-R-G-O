@@ -4,9 +4,8 @@ responsive
 
 faudra faire les animations via le scroll
 
-y manque le truk qui fait classe... (pteptre mettre le gif) et ca fait trop page !
 
-le carré est trop rgos
+
 
 <br><br><br><br><br><br><br><br><br>
 
