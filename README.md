@@ -1,10 +1,21 @@
 # S-Y-N-E-R-G-O
 
+
+
+faire un todoo pcque sinon le type s'amuse a faire des polygones
+
+image hover progression en rond
+
+mettre le lien github
+
+en appuyant sur view projet afficher le gif dans la fenetre a la fin des 2s de 4 heures hoisir une transition vers le projet
+
+faire la page suivante
+
+
 responsive
 
 faudra faire les animations via le scroll
-
-
 
 
 <br><br><br><br><br><br><br><br><br>
