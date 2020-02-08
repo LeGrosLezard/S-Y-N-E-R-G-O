@@ -2,6 +2,14 @@
 
 faudra faire les animations via le scroll
 
+la page faut mettre les animations un peu apres
+
+la page 2 ca depasse en bas
+
+la page 3 y'a un o qui se rajoute
+
+
+
 <br><br><br><br><br><br><br><br><br>
 
 
