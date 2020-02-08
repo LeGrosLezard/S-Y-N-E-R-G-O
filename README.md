@@ -1,6 +1,6 @@
 # S-Y-N-E-R-G-O
 
-
+sertieux c'est si moche que ca ? o_o
 
 faire un todoo pcque sinon le type s'amuse a faire des polygones
 
