@@ -22,26 +22,25 @@
         {% include "home_composition/sections/section2/section2.html" %}
 
 
-
         <div class="section" id="section3">
             {% include "home_composition/sections/section3/section3.html" %}
         </div>
 
         <div class="section" id="section4">
+            {% include "home_composition/sections/section4/section4.html" %}
         </div>
 
         <div class="section" id="section5">
-            <h1>YOOOOOOOOO</h1>
+            {% include "home_composition/sections/section5/section5.html" %}
         </div>
 
         <div class="section" id="section6">
-            <h1>coucou</h1>
+            {% include "home_composition/sections/section6/section6.html" %}
         </div>
 
 
         <div class="section" id="section7">
-            <h1>Section 3</h1>
-            fleche qui tourne
+            {% include "home_composition/sections/section7/section7.html" %}
         </div>
 
 
@@ -68,25 +67,69 @@
 
 <style>
 
+    /* Actual page */
+    body{
+        font-family: playfair display;
+        width:100%;
+        height:100%;
+        margin:0;
+        padding:0;
+    }
+    .section{
+        text-align:center;
+        width:100%;
+        border:1px solid transparent;
+    }
+    a{
+        color:white;
+        text-decoration:none;
+    }
 
-body{
-    font-family: playfair display;
-    width:100%;
-    height:100%;
-    margin:0;
-    padding:0;
-}
 
 
-.section{
-    text-align:center;
-    width:100%;
-    border:1px solid transparent;
-}
-a{
-    color:white;
-    text-decoration:none;
-}
+
+/* CLASSES */
+    .container_section{
+        position:absolute;
+        padding:0;
+        margin:0;
+        width:100%;
+        height:100%;
+    }
+
+
+/* SQUARE VIEW PROJECT */
+    .svg_square{
+        position:relative;
+        stroke-dasharray: 600;
+        transition: 1.5s;
+    }
+    .svg_square:hover {
+        stroke-dashoffset: 600;
+        stroke:#2D3142;
+    }
+
+    .svg_square:hover text{
+        stroke:none;
+    }
+    .project_view{
+        color:white;
+        letter-spacing:2px;
+        position:fixed;
+    }
+
+
+
+/* PAGE SECTION */
+    .page_section{
+        width:100%;
+        overflow:hidden;
+        margin-top:4%;
+        height:90%;
+        border:1px solid red;
+    }
+
+
 </style>
 
 
@@ -99,7 +142,7 @@ a{
 <script type="text/javascript">
     //sectionsColor: ['#1A1A1A', '#1A1A1A', '#7BAABE', 'whitesmoke', '#ccddff'],
     var myFullpage = new fullpage('#fullpage', {
-        sectionsColor: ['#1A1A1A', '#1A1A1A', '#7BAABE', 'whitesmoke', '#ccddff'],
+        sectionsColor: ['#1A1A1A', '#1A1A1A', '#7BAABE', '#455561', '#ccddff'],
         anchors: ['firstPage', 'secondPage', '3rdPage', '4thpage', 'dzad', 'cxwcw', 'lastPage'],
 
 
