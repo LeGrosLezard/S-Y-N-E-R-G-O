@@ -1,88 +1,77 @@
-        <div class="section" id="section1">
+<div class="section" id="section1">
 
-            <span id="site_acces"><a href="#">Accès au site</a></span>
-            
-            <svg id="site_acces_line"
-                width="200" height="250" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                <line x1="20" x2="320" y1="1" y2="1" stroke="white" fill="transparent" stroke-width="2"/>
-                <path fill="none" stroke="blue" stroke-width="5"/>
+    <span id="site_acces"><a href="#">Accès au site</a></span>
+    
+    <svg id="site_acces_line"
+        width="200" height="250" version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <line x1="20" x2="320" y1="1" y2="1" stroke="white" fill="transparent" stroke-width="2"/>
+        <path fill="none" stroke="blue" stroke-width="5"/>
+    </svg>
+
+
+    <div class="navebarre">
+        {% include "home_composition/navebarre/navebarre_logo.html" %}
+    </div>
+
+    <span id="menu">M E N U</span>
+
+
+    <center><h1 id="section1_h1">SYNERGO</h1></center>
+
+    <center>
+        <div id="section1_titre">
+
+            <h2 id="section1_part1">
+                <img
+                    src="https://fontmeme.com/permalink/200206/4bb476e3640b6006a396c23af50ddb52.png"
+                    alt="https://fontmeme.com/fr/polices-de-calligraphie/"
+                    border="0" >
+            </h2>
+
+            <svg id="line_animation"
+                width="500" height="2" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                <line x1="20" x2="300" y1="1" y2="1" stroke="white" fill="transparent" stroke-width="3"/>
+                <path fill="none" stroke="white" stroke-width="50"/>
             </svg>
 
+            <h1 id="section1_part2">Du</h1>
 
-            <div class="navebarre">
-                {% include "home_composition/navebarre/navebarre_logo.html" %}
-            </div>
-
-            <span id="menu">M E N U</span>
-
-
-            <center><h1 id="section1_h1">SYNERGO</h1></center>
-
-            <center>
-                <div id="section1_titre">
-
-                    <h2 id="section1_part1">
-                        <img
-                            src="https://fontmeme.com/permalink/200206/4bb476e3640b6006a396c23af50ddb52.png"
-                            alt="https://fontmeme.com/fr/polices-de-calligraphie/"
-                            border="0" >
-                    </h2>
-
-                    <svg id="line_animation"
-                        width="500" height="2" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                        <line x1="20" x2="300" y1="1" y2="1" stroke="white" fill="transparent" stroke-width="3"/>
-                        <path fill="none" stroke="white" stroke-width="50"/>
-                    </svg>
- 
-                    <h1 id="section1_part2">Du</h1>
-
-                    <h1 id="section1_part3">comportement</h1>
-
-                </div>
-            </center>
-
-
-
-
-
-
-
-
-
-
-
-
-            <div id="arrow">
-                <a href="/#3rdPage">{% include "home_composition/arrow/arrow1.html" %}</a>
-                <a href="/#secondPage">{% include "home_composition/arrow/arrow2.html" %}</a>  
-            </div>
-
-
-
-
-            
-
+            <h1 id="section1_part3">comportement</h1>
 
         </div>
+    </center>
+
+
+    <div id="arrow">
+        <a href="/#3rdPage">{% include "home_composition/arrow/arrow1.html" %}</a>
+        <a href="/#secondPage">{% include "home_composition/arrow/arrow2.html" %}</a>  
+    </div>
+
+
+</div>
 
 
 
-
+<script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/baffle@0.3.6/dist/baffle.min.js"></script>
 
 <script>
 
-    document.getElementById("line_animation").style.strokeDashoffset = "0";
+    //FIRST LINE ANIMATION
+    $(document).ready(function() {
 
-    setTimeout(function(){
-        document.getElementById("line_animation").style.strokeDashoffset = "300";
-        document.getElementById("line_animation").style.transition = "0.3s";
-    }, 1000);
+        document.getElementById("line_animation").style.strokeDashoffset = "0";
 
+        setTimeout(function(){
+            document.getElementById("line_animation").style.strokeDashoffset = "300";
+            document.getElementById("line_animation").style.transition = "0.3s";
+        }, 1000);
 
+    });
 
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/baffle@0.3.6/dist/baffle.min.js"></script>
+
 
 <script>
 
@@ -114,115 +103,118 @@
 
 
 
+
+
+
 <style>
-#section1{
-    position:static;
-    width:100%;
-    height:100%;
-    padding:0;
-    margin:0;
-    color:white;
-}
-#section1_h1{
-    position:relative;
-    margin-top:200px;
-    font-weight: bold;
-    letter-spacing: 5px;
-    color:white;
-    font-size: 3em;
-    width:250px;
-    height:35px;
-    z-index: 1;
-}
-.navebarre{
-    position:absolute;
-    top:0;
-    left:0;
-    padding:10px;
-    width:50px;
-}
-#site_acces{
-    position: fixed;
-    right:30px;
-    top:30px;
-    width:200px;
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 4px;
-    padding-bottom: 7px;
-    overflow: hidden;
-}
-#site_acces:hover + #site_acces_line{
-    display:block;
-    stroke-dashoffset: 0;
-}
-#site_acces_line{
-    position: fixed;
-    right:40px;
-    top:50px;
-    height:20px;
-    display:block;
-    stroke-dasharray: 185;
-    stroke-dashoffset: 185;
-    transition: 1.5s;
-}
-#line_animation{
-    margin-left:120px;
-    z-index: 200;
-    position: absolute;
-    margin-top:50px;
-    stroke-dasharray: 300;
-    stroke-dashoffset: 300;
-    transition: 1s;
-}
-#menu{
-    position:absolute;
-    top:25px;
-    left:70px;
-    font-size: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-#arrow{
-    position:absolute;
-    bottom:0;
-    right:0;
-    padding-bottom:30px;
-    padding-right:15px;
-    height:90px;
-    width:40px;
-}
-#arrow1{
-    display:none;
-}
-#section1_titre{
-    width:450px;
-    height:150px;
-    position:relative;
-    z-index: 1;
-}
-#section1_part1{
-    position:relative;
-    float:right;
-    margin-top:-5px;
-    padding-bottom:5px;
-}
-#section1_part2{
-    position:relative;
-    float:left;
-    margin-left:95px;
-    margin-top:45px;
-    visibility:hidden;
-}
-#section1_part3{
-    position:relative;
-    margin-top:45px;
-    font-size:2.5em;
-    margin-left:100px;
-    height:40px;
-    width:300px;
-    visibility:hidden;
-}
+    #section1{
+        position:static;
+        width:100%;
+        height:100%;
+        padding:0;
+        margin:0;
+        color:white;
+    }
+    #section1_h1{
+        position:relative;
+        margin-top:200px;
+        font-weight: bold;
+        letter-spacing: 5px;
+        color:white;
+        font-size: 3em;
+        width:250px;
+        height:35px;
+        z-index: 1;
+    }
+    .navebarre{
+        position:absolute;
+        top:0;
+        left:0;
+        padding:10px;
+        width:50px;
+    }
+    #site_acces{
+        position: fixed;
+        right:30px;
+        top:30px;
+        width:200px;
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        padding-bottom: 7px;
+        overflow: hidden;
+    }
+    #site_acces:hover + #site_acces_line{
+        display:block;
+        stroke-dashoffset: 0;
+    }
+    #site_acces_line{
+        position: fixed;
+        right:40px;
+        top:50px;
+        height:20px;
+        display:block;
+        stroke-dasharray: 185;
+        stroke-dashoffset: 185;
+        transition: 1.5s;
+    }
+    #line_animation{
+        margin-left:120px;
+        z-index: 200;
+        position: absolute;
+        margin-top:50px;
+        stroke-dasharray: 300;
+        stroke-dashoffset: 300;
+        transition: 1s;
+    }
+    #menu{
+        position:absolute;
+        top:25px;
+        left:70px;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    #arrow{
+        position:absolute;
+        bottom:0;
+        right:0;
+        padding-bottom:30px;
+        padding-right:15px;
+        height:90px;
+        width:40px;
+    }
+    #arrow1{
+        display:none;
+    }
+    #section1_titre{
+        width:450px;
+        height:150px;
+        position:relative;
+        z-index: 1;
+    }
+    #section1_part1{
+        position:relative;
+        float:right;
+        margin-top:-5px;
+        padding-bottom:5px;
+    }
+    #section1_part2{
+        position:relative;
+        float:left;
+        margin-left:95px;
+        margin-top:45px;
+        visibility:hidden;
+    }
+    #section1_part3{
+        position:relative;
+        margin-top:45px;
+        font-size:2.5em;
+        margin-left:100px;
+        height:40px;
+        width:300px;
+        visibility:hidden;
+    }
 
 </style>
