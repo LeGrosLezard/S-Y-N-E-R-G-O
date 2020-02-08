@@ -8,7 +8,7 @@ la page 2 ca depasse en bas
 
 la page 3 y'a un o qui se rajoute
 
-
+pour les traits et les bug baisser le timout
 
 <br><br><br><br><br><br><br><br><br>
 
