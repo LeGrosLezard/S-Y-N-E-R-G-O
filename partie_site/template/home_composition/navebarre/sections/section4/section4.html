@@ -1,30 +1,15 @@
 
 <div class="container_section" id="container4">
 
-    <span id="site_acces1"><a href="#">Accès au site</a></span>
-    
-    <svg id="site_acces_line1"
-        width="200" height="250" version="1.1" xmlns="http://www.w3.org/2000/svg">
-        <line x1="20" x2="320" y1="1" y2="1" stroke="white" fill="transparent" stroke-width="2"/>
-        <path fill="none" stroke="blue" stroke-width="5"/>
-    </svg>
+    {% include "home_composition/site_access/site_access.html" %}
+    {% include "home_composition/navebarre/navebarre_logo.html" %}
 
 
+    <div class="page_section">
 
-    <div class="navebarre">
-        {% include "home_composition/navebarre/navebarre_logo.html" %}
-    </div>
-
-    <span id="menu">M E N U</span>
-
-
-    <!--{ include "home_composition/sections/section3/animations/animation1.html" }-->
-
-    <div id="visible">
-
-        <div id="container_image">
+        <div id="container_image_direction">
             
-            <div id="container_image1">
+            <div id="container_image">
 
 
                     <img id="image"
@@ -47,7 +32,7 @@
 
 
 
-            <div id="container_image_2">
+            <div id="container_direction">
 
                     <div id="to_project">
                         <h2 id="eyes_part_title">Head sections</h2>
@@ -62,7 +47,7 @@
                                     <rect x="1" y="1" id="squarebabs" width="238" height="48"
                                         stroke="white" fill="transparent" stroke-width="2"/>
                                     <text x="20" y="30" font-family="playfair display"
-                                        font-size="15" fill="white" id="project_view">
+                                        font-size="15" fill="white" class="project_view">
                                         V I E W &nbsp; P R O J E C T
                                     </text>
                                 </a>
@@ -86,7 +71,7 @@
 <style>
 
 
-    #container_image1{
+    #container_image{
         width:50%;
         float:right;
         height:100%;
@@ -106,13 +91,6 @@
     #image{
         width:80%;
         height:80%;
-
-        opacity:1;
-        -webkit-transition: opacity 2s;
-        -moz-transition: opacity 2s;
-        -o-transition: opacity 2s;
-        transition: opacity 2s;
-        
     }
     #github{
 
@@ -134,7 +112,7 @@
 
 
     
-    #container_image_2{
+    #container_direction{
         width:50%;
         height:100%;
         position:relative;
@@ -164,24 +142,9 @@
         height:75px;
     }
 
-    .svg_square:hover {
-        stroke-dashoffset: 600;
-        stroke:#2D3142;
-    }
-    .svg_square{
-        position:relative;
-        stroke-dasharray: 600;
-        transition: 1.5s;
-    }
     #squarebabs:hover{
         stroke:#2D3142;
     }
-    #project_view{
-        color:white;
-        letter-spacing:2px;
-        position:fixed;
-        
-    }
 
 
 
@@ -196,7 +159,8 @@
 
 
 
-    #container_image{
+
+    #container_image_direction{
         position:absolute;
         height:50%;
         width:100%;
@@ -215,21 +179,6 @@
     }
     #container4{
         background:#1A936F;
-    }
-    #visible{
-        width:100%;
-        overflow:hidden;
-        margin-top:4%;
-        height:90%;
-    }
-
-
-    .navebarre{
-        position:absolute;
-        top:0;
-        left:0;
-        padding:10px;
-        width:50px;
     }
     #site_acces{
         position: fixed;
@@ -325,23 +274,12 @@
     //Onclick github link make appear link
     function appear(){
         document.getElementById("link_github_eyes").style.opacity = 1;
-        document.getElementById("image").style.opacity = 0;
-        setTimeout(function(){document.getElementById("image").style.opacity = 1;}, 1000);
     };
 
-    //Switch Eyes picture to Progress picture
-    function progress(){
-        document.getElementById("image").style.opacity = 0;
-    };
-    //Switch Progress picture to Eyes picture
-    function unprogress(){
-        document.getElementById("image").style.opacity = 1;
-    };
 
 
 
 </script>
-
 
 
 
