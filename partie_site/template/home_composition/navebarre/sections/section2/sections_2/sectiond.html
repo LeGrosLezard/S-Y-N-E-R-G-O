@@ -4,13 +4,13 @@
 
         <h3 id="hand"  onmouseover="active('line_hand1', 'line_hand2', 'line_hand3', 'line_hand4')"
                       onmouseout="deactive('line_hand1', 'line_hand2', 'line_hand3', 'line_hand4',
-                                           '280', '280', '200', '150')">
+                                           '140', '155', '155', '125')">
             <a href="/#dzad">LES MAINS</a>
         </h3>
 
         <svg class="line_under_h3" id="line_hand"
             width="200" height="2" version="1.1" xmlns="http://www.w3.org/2000/svg">
-            <line x1="20" x2="320" y1="1" y2="1" stroke="white" fill="transparent" stroke-width="2"/>
+            <line x1="20" x2="300" y1="1" y2="1" stroke="white" fill="transparent" stroke-width="2"/>
             <path fill="none" stroke="blue" stroke-width="5"/>
         </svg>
 
@@ -18,32 +18,32 @@
         <ul>
             <li>Détection de la main</li>
             <svg class="line_under_h3" id="line_hand1"
-                width="200" height="2" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                <line x1="0" x2="320" y1="1" y2="1" stroke="white" fill="transparent" stroke-width="2"/>
+                width="140" height="1" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                <line x1="0" x2="140" y1="1" y2="1" stroke="white" fill="transparent" stroke-width="2"/>
                 <path fill="none" stroke="blue" stroke-width="5"/>
             </svg>
 
 
             <li>Traitement du squelette</li>
             <svg class="line_under_h3" id="line_hand2"
-                width="200" height="2" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                <line x1="0" x2="320" y1="1" y2="1" stroke="white" fill="transparent" stroke-width="2"/>
+                width="155" height="1" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                <line x1="0" x2="155" y1="1" y2="1" stroke="white" fill="transparent" stroke-width="2"/>
                 <path fill="none" stroke="blue" stroke-width="5"/>
             </svg>
 
 
             <li>Application du squelette</li>
             <svg class="line_under_h3" id="line_hand3"
-                width="200" height="2" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                <line x1="0" x2="320" y1="1" y2="1" stroke="white" fill="transparent" stroke-width="2"/>
+                width="155" height="1" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                <line x1="0" x2="155" y1="1" y2="1" stroke="white" fill="transparent" stroke-width="2"/>
                 <path fill="none" stroke="blue" stroke-width="5"/>
             </svg>
 
 
             <li>Analyse des doigts</li>
             <svg class="line_under_h3" id="line_hand4"
-                width="150" height="2" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                <line x1="0" x2="150" y1="1" y2="1" stroke="white" fill="transparent" stroke-width="2"/>
+                width="125" height="1" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                <line x1="0" x2="125" y1="1" y2="1" stroke="white" fill="transparent" stroke-width="2"/>
                 <path fill="none" stroke="blue" stroke-width="5"/>
             </svg>  
         </ul>
@@ -66,20 +66,24 @@
         stroke-dashoffset: 320;
         transition: 1.5s;
     }
-    #line_hand1,
+    #line_hand1{
+        stroke-dasharray: 140;
+        stroke-dashoffset: 140;
+        transition: 1.5s;
+    }
     #line_hand2{
-        stroke-dasharray: 280;
-        stroke-dashoffset: 280;
+        stroke-dasharray: 155;
+        stroke-dashoffset: 155;
         transition: 1.5s;
     }
     #line_hand3{
-        stroke-dasharray: 200;
-        stroke-dashoffset: 200;
+        stroke-dasharray: 155;
+        stroke-dashoffset: 155;
         transition: 1.5s;
     }
     #line_hand4{
-        stroke-dasharray: 150;
-        stroke-dashoffset: 150;
+        stroke-dasharray: 125;
+        stroke-dashoffset: 125;
         transition: 1.5s;
     }
 </style>
