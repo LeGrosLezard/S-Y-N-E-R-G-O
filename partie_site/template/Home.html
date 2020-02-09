@@ -126,9 +126,69 @@
         overflow:hidden;
         margin-top:4%;
         height:90%;
-        border:1px solid red;
+    }
+    .container_image_direction{
+        position:absolute;
+        height:50%;
+        width:100%;
+        margin-top:11%;
+        overflow:hidden;
+    }
+    .container_image{
+        width:50%;
+        float:right;
+        height:100%;
+        position:static;
+        text-align:left;
+        padding-top:1%;
+    }
+    .image_page{
+        width:80%;
+        height:80%;
+    }
+    .github_direction{
+        color:white;
+        cursor:pointer;
+    }
+    .container_direction{
+        width:50%;
+        height:100%;
+        position:relative;
     }
 
+    .to_project_title{
+        color:white;
+        margin-top:10%;
+        font-weight:bold;
+        letter-spacing:1px;
+        padding-bottom:2%;
+    }
+    .project_explication{
+        color:white;
+        font-weight:bold;
+        width:80%;
+        padding-bottom:8%;
+    }
+    .carre{
+        width:100%;
+        position:relative;
+        height:75px;
+    }
+    .link_github{
+        font-size:0.86em;
+        opacity:0;
+        -webkit-transition: opacity 2s;
+        -moz-transition: opacity 2s;
+        -o-transition: opacity 2s;
+        transition: opacity 2s;
+        position:relative;
+    }
+    .to_project{
+        width:50%;
+        height:100%;
+        margin-left:25%;
+        margin-top:12%;
+    }
 
 </style>
 
@@ -178,4 +238,14 @@
         });
     });
 
+</script>
+
+
+
+
+<script>
+    //Onclick github link make appear link
+    function appear(){
+        document.getElementById("link_github_eyes").style.opacity = 1;
+    };
 </script>
