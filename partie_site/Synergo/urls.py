@@ -26,11 +26,13 @@ from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path(r'', views.Garde),
-    path(r'transition', views.transition),
-    path(r'home', views.home),
+    path(r'Garde', views.garde),
+    path(r'', views.home),
     path(r'essais', views.essais),
     path(r'download', include('download.urls')),
+
+    path('eyes_sections', views.eyes_sections),
+
 ]+ static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
 
 

@@ -2,18 +2,17 @@ from django.shortcuts import render
 
 
 
-def essais(request):
-    return render(request, "essais.html")
 
-def Garde(request):
-    return render(request, "Garde.html")
-
-def transition(request):
-    return render(request, "Transition.html")
 
 def home(request):
     return render(request, "Home.html")
 
 
+def garde(request):
+    return render(request, "Garde.html")
 
+def eyes_sections(request):
+    return render(request, "eyes_sections.html")
 
+def essais(request):
+    return render(request, "essais.html")
