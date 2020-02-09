@@ -1,7 +1,19 @@
 <div class="section" id="section1">
 
-    {% include "home_composition/site_access/site_access.html" %}
-    {% include "home_composition/navebarre/navebarre_logo.html" %}
+    <span id="site_acces"><a href="#">Accès au site</a></span>
+    
+    <svg id="site_acces_line"
+        width="200" height="250" version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <line x1="20" x2="320" y1="1" y2="1" stroke="white" fill="transparent" stroke-width="2"/>
+        <path fill="none" stroke="blue" stroke-width="5"/>
+    </svg>
+
+
+    <div class="navebarre">
+        {% include "home_composition/navebarre/navebarre_logo.html" %}
+    </div>
+
+    <span id="menu">M E N U</span>
 
 
     <center><h1 id="section1_h1">SYNERGO</h1></center>
@@ -113,6 +125,41 @@
         width:250px;
         height:35px;
         z-index: 1;
+    }
+    #site_acces{
+        position: fixed;
+        right:30px;
+        top:30px;
+        width:200px;
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        padding-bottom: 7px;
+        overflow: hidden;
+    }
+    #site_acces:hover + #site_acces_line{
+        display:block;
+        stroke-dashoffset: 0;
+    }
+    #site_acces_line{
+        position: fixed;
+        right:40px;
+        top:50px;
+        height:20px;
+        display:block;
+        stroke-dasharray: 185;
+        stroke-dashoffset: 185;
+        transition: 1.5s;
+    }
+    #line_animation{
+        margin-left:120px;
+        z-index: 200;
+        position: absolute;
+        margin-top:50px;
+        stroke-dasharray: 300;
+        stroke-dashoffset: 300;
+        transition: 1s;
     }
     #menu{
         position:absolute;
