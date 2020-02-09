@@ -1,4 +1,3 @@
-
 <div class="container_section" id="container3">
 
 
@@ -12,10 +11,27 @@
 
     <div class="page_section">
 
+
+        <div id="transition_section3">
+            <svg width="100%" height="100%" id="svg_transition_section3">
+              <rect x="0" y="0" width="100%" height="100%" stroke="#9FB1BC" fill="transparent" stroke-width="10"/>
+            </svg>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
         <div class="container_image_direction">
 
-
-
+            
             <div class="container_image">
 
 
@@ -66,7 +82,7 @@
 
                     <div class="carre">
 
-                        <svg width="240" height="50" class="svg_square">
+                        <svg width="240" height="50" class="svg_square" onclick="redirect()">
 
                             <a href="#yoyo">
  
@@ -95,10 +111,16 @@
 
 
 
-
 <style>
-
-
+    #transition_section3{
+        position:absolute;
+        width:60%;
+        height:70%;
+        margin-left:20%;
+        margin-top:4%;
+        stroke-dasharray: 385%;
+        stroke-dashoffset: 385%;
+    }
     #squarebabs:hover{
         stroke:#2D3142;
     }
@@ -140,12 +162,19 @@
 
 
 
+<script>
 
+    function redirect(){
+        document.getElementById("transition_section3").style.zIndex = "200";
+        document.getElementById("transition_section3").style.strokeDashoffset  = "0";
+        document.getElementById("transition_section3").style.transition = "1.5s";
 
+        setTimeout(function(){
+            document.getElementById("transition_section3").style.backgroundColor  = "black";}, 1000)
+        
+    }
 
-
-
-
+</script>
 
 
 
