@@ -270,21 +270,23 @@
 
 
 
-
 <script>
-    //Onclick github link make appear link
-    function appear(){
-        document.getElementById("link_github_eyes").style.opacity = 1;
-        document.getElementById("image_page_eye").style.opacity = 0;
-        setTimeout(function(){document.getElementById("image_page_eye").style.opacity = 1;}, 1000);
+
+    //Onclick github link appears
+    function appear(github_section, image, link){
+        document.getElementById(github_section).style.opacity = 1;
+        document.getElementById(image).style.opacity = 0;
+        document.getElementById(link).style.opacity = 1;
+        setTimeout(function(){document.getElementById(image).style.opacity = 1;}, 2000);
     };
 
     //Switch Eyes picture to Progress picture
-    function progress(){
-        document.getElementById("image_page_eye").style.opacity = 0;
+    function progress(image){
+        document.getElementById(image).style.opacity = 0;
     };
     //Switch Progress picture to Eyes picture
-    function unprogress(){
-        document.getElementById("image_page_eye").style.opacity = 1;
+    function unprogress(image){
+        document.getElementById(image).style.opacity = 1;
     };
+
 </script>
