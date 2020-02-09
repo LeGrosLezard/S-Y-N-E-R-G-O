@@ -16,7 +16,27 @@
             <svg width="100%" height="100%" id="svg_transition_section3">
               <rect x="0" y="0" width="100%" height="100%" stroke="#9FB1BC" fill="transparent" stroke-width="10"/>
             </svg>
+
+
+
+
+
+            <span class="text_animation_section3" id="text_un"><p id="un"></p></span>
+            <span class="text_animation_section3" id="text_deux"><p id="deux"></p></span>
+            <span class="text_animation_section3" id="text_trois"><p id="trois"></p></span>
+            <span class="text_animation_section3" id="text_quattre"><p id="quattre"></p></span>
+
+
+
+
+
+
+
+
         </div>
+
+
+        <span id="logo_animation">S Y N E R G O</span>
 
 
 
@@ -73,7 +93,7 @@
 
             <div class="container_direction">
 
-                <div class="to_project">
+                <div class="to_project" id="eyes_explications">
 
                     <h2 class="to_project_title">Eyes sections</h2>
                     <center>
@@ -112,6 +132,76 @@
 
 
 <style>
+
+    #un{
+        margin-top:0;
+        font-size:2.5em;
+        letter-spacing:2px;
+        font-weight:bold;
+        margin-left:8%;
+    }
+    #deux{
+        margin-top:0;
+        font-size:4em;
+        margin-left:30%;
+    }
+    #trois{
+        margin-top:15px;
+        font-size:2em;
+        float:left;
+    }
+    #quattre{
+        margin-top:0;
+        font-size:1.5em;
+        float:left;
+        font-style:italic;
+    }
+    .text_animation_section3{
+        position:absolute;
+        z-index:49;
+        color:white;
+    }
+    #text_un{
+        width:60%;
+        height:15%;
+        left:0;
+        top:10%;
+    }
+    #text_deux{
+        width:35%;
+        height:15%;
+        left:0;
+        top:45%;
+    }
+    #text_trois{
+        width:75%;
+        height:15%;
+        left:40%;
+        top:45%;
+    }
+    #text_quattre{
+        width:30%;
+        height:15%;
+        left:70%;
+        top:75%;
+    }
+    #text_cinq{
+
+    }
+    #logo_animation{
+        position:absolute;
+        font-size:4.5em;
+        font-weight:bold;
+        z-index:50;
+        width:100%;
+        margin-top:15%;
+        left:0;
+        opacity:0;
+        -webkit-transition: opacity 2s;
+        -moz-transition: opacity 2s;
+        -o-transition: opacity 2s;
+        transition: opacity 2s;  
+    }
     #transition_section3{
         position:absolute;
         width:60%;
@@ -159,22 +249,114 @@
   integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
   crossorigin="anonymous"></script>
 
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 
 <script>
 
-    function redirect(){
-        document.getElementById("transition_section3").style.zIndex = "200";
-        document.getElementById("transition_section3").style.strokeDashoffset  = "0";
-        document.getElementById("transition_section3").style.transition = "1.5s";
 
-        setTimeout(function(){
-            document.getElementById("transition_section3").style.backgroundColor  = "black";}, 1000)
-        
+
+    var DISPLAYING = 0;
+
+    var text1 = "S Y N E R G O,";
+    var text2 = "Nous,"
+    var text3 = "voyons ensemble.";
+    var text4 = "Synergo";
+
+    var text1_treat = text1.split("");
+    var text2_treat = text2.split("");
+    var text3_treat = text3.split("");
+    var text4_treat = text4.split("");
+
+    var timeLooper;
+
+
+    //A REFAIREEEEEE MAIS JE LA COMPREND PAS !!!!!!!!!!!!
+
+    function write1(){
+        if (text1_treat.length > 0){
+            document.getElementById('un').innerHTML += text1_treat.shift();
+        }
+        timeLooper = setTimeout('write1()', 50);
+    };
+    function write2(){
+        if (text2_treat.length > 0){
+            document.getElementById('deux').innerHTML += text2_treat.shift();
+        }
+        timeLooper = setTimeout('write2()', 50);
+    };
+    function write3(){
+        if (text3_treat.length > 0){
+            document.getElementById('trois').innerHTML += text3_treat.shift();
+        }
+        timeLooper = setTimeout('write3()', 50);
+
+        if (document.getElementById('trois').innerHTML.length == 30){
+            DISPLAYING = 1
+        };
+    };
+
+    function write4(){
+        if (text4_treat.length > 0){
+            document.getElementById('quattre').innerHTML += text4_treat.shift();
+        }
+        timeLooper = setTimeout('write4()', 50);
+    };
+
+
+
+
+
+    function blur_div(element){
+        document.getElementById(element).style.WebkitFilter = " blur(10px)";
+        document.getElementById(element).style.MozFilter = " blur(10px)";
+        document.getElementById(element).style.OFilter = " blur(10px)";
+        document.getElementById(element).style.MsFilter = " blur(10px)";
+        document.getElementById(element).style.filter = " blur(10px)";
     }
 
+
+    function redirect(){
+
+        setTimeout(function(){
+
+            blur_div("image_page_eye");
+            blur_div("eyes_explications");
+            document.getElementById("logo_animation").style.opacity = 1;
+            document.getElementById("transition_section3").style.zIndex = "200";
+            document.getElementById("transition_section3").style.strokeDashoffset  = "0";
+            document.getElementById("transition_section3").style.transition = "1.5s";}, 1000)
+
+        setTimeout(function(){
+            document.getElementById("transition_section3").style.backgroundColor  = "black";}, 2500)
+
+
+
+        setTimeout('write1()', 4000);
+        setTimeout('write4()', 4000);
+        setTimeout('write2()', 4000);
+        setTimeout('write3()', 4000);
+
+    };
+
+
+
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
