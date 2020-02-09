@@ -1,13 +1,6 @@
 # S-Y-N-E-R-G-O
 
-mettre une image plus grand en dessous le l'image milieu - de l'image, mileiu carré (image plus grande)
-
-la transition faut que les deux pages s'ouvrent sur la page
-
-la page noir mettre synergo en vreticale en blanc
-
-ok au click sur le github on met le gif et au click sur le projet
-
+réécrire la section
 
 responsive
 
