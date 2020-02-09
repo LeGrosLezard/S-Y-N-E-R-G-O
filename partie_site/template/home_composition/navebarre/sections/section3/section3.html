@@ -19,8 +19,26 @@
             <div class="container_image">
 
 
-                <img class="image_page"
-                    src="static/home_composition/section3/section3/images/a.png">
+                <img class="image_page" id="image_page_eye"
+                    src="static/home_composition/section3/section3/images/a.png"
+                        onmouseOver="progress()"
+                        onmouseOut="unprogress()">
+
+
+                 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" class="svg_progress">
+                    <circle id="stroke-3" cx="80%" cy="55%" r="70" style="z-index:1;"/>
+                 </svg>
+
+                 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" class="svg_progress">
+                    <circle id="stroke-2" cx="80%" cy="55%" r="70"/>
+                 </svg>
+
+                 <span class="percent_progress">60%</span> 
+
+
+
+
+
 
 
                 <div class="github_direction">
@@ -90,9 +108,31 @@
     #container3{
         background:#7BAABE;
     }
+    #stroke-2 {
+      stroke: #96C3CE;
+      position:absolute;
+      fill: none;
+      stroke-width: 2%;
+      stroke-dasharray: 300;
+    }
+    #stroke-3 {
+      stroke: #4BC6B9;
+      position:absolute;
+      fill: none;
+      stroke-width: 2%;
+      stroke-dasharray: 450;
+
+    }
+
+
 
 
 </style>
+
+
+
+
+
 
 
 
