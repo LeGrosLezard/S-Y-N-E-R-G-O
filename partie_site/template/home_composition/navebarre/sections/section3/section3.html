@@ -21,8 +21,8 @@
 
                 <img class="image_page" id="image_page_eye"
                     src="static/home_composition/section3/section3/images/a.png"
-                        onmouseOver="progress()"
-                        onmouseOut="unprogress()">
+                        onmouseOver="progress('image_page_eye')"
+                        onmouseOut="unprogress('image_page_eye')">
 
 
                  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" class="svg_progress">
@@ -38,15 +38,12 @@
 
 
 
-
-
-
-                <div class="github_direction">
-                    <span href="" onclick="appear()">
+                <div class="github_direction" id="github_direction_eyes">
+                    <span href="" onclick="appear('github_direction_eyes', 'image_page_eye', 'link_github_eyes')">
                         Github
                     </span>
                     <a href="https://github.com/JeanBaptisteServais/SYNERGO/tree/master/eye"
-                        class="link_github">
+                        class="link_github" id="link_github_eyes">
                         : https://github.com/JeanBaptisteServais/SYNERGO/tree/master/eye
                     </a>
                 </div>
@@ -135,6 +132,10 @@
 
 
 
+<script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
 
 
 
