@@ -141,10 +141,26 @@
         position:static;
         text-align:left;
         padding-top:1%;
+        overflow:hidden;
     }
     .image_page{
+        position:relative;
         width:80%;
         height:80%;
+        opacity:1;
+        z-index:20;
+        -webkit-transition: opacity 2s;
+        -moz-transition: opacity 2s;
+        -o-transition: opacity 2s;
+        transition: opacity 2s;
+    }
+    .svg_progress{
+        position:absolute;
+        width:38%;
+        height:80%;
+        left : 40%;
+        bottom : 21.5%;
+        z-index:1;
     }
     .github_direction{
         color:white;
@@ -155,15 +171,16 @@
         height:100%;
         position:relative;
     }
-
     .to_project_title{
+        position:relative;
         color:white;
-        margin-top:10%;
+        margin-top:-10%;
         font-weight:bold;
         letter-spacing:1px;
         padding-bottom:2%;
     }
     .project_explication{
+        position:relative;
         color:white;
         font-weight:bold;
         width:80%;
@@ -189,6 +206,17 @@
         margin-left:25%;
         margin-top:12%;
     }
+    .percent_progress{
+        position:absolute;
+        left : 68%;
+        top : 35%;
+        color:white;
+        font-size:2em;
+        font-family: playfair display;
+        z-index:10;
+    }
+
+
 
 </style>
 
@@ -247,5 +275,16 @@
     //Onclick github link make appear link
     function appear(){
         document.getElementById("link_github_eyes").style.opacity = 1;
+        document.getElementById("image_page_eye").style.opacity = 0;
+        setTimeout(function(){document.getElementById("image_page_eye").style.opacity = 1;}, 1000);
+    };
+
+    //Switch Eyes picture to Progress picture
+    function progress(){
+        document.getElementById("image_page_eye").style.opacity = 0;
+    };
+    //Switch Progress picture to Eyes picture
+    function unprogress(){
+        document.getElementById("image_page_eye").style.opacity = 1;
     };
 </script>
