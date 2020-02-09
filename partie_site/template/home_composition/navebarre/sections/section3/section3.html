@@ -4,8 +4,6 @@
     {% include "home_composition/site_access/site_access.html" %}
     {% include "home_composition/navebarre/navebarre_logo.html" %}
 
-    <!--{ include "home_composition/sections/section3/animations/animation1.html" }-->
-
 
 
 
@@ -69,15 +67,15 @@
                         onmouseOut="unprogress('image_page_eye')">
 
 
-                 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" class="svg_progress">
+                 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" class="svg_progress" id="svg_progress_eye1">
                     <circle id="stroke-3" cx="80%" cy="55%" r="70" style="z-index:1;"/>
                  </svg>
 
-                 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" class="svg_progress">
+                 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" class="svg_progress" id="svg_progress_eye2">
                     <circle id="stroke-2" cx="80%" cy="55%" r="70"/>
                  </svg>
 
-                 <span class="percent_progress">60%</span> 
+                 <span class="percent_progress" id="percent_eye">60%</span> 
 
 
 
@@ -140,6 +138,9 @@
 
 
 <style>
+    #image_page_eye{
+        z-index:50;
+    }
     #section_eyes_section{
         opacity:1;
         -webkit-transition: opacity 2s;
@@ -441,6 +442,13 @@
 
         setTimeout(function(){
 
+            
+            document.getElementById("image_page_eye").style.zIndex = "1";
+            document.getElementById("svg_progress_eye1").style.display = "none";
+            document.getElementById("svg_progress_eye2").style.display = "none";
+            document.getElementById("percent_eye").style.display = "none";
+            
+            
             blur_div("image_page_eye");
             blur_div("eyes_explications");
             document.getElementById("logo_animation").style.opacity = 1;
