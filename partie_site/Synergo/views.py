@@ -6,7 +6,7 @@ from django.shortcuts import render
 
 
 #Root for the eyes_sections template
-from path_views_template_root import eyes_path
+from .path_views_template_root import eyes_path
 
 
 
