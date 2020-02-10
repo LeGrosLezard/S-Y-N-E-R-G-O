@@ -1,11 +1,186 @@
-<div class="section3_part2_page" id="section3_part2_part2">
-    <div id=""
-        onclick="scrolling('true', 'false', '#section3_part2_part2', '')">
-        <span id="span2">aaa</span>
-    </div><br>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-    <div id=""
-        onclick="scrolling('false', 'true', '#section3_part2_part2', '#section3_part2_part1')">
-        <span id="span3">bb</span>
+<div class="section3_part2_page" id="section3_part2_part2">
+
+
+
+    <div id="" onclick="scrolling('true', 'false', '#section3_part2_part2', '')">
+        <span class="navigation_page" id="span2">Page suivante</span>
     </div>
+
+    <div id="" onclick="scrolling('false', 'true', '#section3_part2_part2', '#section3_part2_part1')">
+        <span class="navigation_page" id="span3">Page précédente</span>
+    </div>
+
+    
+
+
+
+
+
+    <div id="etape_s3_p2">
+
+        <div class="etapes_s3_p2" id="un_s3_p2"><span class="txt_etape">Étape Une<span></div>
+        <div class="etapes_s3_p2" id="deux_s3_p2"><span class="txt_etape">Étape Deux<span></div>
+        <div class="etapes_s3_p2" id="trois_s3_p2"><span class="txt_etape">Étape Trois<span></div>
+        <div class="etapes_s3_p2" id="quattre_s3_p2"><span class="txt_etape">Étape Quattre<span></div>
+        <div class="etapes_s3_p2" id="cinq_s3_p2"><span class="txt_etape">Étape Cinq<span></div>
+        <div class="etapes_s3_p2" id="six_s3_p2"><span class="txt_etape">Étape UNE<span></div>
+        <div class="etapes_s3_p2" id="sept_s3_p2"><span class="txt_etape">Étape UNE<span></div>
+        <div class="etapes_s3_p2" id="huit_s3_p2"><span class="txt_etape">Étape UNE<span></div>
+        <div class="etapes_s3_p2" id="neuf_s3_p2"><span class="txt_etape">Étape UNE<span></div>
+        <div class="etapes_s3_p2" id="dix_s3_p2"><span class="txt_etape">Étape UNE<span></div>
+        <div class="etapes_s3_p2" id="onze_s3_p2"><span class="txt_etape">Étape UNE<span></div>
+        <div class="etapes_s3_p2" id="douze_s3_p2"><span class="txt_etape">Étape UNE<span></div>
+        <div class="etapes_s3_p2" id="treize_s3_p2"><span class="txt_etape">Étape UNE<span></div>
+        
+    
+    </div>
+
+    <div id="nagation_icone">
+        <img id="navigation_etape_s3_p2_icone1" onclick="before()"
+            src="https://img.icons8.com/material-rounded/24/000000/circled-chevron-right.png">
+
+        <img id="navigation_etape_s3_p2_icone2" onclick="next()"
+            src="https://img.icons8.com/material-rounded/24/000000/circled-chevron-right.png">
+    </div>
+
+
+
+
 </div>
+
+
+
+
+<style>
+
+    #un_s3_p2{
+        background:rgb(255, 236, 0)
+    }
+    #deux_s3_p2{
+        background:rgb(255, 224, 14)
+    }
+    #trois_s3_p2{
+        background:rgb(255, 212, 29)
+    }
+    #quattre_s3_p2{
+        background:rgb(255, 188, 58)
+    }
+    #cinq_s3_p2{
+        background:rgb(255, 176, 72)
+    }
+    #six_s3_p2{
+        background:rgb(255, 164, 87)
+    }
+    #sept_s3_p2{
+        background:rgb(255, 152, 101)
+    }
+    #huit_s3_p2{
+        background:rgb(255, 140, 116)
+    }
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    #navigation_etape_s3_p2_icone1{
+        transform: rotate(-90deg);
+    }
+    #navigation_etape_s3_p2_icone2{
+        transform: rotate(90deg);
+    }
+    .txt_etape{
+        margin-left:4.4%;
+    }
+    #nagation_icone{
+        margin-top:2%;
+    }
+    .etapes_s3_p2{
+        float:left;
+        position:relative;
+        padding:2px;
+        width:100%;
+        text-align:left;
+        color:white;
+        font-family:Lexend Deca, sans-serif;
+        cursor:pointer;
+    }
+    #etape_s3_p2{
+        position:relative;
+        margin-top:1%;
+        font-size:4em;
+        width:100%;
+        height:80%;
+        overflow:hidden;
+    }
+    #eyes_detector_title{
+        float:left;
+        margin-left:5%;
+        position:relative;
+        margin-top:5%;
+        font-size:2em;
+        padding-bottom:5%;
+    }
+    #section3_part2_part2{
+        background:#7BAABE;
+        z-index:100;
+    }
+    .navigation_page{
+        cursor:pointer;
+    }
+    .href_dlib{
+        color:black;
+    }
+    .href_dlib:hover{
+        text-decoration:none;
+        color:black;
+    }
+</style>
+
+
+
+<script>
+
+
+
+
+
+    var current_div = ""
+
+    function next(){
+        document.getElementById("un_s3_p2").style.display = "none";
+    };
+    function before(){
+        document.getElementById("un_s3_p2").style.display = "block";
+    };
+
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
