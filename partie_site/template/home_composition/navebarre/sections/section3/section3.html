@@ -1,26 +1,29 @@
 <div class="container_section" id="container3">
 
-
+    <!-- Header (menu and acces to the web site) -->
     {% include "home_composition/site_access/site_access.html" %}
     {% include "home_composition/navebarre/navebarre_logo.html" %}
 
-
+    
 
 
     <div class="page_section" id="section_eyes_section">
-
-
+        
+        <!-- Here is the part for animation -->
         <div id="transition_section3">
+
+            <!-- Here is the rectangle when we put on view project -->
             <svg width="100%" height="100%" id="svg_transition_section3">
               <rect x="0" y="0" width="100%" height="100%" stroke="#9FB1BC" fill="transparent" stroke-width="10"/>
             </svg>
 
-
+            <!-- Here is the Text of animation -->
             <span class="text_animation_section3" id="text_un"><p id="un"></p></span>
             <span class="text_animation_section3" id="text_deux"><p id="deux"></p></span>
             <span class="text_animation_section3" id="text_trois"><p id="trois"></p></span>
             <span class="text_animation_section3" id="text_quattre"><p id="quattre"></p></span>
 
+            <!-- Here is the Bands of color animation -->
             <div class="bande width_bande" id="bande1"></div>
             <div class="bande width_bande" id="bande2"></div>
             <div class="bande width_bande" id="bande3"></div>
@@ -30,18 +33,16 @@
             <div class="bande width_bande" id="bande7"></div>
             <div class="bande width_bande" id="bande8"></div>
 
+            <!-- Here is the white div for pre gif -->
             <div id="cache_gif"></div>
+
+            <!-- Here is the gif animation -->
             <img class="image_page" id="gif_transition"
                 src="/static/home_composition/section3/images/transition.gif">
 
-
-
-
-
-
-        </div>
-
-
+         </div>
+        
+        <!-- Here is the black logo synergo during animation -->
         <span id="logo_animation">S Y N E R G O</span>
 
 
@@ -49,24 +50,21 @@
 
 
 
-
-
-
-
-
-
+        <!-- Here is the part for The picture and the view project -->
         <div class="container_image_direction">
 
-            
+
+
+            <!-- Here is the part for The picture and progress barre tool -->
             <div class="container_image">
 
-
+                <!-- Here is the part for The picture -->
                 <img class="image_page" id="image_page_eye"
                     src="static/home_composition/section3/section3/images/a.png"
                         onmouseOver="progress('image_page_eye')"
                         onmouseOut="unprogress('image_page_eye')">
 
-
+                 <!-- Here is the part for The progress barre tool -->
                  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" class="svg_progress" id="svg_progress_eye1">
                     <circle id="stroke-3" cx="80%" cy="55%" r="70" style="z-index:1;"/>
                  </svg>
@@ -79,7 +77,7 @@
 
 
 
-
+                <!-- Here is the github link -->
                 <div class="github_direction" id="github_direction_eyes">
                     <span href="" onclick="appear('github_direction_eyes', 'image_page_eye', 'link_github_eyes')">
                         Github
@@ -96,22 +94,25 @@
 
 
 
-
+            <!-- Here is the part for The view project -->
             <div class="container_direction">
 
                 <div class="to_project" id="eyes_explications">
 
+
+                    <!-- Here is the text -->
                     <h2 class="to_project_title">Eyes sections</h2>
                     <center>
                         <p class="project_explication">Venez voir notre détecteur d'iris à l'aide d'OpenCV !</p>
                     </center>
 
+
+                    <!-- Here is the square -->
                     <div class="carre">
 
                         <svg width="240" height="50" class="svg_square" onclick="redirect()">
-
                             <a href="#yoyo">
- 
+
                                 <rect x="1" y="1" id="squarebabs" width="238" height="48"
                                     stroke="white" fill="transparent" stroke-width="2"/>
   
@@ -148,6 +149,8 @@
         -o-transition: opacity 2s;
         transition: opacity 2s;
     }
+
+    /* Section of the 4th 6th animations */
     #gif_transition{
         position:absolute;
         left:35%;
@@ -170,49 +173,44 @@
         background:white;
         display:none;
     }
+    /* Color bands and top emplacments*/
     #bande1{
-        position:absolute;
         top:0;
         background: red
     }
     #bande2{
-        position:absolute;
         top:50px;
         background: #B8E1FF;
     }
     #bande3{
-        position:absolute;
         top:100px;
         background: pink;
     }
     #bande4{
-        position:absolute;
         top:150px;
         background: maroon;
     }
     #bande5{
-        position:absolute;
         top:200px;
         background: orange;
     }
     #bande6{
-        position:absolute;
         top:250px;
         background: green;
     }
     #bande7{
-        position:absolute;
         top:300px;
         background: blue;
     }
     #bande8{
-        position:absolute;
         height: 45px;
         top:350px;
         background: yellow;
     }
 
+    /* Band class -> moving band */
     .bande {
+        position:absolute;
         width: 110px;
         height: 50px;
         display: inline-block;
@@ -236,19 +234,8 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    /* Section of the 3rd animations (Text) */
+    /* P composant */    
     #un{
         margin-top:0;
         font-size:4em;
@@ -276,11 +263,8 @@
         margin-right:55%;
         font-style:italic;
     }
-    .text_animation_section3{
-        position:absolute;
-        z-index:49;
-        color:white;
-    }
+
+    /* Span composant */
     #text_un{
         width:60%;
         height:15%;
@@ -305,6 +289,13 @@
         left:60%;
         top:75%;
     }
+    .text_animation_section3{
+        position:absolute;
+        z-index:49;
+        color:white;
+    }
+
+    /* First animation (Logo SYNERGO appear) */
     #logo_animation{
         position:absolute;
         font-size:4.5em;
@@ -319,6 +310,9 @@
         -o-transition: opacity 2s;
         transition: opacity 2s;  
     }
+
+
+    /* It compose the eyes and information section div */
     #transition_section3{
         position:absolute;
         width:60%;
@@ -328,12 +322,16 @@
         stroke-dasharray: 385%;
         stroke-dashoffset: 385%;
     }
+
+    /* Section 3 Scare SVG */
     #squarebabs:hover{
         stroke:#2D3142;
     }
     #container3{
         background:#7BAABE;
     }
+
+    /* The progress circle bartool*/
     #stroke-2 {
       stroke: #96C3CE;
       position:absolute;
@@ -349,10 +347,6 @@
       stroke-dasharray: 450;
 
     }
-
-
-
-
 </style>
 
 
@@ -371,6 +365,8 @@
 
 <script>
 
+    //GLOBALS VARIABLES
+
     var DISPLAYING = 0;
 
     var text1 = "S Y N E R G O,";
@@ -387,7 +383,7 @@
 
 
     //A REFAIREEEEEE MAIS JE LA COMPREND PAS !!!!!!!!!!!!
-
+    //Writting sentence for animation.
     function write1(){
         if (text1_treat.length > 0){
             document.getElementById('un').innerHTML += text1_treat.shift();
@@ -410,7 +406,6 @@
             DISPLAYING = 1
         };
     };
-
     function write4(){
         if (text4_treat.length > 0){
             document.getElementById('quattre').innerHTML += text4_treat.shift();
@@ -418,54 +413,76 @@
         timeLooper = setTimeout('write4()', 50);
     };
 
+    //Writte sence : Synergo Nous, ...
+    function animation3(){
+        setTimeout('write1()', 4000);
+        setTimeout('write4()', 4000);
+        setTimeout('write2()', 5000);
+        setTimeout('write3()', 6000);
+
+    };
 
 
 
-
+    //Make a blur on the screen from differents navigator.      STATIC ANIMATION
     function blur_div(element){
         document.getElementById(element).style.WebkitFilter = " blur(10px)";
         document.getElementById(element).style.MozFilter = " blur(10px)";
         document.getElementById(element).style.OFilter = " blur(10px)";
         document.getElementById(element).style.MsFilter = " blur(10px)";
         document.getElementById(element).style.filter = " blur(10px)";
-    }
-
-
+    };
+    //stretching bands
     function bande_operate(element){
         document.getElementById(element).style.width = "100%";
-    }
+    };
+    //Coding like foot, we undisplaying page for animation.   STATIC ANIMATION
+    function undisplaying(){
+        document.getElementById("image_page_eye").style.zIndex = "1";
+        document.getElementById("svg_progress_eye1").style.display = "none";
+        document.getElementById("svg_progress_eye2").style.display = "none";
+        document.getElementById("percent_eye").style.display = "none";
+    };
+    //Make appear the logo darkening the screen
+    function logo_appear(){
+        document.getElementById("logo_animation").style.opacity = 1;
+        document.getElementById("transition_section3").style.zIndex = "200";
+        document.getElementById("transition_section3").style.strokeDashoffset  = "0";
+        document.getElementById("transition_section3").style.transition = "1.5s";
+    };
 
-
-
-
-    function redirect(){
+    //First animation; composed by
+    // - blur_div
+    // - undisplaying
+    // - logo_appear
+    function animation1(){
 
         setTimeout(function(){
 
-            
-            document.getElementById("image_page_eye").style.zIndex = "1";
-            document.getElementById("svg_progress_eye1").style.display = "none";
-            document.getElementById("svg_progress_eye2").style.display = "none";
-            document.getElementById("percent_eye").style.display = "none";
-            
-            
+            //undisplay first layer animation
+            undisplaying();
+
+            //Make blur on the eye/explciation sections
             blur_div("image_page_eye");
             blur_div("eyes_explications");
-            document.getElementById("logo_animation").style.opacity = 1;
-            document.getElementById("transition_section3").style.zIndex = "200";
-            document.getElementById("transition_section3").style.strokeDashoffset  = "0";
-            document.getElementById("transition_section3").style.transition = "1.5s";}, 1000)
 
+            //Make appear the logo as fadIn()
+            logo_appear();
+
+            }, 1000)
+    };
+
+    //Put a black div at center.
+    function animation2(){
         setTimeout(function(){
-            document.getElementById("transition_section3").style.backgroundColor  = "black";}, 2500)
+            document.getElementById("transition_section3").style.backgroundColor  = "black";
+        }, 2500)
+    };
 
 
 
-        setTimeout('write1()', 4000);
-        setTimeout('write4()', 4000);
-        setTimeout('write2()', 5000);
-        setTimeout('write3()', 6000);
-
+    //bandaged of colors are displaying, undisplayin text.
+    function animation4(){
 
         setTimeout(function(){
             document.getElementById("transition_section3").style.backgroundColor = "white";
@@ -481,10 +498,16 @@
             };
 
         }, 7999);
+    };
 
+
+    //Make run the bandaged -> it exapands.
+    function animation5(){
 
         setTimeout(function(){
+
             document.getElementById("cache_gif").style.display = "block";
+
             bande_operate("bande1")
             bande_operate("bande2")
             bande_operate("bande3")
@@ -493,59 +516,53 @@
             bande_operate("bande6")
             bande_operate("bande7")
             bande_operate("bande8")
+
         }, 8005);
+    };
 
-
+    //Make appear the gif.
+    function animation6(){
         setTimeout(function(){
             document.getElementById("gif_transition").style.opacity = "1";
             document.getElementById("gif_transition").style.visibility = "visible";
-
         }, 8300)
-
-
-        setTimeout(function(){
-            document.getElementById("section_eyes_section").style.opacity = "0";
-        }, 9500)
-
-
-        setTimeout(function(){
-            document.location.href="/eyes_sections";
-        }, 11500)
-
 
     };
 
 
 
+    function animation7(){
+        setTimeout(function(){
+            document.getElementById("section_eyes_section").style.opacity = "0";
+        }, 9500)
+    };
+
+    function animation8(){
+        setTimeout(function(){
+            document.location.href="/eyes_sections";
+        }, 11500)
+    };
 
 
 
+    function redirect(){
 
+        
+        animation1(); //First animation, logo appear, window darkening.       1000 ms
 
+        animation2(); //Second animation Black div background.                2500 ms
 
-    
+        animation3(); //Third animation text appear.                     4000-6000 ms
 
+        animation4(); // Fourth animation displaying bandaged.                7999 ms
 
+        animation5(); //Fivety animation bandaged moving.                     8005 ms
 
+        animation6(); //Sixty animation make appear gif.                      8300 ms
 
+        animation7(); //Seventy animation, make a fading on the screen.       9500 ms
 
+        animation8(); //Heighty animation, redirection on tuto.              11500 ms
+    };
 
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
