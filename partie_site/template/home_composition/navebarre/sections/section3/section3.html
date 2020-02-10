@@ -4,15 +4,192 @@
     {% include "home_composition/site_access/site_access.html" %}
     {% include "home_composition/navebarre/navebarre_logo.html" %}
 
-    
 
-
-    <div class="page_section" id="section_eyes_section">
+    <div class="page_section" id="section3_part1" style="display:none;">
         {% include "home_composition/sections/section3/parts_section3/section3_part1.html" %}
     </div>
 
 
+    <div class="page_section" id="section3_part2">
+
+        <div class="section3_part2_page" id="section3_part2_part1">
+            <div id="" onclick="scrolling('true', 'false', '#section3_part2_part1', '')">
+                aaa
+            </div>
+        </div>
+
+
+
+
+        <div class="section3_part2_page" id="section3_part2_part2">
+            <div id=""
+                onclick="scrolling('true', 'false',
+                                   '#section3_part2_part2', '')">
+                aaa
+            </div><br>
+            
+            <div id=""
+                onclick="scrolling('false', 'true',
+                                   '#section3_part2_part2', '#section3_part2_part1')">
+                bbb
+            </div>
+        </div>
+
+
+
+
+
+        <div class="section3_part2_page" id="section3_part2_part3">
+            <div id=""
+                onclick="scrolling('false', 'true',
+                                   '#section3_part2_part3', '#section3_part2_part2')">
+                aaa
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+
 </div>
+
+
+
+
+
+
+<style>
+    #container3{
+        background:#7BAABE;
+        opacity:1;
+        -webkit-transition: opacity 2s;
+        -moz-transition: opacity 2s;
+        -o-transition: opacity 2s;
+        transition: opacity 2s;  
+    }
+
+    .section3_part2_page{
+        height:100%;
+        position:relative;
+    }
+    #section3_part2_part1{
+        background:black;
+        color:white;
+        z-index:200;
+    }
+    #section3_part2_part2{
+        background:red;
+        z-index:100;
+    }
+    #section3_part2_part3{
+        background:white;
+        z-index:50;
+    }
+
+    #section3_part2{
+        position:relative;
+    }
+</style>
+
+
+
+
+
+<script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+
+<script>
+
+    var TOP_PAGE = 0
+
+    function scrolling(up, down, element_after, element_before){
+
+        if (up == "true"){
+            setTimeout(function(){ $(element_after).slideUp(500).delay(500);}, 1);
+            TOP_PAGE += 1
+            switch_top_page_color("true", "");
+
+        }else if (down == "true"){
+            setTimeout(function(){ $(element_before).slideDown(500).delay(500);}, 1);
+            TOP_PAGE -= 1
+            switch_top_page_color("", "true");
+        };
+    };
+
+
+    function switch_color(){
+        if (TOP_PAGE == 0){
+
+            document.getElementById("container3").style.opacity = 0;
+            document.getElementById("container3").style.backgroundColor = "black";
+            document.getElementById("container3").style.opacity = 1;
+
+            document.getElementById("container3").style.color = "white";
+ 
+        }else if (TOP_PAGE == 1){
+            document.getElementById("container3").style.opacity = 0;
+            document.getElementById("container3").style.backgroundColor = "red";
+            document.getElementById("container3").style.opacity = 1;
+
+            document.getElementById("container3").style.color = "white";
+
+        }else if (TOP_PAGE == 2){
+            document.getElementById("container3").style.opacity = 0;
+            document.getElementById("container3").style.backgroundColor = "white";
+            document.getElementById("container3").style.opacity = 1;
+
+            document.getElementById("container3").style.color = "black";
+
+        };
+    };
+
+    function switch_top_page_color(up, down){
+
+        //page go to up put delay on changement top page.
+
+        if (up == "true"){setTimeout(function(){switch_color()}, 2000);
+        }else if (down = "true"){switch_color()};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    };
+
+
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
