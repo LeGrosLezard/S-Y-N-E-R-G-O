@@ -6,43 +6,36 @@
 
 
     <div class="page_section" id="section3_part1" style="display:none;">
-        {% include "home_composition/sections/section3/parts_section3/section3_part1.html" %}
+        {% include "home_composition/sections/section3/parts_section3/part1/section3_part1.html" %}
     </div>
 
 
     <div class="page_section" id="section3_part2">
 
+
+        <!--
+
         <div class="section3_part2_page" id="section3_part2_part1">
             <div id="" onclick="scrolling('true', 'false', '#section3_part2_part1', 'section3_part2_part2')">
-                <span id="span1">aaa</span>
+                <span id="span1">page suivante</span>
             </div>
         </div>
 
+        -->
+
+
+        <!--
+        { include "home_composition/sections/section3/parts_section3/part2/page2/page2.html" }
+        -->
+
+        
+        {% include "home_composition/sections/section3/parts_section3/part2/page3/page3.html" %}
 
 
 
-        <div class="section3_part2_page" id="section3_part2_part2">
-            <div id=""
-                onclick="scrolling('true', 'false', '#section3_part2_part2', '')">
-                <span id="span2">aaa</span>
-            </div><br>
-
-            <div id=""
-                onclick="scrolling('false', 'true', '#section3_part2_part2', '#section3_part2_part1')">
-                <span id="span3">bb</span>
-            </div>
-        </div>
+        <!-- 1 description 2 menu etape avec animation datonien comme le site 3 application sur le coté mettre un menu avec des rond -->
 
 
-
-
-
-        <div class="section3_part2_page" id="section3_part2_part3">
-            <div id=""
-                onclick="scrolling('false', 'true', '#section3_part2_part3', '#section3_part2_part2')">
-                <span id="span4">aaa</span>
-            </div>
-        </div>
 
     </div>
 
@@ -70,22 +63,20 @@
         -moz-transition: opacity 2s;
         -o-transition: opacity 2s;
         transition: opacity 2s;
-        border:1px solid red;
     }
     #section3_part2_part1{
         background:#7BAABE;
         color:white;
         z-index:200;
     }
-    #section3_part2_part2{
-        background:#7BAABE;
-        z-index:100;
-    }
-    #section3_part2_part3{
-        background:#7BAABE;
-        z-index:50;
+    #span1{
+        cursor:pointer;
     }
 
+    #section3_part2_part3{
+        background:orange;
+        z-index:50;
+    }
     #section3_part2{
         position:relative;
     }
@@ -114,14 +105,16 @@
         if (FADIN == 1){
 
             document.getElementById("span1").style.visibility = "hidden";
-            
+
             document.getElementById("section3_part2_part1").style.opacity = "0";
             document.getElementById("section3_part2_part3").style.opacity = "0";
             document.getElementById("section3_part2_part2").style.opacity = "1";
+
         }else if(FADIN == 0){
 
             document.getElementById("section3_part2_part2").style.opacity = "0";
             document.getElementById("section3_part2_part1").style.opacity = "1";
+
         }else if (FADIN == 2){
             document.getElementById("section3_part2_part2").style.opacity = "0";
             document.getElementById("section3_part2_part3").style.opacity = "1";
@@ -140,9 +133,6 @@
                 document.getElementById("span2").style.visibility = "visible";
                 document.getElementById("span3").style.visibility = "visible"; }, 500)
 
-
-
-    
         }else if(FADIN == 0){
 
             document.getElementById("span4").style.visibility = "hidden";
@@ -151,9 +141,6 @@
 
             setTimeout(function(){
                 document.getElementById("span1").style.visibility = "visible"; }, 500)
-
-
-
 
         }else if (FADIN == 2){
             document.getElementById("span2").style.visibility = "hidden";
