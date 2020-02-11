@@ -31,11 +31,8 @@ urlpatterns = [
     #Home access.
     path(r'', views.home),
 
-    #To change.
-    path(r'Garde', views.garde),
-    path(r'essais', views.essais),
+    #Download app root
     path(r'download', include('download.urls')),
-
     #Eyes section app root.
     path(r'eyes_section', include('eyes_section.urls')),
 

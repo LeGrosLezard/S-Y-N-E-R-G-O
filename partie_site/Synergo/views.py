@@ -13,10 +13,4 @@ def home(request):
     return render(request, "Home.html")
 
 
-def garde(request):
-    #use as experience
-    return render(request, "Garde.html")
 
-def essais(request):
-    #use as experience
-    return render(request, "essais.html")
