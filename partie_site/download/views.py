@@ -44,5 +44,5 @@ def upload(request):
 
         forms_video("", "")
 
-    return render(request, 'Upload.html', {'form': form})
+    return render(request, 'upload/Upload.html', {'form': form})
 
