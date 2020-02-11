@@ -1,18 +1,150 @@
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
+
+<div id="explication_div_p2_s3">
+
+    <div id="container_explication_div_p2_s3">
+
+        <div id="titre_explication_p2_s3">
+            <p id="p_expliccation_p2_s3">
+                étape une
+            </p>
+        </div>
+
+
+        <div id="explication_2_s3">
+
+            <div class="explication_2_s3_divs" id="explication_2_s3_part1">
+    
+                <div class="go_out_explication">
+                    <img id="go_out_explication_icone" onclick="quit_explication_s3()"
+                        src="https://img.icons8.com/ios-glyphs/30/000000/xbox-cross.png">
+ 
+                </div>
+
+                <p id="part1_p_explication_s3_p2">Explication numero une coucou</p>
+
+            </div>
+
+
+            <div class="explication_2_s3_divs" id="explication_2_s3_part2">
+                <p>bnbbbbbbbbbbbbbbbbbbbbbbb<br>lien des mecs citations</p>
+            </div>
+
+        </div>
+
+
+
+
+
+    </div>
+
+
+</div>
+
+
+
+
+<style>
+    #part1_p_explication_s3_p2{
+        margin-top:5%;
+    }
+    .explication_2_s3_divs{
+        width:80%;
+        height:50%;
+        word-wrap: break-word;
+        color:black;
+        float:right;
+        margin-right:5%;
+    }
+    #explication_2_s3_part1{
+        position:relative;
+        top:0;
+        font-size:0.5em;
+        padding-top:5%;
+        width:80%;
+        font-family:Lexend Deca, sans-serif;
+    }
+    #explication_2_s3_part2{
+        position:relative;
+        font-size:0.3em;
+        font-family:Montserrat, sans-serif;
+        width:80%;
+    }
+    .go_out_explication{
+        position:absolute;
+        top:0;
+        right:0;
+        width:5%;
+        height:5%;
+        transform: rotate(45deg);
+    }
+    #go_out_explication_icone{
+        cursor:pointer;
+    }
+    #container_explication_div_p2_s3{
+        width:100%;
+        height:100%;
+        margin:0;
+        padding:0;
+        position:relative;
+        font-family:Lexend Deca, sans-serif;
+    }
+    #titre_explication_p2_s3{
+        position:absolute;
+        height:20%;
+        width:50%;
+        margin-top:5%;
+    }
+    #p_expliccation_p2_s3{
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+        color:black;
+        font-size:4em;
+        float:left;
+        margin-left:5%;
+        text-decoration : underline;
+        
+
+    }
+    #explication_2_s3{
+        position: relative;
+        width:50%;
+        height:100%;
+        float:right;
+        color:white;
+        font-size:5em;
+    }
+
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <div class="section3_part2_page" id="section3_part2_part2">
 
 
-    <!--
-    <div id="" onclick="scrolling('true', 'false', '#section3_part2_part2', '')">
-        <span class="navigation_page" id="span2">Page suivante</span>
-    </div>
+        <span class="navigation_page" id="span2"
+            onclick="scrolling('true', 'false', '#section3_part2_part2', '')">
+            Page suivante
+        </span>
 
-    <div id="" onclick="scrolling('false', 'true', '#section3_part2_part2', '#section3_part2_part1')">
-        <span class="navigation_page" id="span3">Page précédente</span>
-    </div>
-    -->
-    
+        <span class="navigation_page" id="span3"
+            onclick="scrolling('false', 'true', '#section3_part2_part2', '#section3_part2_part1')">
+            Page précédente
+        </span>
 
 
 
@@ -20,7 +152,14 @@
 
     <div id="etape_s3_p2">
 
-        <div class="etapes_s3_p2" id="un_s3_p2"><span class="txt_etape">Étape Une<span></div>
+        <div class="etapes_s3_p2" id="un_s3_p2"
+            onclick="explications_function('rgb(255, 236, 0)', 'Étape Une')">
+            <span class="txt_etape">
+                Étape Une
+            <span>
+        </div>
+
+
         <div class="etapes_s3_p2" id="deux_s3_p2"><span class="txt_etape">Étape Deux<span></div>
         <div class="etapes_s3_p2" id="trois_s3_p2"><span class="txt_etape">Étape Trois<span></div>
         <div class="etapes_s3_p2" id="quattre_s3_p2"><span class="txt_etape">Étape Quattre<span></div>
@@ -43,8 +182,11 @@
 
         <img id="navigation_etape_s3_p2_icone2" onclick="next()"
             src="https://img.icons8.com/material-rounded/24/000000/circled-chevron-right.png">
-    </div>
 
+
+        <p id="etape_precedente">étapes précédentes</p>
+        <p id="etape_suivante">étapes suivantes</p>
+    </div>
 
 
 
@@ -54,6 +196,16 @@
 
 
 <style>
+    #container3{
+        background:rgb(255, 236, 0);
+    }
+    #explication_div_p2_s3{
+        width:100%;
+        height:100%;
+        position:absolute;
+        z-index:100000;
+        background:rgb(255, 236, 0);
+    }
 
     #un_s3_p2{
         background:rgb(255, 236, 0)
@@ -83,7 +235,18 @@
 
 
 
-
+    #etape_precedente{
+        position:absolute;
+        width:15%;
+        top:0;
+        left:30%;
+    }
+    #etape_suivante{
+        position:absolute;
+        width:15%;
+        top:0;
+        right:30%;
+    }
 
 
 
@@ -93,16 +256,21 @@
     
 
     #navigation_etape_s3_p2_icone1{
+        position:relative;
         transform: rotate(-90deg);
+        cursor:pointer;
     }
     #navigation_etape_s3_p2_icone2{
+        position:relative;
         transform: rotate(90deg);
+        cursor:pointer;
     }
     .txt_etape{
         margin-left:4.4%;
     }
     #nagation_icone{
         margin-top:2%;
+        position:relative;
     }
     .etapes_s3_p2{
         float:left;
@@ -136,6 +304,7 @@
     }
     .navigation_page{
         cursor:pointer;
+        color:white;
     }
     .href_dlib{
         color:black;
@@ -151,9 +320,6 @@
 <script>
 
 
-
-
-
     var current_div = ""
 
     function next(){
@@ -164,9 +330,39 @@
     };
 
 
+    function quit_explication_s3(){
+        document.getElementById("explication_div_p2_s3").style.display = "none";
+        document.getElementById("container3").style.background = "#7BAABE";
+    }
+
+
+
+    function explications_function(color, explication_no){
+
+
+        document.getElementById("explication_div_p2_s3").style.display = "block";
+
+        document.getElementById("explication_div_p2_s3").style.background = color;
+        document.getElementById("container3").style.background = color;
+
+
+
+
+    }
 
 
 </script>
+
+
+
+
+
+
+
+
+
+
+
 
 
 
