@@ -1,5 +1,7 @@
 # S-Y-N-E-R-G-O
 
+je sais pas s'il faut faire une app de vidéo maintenant pcque je la ferai apres mais la je veux juste m'entrainer avec les sections enfaire....
+
 réécrire la section
 
 responsive
