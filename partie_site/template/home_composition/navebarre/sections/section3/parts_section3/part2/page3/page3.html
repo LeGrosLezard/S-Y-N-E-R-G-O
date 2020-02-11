@@ -1,25 +1,67 @@
-
-
 <div class="section3_part2_page" id="section3_part2_part3">
 
 
+    <span id="span4"
+        onclick="scrolling('false', 'true', '#section3_part2_part3', '#section3_part2_part2')">
+            Page précédente
+    </span>
 
 
-    <div id="aa" onclick="scrolling('false', 'true', '#section3_part2_part3', '#section3_part2_part2')">
-        <span id="span4">Page précédente</span>
+
+    <div id="animation_s3_p2_p3">
+
+        <img id="img_video_s3_p2_p3"
+            src="https://img.icons8.com/material-outlined/24/000000/video.png">
+
+        <img id="img_camera_s3_p2_p3"
+            src="https://img.icons8.com/ios-filled/50/000000/camcorder.png">
+
+        <p id="animation_p_p3_s3_p3_p2"></p>
+
     </div>
 
 
-    <p>Essayez vous verrez</p>
+
+
+    <div id="s3_p2_p3_button">
+
+
+        <div id="video_s3_p2_p3" onclick="choice_animation('Synergo Caméra', 'camera')">
+            <center>
+                <svg width="180" height="50" id="svg_video_s3_p2_p3">
+                    <rect x="0" y="0" rx="5" ry="5" width="180" height="50" stroke="white" stroke-width="3" fill="none"/>
+                    <text class="svg_text" x="50%" y="50%" alignment-baseline="middle" text-anchor="middle" fill="white">J'essaie avec ma webcam.</text>    
+                </svg>
+            </center>
+        </div>
 
 
 
-    <button type="button">Avec une vidéo téléchargée.</button>
-    <button type="button">Avec ma caméra.</button>
 
-    
-    <img style="width:20%; height:20%;border:2px solid black;" src="{% url 'videostream' stream_path='video' %}">
-    {% include "upload/Upload.html" %}
+        <div id="camera_s3_p2_p3" onclick="choice_animation('Synergo Vidéo', 'video')">
+            <center>
+                <svg width="180" height="50" id="svg_cam_s3_p2_p3">
+                    <rect x="0" y="0" rx="5" ry="5" width="180" height="50" stroke="white" stroke-width="3" fill="none"/>
+                    <text class="svg_text" x="50%" y="50%" alignment-baseline="middle" text-anchor="middle" fill="white">J'essaie avec ma vidéo.</text>    
+                </svg>
+            </center>
+
+        </div>
+
+
+
+    </div>
+
+
+
+    <div id="s3_p2_p3_text"></div>
+    <div id="s3_p2_p3_video"></div>
+
+
+
+
+
+
 
 
 
@@ -41,16 +83,162 @@
 
 
 <style>
-    #span4{
+
+    #s3_p2_p3_video{
+
+    }
+    #s3_p2_p3_text{
+
+    }
+    #animation_s3_p2_p3{
+        position:absolute;
+        width:100%;
+        height:100%;
+        margin:0;
+        padding:0;
+        opacity:0;
+        -webkit-transition: opacity 2s;
+        -moz-transition: opacity 2s;
+        -o-transition: opacity 2s;
+        transition: opacity 2s;
+    }
+    .svg_text{
+        color:white;
+        stroke:none;
+    }
+    #svg_video_s3_p2_p3:hover{
+        stroke-dashoffset: 451;
+        stroke:#2D3142;
         cursor:pointer;
     }
+    #svg_cam_s3_p2_p3:hover{
+        stroke-dashoffset: 451;
+        stroke:#2D3142;
+        cursor:pointer;
+    }
+    #svg_video_s3_p2_p3{
+        stroke-dasharray: 451;
+        transition: 1.5s;
+    }
+    #svg_cam_s3_p2_p3{
+        stroke-dasharray: 451;
+        transition: 1.5s;
+    }
+    #camera_s3_p2_p3{
+        position:relative;
+        width:50%;
+        float:left;
+        text-align:center;
+    }
+    #video_s3_p2_p3{
+        position:relative;
+        width:50%;
+        float:right;
+        text-align:center;
+    }
+    #img_camera_s3_p2_p3{
+        position:relative;
+        width:5%;
+        margin-top:15%
+        opacity:0;
+        -webkit-transition: opacity 2s;
+        -moz-transition: opacity 2s;
+        -o-transition: opacity 2s;
+        transition: opacity 2s;
 
+    }
+    #img_video_s3_p2_p3{
+        position:relative;
+        width:5%;
+        margin-top:15%;
+        opacity:0;
+        -webkit-transition: opacity 2s;
+        -moz-transition: opacity 2s;
+        -o-transition: opacity 2s;
+        transition: opacity 2s;
+
+    }
+    #s3_p2_p3_button{
+        position:relative;
+        width:100%;
+        margin:0;
+        padding:0;
+        margin-top:5%;
+        height:100%;
+    }
+
+    #span4{
+        cursor:pointer;
+        color:white;
+    }
+    #section3_part2_part3{
+        color:white;
+    }
+    #animation_p_p3_s3_p3_p2{
+        position:absolute;
+        width:100%;
+        color:white;
+        letter-spacing:2px;
+        font-weight:bold;
+        top:35%;
+
+        opacity:0;
+        -webkit-transition: opacity 2s;
+        -moz-transition: opacity 2s;
+        -o-transition: opacity 2s;
+        transition: opacity 2s;
+    }
 </style>
 
 
 
 
+<script>
 
+
+    function raise_(element){
+        setTimeout(function(){
+             document.getElementById(element).style.opacity = "0";
+            }, 1500)
+    };
+
+    function increase_size(element){
+        document.getElementById(element).style.width = "10%";
+        document.getElementById(element).style.opacity = "1";
+    };
+
+    function animation_start(text){
+        document.getElementById("animation_s3_p2_p3").style.opacity = "1";
+        document.getElementById("img_camera_s3_p2_p3").style.opacity = "1";
+        document.getElementById("img_video_s3_p2_p3").style.opacity = "1";
+        raise_("img_camera_s3_p2_p3");
+        raise_("img_video_s3_p2_p3");
+
+        setTimeout(function(){
+            document.getElementById("animation_p_p3_s3_p3_p2").innerHTML = text;
+            document.getElementById("animation_p_p3_s3_p3_p2").style.opacity = "1";
+        }, 3000)
+    };
+
+
+    function mode_camera(){
+        //<img style="width:20%; height:20%;border:2px solid black;" src="{% url 'videostream' stream_path='video' %}">
+
+    };
+
+    function mode_video(){
+        //{% include "upload/Upload.html" %}
+    }
+
+    function choice_animation(text, mode){
+        animation_start(text);
+
+        
+
+    };
+
+
+</script>
 
 
 
