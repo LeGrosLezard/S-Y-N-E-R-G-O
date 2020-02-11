@@ -25,13 +25,20 @@ from . import views
 
 
 urlpatterns = [
+    #Admin access.
     path('admin/', admin.site.urls),
-    path(r'Garde', views.garde),
+
+    #Home access.
     path(r'', views.home),
+
+    #To change.
+    path(r'Garde', views.garde),
     path(r'essais', views.essais),
     path(r'download', include('download.urls')),
 
-    path('eyes_sections', views.eyes_sections),
+    #Eyes section app root.
+    path(r'eyes_section', include('eyes_section.urls')),
+
 
 ]+ static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
 
