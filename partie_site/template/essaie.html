@@ -1,0 +1,65 @@
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+</head>
+<body>
+
+<h1>My Page</h1>
+<p>Some paragraph.</p>
+<video id="playerVideo" width="320" height="240" autoplay="autoplay" muted>
+  Your browser does not support the video tag.
+</video><br>
+<span id="blobURL"></span><br>
+<span id="download"></span>
+
+</body>
+</html>
+
+
+
+
+
+
+
+<script>
+
+
+function setVideo(blob)
+{
+  var url = URL.createObjectURL(blob);
+	var video = document.getElementById('playerVideo');
+	video.type = "video/mp4";
+	video.src = url;
+	video.load();
+	download(url);
+}
+	
+function download(blob_url)
+{
+	var fileName = "video.mp4";
+	var a = document.createElement('a');
+	a.href        = blob_url;
+	a.download    = fileName;
+	a.textContent = "DOWNLOAD " + fileName;
+	document.getElementById('blobURL').innerHTML = "BLOB URL: <b>"+blob_url+"</b>";
+	document.getElementById('download').appendChild(a);
+}
+	
+$(document).ready(function(){
+ var xhr = new XMLHttpRequest();
+ xhr.responseType = 'blob';
+
+ xhr.onload = function() {
+  setVideo(xhr.response);
+ };
+
+ xhr.open('GET', 'blob:http://127.0.0.1:8000/ac5be348-547b-471e-8f61-b0f76a987cc2');
+ xhr.send();
+
+});
+
+</script>
