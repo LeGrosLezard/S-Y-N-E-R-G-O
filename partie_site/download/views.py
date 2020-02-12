@@ -2,6 +2,24 @@ from django.shortcuts import render
 from .forms import video_upload_form
 from django.http import HttpResponseRedirect
 from .models import video_upload
+from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.cache import cache_page
+
+
+#==========================
+"""Auto uplaod video from webcam user."""
+
+
+#==========================
+
+
+
+
+
+
+
+#==========================
+"""User upload himself his video."""
 
 
 def redirection(redirection, location):
@@ -22,8 +40,18 @@ def forms_video():
         newdoc = video_upload(docfile = request.FILES['docfile'])
         newdoc.save()
         #print("file saved into :'media'")
+#==========================
 
 
+
+
+
+
+
+
+        
+@cache_page(60 * 15)
+@csrf_protect
 def upload(request):
     """Here we uploading videos.
     For that we need a form for the template,
@@ -42,7 +70,22 @@ def upload(request):
             #redirection(False, "")
             #return render(request, 'home.html', {'form': form})
 
-        forms_video("", "")
+        uploading_auto = request.POST.get('data')
+        if uploading_auto:
+            print(uploading_auto, "0000000000000000000000000000000000")
+
+            f = open(str(uploading_auto[27:]) + ".mp4", 'wb')
+            f.write(request.body)
+            f.close()
+
+
+
+        else:
+            forms_video("", "")
 
     return render(request, 'upload/Upload.html', {'form': form})
+
+
+
+
 
