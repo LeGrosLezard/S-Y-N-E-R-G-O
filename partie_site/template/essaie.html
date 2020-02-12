@@ -1,6 +1,7 @@
 
 
 
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,6 +16,8 @@
 </video><br>
 <span id="blobURL"></span><br>
 <span id="download"></span>
+<br><br>
+<video controls="" preload="auto" id="_video"></video>
 
 </body>
 </html>
@@ -23,7 +26,7 @@
 
 
 
-
+<a href="">Download</a>
 
 <script>
 
@@ -36,6 +39,7 @@ function setVideo(blob)
 	video.src = url;
 	video.load();
 	download(url);
+        uploadAudio(blob)
 }
 	
 function download(blob_url)
@@ -44,11 +48,17 @@ function download(blob_url)
 	var a = document.createElement('a');
 	a.href        = blob_url;
 	a.download    = fileName;
+        a.id          = "coucou";
 	a.textContent = "DOWNLOAD " + fileName;
 	document.getElementById('blobURL').innerHTML = "BLOB URL: <b>"+blob_url+"</b>";
 	document.getElementById('download').appendChild(a);
+
+        var b = document.getElementById('coucou').click();
+        console.log(b)
+
+
 }
-	
+
 $(document).ready(function(){
  var xhr = new XMLHttpRequest();
  xhr.responseType = 'blob';
@@ -57,9 +67,150 @@ $(document).ready(function(){
   setVideo(xhr.response);
  };
 
- xhr.open('GET', 'blob:http://127.0.0.1:8000/ac5be348-547b-471e-8f61-b0f76a987cc2');
+ xhr.open('GET', 'blob:http://127.0.0.1:8000/4311eda7-7ef5-4870-8b9d-5ddeed1602ee');
  xhr.send();
 
 });
+
+
+
+
+
+
+
+
+
+
+            function uploadAudio(mp3Data){
+		var reader = new FileReader();
+		reader.onload = function(event){
+			var fd = new FormData();
+			var mp3Name = encodeURIComponent('audio_recording_' + new Date().getTime() + '.mp4');
+			console.log("mp3name = " + mp3Name);
+			fd.append('fname', mp3Name);
+			fd.append('data', event.target.result);
+			$.ajax({
+				type: 'POST',
+                                headers: { "X-CSRFToken": getCookie("csrftoken") },
+				url: 'download',
+				data: fd,
+				processData: false,
+				contentType: false
+			}).done(function(data) {
+				console.log(data);
+
+			});
+		};      
+		reader.readAsDataURL(mp3Data);
+	}
+
+
+
+
+
+
+
+
+
+
+
+    function getCookie(c_name)
+    {
+        if (document.cookie.length > 0)
+        {
+            c_start = document.cookie.indexOf(c_name + "=");
+            if (c_start != -1)
+            {
+                c_start = c_start + c_name.length + 1;
+                c_end = document.cookie.indexOf(";", c_start);
+                if (c_end == -1) c_end = document.cookie.length;
+                return unescape(document.cookie.substring(c_start,c_end));
+            }
+        }
+        return "";
+     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var xhr = new XMLHttpRequest();
+xhr.responseType = 'blob';
+
+xhr.onload = function() {
+  
+  var reader = new FileReader();
+  
+  reader.onloadend = function() {
+  
+    var byteCharacters = atob(reader.result.slice(reader.result.indexOf(',') + 1));
+    
+    var byteNumbers = new Array(byteCharacters.length);
+
+    for (var i = 0; i < byteCharacters.length; i++) {
+      
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+      
+    }
+
+    var byteArray = new Uint8Array(byteNumbers);
+    var blob = new Blob([byteArray], {type: 'video/ogg'});
+    var url = URL.createObjectURL(blob);
+    
+    document.getElementById('_video').src = url;
+    console.log(document.getElementById('_video').src, "ici")
+  }
+  
+  reader.readAsDataURL(xhr.response);
+  
+};
+
+xhr.open('GET', 'blob:http://127.0.0.1:8000/4311eda7-7ef5-4870-8b9d-5ddeed1602ee');
+xhr.send();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 </script>
