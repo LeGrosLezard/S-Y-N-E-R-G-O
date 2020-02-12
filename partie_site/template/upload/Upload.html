@@ -1,40 +1,17 @@
-{% load static %}
 
 
 
-<!DOCTYPE html>
-<html>
- <head>
-   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-   <title> Synergo </title>
-   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
- </head>
-
- <body>
- 
-
-
-    <h1>Video Uploader</h1>
+<div id="formulaire">
     <form enctype="multipart/form-data" method="POST" action="">
         {% csrf_token %}
         {{ form.as_p }}
         <input type="submit" value="Upload"/>
     </form>
-
-
-    <video width='400' controls>
-    <source src='{{ MEDIA_URL }}{{ videofile }}' type='video/mp4'>
-        Your browser does not support the video tag.
-    </video>
+				
+</div>
 
 
 
-</body>
-
- </body>
-
-
-</html>
 
 
 
@@ -43,6 +20,11 @@
 
 
 <style>
+    #formulaire{
+        width:100%;
+        height:100%;
+        margin-left:20%;
+    }
 </style>
 
 
