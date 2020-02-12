@@ -20,6 +20,15 @@
 
         <p id="animation_p_p3_s3_p3_p2"></p>
 
+
+        <div id="camering">
+            <img id="cam" src="{% url 'videostream' stream_path='video' %}">
+        </div>
+
+
+
+
+
         <div id="uploading">
             <iframe id="iframe_uploading"
                 width="49%" height="180px" scrolling="no" frameBorder="0" src='/download'></iframe>
@@ -113,6 +122,23 @@
     #s3_p2_p3_text{
 
     }
+    #cam{
+        margin-top:10%;
+        width:40%;
+        height:60%;
+        border:2px solid black;
+    }
+    #camering{
+        position:absolute;
+        width:100%;
+        height:100%;
+
+        opacity:0;
+        -webkit-transition: opacity 2s;
+        -moz-transition: opacity 2s;
+        -o-transition: opacity 2s;
+        transition: opacity 2s;
+    }
     li{
         text-align:left;
     }
@@ -132,15 +158,21 @@
         width:100%;
         margin:0;
         padding:0;
+
+        opacity:0;
+        -webkit-transition: opacity 2s;
+        -moz-transition: opacity 2s;
+        -o-transition: opacity 2s;
+        transition: opacity 2s;
+
     }
     #animation_s3_p2_p3{
-        z-index:1;
         position:absolute;
         width:100%;
         height:100%;
         margin:0;
         padding:0;
-        opacity:1;
+        opacity:0;
         -webkit-transition: opacity 2s;
         -moz-transition: opacity 2s;
         -o-transition: opacity 2s;
@@ -261,29 +293,58 @@
             document.getElementById("img_camera_s3_p2_p3").style.opacity = "0";
             document.getElementById("img_video_s3_p2_p3").style.opacity = "1";
             raise_("img_video_s3_p2_p3");
+
+            setTimeout(function(){
+                document.getElementById("animation_p_p3_s3_p3_p2").innerHTML = text;
+                document.getElementById("animation_p_p3_s3_p3_p2").style.opacity = "1";
+            }, 3000)
+
+
+            setTimeout(function(){
+                document.getElementById("animation_p_p3_s3_p3_p2").style.opacity = "0";
+                mode_video();
+            }, 4500)
+
+            
         };
 
         if (mode == "camera"){
             document.getElementById("img_video_s3_p2_p3").style.opacity = "0";
             document.getElementById("img_camera_s3_p2_p3").style.opacity = "1";
             raise_("img_camera_s3_p2_p3");
+
+
+            setTimeout(function(){
+                document.getElementById("animation_p_p3_s3_p3_p2").innerHTML = text;
+                document.getElementById("animation_p_p3_s3_p3_p2").style.opacity = "1";
+            }, 3000)
+
+
+            setTimeout(function(){
+                document.getElementById("animation_p_p3_s3_p3_p2").style.opacity = "0";
+                mode_camera();
+            }, 4500)
+
+
+
+
+
         };
 
     
-        setTimeout(function(){
-            document.getElementById("animation_p_p3_s3_p3_p2").innerHTML = text;
-            document.getElementById("animation_p_p3_s3_p3_p2").style.opacity = "1";
-        }, 3000)
+
+        
+
+        
     };
 
 
     function mode_camera(){
-        //<img style="width:20%; height:20%;border:2px solid black;" src="{% url 'videostream' stream_path='video' %}">
-        {}
+        document.getElementById("camering").style.opacity = "1"; 
     };
 
     function mode_video(){
-        document.getElementById("uploading").style.diplay = "block";
+        document.getElementById("uploading").style.opacity = "1";
     }
 
     function choice_animation(text, mode){
