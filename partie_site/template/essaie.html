@@ -1,7 +1,5 @@
 
 
-
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,6 +17,11 @@
 <br><br>
 <video controls="" preload="auto" id="_video"></video>
 
+
+<p id="cc">{{ oki }}</p>
+<video controls="" autoplay="autoplay" id="aaaaa" style="border:2px solid blue;"></video>
+
+
 </body>
 </html>
 
@@ -29,6 +32,17 @@
 <a href="">Download</a>
 
 <script>
+
+const yoyo = document.getElementById("cc").innerHTML;
+
+document.getElementById("aaaaa").src = yoyo;
+
+
+
+
+
+
+
 
 
 function setVideo(blob)
@@ -71,6 +85,20 @@ $(document).ready(function(){
  xhr.send();
 
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -159,43 +187,6 @@ $(document).ready(function(){
 
 
 
-
-
-
-
-var xhr = new XMLHttpRequest();
-xhr.responseType = 'blob';
-
-xhr.onload = function() {
-  
-  var reader = new FileReader();
-  
-  reader.onloadend = function() {
-  
-    var byteCharacters = atob(reader.result.slice(reader.result.indexOf(',') + 1));
-    
-    var byteNumbers = new Array(byteCharacters.length);
-
-    for (var i = 0; i < byteCharacters.length; i++) {
-      
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
-      
-    }
-
-    var byteArray = new Uint8Array(byteNumbers);
-    var blob = new Blob([byteArray], {type: 'video/ogg'});
-    var url = URL.createObjectURL(blob);
-    
-    document.getElementById('_video').src = url;
-    console.log(document.getElementById('_video').src, "ici")
-  }
-  
-  reader.readAsDataURL(xhr.response);
-  
-};
-
-xhr.open('GET', 'blob:http://127.0.0.1:8000/4311eda7-7ef5-4870-8b9d-5ddeed1602ee');
-xhr.send();
 
 
 
