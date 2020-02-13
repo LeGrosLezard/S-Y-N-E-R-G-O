@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .forms import video_upload_form
 from django.http import HttpResponseRedirect
 from .models import video_upload
@@ -8,7 +8,8 @@ from django.views.decorators.cache import cache_page
 import base64
 import urllib.request
 import urllib.parse
-
+from django.http import JsonResponse
+import time
 #==========================
 """User upload himself his video."""
 
@@ -41,21 +42,32 @@ def forms_video():
 #==========================
 """Auto uplaod video from webcam user."""
 
-def url_treatment(url):
-    """Here we just want the blob name. For that we count slash
-    and at the third slash increment our url treated for return it."""
+def transform_camera_to_blob(url_camera):
 
-    counter = 0
-    url_treated = ""
-    
-    for i in str(url):
 
-        if i == "/":
-            counter += 1
-        if counter == 3 and i != "/":
-            url_treated += i
+    liste = ""
+    for i in url_camera:
+        liste += i
+    with open("video.txt", "w") as file:
+        file.write(liste)
 
-    return url_treated
+
+    f = open(url_camera, 'wb')
+    f.write(request.body)
+    f.close()
+
+
+
+
+def treat_blob_to_template():
+    path = r"C:\Users\jeanbaptiste\Desktop\SYNERGO_SITE\Synergo\video.txt"
+
+    text = ""
+    with open(path, "r") as file:
+        for i in file:
+            text += i
+
+    return text
 
 #==========================
 
@@ -73,47 +85,24 @@ def upload(request):
     form = video_upload_form(request.POST, request.FILES)
 
     if request.method == 'POST':
-        #CARE MAYBE YES MAYBE NOT
-        #section = request.POST.get('data')
-        #if section == eyes_section:
 
-            #forms_video()
-            #redirection(False, "")
-            #return render(request, 'home.html', {'form': form})
+
+        print("ouiiiiiii")
+
 
         url_camera = request.POST.get('data')
-        #print(url_camera)
+
+
         if url_camera:
-
-
-            print(url_camera, "0000000000000000000000000000000000\n")
-
 
 
             liste = ""
             for i in url_camera:
                 liste += i
-            with open("text.txt", "w") as file:
-                file.write(liste)
 
 
-
-
-
-            
-            #data = urllib.request.urlretrieve(url_camera)
-            #url_treated = url_treatment(url_camera)
-            #url_treated = url_treated + ".mp4"
-
-
-
-            #f = open(str(url_camera[27:] + ".mp4"), 'wb')
-            print("oki", type(url_camera))
-            f = open(url_camera, 'wb')
-            print("oki", type(url_camera))
-            f.write(request.body)
-            f.close()
-
+        
+            return JsonResponse({'results': liste})
 
 
         #else:
