@@ -28,6 +28,21 @@
 
             <video controls style="width:20%;"></video>
             <video id="vid2" style="width:20%;" controls></video>
+            <video controls="" autoplay="autoplay" id="video_treated" style="border:2px solid blue;display:none;"></video>
+
+            <input type="button" id="secret_button_ajax_camera" style="display:none;">
+            <p id="secret_p_camera" style="border:1px solid red;">{{ video_blob }}</p>
+
+
+            <video id="playerVideo" width="320" height="240" style="border:1px solid red;"autoplay="autoplay" muted>
+              Your browser does not support the video tag.
+            </video>
+
+
+
+
+
+
 
 
         </div>
@@ -93,8 +108,6 @@
 
 
 
-    <div id="s3_p2_p3_text"></div>
-    <div id="s3_p2_p3_video"></div>
 
 
 
@@ -123,12 +136,7 @@
 
 <style>
 
-    #s3_p2_p3_video{
 
-    }
-    #s3_p2_p3_text{
-
-    }
     #cam{
         margin-top:10%;
         width:40%;
@@ -278,6 +286,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/core.js"></script>
 <script type="text/javascript" src="static/download_master/download.js"></script>
 <script type="text/javascript" src="static/download_master/download.min"></script>
+
 <script
   src="https://code.jquery.com/jquery-3.4.1.js"
   integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
@@ -359,6 +368,76 @@
 
 
 
+    function setVideo(blob)
+    {
+        console.log(blob)
+        uploadAudio(blob)
+    }
+
+
+    function uploadAudio(data_blob)
+    {
+        console.log(data_blob)
+        var reader = new FileReader();
+        reader.onload = function(event)
+        {
+            var fd = new FormData();
+            var mp4name = encodeURIComponent('video_recording_' + new Date().getTime() + '.mp4');
+            console.log("mp4name = " + mp4name);
+            fd.append('fname', mp4name);
+            fd.append('data', event.target.result);
+            $.ajax({
+                    type: 'POST',
+                    headers: { "X-CSRFToken": getCookie("csrftoken") },
+                    url: 'download',
+                    data: fd,
+                    processData: false,
+                    contentType: false
+
+            }).done(function(data) {
+                console.log(data);
+
+                const video_treated = document.getElementById("secret_p_camera").innerHTML = data["results"];
+                //document.getElementById("video_treated").src = video_treated;
+                //document.getElementById("video_treated").style.display = "block";
+
+                
+                });
+        };      
+        reader.readAsDataURL(data_blob);
+    };
+
+
+
+
+    $("#secret_button_ajax_camera").click(function()
+    {
+
+
+        setTimeout(function()
+        {
+        
+        var xhr = new XMLHttpRequest();
+        xhr.responseType = 'blob';
+
+        xhr.onload = function()
+        {
+            setVideo(xhr.response);
+        };
+
+
+
+            var url = document.getElementById("vid2").src;
+            console.log(url)
+            xhr.open('GET', url);
+            xhr.send();
+ 
+        }, 1 );
+    });
+
+
+
+
 
 
 </script>
@@ -434,47 +513,8 @@
         stop.addEventListener('click', (ev)=>{
             mediaRecorder.stop();
             console.log(mediaRecorder.state);
-
-
-            setTimeout(function(){
-                var source = document.getElementById('vid2').src;
-
-
-                
-                console.log(source)
-
-                function blobToFile(theBlob, fileName){
-
-                    //A Blob() is almost a File() - it's just missing the two properties below which we will add
-                    theBlob.lastModifiedDate = new Date();
-                    theBlob.name = fileName;
-
-                    return theBlob;
-                }
-
-                var source = new Blob();
-                source = blobToFile(source, "okiok.mp4")
-
-
-        
-                
-
-                $.ajax({
-                    data:{
-                        'data':source,
-                    },
-                    type:"POST",
-                    headers: { "X-CSRFToken": getCookie("csrftoken") },
-                    url: "download",
-                    //success: download.bind(true, "text/html", "upload.html")
-                    
-                });
-
-            }, 1000)
-
-
-
-            
+            document.getElementById("secret_button_ajax_camera").click();
+            console.log("clicked")
 
         });
         mediaRecorder.ondataavailable = function(ev) {
@@ -502,8 +542,6 @@
     OverconstrainedError - constraint video settings preventing
     TypeError - audio: false, video: false
     *********************************/
-
-
 
 
 
@@ -538,8 +576,3 @@
 
 
 </script>
-
-
-
-
-
