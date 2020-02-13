@@ -5,18 +5,9 @@ from .models import video_upload
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.cache import cache_page
 
-
-#==========================
-"""Auto uplaod video from webcam user."""
-
-
-#==========================
-
-
-
-
-
-
+import base64
+import urllib.request
+import urllib.parse
 
 #==========================
 """User upload himself his video."""
@@ -47,6 +38,26 @@ def forms_video():
 
 
 
+#==========================
+"""Auto uplaod video from webcam user."""
+
+def url_treatment(url):
+    """Here we just want the blob name. For that we count slash
+    and at the third slash increment our url treated for return it."""
+
+    counter = 0
+    url_treated = ""
+    
+    for i in str(url):
+
+        if i == "/":
+            counter += 1
+        if counter == 3 and i != "/":
+            url_treated += i
+
+    return url_treated
+
+#==========================
 
 
         
@@ -70,18 +81,43 @@ def upload(request):
             #redirection(False, "")
             #return render(request, 'home.html', {'form': form})
 
-        uploading_auto = request.POST.get('data')
-        if uploading_auto:
-            print(uploading_auto, "0000000000000000000000000000000000")
+        url_camera = request.POST.get('data')
+        #print(url_camera)
+        if url_camera:
 
-            f = open(str(uploading_auto[27:]) + ".mp4", 'wb')
+
+            print(url_camera, "0000000000000000000000000000000000\n")
+
+
+
+            liste = ""
+            for i in url_camera:
+                liste += i
+            with open("text.txt", "w") as file:
+                file.write(liste)
+
+
+
+
+
+            
+            #data = urllib.request.urlretrieve(url_camera)
+            #url_treated = url_treatment(url_camera)
+            #url_treated = url_treated + ".mp4"
+
+
+
+            #f = open(str(url_camera[27:] + ".mp4"), 'wb')
+            print("oki", type(url_camera))
+            f = open(url_camera, 'wb')
+            print("oki", type(url_camera))
             f.write(request.body)
             f.close()
 
 
 
-        else:
-            forms_video("", "")
+        #else:
+        #    forms_video("", "")
 
     return render(request, 'upload/Upload.html', {'form': form})
 
