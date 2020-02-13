@@ -14,3 +14,17 @@ def home(request):
 
 
 
+def essaie(request):
+    """Home template, principal template.
+    Is made up of an access to the site and
+    sections to present the project
+    (eyes, face, head, hand, langage sections)."""
+
+    path = r"C:\Users\jeanbaptiste\Desktop\SYNERGO_SITE\Synergo\text.txt"
+
+    text = ""
+    with open(path, "r") as file:
+        for i in file:
+            text += i
+
+    return render(request, "essaie.html", {"oki" : text})
