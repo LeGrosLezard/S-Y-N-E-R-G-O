@@ -22,7 +22,14 @@
 
 
         <div id="camering">
-            <img id="cam" src="{% url 'videostream' stream_path='video' %}">
+
+            <p><button id="btnStart">START RECORDING</button><br/>
+            <button id="btnStop">STOP RECORDING</button></p>
+
+            <video controls style="width:20%;"></video>
+            <video id="vid2" style="width:20%;" controls></video>
+
+
         </div>
 
 
@@ -30,7 +37,7 @@
 
 
         <div id="uploading">
-            <iframe id="iframe_uploading"
+            <e id="iframe_uploading"
                 width="49%" height="180px" scrolling="no" frameBorder="0" src='/download'></iframe>
     
             <div id="explication_upload_p3_p2">
@@ -132,7 +139,7 @@
         position:absolute;
         width:100%;
         height:100%;
-
+        z-index:20000000000000000000000;
         opacity:0;
         -webkit-transition: opacity 2s;
         -moz-transition: opacity 2s;
@@ -268,9 +275,16 @@
 </style>
 
 
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/core.js"></script>
+<script type="text/javascript" src="static/download_master/download.js"></script>
+<script type="text/javascript" src="static/download_master/download.min"></script>
+<script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
 
 <script>
+
 
 
     function raise_(element){
@@ -317,39 +331,34 @@
             setTimeout(function(){
                 document.getElementById("animation_p_p3_s3_p3_p2").innerHTML = text;
                 document.getElementById("animation_p_p3_s3_p3_p2").style.opacity = "1";
-            }, 3000)
+            }, 1)
 
 
             setTimeout(function(){
                 document.getElementById("animation_p_p3_s3_p3_p2").style.opacity = "0";
                 mode_camera();
-            }, 4500)
-
-
-
-
+            }, 1)
 
         };
 
-    
-
-        
-
-        
     };
 
 
     function mode_camera(){
-        document.getElementById("camering").style.opacity = "1"; 
+        document.getElementById("camering").style.opacity = "1";
+
     };
 
     function mode_video(){
         document.getElementById("uploading").style.opacity = "1";
-    }
+    };
 
     function choice_animation(text, mode){
         animation_start(text, mode);
     };
+
+
+
 
 
 </script>
@@ -359,12 +368,176 @@
 
 
 
+ <script>
+        
+    let constraintObj = { 
+        audio: false, 
+        video: { 
+            facingMode: "user", 
+            width: { min: 640, ideal: 1280, max: 1920 },
+            height: { min: 480, ideal: 720, max: 1080 } 
+        } 
+    }; 
+
+    //handle older browsers that might implement getUserMedia in some way
+    if (navigator.mediaDevices === undefined) {
+        navigator.mediaDevices = {};
+        navigator.mediaDevices.getUserMedia = function(constraintObj) {
+            let getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+            if (!getUserMedia) {
+                return Promise.reject(new Error('getUserMedia is not implemented in this browser'));
+            }
+            return new Promise(function(resolve, reject) {
+                getUserMedia.call(navigator, constraintObj, resolve, reject);
+            });
+        }
+    }else{
+        navigator.mediaDevices.enumerateDevices()
+        .then(devices => {
+            devices.forEach(device=>{
+                console.log(device.kind.toUpperCase(), device.label);
+                //, device.deviceId
+            })
+        })
+        .catch(err=>{
+            console.log(err.name, err.message);
+        })
+    }
+
+    navigator.mediaDevices.getUserMedia(constraintObj)
+    .then(function(mediaStreamObj) {
+        //connect the media stream to the first video element
+        let video = document.querySelector('video');
+        if ("srcObject" in video) {
+            video.srcObject = mediaStreamObj;
+        } else {
+            //old version
+            video.src = window.URL.createObjectURL(mediaStreamObj);
+        }
+        
+        video.onloadedmetadata = function(ev) {
+            //show in the video element what is being captured by the webcam
+            video.play();
+        };
+        
+        //add listeners for saving video/audio
+        let start = document.getElementById('btnStart');
+        let stop = document.getElementById('btnStop');
+        let vidSave = document.getElementById('vid2');
+        let mediaRecorder = new MediaRecorder(mediaStreamObj);
+        let chunks = [];
+        
+        start.addEventListener('click', (ev)=>{
+            mediaRecorder.start();
+            console.log(mediaRecorder.state);
+        })
+        stop.addEventListener('click', (ev)=>{
+            mediaRecorder.stop();
+            console.log(mediaRecorder.state);
+
+
+            setTimeout(function(){
+                var source = document.getElementById('vid2').src;
+
+
+                
+                console.log(source)
+
+                function blobToFile(theBlob, fileName){
+
+                    //A Blob() is almost a File() - it's just missing the two properties below which we will add
+                    theBlob.lastModifiedDate = new Date();
+                    theBlob.name = fileName;
+
+                    return theBlob;
+                }
+
+                var source = new Blob();
+                source = blobToFile(source, "okiok.mp4")
+
+
+        
+                
+
+                $.ajax({
+                    data:{
+                        'data':source,
+                    },
+                    type:"POST",
+                    headers: { "X-CSRFToken": getCookie("csrftoken") },
+                    url: "download",
+                    //success: download.bind(true, "text/html", "upload.html")
+                    
+                });
+
+            }, 1000)
+
+
+
+            
+
+        });
+        mediaRecorder.ondataavailable = function(ev) {
+            chunks.push(ev.data);
+        }
+        mediaRecorder.onstop = (ev)=>{
+            let blob = new Blob(chunks, { 'type' : 'video/mp4;' });
+            chunks = [];
+            let videoURL = window.URL.createObjectURL(blob);
+            vidSave.src = videoURL;
+        }
+    })
+    .catch(function(err) { 
+        console.log(err.name, err.message); 
+    });
+    
+    /*********************************
+    getUserMedia returns a Promise
+    resolve - returns a MediaStream Object
+    reject returns one of the following errors
+    AbortError - generic unknown cause
+    NotAllowedError (SecurityError) - user rejected permissions
+    NotFoundError - missing media track
+    NotReadableError - user permissions given but hardware/OS error
+    OverconstrainedError - constraint video settings preventing
+    TypeError - audio: false, video: false
+    *********************************/
+
+
+
+
+
+    function getCookie(c_name)
+    {
+        if (document.cookie.length > 0)
+        {
+            c_start = document.cookie.indexOf(c_name + "=");
+            if (c_start != -1)
+            {
+                c_start = c_start + c_name.length + 1;
+                c_end = document.cookie.indexOf(";", c_start);
+                if (c_end == -1) c_end = document.cookie.length;
+                return unescape(document.cookie.substring(c_start,c_end));
+            }
+        }
+        return "";
+     }
+
+
+    $.cookie('cookiename', 'cookievalue');
+    // read cookie
+    var myCookie = $.cookie('cookiename');
+    // delete cookie
+    $.cookie('cookiename', null);
 
 
 
 
 
 
+
+
+</script>
 
 
 
