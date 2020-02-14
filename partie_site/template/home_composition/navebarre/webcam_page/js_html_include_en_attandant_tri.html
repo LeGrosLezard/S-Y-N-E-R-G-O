@@ -53,7 +53,8 @@
     var mediaElement = getHTMLMediaElement(video, {
         buttons: ['full-screen'/*, 'take-snapshot'*/],
         showOnMouseEnter: false,
-        width: 360,
+        width: 550,
+        height: 300,
         onTakeSnapshot: function() {
             var canvas = document.createElement('canvas');
             canvas.width = mediaElement.clientWidth;
@@ -1280,6 +1281,17 @@
     }
 </script>
 
+
+
+
+
+
+
+
+
+
+
+
 <script>
     function captureScreen(config) {
         if (navigator.getDisplayMedia) {
@@ -1369,6 +1381,17 @@
         }
     }
 </script>
+
+
+
+
+
+
+
+
+
+
+
 
 <script>
     /* upload_youtube_video.js Copyright 2017 Google Inc. All Rights Reserved. */
@@ -1512,6 +1535,12 @@
     };
 
 </script>
+
+
+
+
+
+
 
 <script>
     /* cors_upload.js Copyright 2015 Google Inc. All Rights Reserved. */
@@ -1676,6 +1705,19 @@
     };
 </script>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 <script>
     var chkFixSeeking = document.querySelector('#chk-fixSeeking');
     chkFixSeeking.onchange = function() {
@@ -1690,6 +1732,16 @@
         chkFixSeeking.checked = true;
     }
 </script>
+
+
+
+
+
+
+
+
+
+
 
 <script>
     var chkTimeSlice = document.querySelector('#chk-timeSlice');
@@ -1715,6 +1767,15 @@
         }
     }, false);
 </script>
+
+
+
+
+
+
+
+
+
 
 <script>
     var btnPauseRecording = document.querySelector('#btn-pause-recording');
@@ -1746,7 +1807,7 @@
             btnStartRecording.recordRTC.resumeRecording();
             recordingPlayer.play();
 
-            btnPauseRecording.style.fontSize = '15px';
+            //btnPauseRecording.style.fontSize = '15px';
             btnPauseRecording.innerHTML = 'Pause';
             setTimeout(function() {
                 btnPauseRecording.disabled = false;
