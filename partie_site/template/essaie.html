@@ -1,207 +1,160 @@
+<!-- Learn about this code on MDN: https://developer.mozilla.org/en-US/docs/Web/API/MediaStream_Recording_API/Recording_a_media_element -->
+
+<p>Click the "Start" button to begin video recording for a few seconds. You can stop
+   the video by clicking the creatively-named "Stop" button. The "Download"
+   button will download the received data (although it's in a raw, unwrapped form
+   that isn't very useful).
+</p>
+<br>
+<div class="left">
+  <div id="startButton" class="button">
+    Start
+  </div>
+  <h2>Preview</h2>
+  <video id="preview" width="160" height="120" autoplay muted></video>
+</div>
+<div class="right">
+  <div id="stopButton" class="button">
+    Stop
+  </div>
+  <h2>Recording</h2>
+  <video id="recording" width="160" height="120" controls></video>
+  <a id="downloadButton" class="button">
+    Download
+  </a>
+</div>
+<div class="bottom">
+  <pre id="log"></pre>
+</div>
+
+<style>
+                                           body {
+  font: 14px "Open Sans", "Arial", sans-serif;
+}
+
+video {
+  margin-top: 2px;
+  border: 1px solid black;
+}
+
+.button {
+  cursor: pointer;
+  display: block;
+  width: 160px;
+  border: 1px solid black;
+  font-size: 16px;
+  text-align: center;
+  padding-top: 2px;
+  padding-bottom: 4px;
+  color: white;
+  background-color: darkgreen;
+  text-decoration: none;
+}
+
+h2 {
+  margin-bottom: 4px;
+}
+
+.left {
+  margin-right: 10px;
+  float: left;
+  width: 160px;
+  padding: 0px;
+}
+
+.right {
+  margin-left: 10px;
+  float: left;
+  width: 160px;
+  padding: 0px;
+}
+
+.bottom {
+  clear: both;
+  padding-top: 10px;
+}
+                                           
+                                           </style>
 
 
-<!DOCTYPE html>
-<html>
-<head>
-  <script src="http://code.jquery.com/jquery-latest.js"></script>
-</head>
-<body>
-
-<h1>My Page</h1>
-<p>Some paragraph.</p>
-<video id="playerVideo" width="320" height="240" autoplay="autoplay" muted>
-  Your browser does not support the video tag.
-</video><br>
-<span id="blobURL"></span><br>
-<span id="download"></span>
-<br><br>
-<video controls="" preload="auto" id="_video"></video>
-
-
-<p id="cc">{{ oki }}</p>
-<video controls="" autoplay="autoplay" id="aaaaa" style="border:2px solid blue;"></video>
-
-
-</body>
-</html>
 
 
 
 
 
-<a href="">Download</a>
+
 
 <script>
+                                           let preview = document.getElementById("preview");
+let recording = document.getElementById("recording");
+let startButton = document.getElementById("startButton");
+let stopButton = document.getElementById("stopButton");
+let downloadButton = document.getElementById("downloadButton");
+let logElement = document.getElementById("log");
 
-const yoyo = document.getElementById("cc").innerHTML;
-
-document.getElementById("aaaaa").src = yoyo;
-
-
-
-
-
-
-
-
-
-function setVideo(blob)
-{
-  var url = URL.createObjectURL(blob);
-	var video = document.getElementById('playerVideo');
-	video.type = "video/mp4";
-	video.src = url;
-	video.load();
-	download(url);
-        uploadAudio(blob)
+let recordingTimeMS = 5000;
+function log(msg) {
+  logElement.innerHTML += msg + "\n";
 }
-	
-function download(blob_url)
-{
-	var fileName = "video.mp4";
-	var a = document.createElement('a');
-	a.href        = blob_url;
-	a.download    = fileName;
-        a.id          = "coucou";
-	a.textContent = "DOWNLOAD " + fileName;
-	document.getElementById('blobURL').innerHTML = "BLOB URL: <b>"+blob_url+"</b>";
-	document.getElementById('download').appendChild(a);
-
-        var b = document.getElementById('coucou').click();
-        console.log(b)
-
-
+function wait(delayInMS) {
+  return new Promise(resolve => setTimeout(resolve, delayInMS));
 }
-
-$(document).ready(function(){
- var xhr = new XMLHttpRequest();
- xhr.responseType = 'blob';
-
- xhr.onload = function() {
-  setVideo(xhr.response);
- };
-
- xhr.open('GET', 'blob:http://127.0.0.1:8000/4311eda7-7ef5-4870-8b9d-5ddeed1602ee');
- xhr.send();
-
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            function uploadAudio(mp3Data){
-		var reader = new FileReader();
-		reader.onload = function(event){
-			var fd = new FormData();
-			var mp3Name = encodeURIComponent('audio_recording_' + new Date().getTime() + '.mp4');
-			console.log("mp3name = " + mp3Name);
-			fd.append('fname', mp3Name);
-			fd.append('data', event.target.result);
-			$.ajax({
-				type: 'POST',
-                                headers: { "X-CSRFToken": getCookie("csrftoken") },
-				url: 'download',
-				data: fd,
-				processData: false,
-				contentType: false
-			}).done(function(data) {
-				console.log(data);
-
-			});
-		};      
-		reader.readAsDataURL(mp3Data);
-	}
-
-
-
-
-
-
-
-
-
-
-
-    function getCookie(c_name)
-    {
-        if (document.cookie.length > 0)
-        {
-            c_start = document.cookie.indexOf(c_name + "=");
-            if (c_start != -1)
-            {
-                c_start = c_start + c_name.length + 1;
-                c_end = document.cookie.indexOf(";", c_start);
-                if (c_end == -1) c_end = document.cookie.length;
-                return unescape(document.cookie.substring(c_start,c_end));
-            }
-        }
-        return "";
-     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</script>
+function startRecording(stream, lengthInMS) {
+  let recorder = new MediaRecorder(stream);
+  let data = [];
+ 
+  recorder.ondataavailable = event => data.push(event.data);
+  recorder.start();
+  log(recorder.state + " for " + (lengthInMS/1000) + " seconds...");
+ 
+  let stopped = new Promise((resolve, reject) => {
+    recorder.onstop = resolve;
+    recorder.onerror = event => reject(event.name);
+  });
+
+  let recorded = wait(lengthInMS).then(
+    () => recorder.state == "recording" && recorder.stop()
+  );
+ 
+  return Promise.all([
+    stopped,
+    recorded
+  ])
+  .then(() => data);
+}
+function stop(stream) {
+  stream.getTracks().forEach(track => track.stop());
+}
+startButton.addEventListener("click", function() {
+  navigator.mediaDevices.getUserMedia({
+    video: true,
+    audio: true
+  }).then(stream => {
+    preview.srcObject = stream;
+    downloadButton.href = stream;
+    preview.captureStream = preview.captureStream || preview.mozCaptureStream;
+    return new Promise(resolve => preview.onplaying = resolve);
+  }).then(() => startRecording(preview.captureStream(), recordingTimeMS))
+  .then (recordedChunks => {
+    let recordedBlob = new Blob(recordedChunks, { type: "video/webm" });
+    recording.src = URL.createObjectURL(recordedBlob);
+    downloadButton.href = recording.src;
+    downloadButton.download = "RecordedVideo.webm";
+    
+    log("Successfully recorded " + recordedBlob.size + " bytes of " +
+        recordedBlob.type + " media.");
+  })
+  .catch(log);
+}, false);stopButton.addEventListener("click", function() {
+  stop(preview.srcObject);
+}, false);
+
+                                           </script>
+
+
+
+
+
+
+
+                                           
