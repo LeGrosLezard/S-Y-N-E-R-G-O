@@ -33,10 +33,25 @@
 
 
         <div id="visionnage">
-            <img src="static/home_composition/section3/images/loading_s3_p2_p3.gif" id="loading">
-            <p>L O A D I N G ... <br>
-                Nous chargeons la vidéo, prenez le temps de visiter notre site, nous vous ferons signe
-            </p>
+
+
+
+
+            <div>
+                <iframe id=""
+                    width="49%" height="180px" scrolling="no" frameBorder="0" src='/download'></iframe>
+            </div>
+
+
+
+            <div style="display:none;">
+
+                <img src="static/home_composition/section3/images/loading_s3_p2_p3.gif" id="loading">
+                <p>L O A D I N G ... <br>
+                    Nous chargeons la vidéo, prenez le temps de visiter notre site, nous vous ferons signe
+                </p>
+            </div>
+
 
         </div>
 
@@ -46,16 +61,15 @@
 
 
 
+        <div id="to_camera" style="width:100%;height:100%;">
 
+                <input type="button" value="croix" onclick="quit_webcam_page_eye_apli()" id="croix_webcam" style="border:2px solid red;">
+                <input type="button" value="croix2" onclick="end_download()" id="end_download" style="display:none;">
 
-
-        <div id="to_camera" style="width:100%;height:100%;>
-
-            <input type="button" value="croix" onclick="quit_webcam_page_eye_apli()" id="croix_webcam">
-            <input type="button" value="croix" onclick="end_download()" id="end_download" style="display:none;">
 
             <div id="buttons">
-            
+
+
 
                 <button class="clio_button" id="btn-start-recording">Recording</button>
 
@@ -190,7 +204,7 @@
 
 
         <div style="display: none">
-            <input type="checkbox" id="chk-fixSeeking" style="margin:0;width:auto;" title="">
+            <input type="checkbox" id="chk-fixSeeking" style="margin:0;width:auto;display:none;" title="">
             <label for="chk-fixSeeking" style="font-size: 15px;margin:0;width: auto;
             cursor: pointer;-webkit-user-select:none;user-select:none;"
             title="Fix video seeking issues?"></label>
@@ -223,6 +237,12 @@
 #visionnage{
     width:100%;
     height:100%;
+    display:block;
+    opacity:1;
+    -webkit-transition: opacity 2s;
+    -moz-transition: opacity 2s;
+    -o-transition: opacity 2s;
+    transition: opacity 2s;
 }
 .appli_eyes:hover{
     color:green;
@@ -591,21 +611,27 @@ function to_video(){
 };  
 
 
+
+
+
+
 function end_download(){
-    alert("coucou")
+
     document.getElementById("to_camera").style.opacity = "0";
     document.getElementById("to_camera").style.display = "none";
     document.getElementById("parameter_webcam_page_eye").style.display = "none";
+    document.getElementById("visionnage").style.display = "block";
+    document.getElementById("visionnage").style.opacity = "1";
 }
 
 
-function alert(){
+function alert_finish(){
     document.getElementById("alert").innerHTML = "Votre video eyes sections est pretes !!!";
     
 };
 
 
-alert()
+
 
 
 
