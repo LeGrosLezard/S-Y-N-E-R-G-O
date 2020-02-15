@@ -28,7 +28,67 @@
 <section style="z-index:100000;background:gray;">
 
 
-        <div>
+        <div id="to_camera" style="width:100%;height:100%;">
+
+            <div id="buttons">
+
+                <button class="clio_button" id="btn-start-recording">Recording</button>
+
+                <button class="clio_button" id="btn-pause-recording"
+                     style="display:none;">Pause</button>
+
+                <button class="clio_button" id="save-to-disk">Save</button>
+            </div>
+
+
+            <div style="margin-top: 10px;" id="recording-player"></div>
+
+
+        </div>
+
+
+
+
+
+            <div id="to_application_to_camera" style="border:1px solid red;width:100%;height:100%;">
+
+                <center>
+        
+                    <div id="aplications_eyes">
+                        <h1>Application Eyes detectors</h1>
+                        <p>Venez donc essayer !</p>
+
+
+
+                        <ul id="applation_eye">
+                            <center>
+                            <li class="appli_eyes">Eyes tracking visite de site web</li>
+                            <li class="appli_eyes">Des accesoires pour votre figure</li>
+                            <li class="appli_eyes">Ne pas dormir au volant !</li>
+                            </center>
+                        </ul>
+
+                    </div>
+
+
+                    <p id="recommandation">
+                        <span>Recommandation: De face, une bonne qualité de caméra. Yeux bien visible.</span>
+                    </p>
+
+
+                    
+                    <button class="clio_button" id="clickclick" onclick="to_video2()" style="font-size:1.5em;display:none;">test</button>
+ 
+                </center>
+
+            </div>
+
+
+
+
+
+
+        <div id="parameter_webcam_page_eye">
             <select class="recording-media" id="select1">
                 <option value="record-audio-plus-video" onclick="iconade('micam', 'icon_recording')">Microphone et Camera</option>
                 <option value="record-audio" onclick="iconade('mic', 'icon_recording')">Microphone</option>
@@ -55,14 +115,14 @@
 
             <p id="ask_webcam">
 
-                <strong>Important :</strong> Nous vous prions de bien vouloir essayer<br>
+                <strong><span style="color:red;">Important :</span></strong> Nous vous prions de bien vouloir essayer<br>
                 la caméra avant de faire votre enregistrement avec <strong>les différents encodages</strong>. <br><br>
 
                 Votre navigateur est : <strong><span id="navigator_span"></span></strong>
             </p>
 
 
-            <!--
+
             <select class="media-resolutions" style="display:none;">
                 <option value="default">Default resolutions</option>
                 <option value="1920x1080">1080p</option>
@@ -89,48 +149,14 @@
                 <option value="8000">1 KB bps</option>
                 <option value="800">100 Bytes bps</option>
             </select>
-            -->
+
         </div>
 
 
 
-        <div id="aplications_eyes">
-            <h1>Application Eyes detectors</h1>
-            <ul>
-                <li>Eyes tracking visite de site web</li>
-                <li>Des accesoires pour votre figure</li>
-                <li>Ne pas dormir au volant !</li>
-            </ul>
-        </div>
+        <button class="clio_button" id="Button_eye_application" onclick="to_video()">J'essaie la vidéo</button>
 
-
-
-
-
-        <!--
-        <div id="buttons">
-
-            <button class="clio_button" id="btn-start-recording">Recording</button>
-
-            <button class="clio_button" id="btn-pause-recording"
-                 style="display:none;">Pause</button>
-
-            <button class="clio_button" id="save-to-disk">Save</button>
-        </div>
-
-
-        <div style="margin-top: 10px;" id="recording-player"></div>
-
-
-        <p id="navigator_ids">
-            Chrome | VP8, VP9, H264, MKV, Whammy<br>
-            Opera | VP8, VP9, H264, MKV<br>
-            Firefox | VP8, H264<br>
-            Safari | VP8<br>
-            Edge | None
-        </p>
-
-
+        
         <div style="display: none">
             <input type="checkbox" id="chk-fixSeeking" style="margin:0;width:auto;" title="">
             <label for="chk-fixSeeking" style="font-size: 15px;margin:0;width: auto;
@@ -139,12 +165,9 @@
         </div>
 
 
-        -->
-
   
 
 <section>
-
 
 
 
@@ -162,17 +185,60 @@
 
 
 <style>
+.appli_eyes:hover{
+    color:green;
+}
+#to_application_to_camera{
+    z-index:300;
+    position:absolute;
+    display:none;
+    opacity:0;
+    -webkit-transition: opacity 2s;
+    -moz-transition: opacity 2s;
+    -o-transition: opacity 2s;
+    transition: opacity 2s;
+}
+#to_camera{
+    z-index:500;
+    position:absolute;
+    opacity:0;
+    -webkit-transition: opacity 2s;
+    -moz-transition: opacity 2s;
+    -o-transition: opacity 2s;
+    transition: opacity 2s;
+    display:none;
+}
+#parameter_webcam_page_eye{
+    opacity:1;
+    -webkit-transition: opacity 2s;
+    -moz-transition: opacity 2s;
+    -o-transition: opacity 2s;
+    transition: opacity 2s;
+    z-index:1;
+}
+#Button_eye_application{
+    font-size:1.5em;
+    margin-top:10%;
+}
+#applation_eye{
+    list-style:none;
+    text-align:center;
+    margin-left:38%;
+}
 
+#recommandation{
+    margin-top:10%;
+}
 #aplications_eyes{
-    float:right;
     position:relative;
-    margin-right:5%;
+    text-align:center;
 }
 #ask_webcam{
     text-align:left;
     padding-top:1%;
-    position:relative;
     z-index:1;
+    position:relative;
+    height:100px;
 }
 #select1{
     background:gray;
@@ -236,6 +302,7 @@
    transition: transform 0s !important;
    font-family: Arial;
    border:none;
+   outline: 0;
 }
 .clio_button:hover {
     color: #FFFFFF;
@@ -416,7 +483,27 @@ select {
 
 
 
-document.getElementById("navigator_span").innerHTML = you_browsers;
+function browsers_to_encodage(you_browsers){
+
+    var encodage = ""
+
+    if(you_browsers == "Chrome"){
+        encodage = "VP8, VP9, H264, MKV ou Whammy"
+    }else if(you_browsers == "Opera"){
+        encodage = "VP8, VP9, H264 ou MKV"
+    }else if(you_browsers == "Firefox"){
+        encodage = "VP8 ou H264"
+    }else if(you_browsers == "Safari"){
+        encodage = "VP8"
+    }else if(you_browsers == "Edge"){
+        encodage = "None"
+    };
+    return encodage
+}
+
+
+encodage = browsers_to_encodage(you_browsers)
+document.getElementById("navigator_span").innerHTML = you_browsers + " utilisez : <em>"  +  encodage +  "</em>";
 
 
 var a = document.getElementById("camering")
@@ -433,6 +520,45 @@ document.getElementById("select2").size = "6";
 
 document.getElementById("icon_recording").innerHTML = '<img width="40" src="https://img.icons8.com/material/24/000000/camera-on-tripod.png">';
 document.getElementById("icon_recording2").innerHTML = '<img width="40" src="https://img.icons8.com/ios-filled/50/000000/word.png">';
+
+
+
+function to_video(){
+
+    document.getElementById("clickclick").style.display = "block";
+
+    document.getElementById("Button_eye_application").style.display = "none";
+    document.getElementById("to_application_to_camera").style.display = "block";
+    document.getElementById("parameter_webcam_page_eye").style.opacity = "0";
+    document.getElementById("to_application_to_camera").style.opacity = "1";
+
+};  
+
+function to_video2(){
+    
+    document.getElementById("clickclick").style.display = "none";
+
+    document.getElementById("to_camera").style.display = "block";
+    document.getElementById("to_application_to_camera").style.opacity = "0";
+    document.getElementById("to_camera").style.opacity = "1";
+
+    setTimeout(function(){
+        document.getElementById("to_application_to_camera").style.display = "none";
+    }, 1000);
+
+};  
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
