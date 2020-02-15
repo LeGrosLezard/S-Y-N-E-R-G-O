@@ -51,6 +51,17 @@
 
             <div id="icon_recording2"></div>
 
+
+
+            <p id="ask_webcam">
+
+                <strong>Important :</strong> Nous vous prions de bien vouloir essayer<br>
+                la caméra avant de faire votre enregistrement avec <strong>les différents encodages</strong>. <br><br>
+
+                Votre navigateur est : <strong><span id="navigator_span"></span></strong>
+            </p>
+
+
             <!--
             <select class="media-resolutions" style="display:none;">
                 <option value="default">Default resolutions</option>
@@ -82,6 +93,21 @@
         </div>
 
 
+
+        <div id="aplications_eyes">
+            <h1>Application Eyes detectors</h1>
+            <ul>
+                <li>Eyes tracking visite de site web</li>
+                <li>Des accesoires pour votre figure</li>
+                <li>Ne pas dormir au volant !</li>
+            </ul>
+        </div>
+
+
+
+
+
+        <!--
         <div id="buttons">
 
             <button class="clio_button" id="btn-start-recording">Recording</button>
@@ -113,7 +139,7 @@
         </div>
 
 
-
+        -->
 
   
 
@@ -137,6 +163,16 @@
 
 <style>
 
+#aplications_eyes{
+    float:right;
+    position:relative;
+    margin-right:5%;
+}
+#ask_webcam{
+    text-align:left;
+    padding-top:1%;
+    position:relative;
+}
 #select1{
     background:gray;
     outline: 0;
@@ -181,6 +217,7 @@
     -moz-transition: opacity 2s;
     -o-transition: opacity 2s;
     transition: opacity 2s;
+    padding-right:5%;
 }
 
 #navigator_ids{
@@ -325,6 +362,8 @@ select {
 <script>
     var browsers = ["Firefox","MSIE","Trident","Edge","Chrome","Safari", "Android"];
 
+    var you_browsers = ""
+
     function getBrowser(bname) {
       var ua = navigator.userAgent;
       for(var b in browsers) {
@@ -339,8 +378,11 @@ select {
     if (browser === false) {
       console.log("inconnue");
     } else {
-      console.log("Votre navigateur: " + browser);
+      you_browsers =  browser;
     };
+
+
+
 
     //micam mic full micfull
     function iconade(icone, div){
@@ -370,6 +412,8 @@ select {
     };
 
 
+
+document.getElementById("navigator_span").innerHTML = you_browsers;
 
 
 var a = document.getElementById("camering")
