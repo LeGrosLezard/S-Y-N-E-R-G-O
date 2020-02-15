@@ -5,7 +5,6 @@
         {{ form.as_p }}
         <input type="submit" value="Upload" id="upload"/>
     </form>
-	
 </div>
 
 
@@ -46,18 +45,72 @@
           })
           .done(function(data){
               if (data.error){
-                  jQuery("#monCadreAlert").text(data.error);
-                  jQuery("#is_save");
-                  
+                  {}
               }
               else{
                 document.getElementById("response").click();
-            }
+                treat_video_camera(data["response"])
+            }   
         });
     });
 
+
+    function treat_video_camera(name){
+        console.log(name)
+          $.ajax({
+              data:{"video_name": name,
+                    csrfmiddlewaretoken:'{{ csrf_token }}'
+                   },
+              type:"POST",
+              url:"treat_video",
+          })
+          .done(function(data){
+              if (data.error){
+                  {}
+              }
+              else{
+                {}
+            }   
+        });
+    };
+
+
+
+
+
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+
+
+
+
+
 </script>
-
-
 
 
