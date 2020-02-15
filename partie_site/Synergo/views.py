@@ -4,6 +4,8 @@ It's the inteface beetween template and model (data base)"""
 
 from django.shortcuts import render
 
+from django.http import JsonResponse
+
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.cache import cache_page
 
@@ -28,8 +30,8 @@ def uploading(request, form):
 
 
 
-@cache_page(60 * 15)
-@csrf_protect
+
+
 def home(request):
     """Home template, principal template.
     Is made up of an access to the site and
@@ -40,7 +42,8 @@ def home(request):
     uploading(request, form)
 
 
-    return render(request, "Home.html", {"video_blob": "coucouuu", "response":"yo", 'form':form})
+    return render(request, "Home.html", {'form':form})
+
 
 
 
