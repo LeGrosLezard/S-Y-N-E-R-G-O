@@ -25,28 +25,33 @@
 
     
 
-<section style="z-index:100000;">
+<section style="z-index:100000;background:gray;">
 
 
         <div>
             <select class="recording-media" id="select1">
-                <option value="record-audio-plus-video">Microphone+Camera</option>
-                <option value="record-audio">Microphone</option>
-                <option value="record-screen">Full Screen</option>
-                <option value="record-audio-plus-screen">Microphone+Screen</option>
+                <option value="record-audio-plus-video" onclick="iconade('micam', 'icon_recording')">Microphone et Camera</option>
+                <option value="record-audio" onclick="iconade('mic', 'icon_recording')">Microphone</option>
+                <option value="record-screen" onclick="iconade('full', 'icon_recording')">Full Screen</option>
+                <option value="record-audio-plus-screen" onclick="iconade('micfull', 'icon_recording')">Microphone et Screen</option>
             </select>
+
+            <div id="icon_recording"></div>
+
 
 
             <select class="media-container-format" id="select2">
-                <option>default</option>
-                <option>vp8</option>
-                <option>vp9</option>
-                <option>h264</option>
-                <option>mkv</option>
-                <option>whammy</option>
+                <option onclick="iconade('1', 'icon_recording2')">default</option>
+                <option onclick="iconade('2', 'icon_recording2')">vp8</option>
+                <option onclick="iconade('3', 'icon_recording2')">vp9</option>
+                <option onclick="iconade('4', 'icon_recording2')">h264</option>
+                <option onclick="iconade('5', 'icon_recording2')">mkv</option>
+                <option onclick="iconade('6', 'icon_recording2')">whammy</option>
             </select>
 
+            <div id="icon_recording2"></div>
 
+            <!--
             <select class="media-resolutions" style="display:none;">
                 <option value="default">Default resolutions</option>
                 <option value="1920x1080">1080p</option>
@@ -73,7 +78,7 @@
                 <option value="8000">1 KB bps</option>
                 <option value="800">100 Bytes bps</option>
             </select>
-
+            -->
         </div>
 
 
@@ -92,7 +97,7 @@
 
 
         <p id="navigator_ids">
-            Chrome | VP8, VP9, H264, MKV<br>
+            Chrome | VP8, VP9, H264, MKV, Whammy<br>
             Opera | VP8, VP9, H264, MKV<br>
             Firefox | VP8, H264<br>
             Safari | VP8<br>
@@ -133,10 +138,49 @@
 <style>
 
 #select1{
-
+    background:gray;
+    outline: 0;
+    border:none;
+    float:left;
+    height:100px;
+    overflow-y:hidden;
+    position:relative;
+}
+#icon_recording{
+    width:50px;
+    height:50px;
+    float:left;
+    position:relative;
+    padding-left:5px;
+    margin-top:25px;
+    opacity:1;
+    -webkit-transition: opacity 2s;
+    -moz-transition: opacity 2s;
+    -o-transition: opacity 2s;
+    transition: opacity 2s;
 }
 #select2{
-
+    background:gray;
+    outline: 0;
+    border:none;
+    float:left;
+    padding-left:5%;
+    height:100px;
+    overflow-y:hidden;
+    position:relative;
+}
+#icon_recording2{
+    width:50px;
+    height:50px;
+    float:left;
+    position:relative;
+    padding-left:5px;
+    margin-top:25px;
+    opacity:1;
+    -webkit-transition: opacity 2s;
+    -moz-transition: opacity 2s;
+    -o-transition: opacity 2s;
+    transition: opacity 2s;
 }
 
 #navigator_ids{
@@ -209,6 +253,7 @@
     width:12%;
     border-radius:4px;
     border:1px solid blue;
+    z-index:1000000000000;
 }
 
 select {
@@ -251,7 +296,7 @@ select {
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
-    margin-top:-90px;
+    margin-top:10px;
 
     
 }
@@ -275,3 +320,74 @@ select {
 
 
 </style>
+
+
+<script>
+    var browsers = ["Firefox","MSIE","Trident","Edge","Chrome","Safari", "Android"];
+
+    function getBrowser(bname) {
+      var ua = navigator.userAgent;
+      for(var b in browsers) {
+        b = browsers[b];
+          if(ua.indexOf(b) != -1) return b;
+      }	
+      return false;
+    }
+
+    var browser = getBrowser();
+    if(browser == "Trident"|| browser=="MSIE") browser="IE/Edge";
+    if (browser === false) {
+      console.log("inconnue");
+    } else {
+      console.log("Votre navigateur: " + browser);
+    };
+
+    //micam mic full micfull
+    function iconade(icone, div){
+
+        document.getElementById(div).style.opacity = "0";
+
+        setTimeout(function()
+        {
+
+            dico = {"micam"  : '<img width="40" src="https://img.icons8.com/material/24/000000/camera-on-tripod.png">',
+                    "mic"    : '<img width="35" src="https://img.icons8.com/ios-filled/50/000000/microphone.png">',
+                    "full"   : '<img width="45" src="https://img.icons8.com/ios-filled/50/000000/sdtv.png">',
+                    "micfull": '<img width="40" src="https://img.icons8.com/ios-filled/50/000000/add-record.png">',
+
+                    "1" : '<img width="40" src="https://img.icons8.com/ios-filled/50/000000/word.png">',
+                    "2" : '<img width="40" src="https://img.icons8.com/ios-filled/50/000000/ps.png">',
+                    "3" : '<img width="40"  src="https://img.icons8.com/ios-filled/50/000000/binary-file.png">',
+                    "4" : '<img width="40" src="https://img.icons8.com/ios-filled/50/000000/psd.png">',
+                    "5" : '<img width="40" src="https://img.icons8.com/ios-filled/50/000000/powerpoint.png">',
+                    "6" : '<img width="40" src="https://img.icons8.com/ios-filled/50/000000/python-file.png">'
+                    };
+
+            document.getElementById(div).innerHTML = dico[icone];
+            document.getElementById(div).style.opacity = "1";
+
+        }, 900);
+    };
+
+
+
+
+var a = document.getElementById("camering")
+a.style.background = "gray";
+
+var a = document.getElementById("container3")
+a.style.background = "gray";
+
+var a = document.getElementById("section3_part2_part3")
+a.style.background = "gray";
+
+document.getElementById("select1").size = "5";
+document.getElementById("select2").size = "6";
+
+document.getElementById("icon_recording").innerHTML = '<img width="40" src="https://img.icons8.com/material/24/000000/camera-on-tripod.png">';
+document.getElementById("icon_recording2").innerHTML = '<img width="40" src="https://img.icons8.com/ios-filled/50/000000/word.png">';
+
+
+
+</script>
+
