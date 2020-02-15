@@ -30,40 +30,11 @@ urlpatterns = [
 
     #Home access.
     path(r'', views.home),
+    path(r'essaie', views.essaie),
 
-    #Download app root
-    path(r'download', include('download.urls')),
     #Eyes section app root.
     path(r'eyes_section', include('eyes_section.urls')),
 
 
 ]+ static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
