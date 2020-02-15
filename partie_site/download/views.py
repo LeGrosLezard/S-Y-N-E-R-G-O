@@ -5,11 +5,7 @@ from .models import video_upload
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.cache import cache_page
 
-import base64
-import urllib.request
-import urllib.parse
-from django.http import JsonResponse
-import time
+
 #==========================
 """User upload himself his video."""
 
@@ -22,57 +18,12 @@ def redirection(redirection, location):
     return HttpResponseRedirect(redirection)
 
 
-def forms_video():
-    """Verify form, recuperate file, clean it and register it
-    thank to the class into media folder."""
-
-    if form.is_valid():
-        name_video = request.FILES['docfile']
-        form.cleaned_data['docfile'].name
-        newdoc = video_upload(docfile = request.FILES['docfile'])
-        newdoc.save()
-        #print("file saved into :'media'")
-#==========================
-
-
-
-
-
-
-#==========================
-"""Auto uplaod video from webcam user."""
-
-def transform_camera_to_blob(url_camera):
-
-
-    liste = ""
-    for i in url_camera:
-        liste += i
-    with open("video.txt", "w") as file:
-        file.write(liste)
-
-
-    f = open(url_camera, 'wb')
-    f.write(request.body)
-    f.close()
-
-
-
-
-def treat_blob_to_template():
-    path = r"C:\Users\jeanbaptiste\Desktop\SYNERGO_SITE\Synergo\video.txt"
-
-    text = ""
-    with open(path, "r") as file:
-        for i in file:
-            text += i
-
-    return text
 
 #==========================
 
 
-        
+
+    
 @cache_page(60 * 15)
 @csrf_protect
 def upload(request):
@@ -86,29 +37,30 @@ def upload(request):
 
     if request.method == 'POST':
 
-
-        print("ouiiiiiii")
-
-
-        url_camera = request.POST.get('data')
-
-
-        if url_camera:
-
-
-            liste = ""
-            for i in url_camera:
-                liste += i
-
-
-        
-            return JsonResponse({'results': liste})
-
-
-        #else:
-        #    forms_video("", "")
+        if form.is_valid():
+            name_video = request.FILES['docfile']
+            form.cleaned_data['docfile'].name
+            newdoc = video_upload(docfile = request.FILES['docfile'])
+            newdoc.save()
+            #print("file saved into :'media'")
 
     return render(request, 'upload/Upload.html', {'form': form})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
