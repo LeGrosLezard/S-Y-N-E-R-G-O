@@ -20,7 +20,7 @@
 
 
         <div id="camering">
-            {% include "home_composition/webcam_page/webcam_page.html" %}
+            {% include "home_composition/sections/section3/webcam_page/webcam_page.html" %}
         </div>
 
 
@@ -150,6 +150,7 @@
         float:right;
         width:50%;
         height:100%;
+        display:none;
     }
     #uploading{
         top:30%;
@@ -343,6 +344,8 @@
     function mode_camera(){
         document.getElementById("svg_cam_s3_p2_p3").style.opacity = "0";
         document.getElementById("svg_video_s3_p2_p3").style.opacity = "0";
+        document.getElementById("uploading").style.opacity = "0";
+        
         document.getElementById("camering").style.opacity = "1";
     };
 
@@ -357,9 +360,6 @@
     };
 
 </script>
-
-
-
 
 
 
