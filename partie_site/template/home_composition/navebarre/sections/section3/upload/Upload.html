@@ -1,17 +1,12 @@
 
-<div id="formulaire">dzadzazd
+<div id="formulaire">bonjour
     <form enctype="multipart/form-data" method="POST" action="">
         {% csrf_token %}
         {{ form.as_p }}
         <input type="submit" value="Upload" id="upload"/>
     </form>
-        {{video_blob}}		
+	
 </div>
-
-
-
-
-
 
 
 
@@ -38,16 +33,14 @@
     jQuery("form").on("submit", function(e){
         e.preventDefault();
         
-        alert("oui")
-
         var data = new FormData(this);
-        alert(data)
+
 
           $.ajax({
               data:data,
               cache: false,
               type:"POST",
-              url:"/download",
+              url:"",
               processData:false,
               contentType:false,
           })
@@ -56,10 +49,9 @@
                   jQuery("#monCadreAlert").text(data.error);
                   jQuery("#is_save");
                   
-                  
               }
               else{
-                alert("coouc")
+                document.getElementById("response").click();
             }
         });
     });
