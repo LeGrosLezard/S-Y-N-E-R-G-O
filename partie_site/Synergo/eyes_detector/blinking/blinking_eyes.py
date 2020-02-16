@@ -79,6 +79,9 @@ def blink_analysis(result, nb_frame, blinking_frame):
     if blinking_frame == 0 and len(blink_history) > 0:
         print("closed : ", len(blink_history),
               "from ", blink_history[0], "to ", blink_history[-1], "frames")
+
+        if len(blink_history) > 10:
+            print("joué musique + range toi, et du genre il y a a 10 km un hotel")
         blink_history = []
 
 
