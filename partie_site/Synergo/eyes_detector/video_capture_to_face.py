@@ -47,7 +47,7 @@ def video_capture_to_face(video_name, eyes_image):
                           (frame_width, frame_height))
 
     eyes_image = cv2.imread(eyes_image)
-    
+
     while True:
 
         start_time_frame = time.time()
@@ -76,7 +76,12 @@ def video_capture_to_face(video_name, eyes_image):
                 print(image.shape[:2], right_eye[1].shape[:2])
                 for i in range(right_eye[1].shape[0]):
                     for j in range(right_eye[1].shape[1]):
-                        right_eye[1][i, j] = image[i, j]
+                        if image[i, j][0] > 200 and\
+                           image[i, j][1] > 200 and\
+                           image[i, j][2] < 60:
+                            pass
+                        else:
+                            right_eye[1][i, j] = image[i, j]
 
 
             if left_eye is not None:
@@ -89,7 +94,13 @@ def video_capture_to_face(video_name, eyes_image):
                 print(image.shape[:2], left_eye[1].shape[:2])
                 for i in range(left_eye[1].shape[0]):
                     for j in range(left_eye[1].shape[1]):
-                        left_eye[1][i, j] = image[i, j]
+
+                        if image[i, j][0] > 200 and\
+                           image[i, j][1] > 200 and\
+                           image[i, j][2] < 60:
+                            pass
+                        else:
+                            left_eye[1][i, j] = image[i, j]
 
         
 
