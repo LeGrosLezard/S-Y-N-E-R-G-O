@@ -1,4 +1,4 @@
-"""We aren't in live, so we can recuperate every 500 frames ~15-20 sec
+"""We aren't in live, so we can recuperate every 500 frames ~10-15 sec
 with that we can take the mean eyes positions"""
 
 import time
@@ -101,16 +101,13 @@ def video_writter(video, number_divise):
 
         nb_frame += 1
 
-        cv2.imshow("Frame", frame)
+        #cv2.imshow("Frame", frame)
+        #if cv2.waitKey(1) & 0xFF == ord('q'):
+            #break
 
-
-
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-
-    cap.release()
-    cv2.destroyAllWindows()
+    #cap.release()
+    #cv2.destroyAllWindows()
 
 
 video  = media_path.format("aa.mp4")
-video_writter(video, 2)
+video_writter(video, 2.9999999999999973)
