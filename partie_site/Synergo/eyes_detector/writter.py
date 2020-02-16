@@ -1,4 +1,4 @@
-"""We aren't in live, so we can recuperate every 1000 frames ~20 sec
+"""We aren't in live, so we can recuperate every 500 frames ~10-15 sec
 with that we can take the mean eyes positions"""
 
 import time
