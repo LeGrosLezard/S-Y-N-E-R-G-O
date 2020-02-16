@@ -1,40 +1,52 @@
+"""We aren't in live, so we can recuperate every 1000 frames ~20 sec
+with that we can take the mean eyes"""
+
 import time
 import cv2
 
 from paths import media_path, dlib_model
 
 
-def parametrages(video):
-    
+def parametrages(video, number_divise):
+
+    #Initialisze video.
     cap = cv2.VideoCapture(video)
+
+    #Recuperate numbers picture and frame/sec
     number_picture = cap.get(cv2.CAP_PROP_FRAME_COUNT)
     frame_sec = cap.get(cv2.CAP_PROP_FPS)
 
     print("number of frame :", number_picture)
     print("number of frame/sec :", frame_sec)
 
+    #Recuperate dimensions of the video.
     frame_width  = int(cap.get(3))
     frame_height = int(cap.get(4))
 
     print("dimensions to resize : ", frame_width, frame_height)
 
-    frame_width  = int(frame_width/2)
-    frame_height = int(frame_height/2)
+    #Divise the frame by the number_divise.
+    frame_width  = int(frame_width / number_divise)
+    frame_height = int(frame_height / number_divise)
 
-
+    #return video, dimensions, informations videos.
     return cap, frame_width, frame_height, number_picture, frame_sec
 
 
 def video_support(frame_width, frame_height, number_picture, frame_sec):
 
-
+    #Create (number_picture / 1000) supports avi files.
+    #Where 1000 is number of frame who's divide number of picture into the video
     file_name = int(number_picture / 1000)
     print("Number of files: ", file_name)
 
+    #Put it into dico
     dico_file = {}
     for nb, i in enumerate(range(file_name)):
     
         name = "data/" + str(nb) + ".avi"
+        #Create (number_picture / 1000) empties videos.
+                                                                  #frame/sec original video
         out = cv2.VideoWriter(name, cv2.VideoWriter_fourcc('M','J','P','G'), int(frame_sec),
                               (frame_width,frame_height))
 
@@ -47,7 +59,9 @@ def video_support(frame_width, frame_height, number_picture, frame_sec):
 
 def video_writter(video):
 
+    #Info video.
     cap, frame_width, frame_height, number_picture, frame_sec = parametrages(video)
+    #Create empties video.
     dico_file = video_support(frame_width, frame_height, number_picture, frame_sec)
 
 
@@ -55,8 +69,6 @@ def video_writter(video):
     nb_frame = 0
 
     while True:
-
-        start_time_frame = time.time()
 
         _, frame = cap.read()
 
@@ -68,10 +80,12 @@ def video_writter(video):
         frame = cv2.resize(frame, (width, height))
 
 
-
+        #Every 1000 frames append a new empty video.
         file = "data/" + str(file_used) + ".avi"
         dico_file[file].write(frame)
 
+        #File used += 1.
+        #frame re initialise.
         if nb_frame == 1000:
             file_used += 1
             nb_frame = -1
@@ -83,7 +97,7 @@ def video_writter(video):
 
         cv2.imshow("Frame", frame)
 
-        #print(time.time() - start_time_frame)
+
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
@@ -94,4 +108,4 @@ def video_writter(video):
 
 
 video  = media_path.format("aa.mp4")
-video_writter(video)
+video_writter(video, 2)
