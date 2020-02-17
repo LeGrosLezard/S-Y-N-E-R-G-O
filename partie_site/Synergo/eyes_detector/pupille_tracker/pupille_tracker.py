@@ -153,10 +153,11 @@ def eye_contour_masking(img, eye, gray):
 
 def superpose_contour_eye_rectangle(mask_eyes_gray, crop):
 
-
+    cv2.imshow("mask_eyes_gray", mask_eyes_gray)
+    cv2.imshow("crop", crop)
     for i in range(mask_eyes_gray.shape[0]):
         for j in range(mask_eyes_gray.shape[1]):
-            if mask_eyes_gray[i, j] > 40:
+            if mask_eyes_gray[i, j] > 180:
                 crop[i, j] = 255
     
     return crop
@@ -181,10 +182,11 @@ def find_center_pupille(crop, mask_eyes_img, rayon):
             break
 
     _, threshold = cv2.threshold(gaussian, thresh - 10, 255, cv2.THRESH_BINARY_INV)
-    cv2.imshow("gaussian", gaussian)
+    cv2.imshow("threshold", threshold)
 
     kernel = np.ones((3,3), np.uint8)
-    img_erosion = cv2.erode(threshold, kernel, iterations=1) 
+    img_erosion = cv2.erode(threshold, kernel, iterations=1)
+
 
     cv2.imshow("img_erosion", img_erosion)
 
@@ -201,7 +203,7 @@ def find_center_pupille(crop, mask_eyes_img, rayon):
             x_center, y_center = pupille_center[0][0], pupille_center[0][1]
             #cv2.circle(mask_eyes_img, (x_center, y_center), 1, (255, 0, 0), 1)
             mask_eyes_img[y_center, x_center] = 0, 0, 255
-            #cv2.circle(mask_eyes_img, (x_center, y_center), rayon, (255, 255, 255), 1)
+            cv2.circle(mask_eyes_img, (x_center, y_center), rayon, (255, 255, 255), 1)
             #cv2.drawContours(mask_eyes_img, contours[0], -1, (0, 255, 0), 1)
             out = x_center, y_center, mask_eyes_img
 
