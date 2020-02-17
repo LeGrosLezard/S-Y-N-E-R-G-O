@@ -30,8 +30,8 @@ from recuperate_points.face_points import load_model_dlib
 print("Import time : ", time.time() - start_time_import)
 
 
-
-def video_capture_to_face(video_name, eyes_image):
+global_alarm = []
+def video_capture_to_face(video_name):
 
     #Recuperate name of the video.
     video  = media_path.format(video_name)
@@ -50,10 +50,10 @@ def video_capture_to_face(video_name, eyes_image):
     out = cv2.VideoWriter("coucou.avi", cv2.VideoWriter_fourcc('M','J','P','G'), int(frame_sec),
                           (frame_width, frame_height))
 
+    start_time = time.time()
 
+    nb_frame = 0
     while True:
-
-        start_time_frame = time.time()
 
         _, frame = cap.read()
         height, width = frame.shape[:2]
@@ -68,21 +68,30 @@ def video_capture_to_face(video_name, eyes_image):
 
             #Recuperate blink algorythme
             blinking_frame, result = blinking_eyes(landmarks, head_box) #blinking_eyes
-            blink_analysis(result, nb_frame, blinking_frame) #blinking_eyes
 
+            timmer = time.time() - start_time
+            alarm = blink_analysis(result, nb_frame, blinking_frame, timmer) #blinking_eyes
+
+            if alarm[0] is not "":
+                cv2.putText(frame, alarm[0], (0, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,255), 2)
+            if alarm[1] is not "":
+                cv2.putText(frame, alarm[1], (0, 200), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (36,100,255), 2)
+            if alarm[2] is not "":
+                cv2.putText(frame, alarm[2], (0, 300), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (36,255,12), 2)
+                start_time = time.time()
 
         out.write(frame)
-
+        nb_frame += 1
 
         #cv2.imshow("vcsqc", eyes_image)
         cv2.imshow("Frame", frame)
 
-        if cv2.waitKey(0) & 0xFF == ord('q'):
+        if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
     cap.release()
     cv2.destroyAllWindows()
 
 
-eyes_image = r"C:\Users\jeanbaptiste\Desktop\SYNERGO_SITE\Synergo\media\eyes_detector\gros_oeil.png"
-video_capture_to_face("aa.mp4", eyes_image)
+
+video_capture_to_face("b.mp4")
