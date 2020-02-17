@@ -45,7 +45,7 @@ def recuperate_eyes(landmarks, frame):
     return eyes
 
 
-def recuperate_extremums(eye_contours):
+def recuperate_extremums(eye_contours, frame):
     """Recuperate extremum for eyes movement and glob occular rayon"""
 
     x = tuple(eye_contours[eye_contours[:, :, 0].argmin()][0])  #left
@@ -53,7 +53,7 @@ def recuperate_extremums(eye_contours):
     w = tuple(eye_contours[eye_contours[:, :, 0].argmax()][0])  #top
     h = tuple(eye_contours[eye_contours[:, :, 1].argmax()][0])  #bottom
     
-    #[cv2.circle(frame, (i), 1, (255, 0, 0), 1) for i in [x, y, w, h]]
+    [cv2.circle(frame, (i), 1, (255, 0, 0), 1) for i in [x]]
 
     occular_glob = abs(int((y[1] - h[1]) / 2))
     return occular_glob, (x, y, w, h)
@@ -172,7 +172,7 @@ def find_center_pupille(crop, mask_eyes_img, rayon):
             out = x_center, y_center, mask_eyes_img
             #cv2.imshow("mask_eyes_img", mask_eyes_img)
 
-            cv2.waitKey(0)
+            #cv2.waitKey(0)
 
     return out
 
@@ -206,8 +206,8 @@ def pupille_tracker(landmarks, frame, gray):
     eyes = recuperate_eyes(landmarks, frame)
     right_eye, left_eye = eyes
 
-    glob_right, extremum_right = recuperate_extremums(right_eye)
-    glob_left, extremum_left   = recuperate_extremums(left_eye)
+    glob_right, extremum_right = recuperate_extremums(right_eye, frame)
+    glob_left, extremum_left   = recuperate_extremums(left_eye, frame)
 
 
     right_eye, crop_eyes_right, crop_appli_right = find_pupil_center(right_eye, frame, gray, glob_right)
@@ -272,10 +272,10 @@ def eyes_movements(frame, extremum):
 
         #print(int(np.mean(liste[0])), int(np.mean(liste[1])))
         print("total : ", abs(x[0] - w[0]), " ", abs(y[1] - h[1]))
-        print("corner gauche : ", dist.euclidean(x, eye))
-        print("corner droit : ", dist.euclidean(w, eye))
-        print("bas : ", dist.euclidean(y, eye))
-        print("haut : ", dist.euclidean(h, eye))
+        print("corner gauche : ", dist.euclidean(x, eye), (dist.euclidean(x, eye)* 100) / abs(x[0] - w[0]))
+        print("corner droit : ", dist.euclidean(w, eye),  (dist.euclidean(w, eye)* 100) / abs(x[0] - w[0]))
+        print("bas : ", dist.euclidean(y, eye), (dist.euclidean(y, eye)* 100) / abs(y[1] - h[1]))
+        print("haut : ", dist.euclidean(h, eye), (dist.euclidean(h, eye)* 100) / abs(y[1] - h[1]))
 
 
 
