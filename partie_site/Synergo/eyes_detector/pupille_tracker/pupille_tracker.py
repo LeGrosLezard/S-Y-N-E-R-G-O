@@ -28,12 +28,40 @@ import cv2
 import numpy as np
 
 #===================================================== Recuperate eyes
-def recuperate_eyes(landmarks):
+
+def contours_extremums(contours, frame):
+
+    x = tuple(contours[contours[:, :, 0].argmin()][0]) #l
+    y = tuple(contours[contours[:, :, 1].argmin()][0])  #r
+
+    w = tuple(contours[contours[:, :, 0].argmax()][0])#t
+    h = tuple(contours[contours[:, :, 1].argmax()][0])#b
+
+    cv2.circle(frame, (x), 1, (255, 255, 255), 1)
+    cv2.circle(frame, (y), 1, (255, 255, 255), 1)
+    cv2.circle(frame, (w), 1, (255, 255, 255), 1)
+    cv2.circle(frame, (h), 1, (255, 255, 255), 1)
+
+    print(x, y, w, h)
+
+    for i in range(y[1], h[1]):
+        for j in range(x[0], w[0]):
+            if frame[i, j][0] == 0 and\
+               frame[i, j][1] == 0 and\
+               frame[i, j][2] == 255:
+                print("detection : ", j, i)
+            else:
+                frame[i, j] = 255, 0, 0
+
+
+
+def recuperate_eyes(landmarks, frame):
 
     eyes = (cv2.convexHull(np.array([(landmarks.part(n).x, landmarks.part(n).y)
                     for n in range(36, 42)])),
             cv2.convexHull(np.array([(landmarks.part(n).x, landmarks.part(n).y)
                     for n in range(42, 48)])))
+
     return eyes
 
 
@@ -104,7 +132,7 @@ def find_center_pupille(crop, mask_eyes_img):
     kernel = np.ones((3,3), np.uint8)
     img_erosion = cv2.erode(threshold, kernel, iterations=1) 
 
-    contours = cv2.findContours(img_erosion, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)[0]
+    contours = cv2.findContours(img_erosion, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)[0]
     contours = sorted(contours, key=lambda x: cv2.contourArea(x), reverse=True)
 
     if len(contours) > 0:
@@ -115,10 +143,11 @@ def find_center_pupille(crop, mask_eyes_img):
 
         if pupille_center != []:
             x_center, y_center = pupille_center[0][0], pupille_center[0][1]
-            #cv2.circle(mask_eyes_img, (x_center, y_center), 4, (0, 0, 255), 1)
-
+            cv2.circle(mask_eyes_img, (x_center, y_center), 1, (0, 0, 255), 1)
+            #cv2.drawContours(mask_eyes_img, contours[0], -1, (0, 255, 0), 1)
             out = x_center, y_center, mask_eyes_img
 
+            cv2.imshow("mask_eyes_img", mask_eyes_img)
 
     return out
 
@@ -149,7 +178,7 @@ def find_pupil_center(eye, frame, gray):
 
 def pupille_tracker(landmarks, frame, gray):
 
-    eyes = recuperate_eyes(landmarks)
+    eyes = recuperate_eyes(landmarks, frame)
 
     right_eye = eyes[0]
     left_eye = eyes[1]
@@ -157,5 +186,20 @@ def pupille_tracker(landmarks, frame, gray):
     right_eye, crop_eyes_right, crop_appli_right = find_pupil_center(right_eye, frame, gray)
     left_eye, crop_eyes_left, crop_appli_left  = find_pupil_center(left_eye, frame, gray)
 
+
+    eyes = (cv2.convexHull(np.array([(landmarks.part(n).x, landmarks.part(n).y)
+                    for n in range(36, 42)])),
+            cv2.convexHull(np.array([(landmarks.part(n).x, landmarks.part(n).y)
+                    for n in range(42, 48)])))
+
+    contours_extremums(eyes[0], frame)
+    contours_extremums(eyes[1], frame)
+
+
     return (right_eye, crop_eyes_right, crop_appli_right),\
            (left_eye, crop_eyes_left, crop_appli_left)
+
+
+
+
+
