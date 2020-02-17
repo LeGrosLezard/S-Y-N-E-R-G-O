@@ -42,17 +42,21 @@ def contours_extremums(contours, frame):
     cv2.circle(frame, (w), 1, (255, 255, 255), 1)
     cv2.circle(frame, (h), 1, (255, 255, 255), 1)
 
-    print(x, y, w, h)
+    print(x[0], w[0], y[1], h[1])
+
+    liste = [[], []]
 
     for i in range(y[1], h[1]):
         for j in range(x[0], w[0]):
             if frame[i, j][0] == 0 and\
                frame[i, j][1] == 0 and\
                frame[i, j][2] == 255:
-                print("detection : ", j, i)
+                liste[0].append(j)
+                liste[1].append(i)
             else:
                 frame[i, j] = 255, 0, 0
 
+    print(np.mean(liste[0]), np.mean(liste[1]))
 
 
 def recuperate_eyes(landmarks, frame):
