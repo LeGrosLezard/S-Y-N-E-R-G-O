@@ -27,6 +27,7 @@ force with you
 import cv2
 import numpy as np
 from bent_up_head import bent_up_head
+from scipy.spatial import distance as dist
 #===================================================== Recuperate eyes
 
 def contours_extremums(contours, frame, mode):
@@ -40,12 +41,12 @@ def contours_extremums(contours, frame, mode):
 
     if mode is "globe_occular":
 
-        #cv2.circle(frame, (x), 1, (255, 255, 255), 1)
-        #cv2.circle(frame, (y), 1, (255, 255, 255), 1)
-        #cv2.circle(frame, (w), 1, (255, 255, 255), 1)
+        cv2.circle(frame, (x), 1, (255, 0, 0), 1)
+        #cv2.circle(frame, (y), 1, (0, 255, 0), 1)
+        cv2.circle(frame, (w), 1, (0, 255, 0), 1)
         #cv2.circle(frame, (h), 1, (255, 255, 255), 1)
 
-        print(x[0], w[0], y[1], h[1])
+        #print(x[0], w[0], y[1], h[1])
 
         liste = [[], []]
 
@@ -61,15 +62,16 @@ def contours_extremums(contours, frame, mode):
 
         if liste[0] != [] and liste[1] != []:
 
-            print(int(np.mean(liste[0])), int(np.mean(liste[1])))
-            print("total : ", abs(x[0] - w[0]), " ", abs(y[1] - h[1]))
-            print("corner gauche : ", abs(int(np.mean(liste[0]) - x[0])))
-            print("corner droit : ", abs(int(np.mean(liste[0]) - w[0])))
+            eye = (liste[0][0], liste[1][0])
             
-            print("haut : ", abs(int(np.mean(liste[1]) - y[1])))
-            print("bas : ", abs(int(np.mean(liste[1]) - h[1])))
+            #print(int(np.mean(liste[0])), int(np.mean(liste[1])))
+            print("total : ", abs(x[0] - w[0]), " ", abs(y[1] - h[1]))
+            print("corner gauche : ", dist.euclidean(x, eye))
+            print("corner droit : ", dist.euclidean(w, eye))
+            print("bas : ", dist.euclidean(y, eye))
+            print("haut : ", dist.euclidean(h, eye))
 
-            print("")
+
 
     else:
         return abs(int((y[1] - h[1]) / 2))
@@ -82,15 +84,13 @@ def recuperate_eyes(landmarks, frame):
             cv2.convexHull(np.array([(landmarks.part(n).x, landmarks.part(n).y)
                     for n in range(42, 48)])))
 
-
-
     joue = (cv2.convexHull(np.array([(landmarks.part(n).x, landmarks.part(n).y) for n in [2, 41, 31] ])),
             cv2.convexHull(np.array([(landmarks.part(n).x, landmarks.part(n).y) for n in [35, 14, 46] ])))
 
 
-    cv2.drawContours(frame, [joue[0]], -1, (0, 255, 0), 1)
+    #cv2.drawContours(frame, [joue[0]], -1, (0, 255, 0), 1)
     contour_right_joue = cv2.contourArea(joue[0])
-    cv2.drawContours(frame, [joue[1]], -1, (0, 255, 0), 1)
+    #cv2.drawContours(frame, [joue[1]], -1, (0, 255, 0), 1)
     contour_left_joue = cv2.contourArea(joue[1])
 
     eyeR_pts = landmarks.part(36).x, landmarks.part(36).y
@@ -99,14 +99,15 @@ def recuperate_eyes(landmarks, frame):
 
     head_position = bent_up_head(eyeR_pts, eyeL_pts, noze_pts)
 
+
     print("head position : ", head_position)
-    print("contours joues : ", int(contour_right_joue), int(contour_left_joue))
+    #print("contours joues : ", int(contour_right_joue), int(contour_left_joue))
 
     if int(contour_right_joue) > int(contour_left_joue) + 200:
         print("tourne la tete vers la gauche")
     elif int(contour_right_joue) + 200 < int(contour_left_joue):
         print("tourne la tete vers la droite")
-    
+
 
     rayonR = contours_extremums(eyes[0], frame, "")
     rayonL = contours_extremums(eyes[1], frame, "")
@@ -143,20 +144,21 @@ def eye_contour_masking(img, eye, gray):
 
     (x, y, w, h) = cv2.boundingRect(eye)
 
-    cropMask   = mask[y - nb : (y+h) + nb, x-nb : (x+w) + nb]
-    cropImg    = img[ y  - nb: (y+h) + nb, x-nb : (x+w) + nb]
-    crop_appli = img[ y  - 10 : (y+h) + 10,  x-nb  : (x+w) + nb]
+    cropMask   = mask[y - nb  : (y+h) + nb, x - nb  : (x+w) + nb]
+    cropImg    = img[ y  - nb : (y+h) + nb, x - nb  : (x+w) + nb]
+    crop_appli = img[ y  - 10 : (y+h) + 10, x - nb  : (x+w) + nb]
 
     return cropMask, cropImg, crop_appli
 
 
 def superpose_contour_eye_rectangle(mask_eyes_gray, crop):
 
+
     for i in range(mask_eyes_gray.shape[0]):
         for j in range(mask_eyes_gray.shape[1]):
-            if mask_eyes_gray[i, j] > 200:
+            if mask_eyes_gray[i, j] > 40:
                 crop[i, j] = 255
-
+    
     return crop
 
 
@@ -169,7 +171,8 @@ def find_center_pupille(crop, mask_eyes_img, rayon):
 
     out = None, None, None
 
-    gaussian = cv2.GaussianBlur(crop, (9, 9), 0)
+    gaussian = cv2.GaussianBlur(crop, (5, 5), 0)
+    cv2.imshow("gaussian", gaussian)
 
     for thresh in range(0, 200, 5):
         _, threshold = cv2.threshold(gaussian, thresh, 255, cv2.THRESH_BINARY_INV)
@@ -178,8 +181,12 @@ def find_center_pupille(crop, mask_eyes_img, rayon):
             break
 
     _, threshold = cv2.threshold(gaussian, thresh - 10, 255, cv2.THRESH_BINARY_INV)
+    cv2.imshow("gaussian", gaussian)
+
     kernel = np.ones((3,3), np.uint8)
     img_erosion = cv2.erode(threshold, kernel, iterations=1) 
+
+    cv2.imshow("img_erosion", img_erosion)
 
     contours = cv2.findContours(img_erosion, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)[0]
     contours = sorted(contours, key=lambda x: cv2.contourArea(x), reverse=True)
@@ -192,8 +199,9 @@ def find_center_pupille(crop, mask_eyes_img, rayon):
 
         if pupille_center != []:
             x_center, y_center = pupille_center[0][0], pupille_center[0][1]
-            cv2.circle(mask_eyes_img, (x_center, y_center), 1, (0, 0, 255), 1)
-            cv2.circle(mask_eyes_img, (x_center, y_center), rayon, (255, 255, 255), 1)
+            #cv2.circle(mask_eyes_img, (x_center, y_center), 1, (255, 0, 0), 1)
+            mask_eyes_img[y_center, x_center] = 0, 0, 255
+            #cv2.circle(mask_eyes_img, (x_center, y_center), rayon, (255, 255, 255), 1)
             #cv2.drawContours(mask_eyes_img, contours[0], -1, (0, 255, 0), 1)
             out = x_center, y_center, mask_eyes_img
 
@@ -242,9 +250,11 @@ def pupille_tracker(landmarks, frame, gray):
             cv2.convexHull(np.array([(landmarks.part(n).x, landmarks.part(n).y)
                     for n in range(42, 48)])))
 
+    print("droite")
     contours_extremums(eyes[0], frame, "globe_occular")
+    print("gauche")
     contours_extremums(eyes[1], frame, "globe_occular")
-
+    print("")
 
     return (right_eye, crop_eyes_right, crop_appli_right),\
            (left_eye, crop_eyes_left, crop_appli_left)
