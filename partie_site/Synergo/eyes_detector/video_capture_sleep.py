@@ -21,7 +21,7 @@ from paths import path_eyes_detector_stuff
 #Blink part
 from blinking.blinking_eyes import blinking_eyes
 from blinking.blinking_eyes import blink_analysis
-
+from blinking.blinking_eyes import final
 
 #Load dlib model
 from recuperate_points.face_points import load_model_dlib
@@ -30,8 +30,8 @@ from recuperate_points.face_points import load_model_dlib
 print("Import time : ", time.time() - start_time_import)
 
 
-global_alarm = []
-def video_capture_to_face(video_name):
+
+def video_parameters(video_name, dlib_model):
 
     #Recuperate name of the video.
     video  = media_path.format(video_name)
@@ -52,46 +52,61 @@ def video_capture_to_face(video_name):
 
     start_time = time.time()
 
+
+    return predictor, detector, cap, out, start_time
+
+def displaying(alarm, frame):
+    if alarm[0] is not "":
+        cv2.putText(frame, alarm[0], (0, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,255), 2)
+    if alarm[1] is not "":
+        cv2.putText(frame, alarm[1], (0, 200), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (36,100,255), 2)
+    if alarm[2] is not "":
+        cv2.putText(frame, alarm[2], (0, 300), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (36,255,12), 2)
+        start_time = time.time()
+
+
+global_alarm = []
+def video_capture_to_face(video_name):
+
+    predictor, detector, cap, out, start_time = video_parameters(video_name, dlib_model)
+
     nb_frame = 0
-    while True:
+    continuer = True
+    while continuer:
 
-        _, frame = cap.read()
-        height, width = frame.shape[:2]
-        frame = cv2.resize(frame, (int(width/2), int(height/2)))
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        ret, frame = cap.read()
 
-        #Recuperate landmarks and head box.
-        landmarks, head_box = head_points(gray, predictor, detector) #face_points
+        if ret:
+
+            height, width = frame.shape[:2]
+            frame = cv2.resize(frame, (int(width/2), int(height/2)))
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+            #Recuperate landmarks and head box.
+            landmarks, head_box = head_points(gray, predictor, detector) #face_points
 
 
-        if landmarks is not None:
+            if landmarks is not None:
 
-            #Recuperate blink algorythme
-            blinking_frame, result = blinking_eyes(landmarks, head_box) #blinking_eyes
+                #Recuperate blink algorythme
+                blinking_frame, result = blinking_eyes(landmarks, head_box) #blinking_eyes
 
-            timmer = time.time() - start_time
-            alarm = blink_analysis(result, nb_frame, blinking_frame, timmer) #blinking_eyes
+                timmer = time.time() - start_time
+                alarm = blink_analysis(result, nb_frame, blinking_frame, timmer) #blinking_eyes
 
-            if alarm[0] is not "":
-                cv2.putText(frame, alarm[0], (0, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,255), 2)
-            if alarm[1] is not "":
-                cv2.putText(frame, alarm[1], (0, 200), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (36,100,255), 2)
-            if alarm[2] is not "":
-                cv2.putText(frame, alarm[2], (0, 300), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (36,255,12), 2)
-                start_time = time.time()
+                displaying(alarm, frame)
 
-        out.write(frame)
-        nb_frame += 1
+                out.write(frame)
+                nb_frame += 1
 
-        #cv2.imshow("vcsqc", eyes_image)
-        cv2.imshow("Frame", frame)
+        else:
+            continuer = False
 
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
 
-    cap.release()
-    cv2.destroyAllWindows()
-
+    report = final()
+    print(report)
+    
+    return report
 
 
 video_capture_to_face("b.mp4")
