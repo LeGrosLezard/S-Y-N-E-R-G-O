@@ -39,10 +39,10 @@ def contours_extremums(contours, frame, mode):
 
     if mode is "globe_occular":
 
-        cv2.circle(frame, (x), 1, (255, 255, 255), 1)
-        cv2.circle(frame, (y), 1, (255, 255, 255), 1)
-        cv2.circle(frame, (w), 1, (255, 255, 255), 1)
-        cv2.circle(frame, (h), 1, (255, 255, 255), 1)
+        #cv2.circle(frame, (x), 1, (255, 255, 255), 1)
+        #cv2.circle(frame, (y), 1, (255, 255, 255), 1)
+        #cv2.circle(frame, (w), 1, (255, 255, 255), 1)
+        #cv2.circle(frame, (h), 1, (255, 255, 255), 1)
 
         print(x[0], w[0], y[1], h[1])
 
@@ -55,10 +55,18 @@ def contours_extremums(contours, frame, mode):
                    frame[i, j][2] == 255:
                     liste[0].append(j)
                     liste[1].append(i)
-                else:
-                    frame[i, j] = 255, 0, 0
+                #else:
+                #    frame[i, j] = 255, 0, 0
 
-        print(np.mean(liste[0]), np.mean(liste[1]))
+        print(int(np.mean(liste[0])), int(np.mean(liste[1])))
+        print("total : ", abs(x[0] - w[0]), " ", abs(y[1] - h[1]))
+        print("corner gauche : ", abs(int(np.mean(liste[0]) - x[0])))
+        print("corner droit : ", abs(int(np.mean(liste[0]) - w[0])))
+        
+        print("haut : ", abs(int(np.mean(liste[1]) - y[1])))
+        print("bas : ", abs(int(np.mean(liste[1]) - h[1])))
+
+        print("")
 
     else:
         return abs(int((y[1] - h[1]) / 2))
@@ -155,7 +163,8 @@ def find_center_pupille(crop, mask_eyes_img, rayon):
 
         if pupille_center != []:
             x_center, y_center = pupille_center[0][0], pupille_center[0][1]
-            cv2.circle(mask_eyes_img, (x_center, y_center), rayon, (0, 0, 255), 1)
+            cv2.circle(mask_eyes_img, (x_center, y_center), 1, (0, 0, 255), 1)
+            cv2.circle(mask_eyes_img, (x_center, y_center), rayon, (255, 255, 255), 1)
             #cv2.drawContours(mask_eyes_img, contours[0], -1, (0, 255, 0), 1)
             out = x_center, y_center, mask_eyes_img
 
