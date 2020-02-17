@@ -29,7 +29,7 @@ import numpy as np
 
 #===================================================== Recuperate eyes
 
-def contours_extremums(contours, frame):
+def contours_extremums(contours, frame, mode):
 
     x = tuple(contours[contours[:, :, 0].argmin()][0]) #l
     y = tuple(contours[contours[:, :, 1].argmin()][0])  #r
@@ -37,26 +37,31 @@ def contours_extremums(contours, frame):
     w = tuple(contours[contours[:, :, 0].argmax()][0])#t
     h = tuple(contours[contours[:, :, 1].argmax()][0])#b
 
-    cv2.circle(frame, (x), 1, (255, 255, 255), 1)
-    cv2.circle(frame, (y), 1, (255, 255, 255), 1)
-    cv2.circle(frame, (w), 1, (255, 255, 255), 1)
-    cv2.circle(frame, (h), 1, (255, 255, 255), 1)
+    if mode is "globe_occular":
 
-    print(x[0], w[0], y[1], h[1])
+        cv2.circle(frame, (x), 1, (255, 255, 255), 1)
+        cv2.circle(frame, (y), 1, (255, 255, 255), 1)
+        cv2.circle(frame, (w), 1, (255, 255, 255), 1)
+        cv2.circle(frame, (h), 1, (255, 255, 255), 1)
 
-    liste = [[], []]
+        print(x[0], w[0], y[1], h[1])
 
-    for i in range(y[1], h[1]):
-        for j in range(x[0], w[0]):
-            if frame[i, j][0] == 0 and\
-               frame[i, j][1] == 0 and\
-               frame[i, j][2] == 255:
-                liste[0].append(j)
-                liste[1].append(i)
-            else:
-                frame[i, j] = 255, 0, 0
+        liste = [[], []]
 
-    print(np.mean(liste[0]), np.mean(liste[1]))
+        for i in range(y[1], h[1]):
+            for j in range(x[0], w[0]):
+                if frame[i, j][0] == 0 and\
+                   frame[i, j][1] == 0 and\
+                   frame[i, j][2] == 255:
+                    liste[0].append(j)
+                    liste[1].append(i)
+                else:
+                    frame[i, j] = 255, 0, 0
+
+        print(np.mean(liste[0]), np.mean(liste[1]))
+
+    else:
+        return abs(int((y[1] - h[1]) / 2))
 
 
 def recuperate_eyes(landmarks, frame):
@@ -66,7 +71,10 @@ def recuperate_eyes(landmarks, frame):
             cv2.convexHull(np.array([(landmarks.part(n).x, landmarks.part(n).y)
                     for n in range(42, 48)])))
 
-    return eyes
+    rayonR = contours_extremums(eyes[0], frame, "")
+    rayonL = contours_extremums(eyes[1], frame, "")
+
+    return eyes, rayonR, rayonL
 
 
 #===================================================== Get eye
@@ -118,7 +126,7 @@ def superpose_contour_eye_rectangle(mask_eyes_gray, crop):
 
 #===================================================== Pupille center part
 
-def find_center_pupille(crop, mask_eyes_img):
+def find_center_pupille(crop, mask_eyes_img, rayon):
     """Gaussian filter, search the max solo contour on thresh,
     make an erod on 3 neighboors, find center of the contours."""
 
@@ -147,7 +155,7 @@ def find_center_pupille(crop, mask_eyes_img):
 
         if pupille_center != []:
             x_center, y_center = pupille_center[0][0], pupille_center[0][1]
-            cv2.circle(mask_eyes_img, (x_center, y_center), 1, (0, 0, 255), 1)
+            cv2.circle(mask_eyes_img, (x_center, y_center), rayon, (0, 0, 255), 1)
             #cv2.drawContours(mask_eyes_img, contours[0], -1, (0, 255, 0), 1)
             out = x_center, y_center, mask_eyes_img
 
@@ -158,7 +166,7 @@ def find_center_pupille(crop, mask_eyes_img):
 
 #===================================================== Main
 
-def find_pupil_center(eye, frame, gray):
+def find_pupil_center(eye, frame, gray, rayon):
     """Recuperate egalized rectangle area or box area,
        recuperate contour eyes,
        Superpose egalized rectangle with contour eyes,
@@ -174,7 +182,7 @@ def find_pupil_center(eye, frame, gray):
     gray_crop = superpose_contour_eye_rectangle(mask_eyes_gray, gray_crop)
 
     #Define centers of pupils
-    x_center, y_center, crop_eyes = find_center_pupille(gray_crop, mask_eyes_img)
+    x_center, y_center, crop_eyes = find_center_pupille(gray_crop, mask_eyes_img, rayon)
 
     return (x_center, y_center), crop_eyes, crop_appli
 
@@ -182,13 +190,13 @@ def find_pupil_center(eye, frame, gray):
 
 def pupille_tracker(landmarks, frame, gray):
 
-    eyes = recuperate_eyes(landmarks, frame)
+    eyes, rayonR, rayonL = recuperate_eyes(landmarks, frame)
 
     right_eye = eyes[0]
     left_eye = eyes[1]
  
-    right_eye, crop_eyes_right, crop_appli_right = find_pupil_center(right_eye, frame, gray)
-    left_eye, crop_eyes_left, crop_appli_left  = find_pupil_center(left_eye, frame, gray)
+    right_eye, crop_eyes_right, crop_appli_right = find_pupil_center(right_eye, frame, gray, rayonR)
+    left_eye, crop_eyes_left, crop_appli_left  = find_pupil_center(left_eye, frame, gray, rayonL)
 
 
     eyes = (cv2.convexHull(np.array([(landmarks.part(n).x, landmarks.part(n).y)
@@ -196,8 +204,8 @@ def pupille_tracker(landmarks, frame, gray):
             cv2.convexHull(np.array([(landmarks.part(n).x, landmarks.part(n).y)
                     for n in range(42, 48)])))
 
-    contours_extremums(eyes[0], frame)
-    contours_extremums(eyes[1], frame)
+    contours_extremums(eyes[0], frame, "globe_occular")
+    contours_extremums(eyes[1], frame, "globe_occular")
 
 
     return (right_eye, crop_eyes_right, crop_appli_right),\
