@@ -26,10 +26,11 @@ force with you
 
 import cv2
 import numpy as np
-
+from bent_up_head import bent_up_head
 #===================================================== Recuperate eyes
 
 def contours_extremums(contours, frame, mode):
+
 
     x = tuple(contours[contours[:, :, 0].argmin()][0]) #l
     y = tuple(contours[contours[:, :, 1].argmin()][0])  #r
@@ -58,15 +59,17 @@ def contours_extremums(contours, frame, mode):
                 #else:
                 #    frame[i, j] = 255, 0, 0
 
-        print(int(np.mean(liste[0])), int(np.mean(liste[1])))
-        print("total : ", abs(x[0] - w[0]), " ", abs(y[1] - h[1]))
-        print("corner gauche : ", abs(int(np.mean(liste[0]) - x[0])))
-        print("corner droit : ", abs(int(np.mean(liste[0]) - w[0])))
-        
-        print("haut : ", abs(int(np.mean(liste[1]) - y[1])))
-        print("bas : ", abs(int(np.mean(liste[1]) - h[1])))
+        if liste[0] != [] and liste[1] != []:
 
-        print("")
+            print(int(np.mean(liste[0])), int(np.mean(liste[1])))
+            print("total : ", abs(x[0] - w[0]), " ", abs(y[1] - h[1]))
+            print("corner gauche : ", abs(int(np.mean(liste[0]) - x[0])))
+            print("corner droit : ", abs(int(np.mean(liste[0]) - w[0])))
+            
+            print("haut : ", abs(int(np.mean(liste[1]) - y[1])))
+            print("bas : ", abs(int(np.mean(liste[1]) - h[1])))
+
+            print("")
 
     else:
         return abs(int((y[1] - h[1]) / 2))
@@ -78,6 +81,32 @@ def recuperate_eyes(landmarks, frame):
                     for n in range(36, 42)])),
             cv2.convexHull(np.array([(landmarks.part(n).x, landmarks.part(n).y)
                     for n in range(42, 48)])))
+
+
+
+    joue = (cv2.convexHull(np.array([(landmarks.part(n).x, landmarks.part(n).y) for n in [2, 41, 31] ])),
+            cv2.convexHull(np.array([(landmarks.part(n).x, landmarks.part(n).y) for n in [35, 14, 46] ])))
+
+
+    cv2.drawContours(frame, [joue[0]], -1, (0, 255, 0), 1)
+    contour_right_joue = cv2.contourArea(joue[0])
+    cv2.drawContours(frame, [joue[1]], -1, (0, 255, 0), 1)
+    contour_left_joue = cv2.contourArea(joue[1])
+
+    eyeR_pts = landmarks.part(36).x, landmarks.part(36).y
+    eyeL_pts = landmarks.part(45).x, landmarks.part(45).y
+    noze_pts = landmarks.part(30).x, landmarks.part(30).y
+
+    head_position = bent_up_head(eyeR_pts, eyeL_pts, noze_pts)
+
+    print("head position : ", head_position)
+    print("contours joues : ", int(contour_right_joue), int(contour_left_joue))
+
+    if int(contour_right_joue) > int(contour_left_joue) + 200:
+        print("tourne la tete vers la gauche")
+    elif int(contour_right_joue) + 200 < int(contour_left_joue):
+        print("tourne la tete vers la droite")
+    
 
     rayonR = contours_extremums(eyes[0], frame, "")
     rayonL = contours_extremums(eyes[1], frame, "")
