@@ -66,10 +66,11 @@ def eye_contour_masking(img, eye, gray):
 
     (x, y, w, h) = cv2.boundingRect(eye)
 
-    cropMask = mask[y-nb : (y+h)+nb, x-nb : (x+w)+nb]
-    cropImg = img[y-nb : (y+h)+nb, x-nb : (x+w)+nb]
+    cropMask   = mask[y - nb : (y+h) + nb, x-nb : (x+w) + nb]
+    cropImg    = img[ y  - nb: (y+h) + nb, x-nb : (x+w) + nb]
+    crop_appli = img[ y  - 10 : (y+h) + 10,  x-nb  : (x+w) + nb]
 
-    return cropMask, cropImg, (x, y, w, h)
+    return cropMask, cropImg, crop_appli
 
 
 def superpose_contour_eye_rectangle(mask_eyes_gray, crop):
@@ -134,7 +135,7 @@ def find_pupil_center(eye, frame, gray):
     gray_crop, color_crop = rectangle_eye_area(frame, eye, gray)
 
     #Contours of the broder of the eyes
-    mask_eyes_gray, mask_eyes_img, rect = eye_contour_masking(frame, eye, gray)
+    mask_eyes_gray, mask_eyes_img, crop_appli = eye_contour_masking(frame, eye, gray)
 
     #Superpose box and contours
     gray_crop = superpose_contour_eye_rectangle(mask_eyes_gray, gray_crop)
@@ -142,7 +143,7 @@ def find_pupil_center(eye, frame, gray):
     #Define centers of pupils
     x_center, y_center, crop_eyes = find_center_pupille(gray_crop, mask_eyes_img)
 
-    return (x_center, y_center), crop_eyes, rect
+    return (x_center, y_center), crop_eyes, crop_appli
 
 
 
@@ -153,7 +154,8 @@ def pupille_tracker(landmarks, frame, gray):
     right_eye = eyes[0]
     left_eye = eyes[1]
  
-    right_eye, crop_eyes_right, rect = find_pupil_center(right_eye, frame, gray)
-    left_eye, crop_eyes_left, rect  = find_pupil_center(left_eye, frame, gray)
+    right_eye, crop_eyes_right, crop_appli_right = find_pupil_center(right_eye, frame, gray)
+    left_eye, crop_eyes_left, crop_appli_left  = find_pupil_center(left_eye, frame, gray)
 
-    return (right_eye, crop_eyes_right, rect), (left_eye, crop_eyes_left, rect)
+    return (right_eye, crop_eyes_right, crop_appli_right),\
+           (left_eye, crop_eyes_left, crop_appli_left)
