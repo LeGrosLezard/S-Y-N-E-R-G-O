@@ -27,6 +27,7 @@ force with you
 import cv2
 import numpy as np
 from bent_up_head import bent_up_head
+from turn_head import turn_head
 from scipy.spatial import distance as dist
 
 
@@ -118,7 +119,7 @@ def superpose_contour_eye_rectangle(mask_eyes_gray, crop):
 
     for i in range(mask_eyes_gray.shape[0]):
         for j in range(mask_eyes_gray.shape[1]):
-            if mask_eyes_gray[i, j] > 150:
+            if mask_eyes_gray[i, j] > 200:
                 crop[i, j] = 255
 
     #cv2.imshow("treat_crop", crop)
@@ -148,11 +149,18 @@ def find_center_pupille(crop, mask_eyes_img, rayon):
     _, threshold = cv2.threshold(gaussian, thresh - 10, 255, cv2.THRESH_BINARY_INV)
     #cv2.imshow("threshold", threshold)
 
+    blackPx = cv2.countNonZero(threshold)
+
     kernel = np.ones((3,3), np.uint8)
-    img_erosion = cv2.erode(threshold, kernel, iterations=2)
 
-
-    #cv2.imshow("img_erosion", img_erosion)
+    if blackPx > 10:
+        img_erosion = cv2.erode(threshold, kernel, iterations=1)
+        #cv2.imshow("img_erosion", img_erosion)
+    elif blackPx > 0:
+        img_erosion = cv2.dilate(threshold, kernel, iterations=1)
+    elif blackPx == 0:
+        _, threshold = cv2.threshold(gaussian, thresh + 10, 255, cv2.THRESH_BINARY_INV)
+        img_erosion = cv2.dilate(threshold, kernel, iterations=1)
 
     contours = cv2.findContours(img_erosion, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)[0]
     contours = sorted(contours, key=lambda x: cv2.contourArea(x), reverse=True)
@@ -201,7 +209,7 @@ def find_pupil_center(eye, frame, gray, rayon):
 
 
 
-def pupille_tracker(landmarks, frame, gray):
+def pupille_tracker(landmarks, frame, gray, head_box):
 
     eyes = recuperate_eyes(landmarks, frame)
     right_eye, left_eye = eyes
@@ -213,12 +221,11 @@ def pupille_tracker(landmarks, frame, gray):
     right_eye, crop_eyes_right, crop_appli_right = find_pupil_center(right_eye, frame, gray, glob_right)
     left_eye, crop_eyes_left, crop_appli_left  = find_pupil_center(left_eye, frame, gray, glob_left)
 
-    face_movement(landmarks, frame, eyes)
+    face_movement(landmarks, frame, eyes, head_box)
 
-    print("droite")
-    eyes_movements(frame, extremum_right, landmarks)
-    print("gauche")
-    eyes_movements(frame, extremum_left, landmarks)
+
+    eyes_movements(frame, extremum_right, landmarks, 19, head_box)
+    eyes_movements(frame, extremum_left, landmarks, 24, head_box)
     print("")
 
 
@@ -233,7 +240,7 @@ def pupille_tracker(landmarks, frame, gray):
 
 
 
-def face_movement(landmarks, frame, eyes):
+def face_movement(landmarks, frame, eyes, head_box):
 
 
     joue = (cv2.convexHull(np.array([(landmarks.part(n).x, landmarks.part(n).y) for n in [2, 41, 31] ])),
@@ -249,19 +256,24 @@ def face_movement(landmarks, frame, eyes):
     eyeL_pts = landmarks.part(45).x, landmarks.part(45).y
     noze_pts = landmarks.part(30).x, landmarks.part(30).y
 
-    head_position = bent_up_head(eyeR_pts, eyeL_pts, noze_pts)
+    head1 = landmarks.part(2).x, landmarks.part(2).y
+    head2 = landmarks.part(14).x, landmarks.part(14).y
 
 
+    turning = turn_head(eyeR_pts, eyeL_pts, noze_pts, head_box)
+    print(turning)
+
+    head_position = bent_up_head(eyeR_pts, eyeL_pts, noze_pts, head_box)
     print("head position : ", head_position)
-    #print("contours joues : ", int(contour_right_joue), int(contour_left_joue))
 
-    if int(contour_right_joue) > int(contour_left_joue) + 200:
-        print("tourne la tete vers la gauche")
-    elif int(contour_right_joue) + 200 < int(contour_left_joue):
-        print("tourne la tete vers la droite")
+    #if turning == ""
 
 
-def eyes_movements(frame, extremum, landmarks):
+
+
+
+
+def eyes_movements(frame, extremum, landmarks, top, head_box):
 
     x, y, w, h = extremum
 
@@ -269,13 +281,31 @@ def eyes_movements(frame, extremum, landmarks):
            if frame[i, j][0] == 0 and frame[i, j][1] == 0 and frame[i, j][2] == 255]
 
     nose = landmarks.part(27).x, landmarks.part(27).y
+    haut = landmarks.part(top).x, landmarks.part(top).y
+
 
     if eye != []:
 
         cv2.line(frame, eye[0], nose, (0, 255, 0), 1)
-        eye_noze = dist.euclidean(eye[0], nose)
-        print(eye_noze)
+        cv2.line(frame, eye[0], haut, (0, 255, 0), 1)
 
+        eye_noze = dist.euclidean(eye[0], nose)
+        eye_top = dist.euclidean(eye[0], haut)
+
+
+        w = head_box[2]
+
+        if top == 19:
+            if eye_noze >=  w * 0.2825:
+                print("yeux droite")
+            elif eye_noze <= w * 0.233:
+                print("yeux gauche")
+
+        if top == 24:
+            if eye_noze <= w * 0.2025:
+                print("yeux droite")
+            elif eye_noze >= w * 0.262:
+                print("yeux gauche")
 
 
 
