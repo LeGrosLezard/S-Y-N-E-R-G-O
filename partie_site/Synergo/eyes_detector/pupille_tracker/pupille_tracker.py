@@ -71,7 +71,9 @@ def rectangle_eye_area(frame, eye, gray):
 
     #Region interest of the box from gray frame.
     cropGray = gray[y-nb : (y + h) + nb, x - nb : (x + w) + nb]
+    #cv2.imshow("cropGray", cropGray)
 
+ 
     #Egalize the region on gray frame.
     cropEgalize = cv2.equalizeHist(cropGray)
     #cv2.imshow("cropMask", cropMask)
@@ -145,15 +147,13 @@ def find_center_pupille(crop, mask_eyes_img, rayon):
 
     out = None, None, None, None
 
-    cv2.imshow("crop", crop)
+    #cv2.imshow("crop", crop)
 
-
-    crop = adjust_gamma(crop, 3.5)
-    cv2.imshow("crop2", crop)
-
+    crop = adjust_gamma(crop, 3)
+    #cv2.imshow("crop2", crop)
 
     #Eliminate noise with gaussian blur.
-    gaussian = cv2.GaussianBlur(crop, (9, 9), 10)
+    gaussian = cv2.GaussianBlur(crop, (9, 9), 50)
     cv2.imshow("gaussian", gaussian)
 
 
@@ -164,12 +164,12 @@ def find_center_pupille(crop, mask_eyes_img, rayon):
         if len(contours) > 1:
             break
 
-    _, threshold = cv2.threshold(gaussian, thresh - 10, 255, cv2.THRESH_BINARY_INV)
-    cv2.imshow("threshold", threshold)
+    _, threshold = cv2.threshold(gaussian, thresh - 50, 255, cv2.THRESH_BINARY_INV)
+    #cv2.imshow("threshold", threshold)
 
     blackPx = cv2.countNonZero(threshold)
 
-    kernel = np.ones((3,3), np.uint8)
+    kernel = np.ones((1,1), np.uint8)
 
     if blackPx > 10:
         img_erosion = threshold
@@ -183,11 +183,11 @@ def find_center_pupille(crop, mask_eyes_img, rayon):
 
     cv2.imshow("img_erosion", img_erosion)
 
-    contours = cv2.findContours(img_erosion, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)[0]
+    contours = cv2.findContours(img_erosion, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)[0]
     contours = sorted(contours, key=lambda x: cv2.contourArea(x), reverse=True)
 
     if len(contours) > 0:
-        cv2.drawContours(mask_eyes_img, [contours[0]], -1, (0, 255, 0), 1)
+        #cv2.drawContours(mask_eyes_img, [contours[0]], -1, (0, 255, 0), 1)
         cntx = tuple(contours[0][contours[0][:, :, 0].argmin()][0])  #left
         cnty = tuple(contours[0][contours[0][:, :, 1].argmin()][0])  #right
         cntw = tuple(contours[0][contours[0][:, :, 0].argmax()][0])  #top
@@ -195,6 +195,11 @@ def find_center_pupille(crop, mask_eyes_img, rayon):
  
         mask_eyes_img[cntx[1], cntx[0]] = 255, 0, 255
         mask_eyes_img[cntw[1], cntw[0]] = 255, 255, 0
+
+        mask_eyes_img[cnty[1], cnty[0]] = 255, 255, 255
+        mask_eyes_img[cnth[1], cnth[0]] = 0, 255, 255
+
+
 
     if len(contours) > 0:
         a = cv2.moments(contours[0])['m00']
@@ -250,19 +255,22 @@ def pupille_tracker(landmarks, frame, gray, head_box):
 
 
     right_eye, crop_eyes_right, crop_appli_right, cnt1 = find_pupil_center(right_eye, frame, gray, glob_right)
-    #left_eye, crop_eyes_left, crop_appli_left, cnt2  = find_pupil_center(left_eye, frame, gray, glob_left)
+    left_eye, crop_eyes_left, crop_appli_left, cnt2  = find_pupil_center(left_eye, frame, gray, glob_left)
 
-    turning = face_movement(landmarks, frame, eyes, head_box)
+    turning, bot_top = face_movement(landmarks, frame, eyes, head_box)
+
+    #print(turning, bot_top)
 
 
     eyes_movements(frame, extremum_right, landmarks, 19, head_box, eyes, glob_right, turning, cnt1)
-    #eyes_movements(frame, extremum_left, landmarks, 24, head_box, eyes, glob_left, turning)
+
+    eyes_movements(frame, extremum_left, landmarks, 24, head_box, eyes, glob_left, turning, cnt2)
     print("")
 
 
 
-##    return (right_eye, crop_eyes_right, crop_appli_right, cnt1),\
-##           (left_eye, crop_eyes_left, crop_appli_left, cnt2)
+    return (right_eye, crop_eyes_right, crop_appli_right, cnt1),\
+           (left_eye, crop_eyes_left, crop_appli_left, cnt2)
 
 
 
@@ -290,7 +298,9 @@ def face_movement(landmarks, frame, eyes, head_box):
     head1 = landmarks.part(2).x, landmarks.part(2).y
     head2 = landmarks.part(14).x, landmarks.part(14).y
 
-
+    out = None
+    out1 = None
+    
     turning = turn_head(eyeR_pts, eyeL_pts, noze_pts, head_box)
     #print(turning)
 
@@ -298,9 +308,16 @@ def face_movement(landmarks, frame, eyes, head_box):
     #print("head position : ", head_position)
 
     if turning == "legerement a gauche":
-        return "gauche"
+        out = "gauche"
     elif turning == "legerement a droite":
-        return "droite"
+        out =  "droite"
+
+    if head_position == "position baissé":
+        out1 = "bas"
+    elif head_position == "position levé":
+        out1 = "haut"
+
+    return out, out1
 
 
 
@@ -316,160 +333,140 @@ def eyes_movements(frame, extremum, landmarks, top, head_box, eyes, glob, turnin
     global COUNTER
 
 
+    nb = 0.415
+
+    if top == 19:
 
 
 
+        
+        xe, ye, we, he = extremum
 
-    cv2.drawContours(frame, (eyes[0]), -1, (0, 255, 0), 2)
+        eye = [(j, i) for i in range(ye[1], he[1]) for j in range(xe[0], we[0])
+               if frame[i, j][0] == 0 and frame[i, j][1] == 0 and frame[i, j][2] == 255]
 
-    cv2.circle(frame, tuple(eyes[0][0][0]), 1, (255, 0, 0), 1)
-    cv2.circle(frame, tuple(eyes[0][3][0]), 1, (0, 255, 255), 1)
+        hauteur1 = [(j, i) for i in range(ye[1], he[1]) for j in range(xe[0], we[0])
+                   if frame[i, j][0] == 255 and frame[i, j][1] == 255 and frame[i, j][2] == 255]
 
+        hauteur2 = [(j, i) for i in range(ye[1], he[1]) for j in range(xe[0], we[0])
+                   if frame[i, j][0] == 0 and frame[i, j][1] == 255 and frame[i, j][2] == 255]
 
-    xe, ye, we, he = extremum
+    
 
-    eye = [(j, i) for i in range(ye[1], he[1]) for j in range(xe[0], we[0])
-           if frame[i, j][0] == 0 and frame[i, j][1] == 0 and frame[i, j][2] == 255]
+        if eye != []:
+            #cv2.circle(frame, eye[0], glob, (0, 0, 255), 1)
 
-
-    cntx = [(j, i) for i in range(ye[1], he[1]) for j in range(xe[0], we[0])
-           if frame[i, j][0] == 255 and frame[i, j][1] == 0 and frame[i, j][2] == 255]
-
-    cntw = [(j, i) for i in range(ye[1], he[1]) for j in range(xe[0], we[0])
-           if frame[i, j][0] == 255 and frame[i, j][1] == 255 and frame[i, j][2] == 0]
-
-    try:
-        cntx = tuple(cntx[0])
-        cntw = tuple(cntw[0])
-
-
-        cv2.circle(frame, cntx, 1, (0, 255, 255), 1)
-        cv2.circle(frame, cntw, 1, (255, 0, 0), 1)
-    except:
-        pass
-
-    if turning == "droite":
-        pass
-    elif turning == "gauche":
-        pass
-
-    try:
-
-        #cv2.circle(frame, eye[0], 1, (0, 0, 255), 2)
-
-        #cv2.line(frame, tuple(eyes[0][3][0]), (eye[0]), (0, 255, 255), 1)
-        #cv2.line(frame, tuple(eyes[0][0][0]), (eye[0]), (0, 255, 255), 1)
-
-        cote_droit = tuple(eyes[0][3][0])
-        cote_gauche = tuple(eyes[0][0][0])
-
-        oeil_droit =  cntx[0]
-        oeil_gauche = cntw[0]
-
-
-        dist_droit = abs(oeil_droit-cote_droit[0])
-        dist_gauche = abs(cote_gauche[0]-oeil_gauche)
-
-
-        print("dist glbo", dist_droit, dist_gauche, dist_droit + dist_gauche)
-
-
-        total = int(dist.euclidean( (eyes[0][3][0][0], 0), (eyes[0][0][0][0], 0) ))
-        milieu = int(total / 2)
-
-        print("total", total, "milieu", milieu)
-
-        gauche = int(dist.euclidean( (eyes[0][3][0][0], 0), (eye[0][0], 0) ))
-        rapport_mid = abs(gauche - milieu)
-        print("dist gauche", gauche)
-
-        droite = int(dist.euclidean( (eyes[0][0][0][0], 0), (eye[0][0], 0) ))
-        rapport_mid2 = abs(milieu - droite)
-        print("dist droite", droite)
-
-
-
-
-
-    except:
-        pass
-
-
-
-
-
-
-
-
-
-
-
-
-
+##            total = int(dist.euclidean( (eyes[0][3][0][0], 0), (eyes[0][0][0][0], 0) ))
+##            print("total", total, int(total * nb))
+##
+##            gauche = dist.euclidean( (eyes[0][3][0][0], 0), (eye[0][0], 0) )
+##            print("dist gauche", gauche)
+##
+##            droite = dist.euclidean( (eyes[0][0][0][0], 0), (eye[0][0], 0) )
+##            print("dist droite", droite)
 ##
 ##
-##    nose = landmarks.part(27).x, landmarks.part(27).y
-##    haut = landmarks.part(top).x, landmarks.part(top).y
-##
-##
-##    if eye != []:
-##
-##        #cv2.line(frame, eye[0], nose, (0, 255, 0), 1)
-##        #cv2.line(frame, eye[0], haut, (0, 255, 0), 1)
-##
-##        eye_noze = dist.euclidean(eye[0], nose)
-##        eye_top = dist.euclidean(eye[0], haut)
-##
-##        w = head_box[2]
-##        h = head_box[3]
+##            if gauche <= int(total * nb):
+##                print("oeil gauche")
+##            elif droite <= int(total * nb):
+##                print("oeil droite")
 
 
-##        if top == 19:
-##
-##
-## 
-##            MEAN += eye[0][0]
-##            COUNTER += 1
-##            print(MEAN/COUNTER)
-
-            #368
+            eyes = (cv2.convexHull(np.array([(landmarks.part(n).x, landmarks.part(n).y)
+                            for n in range(36, 42)])),
+                    cv2.convexHull(np.array([(landmarks.part(n).x, landmarks.part(n).y)
+                            for n in range(42, 48)])))
+            cv2.drawContours(frame, [eyes[0]], -1, (0, 0, 255), 1)
 
             
+            aa = landmarks.part(36).x, landmarks.part(36).y
+            bb = landmarks.part(39).x, landmarks.part(39).y
+            cc = int((aa[1] + bb[1])/2)
 
-##            print(w, int(w *  0.175), int(eye_noze))
-##            if int(eye_noze) <= int(w *  0.175):
-##                print("yeux vers gauche")
-            
-##            if eye_noze <=  w * 0.165:
-##                print("yeux droite")
 
-##            elif eye_noze <= w * 0.233:
-##                print("yeux gauche")
+            mid_top = dist.euclidean((0, cc), (0, eye[0][1]))
+            print("milieu pupille", mid_top)
+
+
+
+            a = landmarks.part(41).x, landmarks.part(41).y
+            b = landmarks.part(40).x, landmarks.part(40).y
+            c = int((a[1] + b[1])/2)
+
+            d = landmarks.part(37).x, landmarks.part(37).y
+            e = landmarks.part(38).x, landmarks.part(38).y
+            f = int((d[1] + e[1])/2)
+
+
+            hauteur = dist.euclidean( (0, c), (0, f) )
+
+            print("head", head_box[3], "total", hauteur)
+
+            if mid_top >= int(hauteur * 0.34) and hauteur >= int(head_box[3] * 0.065):
+                print("ENFIN")
+
+
+
+
+
+##    if top == 24:
 ##
-##            if eye_top >= h * 0.225:
-##                print("bas")
-##            elif eye_top <= h * 0.1482:
-##                print("haut")
-
-
-##        elif top == 24:
-##            pass
-#           print(w, int(w * 0.165), int(eye_noze))
-
-            #cv2.line(frame, eye[0], haut, (255, 0, 0), 1)
-
-            #if eye_noze <=  int(w *   28.054):
-            #    print("yeux vers gauche")
-
-##            elif eye_noze >= w * 0.262:
-##                print("yeux gauche")
 ##
-##            if eye_top >= h * 0.225:
-##                print("bas")
-##            elif eye_top <= h * 0.1482:
+##
+##
+##
+##        xe, ye, we, he = extremum
+##
+##        eye = [(j, i) for i in range(ye[1], he[1]) for j in range(xe[0], we[0])
+##               if frame[i, j][0] == 0 and frame[i, j][1] == 0 and frame[i, j][2] == 255]
+##
+##
+##
+##        if eye != []:
+##
+##            cv2.circle(frame, eye[0], glob, (0, 0, 255), 1)
+##
+####            total = int(dist.euclidean( (eyes[1][3][0][0], 0), (eyes[1][0][0][0], 0) ))
+####            print(total, total * nb)
+####
+####            gauche = dist.euclidean( (eyes[1][3][0][0], 0), (eye[0][0], 0) )
+####            print("dist gauche", gauche)
+####
+####            droite = dist.euclidean( (eyes[1][0][0][0], 0), (eye[0][0], 0) )
+####            print("dist droite", droite)
+####
+####            if gauche <= int(total * nb):
+####                print("oeil gauche")
+####            elif droite <= int(total * nb):
+####                print("oeil droite")
+##
+##
+##            eyes = (cv2.convexHull(np.array([(landmarks.part(n).x, landmarks.part(n).y)
+##                            for n in [43, 44, 46, 47] ])))
+##
+##
+##
+##
+##            top = landmarks.part(43).x, landmarks.part(43).y
+##            bot = landmarks.part(47).x, landmarks.part(47).y
+##
+##            total = int(dist.euclidean((0, top[1]), (0, bot[1])))
+##
+##            eye_top = int(dist.euclidean((0, top[1]), (0, eye[0][1])))
+##            eye_bot = int(dist.euclidean((0, bot[1]), (0, eye[0][1])))
+##
+##            print(total, int(total * 0.455), eye_top, eye_bot)
+##            print(int(total * 0.42), abs(eye_top-eye_bot))
+##
+##            if eye_top <= int(total * 0.42) and abs(eye_top-eye_bot) >= int(total * 0.35):
 ##                print("haut")
+##
+##
+##
+##
 
 
+    print("")
 
 
 
