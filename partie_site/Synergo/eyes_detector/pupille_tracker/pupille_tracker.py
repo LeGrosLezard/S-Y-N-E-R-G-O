@@ -148,7 +148,7 @@ def find_center_pupille(crop, mask_eyes_img, rayon):
     cv2.imshow("crop", crop)
 
 
-    crop = adjust_gamma(crop, 3)
+    crop = adjust_gamma(crop, 3.5)
     cv2.imshow("crop2", crop)
 
 
@@ -185,8 +185,9 @@ def find_center_pupille(crop, mask_eyes_img, rayon):
 
     contours = cv2.findContours(img_erosion, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)[0]
     contours = sorted(contours, key=lambda x: cv2.contourArea(x), reverse=True)
+
     if len(contours) > 0:
-        #cv2.drawContours(mask_eyes_img, [contours[0]], -1, (0, 255, 0), 1)
+        cv2.drawContours(mask_eyes_img, [contours[0]], -1, (0, 255, 0), 1)
         cntx = tuple(contours[0][contours[0][:, :, 0].argmin()][0])  #left
         cnty = tuple(contours[0][contours[0][:, :, 1].argmin()][0])  #right
         cntw = tuple(contours[0][contours[0][:, :, 0].argmax()][0])  #top
