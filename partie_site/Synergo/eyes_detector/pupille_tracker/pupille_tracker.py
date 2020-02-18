@@ -225,7 +225,7 @@ def pupille_tracker(landmarks, frame, gray, head_box):
 
 
     eyes_movements(frame, extremum_right, landmarks, 19, head_box)
-    eyes_movements(frame, extremum_left, landmarks, 24, head_box)
+    #eyes_movements(frame, extremum_left, landmarks, 24, head_box)
     print("")
 
 
@@ -292,20 +292,43 @@ def eyes_movements(frame, extremum, landmarks, top, head_box):
         eye_noze = dist.euclidean(eye[0], nose)
         eye_top = dist.euclidean(eye[0], haut)
 
-
         w = head_box[2]
+        h = head_box[3]
+
 
         if top == 19:
-            if eye_noze >=  w * 0.2825:
-                print("yeux droite")
-            elif eye_noze <= w * 0.233:
-                print("yeux gauche")
 
-        if top == 24:
-            if eye_noze <= w * 0.2025:
-                print("yeux droite")
-            elif eye_noze >= w * 0.262:
-                print("yeux gauche")
+            print(w, int(w *  0.175), int(eye_noze))
+            if int(eye_noze) <= int(w *  0.175):
+                print("yeux vers gauche")
+            
+##            if eye_noze <=  w * 0.165:
+##                print("yeux droite")
+
+##            elif eye_noze <= w * 0.233:
+##                print("yeux gauche")
+##
+##            if eye_top >= h * 0.225:
+##                print("bas")
+##            elif eye_top <= h * 0.1482:
+##                print("haut")
+
+
+        elif top == 24:
+#            print(w, int(w * 0.165), int(eye_noze))
+
+            cv2.line(frame, eye[0], haut, (255, 0, 0), 1)
+
+            if eye_noze <=  int(w *   28.054):
+                print("yeux vers gauche")
+
+##            elif eye_noze >= w * 0.262:
+##                print("yeux gauche")
+##
+##            if eye_top >= h * 0.225:
+##                print("bas")
+##            elif eye_top <= h * 0.1482:
+##                print("haut")
 
 
 
