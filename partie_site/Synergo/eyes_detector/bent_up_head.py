@@ -6,11 +6,13 @@ from scipy.spatial import distance as dist
 DOWN_COUNTER = 0
 UP_COUNTER = 0
 
-def analyse_position(bent_up):
+def analyse_position(bent_up, head_box):
 
     global DOWN_COUNTER
     global UP_COUNTER
     out = ""
+    w = head_box[2]
+    #print(w, bent_up)
 
     if DOWN_COUNTER > 10 and bent_up >= 17:
         out = "position baissé"
@@ -37,7 +39,8 @@ def analyse_position(bent_up):
 
     return out
 
-def bent_up_head(right_eye, left_eye, nose):
+
+def bent_up_head(right_eye, left_eye, nose, head_box):
     """Calculus distance beetween nose and eyes line"""
 
     global DOWN_COUNTER
@@ -52,6 +55,6 @@ def bent_up_head(right_eye, left_eye, nose):
     cosb = np_min( (pow(d2, 2) - pow(d1, 2) + pow(d_eyes, 2) ) / (2*d2*d_eyes) )
     bent_up = int(250*(d2*sin(acos(cosb))-coeff/3.5)/coeff)
 
-    #out = analyse_position(bent_up)
+    out = analyse_position(bent_up, head_box)
 
-    return bent_up
+    return out
