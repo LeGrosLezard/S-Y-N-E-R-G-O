@@ -53,7 +53,7 @@ def recuperate_extremums(eye_contours, frame):
     w = tuple(eye_contours[eye_contours[:, :, 0].argmax()][0])  #top
     h = tuple(eye_contours[eye_contours[:, :, 1].argmax()][0])  #bottom
     
-    [cv2.circle(frame, (i), 1, (255, 0, 0), 1) for i in [x]]
+    #[cv2.circle(frame, (i), 1, (255, 0, 0), 1) for i in [x, w]]
 
     occular_glob = abs(int((y[1] - h[1]) / 2))
     return occular_glob, (x, y, w, h)
@@ -216,9 +216,9 @@ def pupille_tracker(landmarks, frame, gray):
     face_movement(landmarks, frame, eyes)
 
     print("droite")
-    eyes_movements(frame, extremum_right)
+    eyes_movements(frame, extremum_right, landmarks)
     print("gauche")
-    eyes_movements(frame, extremum_left)
+    eyes_movements(frame, extremum_left, landmarks)
     print("")
 
 
@@ -261,21 +261,30 @@ def face_movement(landmarks, frame, eyes):
         print("tourne la tete vers la droite")
 
 
-def eyes_movements(frame, extremum):
+def eyes_movements(frame, extremum, landmarks):
 
     x, y, w, h = extremum
 
     eye = [(j, i) for i in range(y[1], h[1]) for j in range(x[0], w[0])
            if frame[i, j][0] == 0 and frame[i, j][1] == 0 and frame[i, j][2] == 255]
 
+    nose = landmarks.part(27).x, landmarks.part(27).y
+
     if eye != []:
 
-        #print(int(np.mean(liste[0])), int(np.mean(liste[1])))
-        print("total : ", abs(x[0] - w[0]), " ", abs(y[1] - h[1]))
-        print("corner gauche : ", dist.euclidean(x, eye), (dist.euclidean(x, eye)* 100) / abs(x[0] - w[0]))
-        print("corner droit : ", dist.euclidean(w, eye),  (dist.euclidean(w, eye)* 100) / abs(x[0] - w[0]))
-        print("bas : ", dist.euclidean(y, eye), (dist.euclidean(y, eye)* 100) / abs(y[1] - h[1]))
-        print("haut : ", dist.euclidean(h, eye), (dist.euclidean(h, eye)* 100) / abs(y[1] - h[1]))
+        cv2.line(frame, eye[0], nose, (0, 255, 0), 1)
+        eye_noze = dist.euclidean(eye[0], nose)
+        print(eye_noze)
+
+
+
+
+
+
+
+
+
+
 
 
 
