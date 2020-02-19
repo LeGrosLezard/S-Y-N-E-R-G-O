@@ -24,7 +24,11 @@ def recuperate_eyes_mean_position(video):
     cap = cv2.VideoCapture(video)
     predictor, detector = load_model_dlib(dlib_model)
 
-
+    #height, width = frame.shape[:2]
+    height= 505
+    width = 673
+    BLANCK = np.zeros((height,width,3), np.uint8)
+    
     while True:
 
         start_time_frame = time.time()
@@ -38,6 +42,9 @@ def recuperate_eyes_mean_position(video):
             #frame = cv2.resize(frame, (int(a / 1.3244035243988037), int(b / 1.3244035243988037)))#ca
             #frame = cv2.resize(frame, (int(a /  0.8500000000000002), int(b /  0.8500000000000002)))#ca
             #frame = cv2.resize(frame, (int(a /   1.4000000000000006), int(b /   1.4000000000000006)))#aaa
+            frame = cv2.resize(frame, (int(a /   0.9500000000000003), int(b /   0.9500000000000003)))
+            b, a = frame.shape[:2]
+
 
 
             #Gray threshold.
@@ -49,11 +56,10 @@ def recuperate_eyes_mean_position(video):
             if landmarks is not None:
 
                 #Recuperate pupil center, eyes constitution = (x, y), crop
-                #right_eye, left_eye = pupille_tracker(landmarks, frame, gray, head_box)
-                right_eye = pupille_tracker(landmarks, frame, gray, head_box)
+                right_eye, left_eye = pupille_tracker(landmarks, frame, gray, head_box, BLANCK)
 
             cv2.imshow("Frame", frame)
-
+            cv2.imshow("BLANCK", BLANCK)
             #print(time.time() - start_time_frame)
 
             if cv2.waitKey(0) & 0xFF == ord('q'):
@@ -88,7 +94,8 @@ for video in data:
     #video = path_data_video.format("b.mp4")
     #video = path_data_video.format("c.mp4")
     #video = path_data_video.format("aaa.mp4")
-        
+    video = path_data_video.format("e.mp4")
+
     print("in course: ", video)
     
     stop = recuperate_eyes_mean_position(video)
