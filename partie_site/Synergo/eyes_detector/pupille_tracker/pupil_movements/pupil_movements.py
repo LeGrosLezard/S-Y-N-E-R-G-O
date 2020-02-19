@@ -1,25 +1,21 @@
+import cv2
+import numpy as np
+from scipy.spatial import distance as dist
+
+from ..head_movements.turn_head import turn_head
+from ..head_movements.bent_up_head import bent_up_head
+
+
 def face_movement(landmarks, frame, eyes, head_box):
 
-
-    joue = (cv2.convexHull(np.array([(landmarks.part(n).x, landmarks.part(n).y) for n in [2, 41, 31] ])),
-            cv2.convexHull(np.array([(landmarks.part(n).x, landmarks.part(n).y) for n in [35, 14, 46] ])))
-
-
-    #cv2.drawContours(frame, [joue[0]], -1, (0, 255, 0), 1)
-    contour_right_joue = cv2.contourArea(joue[0])
-    #cv2.drawContours(frame, [joue[1]], -1, (0, 255, 0), 1)
-    contour_left_joue = cv2.contourArea(joue[1])
 
     eyeR_pts = landmarks.part(36).x, landmarks.part(36).y
     eyeL_pts = landmarks.part(45).x, landmarks.part(45).y
     noze_pts = landmarks.part(30).x, landmarks.part(30).y
 
-    head1 = landmarks.part(2).x, landmarks.part(2).y
-    head2 = landmarks.part(14).x, landmarks.part(14).y
-
     out = None
     out1 = None
-    
+
     turning = turn_head(eyeR_pts, eyeL_pts, noze_pts, head_box)
     #print(turning)
 
@@ -45,125 +41,151 @@ def face_movement(landmarks, frame, eyes, head_box):
 TIMMER = []
 POSITION_RIGHT = []
 POSITION_LEFT = []
+
+def recuperate_pupil_center(extremum, frame):
+
+    #Recuperate left, right, top, bot corner of the eye
+    xExtremum, yExtremum, wExtremum, hExtremum = extremum
+
+    #Search our red mark who's center of the eye.
+    center_pupil = [(j, i) for i in range(yExtremum[1], hExtremum[1])
+           for j in range(xExtremum[0], wExtremum[0])
+           if frame[i, j][0] == 0 and frame[i, j][1] == 0 and frame[i, j][2] == 255]
+
+    return center_pupil
+
+
+
+def x_movements(blanck, frame, glob, center_pupil, eyes):
+
+    global COEF_X
+
+    cv2.circle(blanck, center_pupil[0], 1, (0, 255, 0), 1)
+    cv2.circle(frame, center_pupil[0], glob, (0, 255, 0), 1)
+
+    right_point = tuple(eyes[0][3][0])
+    left_point  = tuple(eyes[0][0][0])
+
+    #Recuperate width on x axis distance from the eye.
+    total = int(dist.euclidean( (right_point[0], 0), (left_point[0], 0) ))
+
+    #Center X of the eye in comparaison of right side.
+    right_distance = dist.euclidean( (eyes[0][3][0][0], 0), (center_pupil[0][0], 0) )
+    #Center X of the eye in comparaison of left side.
+    left_distance = dist.euclidean( (eyes[0][0][0][0], 0),  (center_pupil[0][0], 0) )
+
+    #print(total, left_distance, right_distance)
+    if left_distance <= int(total * COEF_X):
+        print("oeil gauche")
+    elif right_distance <= int(total * COEF_X):
+        print("oeil droite") 
+
+
+def y_movements(landmarks, head_box, center_pupil, glob):
+
+    #Extremums landmarks points from dlib.
+    right_point_eye = landmarks.part(36).x, landmarks.part(36).y
+    left_point_eye  = landmarks.part(39).x, landmarks.part(39).y
+    #Recuperate mean of the height midle of the eye.
+    middle_mean_height = int( (right_point_eye[1] + left_point_eye[1]) / 2)
+
+    
+    #Recuperate height distance beetween the center and the pupil.
+    mid_top = dist.euclidean((0, middle_mean_height), (0, center_pupil[0][1]))
+
+
+    #Recuperate the mean of the bottom of the points of the eye.
+    bottom_eye_1 = landmarks.part(41).x, landmarks.part(41).y
+    bottom_eye_2 = landmarks.part(40).x, landmarks.part(40).y
+    middle_mean_height = int( (bottom_eye_1[1] + bottom_eye_2[1]) / 2)
+
+    #Recuperate the mean of the top of the points of the eye.
+    top_eye_1 = landmarks.part(37).x, landmarks.part(37).y
+    top_eye_2 = landmarks.part(38).x, landmarks.part(38).y
+    mean_of_the_bottom = int( (top_eye_1[1] + top_eye_2[1]) / 2)
+
+    #Recuperate distance beetween top and bottom means points.
+    height = dist.euclidean( (0, middle_mean_height), (0, mean_of_the_bottom) )
+
+
+    if mid_top >= int(height * 0.34) and height >= int(head_box[3] * 0.065):
+        print("haut")
+
+    elif height <= int(head_box[3] *  0.036) and glob <= int(height * 0.5):
+        print("bas")
+
+
+
+
+COEF_X = 0.42
 def eyes_movements(informations):
+
+    global COEF_X
 
     frame, extremum, landmarks, head_box, eyes, glob, blanck, the_eye = informations
 
-
-    nb = 0.42
-
     if the_eye == "right":
 
+        center_pupil = recuperate_pupil_center(extremum, frame)
 
-        xe, ye, we, he = extremum
-
-        eye = [(j, i) for i in range(ye[1], he[1]) for j in range(xe[0], we[0])
-               if frame[i, j][0] == 0 and frame[i, j][1] == 0 and frame[i, j][2] == 255]
-
-        hauteur1 = [(j, i) for i in range(ye[1], he[1]) for j in range(xe[0], we[0])
-                   if frame[i, j][0] == 255 and frame[i, j][1] == 255 and frame[i, j][2] == 255]
-
-        hauteur2 = [(j, i) for i in range(ye[1], he[1]) for j in range(xe[0], we[0])
-                   if frame[i, j][0] == 0 and frame[i, j][1] == 255 and frame[i, j][2] == 255]
+        if center_pupil != []:
+            print("ici")
+            x_movements(blanck, frame, glob, center_pupil, eyes)
+            y_movements(landmarks, head_box, center_pupil, glob)
 
 
-        if eye != []:
 
-            cv2.circle(blanck, eye[0], 1, (0, 255, 0), 1)
-
-            cv2.circle(frame, eye[0], glob, (0, 255, 0), 1)
-
-            total = int(dist.euclidean( (eyes[0][3][0][0], 0), (eyes[0][0][0][0], 0) ))
-
-            gauche = dist.euclidean( (eyes[0][3][0][0], 0), (eye[0][0], 0) )
-
-            droite = dist.euclidean( (eyes[0][0][0][0], 0), (eye[0][0], 0) )
-
-            print(total, gauche, droite)
-            if gauche <= int(total * nb):
-                print("oeil gauche")
-            elif droite <= int(total * nb):
-                print("oeil droite")
-
-
-            aa = landmarks.part(36).x, landmarks.part(36).y
-            bb = landmarks.part(39).x, landmarks.part(39).y
-
-            
-            cc = int((aa[1] + bb[1])/2)
-
-            mid_top = dist.euclidean((0, cc), (0, eye[0][1]))
-
-            a = landmarks.part(41).x, landmarks.part(41).y
-            b = landmarks.part(40).x, landmarks.part(40).y
-            c = int((a[1] + b[1])/2)
-
-            d = landmarks.part(37).x, landmarks.part(37).y
-            e = landmarks.part(38).x, landmarks.part(38).y
-            f = int((d[1] + e[1])/2)
-
-
-            hauteur = dist.euclidean( (0, c), (0, f) )
-
-
-            if mid_top >= int(hauteur * 0.34) and hauteur >= int(head_box[3] * 0.065):
-                print("haut")
-
-            elif hauteur <= int(head_box[3] *  0.036) and glob <= int(hauteur * 0.5):
-                print("bas")
 
 
 
     if the_eye == "left":
+        print("la")
+        center_pupil = recuperate_pupil_center(extremum, frame)
 
-        xe, ye, we, he = extremum
+        if center_pupil != []:
 
-        eye = [(j, i) for i in range(ye[1], he[1]) for j in range(xe[0], we[0])
-               if frame[i, j][0] == 0 and frame[i, j][1] == 0 and frame[i, j][2] == 255]
+            cv2.circle(blanck, center_pupil[0], 1, (0, 255, 0), 1)
+            cv2.circle(frame, center_pupil[0], glob, (0, 0, 255), 1)
 
 
+            left_point = tuple(eyes[1][3][0])
+            right_point  = tuple(eyes[1][0][0])
 
-        if eye != []:
+            total = int(dist.euclidean( (right_point[0], 0), (left_point[0], 0) ))
 
-            cv2.circle(blanck, eye[0], 1, (0, 255, 0), 1)
-            cv2.circle(frame, eye[0], glob, (0, 0, 255), 1)
+            left_distance = dist.euclidean( (right_point[0], 0), (center_pupil[0][0], 0) )
+            right_distance = dist.euclidean( (left_point[0], 0),  (center_pupil[0][0], 0) )
 
-            total = int(dist.euclidean( (eyes[1][3][0][0], 0), (eyes[1][0][0][0], 0) ))
-
-            gauche = dist.euclidean( (eyes[1][3][0][0], 0), (eye[0][0], 0) )
-            droite = dist.euclidean( (eyes[1][0][0][0], 0), (eye[0][0], 0) )
-
-            print(total, gauche, droite)
-            if gauche <= int(total * nb):
+            if left_distance <= int(total * COEF_X):
                 print("oeil gauche")
-            elif droite <= int(total * nb):
+            elif right_distance <= int(total * COEF_X):
                 print("oeil droite")
 
 
 
-            aa = landmarks.part(42).x, landmarks.part(42).y
-            bb = landmarks.part(45).x, landmarks.part(45).y
+            right_point_eye = landmarks.part(42).x, landmarks.part(42).y
+            left_point_eye = landmarks.part(45).x, landmarks.part(45).y
 
-            cc = int((aa[1] + bb[1])/2)
+            middle_mean_height = int((right_point_eye[1] + left_point_eye[1])/2)
 
-            mid_top = dist.euclidean((0, cc), (0, eye[0][1]))
+            mid_top = dist.euclidean((0, middle_mean_height), (0, center_pupil[0][1]))
 
-            a = landmarks.part(47).x, landmarks.part(47).y
-            b = landmarks.part(46).x, landmarks.part(46).y
-            c = int((a[1] + b[1])/2)
+            bottom_eye_1 = landmarks.part(47).x, landmarks.part(47).y
+            bottom_eye_2 = landmarks.part(46).x, landmarks.part(46).y
+            middle_mean_height = int((bottom_eye_1[1] + bottom_eye_2[1])/2)
 
-            d = landmarks.part(43).x, landmarks.part(43).y
-            e = landmarks.part(44).x, landmarks.part(44).y
-            f = int((d[1] + e[1])/2)
-
-
-            hauteur = dist.euclidean( (0, c), (0, f) )
+            top_eye_1 = landmarks.part(43).x, landmarks.part(43).y
+            top_eye_2 = landmarks.part(44).x, landmarks.part(44).y
+            mean_of_the_bottom = int((top_eye_1[1] + top_eye_2[1])/2)
 
 
-            if mid_top >= int(hauteur * 0.34) and hauteur >= int(head_box[3] * 0.065):
+            height = dist.euclidean( (0, middle_mean_height), (0, mean_of_the_bottom) )
+
+
+            if mid_top >= int(height * 0.34) and height >= int(head_box[3] * 0.065):
                 print("haut")
 
-            elif hauteur <= int(head_box[3] *  0.036) and glob <= int(hauteur * 0.5):
+            elif height <= int(head_box[3] *  0.036) and glob <= int(height * 0.5):
                 print("bas")
 
 
