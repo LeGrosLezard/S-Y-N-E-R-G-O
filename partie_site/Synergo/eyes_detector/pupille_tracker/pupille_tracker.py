@@ -8,10 +8,8 @@ import cv2
 import numpy as np
 from scipy.spatial import distance as dist
 
-
-from turn_head import turn_head
-from bent_up_head import bent_up_head
-
+from .pupil_movements.pupil_movements import face_movement
+from .pupil_movements.pupil_movements import eyes_movements
 
 
 #===================================================== Recuperate eyes informations.
@@ -150,10 +148,10 @@ def find_a_threshold(gaussian):
     _, threshold = cv2.threshold(gaussian, thresh - 50, 255, cv2.THRESH_BINARY_INV)
     #cv2.imshow("threshold", threshold)
 
-    return threshold, contours
+    return threshold, contours, thresh - 50
 
 
-def threshold_treatment(threshold):
+def threshold_treatment(threshold, gaussian, thresh):
 
     #Count black pixels.
     blackPx = cv2.countNonZero(threshold)
@@ -177,7 +175,7 @@ def center_threshold(mask_eyes_img, contours):
     out = None, None, None
 
     #Find center of the threshold.
-    cv2.drawContours(mask_eyes_img, [contours[0]], -1, (0, 255, 0), 1)
+    #cv2.drawContours(mask_eyes_img, [contours[0]], -1, (0, 255, 0), 1)
     a = cv2.moments(contours[0])['m00']
 
     pupille_center = [(int(cv2.moments(contours[0])['m10']/a),
@@ -211,10 +209,10 @@ def find_center_pupille(crop, mask_eyes_img, rayon):
     gaussian = cv2.GaussianBlur(crop, (9, 9), 50)
 
     #Find the maximum threshold value from one contour.
-    threshold, contours = find_a_threshold(gaussian)
+    threshold, contours, thresh = find_a_threshold(gaussian)
 
     #Treat threshold in the case nothing found.
-    img_erosion = threshold_treatment(threshold)
+    img_erosion = threshold_treatment(threshold, gaussian, thresh)
 
     #Contours of the trehsold.
     contours = cv2.findContours(img_erosion, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)[0]
@@ -292,26 +290,5 @@ def pupille_tracker(landmarks, frame, gray, head_box, blanck):
 
     return (right_eye, crop_eyes_right, crop_appli_right),\
            (left_eye, crop_eyes_left, crop_appli_left)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
