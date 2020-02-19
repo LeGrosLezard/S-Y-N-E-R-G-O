@@ -36,12 +36,6 @@ def face_movement(landmarks, frame, eyes, head_box):
 
 
 
-
-
-TIMMER = []
-POSITION_RIGHT = []
-POSITION_LEFT = []
-
 def recuperate_pupil_center(extremum, frame):
 
     #Recuperate left, right, top, bot corner of the eye
@@ -125,17 +119,16 @@ def y_movements(landmarks, head_box, center_pupil, glob, land_pts):
 
     #height in comparaison height head and glob in comparaison height head.
     elif height <= int(head_box[3] *  COEF_Y_COMPARAISON_MID_BOT) and\
-         glob <= int(height * COEF_Y_COMPARAISON_GLOB_BOT): 
+         glob <= int(height * COEF_Y_COMPARAISON_GLOB_BOT):
         print("bas")
 
 
 COEF_X = 0.42                       #coef x axis.
 COEF_Y_COMPARAISON_MID_TOP = 0.34   #coef mid eye/top eye.
-COEF_Y_COMPARAISON_GLOB_TOP = 0.065 #coef glob eye/top eye.
+COEF_Y_COMPARAISON_GLOB_TOP = 0.058 #coef glob eye/top eye.
 
-COEF_Y_COMPARAISON_MID_BOT = 0.036  #coef mid eye/bot eye.
-COEF_Y_COMPARAISON_GLOB_BOT = 0.5   #coef glob eye/bot eye.
-
+COEF_Y_COMPARAISON_MID_BOT = 0.039  #coef mid eye/bot eye.
+COEF_Y_COMPARAISON_GLOB_BOT = 0.7   #coef glob eye/bot eye.
 
 
 def eyes_movements(informations):
