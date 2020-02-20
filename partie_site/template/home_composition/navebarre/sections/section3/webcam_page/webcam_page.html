@@ -28,8 +28,8 @@
 <section style="z-index:100000;background:gray;">
 
     <input type="button" id="response" onclick="phase1()">
-    <input type="button" id="response2" onclick="phase2()">
-    
+    <input type="button" id="response2" onclick="phase2(0)">
+    <input type="button" id="response3" onclick="phase3()">
 
     <div id="visionnage">
 
@@ -668,11 +668,23 @@ function phase1(){
     document.getElementById('loading_eyes_section').style.display = "block";
 };
 
-function phase2(){
-    setInterval(verification_eye_application, 500)
-}
+
+
+
+
+
+function phase2(number){
+    if (number == 0){
+        interval = setInterval("verification_eye_application()", 5000)
+    }else{
+        clearInterval(interval);
+    }
+};
+
+
 
 function verification_eye_application(){
+    console.log("coucou")
       $.ajax({
           data:{"verification": "verification",
                 csrfmiddlewaretoken:'{{ csrf_token }}'
@@ -685,13 +697,28 @@ function verification_eye_application(){
               {}
           }
           else{
-            console.log(data["verification"])  
-            if (data["verification"] > 3){
-                {}
+
+            console.log(data["verification"])
+            console.log(data["number"])  
+
+            if (data["verification"] == data["number"] || data["verification"] > 3){
+                document.getElementById('response3').click();
+                phase2(1);
             };
-        }   
+        };
     });
-}
+};
+
+
+function phase3(){
+
+    console.log("functionnality's :", String(CHOICE_APPLICATION))
+    console.log(name_of_video)
+
+};
+
+
+
 
 
 </script>
