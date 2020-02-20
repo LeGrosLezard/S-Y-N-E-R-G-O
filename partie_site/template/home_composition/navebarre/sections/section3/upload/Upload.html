@@ -29,6 +29,8 @@
   
 <script>
 
+    var name_of_video = "";
+
     jQuery("form").on("submit", function(e){
         e.preventDefault();
         
@@ -49,9 +51,10 @@
                   console.log("error")
               }
               else{
-                console.log("Video saved")
+                console.log("Video saved");
                 document.getElementById("response").click();
-                treat_video_camera(data["response"])
+                treat_video_camera(data["video_name"])
+                name_of_video = data["video_name"]
             }   
         });
     });
@@ -59,12 +62,11 @@
 
     function treat_video_camera(name){
         console.log("Video name's : ", name)
-        console.log("functionnality's :", String(CHOICE_APPLICATION))
         document.getElementById("response2").click();
+
  
           $.ajax({
               data:{"video_name": name,
-                    "functionality" : String(CHOICE_APPLICATION),
                     csrfmiddlewaretoken:'{{ csrf_token }}'
                    },
               type:"POST",
@@ -75,7 +77,8 @@
                   {}
               }
               else{
-                {}
+                document.getElementById('response3').click();
+                phase2(1);
             }   
         });
     };
