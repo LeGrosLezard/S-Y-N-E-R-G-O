@@ -669,12 +669,29 @@ function phase1(){
 };
 
 function phase2(){
-    
-    setInterval(alert("coucou"), 5) ;
-
-    
+    setInterval(verification_eye_application, 500)
 }
 
+function verification_eye_application(){
+      $.ajax({
+          data:{"verification": "verification",
+                csrfmiddlewaretoken:'{{ csrf_token }}'
+               },
+          type:"POST",
+          url:"verify",
+      })
+      .done(function(data){
+          if (data.error){
+              {}
+          }
+          else{
+            console.log(data["verification"])  
+            if (data["verification"] > 3){
+                {}
+            };
+        }   
+    });
+}
 
 
 </script>
