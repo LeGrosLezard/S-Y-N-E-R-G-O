@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import dj_database_url
 from os import path as os_path
 PROJECT_PATH = os_path.abspath(os_path.split(__file__)[0])
 
@@ -40,7 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'download',
+    'Synergo',
+
+
 ]
 
 MIDDLEWARE = [
@@ -58,7 +61,7 @@ ROOT_URLCONF = 'Synergo.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ["template"],
+        'DIRS': [os.path.join(BASE_DIR, "template")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -80,8 +83,11 @@ WSGI_APPLICATION = 'Synergo.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'db3v2u23srg8hi',
+        'USER': 'yvimfvcnzpdqxr',
+        'PASSWORD': '8604013167fa0f6b6d5931cd1474479389fb3dde4fbfc9922241bd69d951fba6',
+        'HOST': 'ec2-46-137-173-221.eu-west-1.compute.amazonaws.com',
     }
 }
 
