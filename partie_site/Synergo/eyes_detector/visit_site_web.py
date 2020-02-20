@@ -1,170 +1,177 @@
 import cv2
 import numpy as np
 
-POSITION_RIGHT = [[(372, 338)], [(372, 338)], [(372, 338)], [(372, 338)], [(372, 338)], [(372, 338)], [(372, 338)], [(372, 338)], [(372, 338)], [(370, 338)], [(367, 336)], [(367, 335)], [(366, 335)], [(366, 335)], [(366, 335)], [(365, 335)], [(365, 335)], [(365, 335)], [(365, 335)], [(364, 335)], [(364, 334)], [(365, 335)], [(365, 334)], [(366, 334)], [(365, 334)], [(365, 334)], [(365, 334)], [(368, 334)], [(369, 334)], [(369, 334)], [(369, 334)], [(370, 334)], [(370, 334)], [(370, 334)], [(371, 334)], [(372, 334)], [(372, 334)], [(372, 334)], [(372, 334)], [(373, 334)], [(375, 334)], [(375, 334)], [(376, 334)], [(376, 334)], [(377, 334)], [(377, 334)], [(378, 334)], [(378, 334)], [(379, 334)], [(379, 333)], [(379, 334)], [(379, 334)], [(379, 334)], [(379, 334)], [(379, 334)], [(379, 335)], [(379, 335)], [(379, 335)], [(379, 335)], [(379, 336)], [(379, 337)], [(379, 338)], [(379, 338)], [(379, 338)], [(379, 338)], [(379, 339)], [(379, 338)], [(379, 338)], [(379, 340)], [], [], [], [], [(379, 339)], [(379, 339)], [(379, 339)], [(379, 339)], [(378, 339)], [(378, 339)], [(378, 339)], [(377, 339)], [(378, 339)], [(378, 340)], [(377, 340)], [(377, 340)], [(375, 340)], [(374, 339)], [(373, 339)], [(373, 340)], [(373, 340)], [(372, 340)], [(371, 339)], [(371, 340)], [(371, 339)], [(371, 340)], [(371, 340)], [(371, 340)], [(371, 340)], [(371, 340)], [(370, 340)], [(371, 340)], [(369, 339)], [(369, 337)], [(369, 337)], [(369, 336)], [(369, 336)], [(369, 336)], [(369, 336)], [(369, 335)], [(369, 335)], [(369, 335)], [(369, 335)], [(368, 335)], [(368, 335)], [(368, 335)], [(368, 335)], [(368, 335)], [(368, 335)], [(368, 335)], [(368, 335)], [(369, 335)], [(371, 334)], [(371, 334)], [(371, 334)], [(371, 334)], [(373, 334)], [(373, 334)], [(373, 334)], [(373, 334)], [(374, 334)], [(378, 335)], [(379, 334)], [(379, 334)], [(379, 334)], [(379, 334)], [(379, 334)], [(379, 334)], [(379, 333)], [(379, 333)], [(379, 333)], [(379, 334)], [(378, 337)], [(378, 337)], [(378, 337)], [(378, 338)], [(378, 338)], [(378, 338)], [(379, 338)], [(378, 339)], [], [], [], [], [(377, 340)], [(376, 339)], [(377, 339)], [(377, 339)], [(377, 339)], [(376, 340)], [(377, 339)], [(377, 340)], [(376, 340)], [(372, 340)], [(372, 340)], [(373, 340)], [(372, 341)], [(373, 340)], [(372, 340)], [(372, 341)], [(371, 340)], [(371, 341)], [(371, 340)], [(370, 340)], [(370, 340)], [(370, 340)], [(373, 339)], [(374, 338)], [(375, 338)], [(375, 338)], [(376, 337)], [(377, 337)], [], [], [(377, 339)], [(377, 338)], [(376, 337)], [(376, 337)], [(376, 337)], [(376, 337)], [(376, 337)], [(376, 337)], [(376, 337)], [(376, 337)], [(376, 337)], [(376, 337)], [(376, 337)], [(376, 337)], [(376, 338)], [(376, 337)], [(376, 338)], [(376, 339)], [(376, 339)], [(376, 340)], [(376, 341)], [(376, 341)], [(376, 341)], [(376, 341)], [(376, 341)], [(376, 341)], [(376, 341)], [(376, 340)], [(376, 339)], [(376, 337)], [(375, 337)], [(376, 337)], [(375, 336)], [(376, 336)], [(376, 336)]]
-POSITION_LEFT = [[(448, 334)], [(447, 335)], [(448, 334)], [(447, 334)], [(447, 334)], [(447, 334)], [(447, 335)], [(447, 334)], [(447, 334)], [(446, 334)], [(442, 332)], [(442, 331)], [(442, 331)], [(441, 331)], [(440, 330)], [(440, 330)], [(439, 330)], [(439, 331)], [(439, 330)], [(439, 330)], [(439, 330)], [(439, 330)], [(440, 330)], [(440, 329)], [(440, 329)], [(440, 329)], [(441, 329)], [(443, 329)], [(444, 329)], [(444, 329)], [(444, 329)], [(445, 329)], [(445, 329)], [(446, 329)], [(446, 329)], [(447, 329)], [(447, 329)], [(447, 329)], [(447, 329)], [(448, 329)], [(450, 329)], [(450, 329)], [(450, 329)], [(451, 329)], [(451, 329)], [(452, 329)], [(452, 329)], [(452, 328)], [(453, 329)], [(453, 329)], [(453, 329)], [(453, 329)], [(453, 329)], [(453, 329)], [(453, 329)], [(453, 330)], [(453, 330)], [(453, 331)], [(454, 331)], [(454, 331)], [(453, 333)], [(454, 334)], [(454, 334)], [(454, 334)], [(454, 334)], [(454, 334)], [(453, 334)], [(454, 334)], [(454, 335)], [], [], [], [(455, 336)], [(454, 335)], [(454, 335)], [(454, 335)], [(454, 335)], [(453, 335)], [(453, 335)], [(453, 335)], [(453, 335)], [(453, 335)], [(453, 335)], [(452, 335)], [(452, 335)], [(450, 335)], [(449, 335)], [(448, 335)], [(448, 335)], [(448, 335)], [(446, 335)], [(446, 335)], [(446, 335)], [(446, 335)], [(445, 335)], [(446, 335)], [(445, 335)], [(445, 335)], [(445, 335)], [(445, 335)], [(445, 335)], [(444, 334)], [(443, 332)], [(444, 332)], [(443, 331)], [(443, 331)], [(443, 331)], [(443, 331)], [(443, 331)], [(443, 330)], [(443, 330)], [(443, 330)], [(443, 330)], [(442, 330)], [(442, 330)], [(442, 330)], [(442, 330)], [(442, 329)], [(442, 330)], [(442, 330)], [(444, 329)], [(445, 329)], [(445, 329)], [(445, 329)], [(446, 328)], [(447, 328)], [(447, 328)], [(448, 328)], [(448, 328)], [(449, 328)], [(452, 329)], [(452, 329)], [(453, 329)], [(453, 329)], [(453, 329)], [(453, 329)], [(453, 328)], [(453, 329)], [(453, 328)], [(453, 328)], [(453, 329)], [(452, 331)], [(452, 332)], [(453, 333)], [(453, 333)], [(453, 333)], [(453, 333)], [(453, 334)], [(453, 334)], [(454, 337)], [], [], [], [], [(451, 335)], [(452, 335)], [(452, 334)], [(452, 334)], [(452, 335)], [(452, 334)], [(452, 335)], [(450, 335)], [(447, 335)], [(447, 335)], [(447, 335)], [(447, 336)], [(446, 335)], [(447, 336)], [(446, 336)], [(446, 336)], [(445, 335)], [(445, 335)], [(444, 335)], [(444, 336)], [(445, 335)], [(448, 334)], [(449, 333)], [(449, 333)], [(450, 333)], [(451, 332)], [(452, 333)], [], [], [(451, 335)], [(452, 334)], [(451, 333)], [(451, 333)], [(451, 333)], [(451, 333)], [(451, 333)], [(452, 333)], [(452, 333)], [(452, 333)], [(451, 333)], [(451, 333)], [(451, 333)], [(451, 333)], [(451, 333)], [(451, 333)], [(451, 334)], [(451, 334)], [(451, 334)], [(451, 335)], [(451, 336)], [(451, 337)], [(451, 336)], [(451, 337)], [(450, 336)], [(451, 336)], [(451, 336)], [(450, 336)], [(451, 334)], [(451, 333)], [(450, 332)], [(450, 332)], [(451, 332)], [(450, 332)], [(450, 331)]]
 
+def recuperate_middle_vision(position_for_hull, position, POSITION_RIGHT, POSITION_LEFT):
+    """Recuperate middle of the two eyes"""
 
+    for right, left in zip(POSITION_RIGHT, POSITION_LEFT):
 
+        #Eye lost or blinking regulation.
+        if right == [] or left == []:
+            position.append(None)
 
-TIMMER = [0.09094810485839844, 1.438765048980713, 1.9497556686401367, 2.0237133502960205, 2.0844228267669678, 2.1625401973724365, 2.2250373363494873, 2.3031609058380127, 2.3812601566314697, 2.6781206130981445, 2.8968505859375, 3.0949597358703613, 3.2732203006744385, 3.429476261138916, 3.6169497966766357, 3.804450750350952, 3.973454475402832, 4.1850597858428955, 4.763164281845093, 4.958198070526123, 5.13296365737915, 5.304840564727783, 5.50793719291687, 5.695434808731079, 5.86728310585022, 6.078023433685303, 6.26191782951355, 6.456592082977295, 6.675338506698608, 6.878447532653809, 7.3588502407073975, 7.561947345733643, 7.73380970954895, 7.923633337020874, 8.099552154541016, 8.282323122024536, 8.485416889190674, 8.7041654586792, 8.90727686882019, 9.817507266998291, 10.046597242355347, 10.220501184463501, 10.398894548416138, 10.602006435394287, 10.789507865905762, 10.973457098007202, 11.164336204528809, 11.357024192810059, 11.560131311416626, 11.763246297836304, 11.988935947418213, 12.18181586265564, 12.375228643417358, 12.578345775604248, 12.797063827514648, 13.002911567687988, 13.252773761749268, 13.440796136856079, 13.628286838531494, 13.86262321472168, 14.048757553100586, 14.232502698898315, 14.435611486434937, 14.607474565505981, 14.841830730438232, 15.047482967376709, 15.250893354415894, 15.454015493392944, 16.051411867141724, 16.257657766342163, 16.445168018341064, 16.679522275924683, 16.882615327835083, 17.11753511428833, 17.337708950042725, 17.540799617767334, 17.743907928466797, 17.972059965133667, 18.169041872024536, 18.419049739837646, 18.606529474258423, 18.840871572494507, 19.072758436203003, 19.281363248825073, 19.500088691711426, 20.004505395889282, 20.19779896736145, 20.38528823852539, 20.604044675827026, 20.822758674621582, 21.044002532958984, 21.232768058776855, 21.435880184173584, 21.65460705757141, 21.857705116271973, 22.064491510391235, 22.283243894577026, 22.501973152160645, 22.705069541931152, 22.90819764137268, 23.158663034439087, 23.37929368019104, 23.613633394241333, 23.832374095916748, 24.02969717979431, 24.24167561531067, 24.460413694381714, 24.66354203224182, 24.91610860824585, 25.88786029815674, 26.10120964050293, 26.30432415008545, 26.491814374923706, 26.69491720199585, 26.88239574432373, 27.084726095199585, 27.299994707107544, 27.48747730255127, 27.706212043762207, 27.893697023391724, 28.092668294906616, 28.280168771743774, 28.717632055282593, 28.93931007385254, 29.123205184936523, 29.329813718795776, 29.548566579818726, 29.78290557861328, 30.20769953727722, 30.426451444625854, 30.645188093185425, 30.848297357559204, 31.092108249664307, 31.273392915725708, 31.507731199264526, 31.98953342437744, 32.20080924034119, 32.37268805503845, 32.59140872955322, 32.81014442443848, 33.019097089767456, 33.234689474105835, 33.42218017578125, 33.62531089782715, 33.85966634750366, 34.058717012405396, 34.24260354042053, 34.471890687942505, 34.67499899864197, 34.938761472702026, 35.138665199279785, 35.341777086257935, 35.59178042411804, 35.93843460083008, 36.142481327056885, 36.34561467170715, 36.533103704452515, 36.75183463096619, 36.946303606033325, 37.19428586959839, 37.61613845825195, 37.83488416671753, 38.07550859451294, 38.28943920135498, 38.4925434589386, 38.69565749168396, 38.97762393951416, 39.11455059051514, 39.62278747558594, 39.70090413093567, 39.7790265083313, 39.84154272079468, 39.93030571937561, 40.003283739089966, 40.07722210884094, 40.15717911720276, 40.218241930007935, 40.29636812210083, 40.37448477745056, 40.43697929382324, 40.515116930007935, 40.593218088150024, 40.65571880340576, 40.73385238647461, 40.81197190284729, 40.87445402145386, 40.9577693939209, 41.029727935791016, 41.09968638420105, 41.17166495323181, 41.241605043411255, 41.29998517036438, 41.378090381622314, 41.44058632850647, 41.51870656013489, 41.59684419631958, 41.659323930740356, 41.73745536804199, 41.79995107650757, 41.87806248664856, 41.95795035362244, 42.021886348724365, 42.100019216537476, 42.16250228881836, 42.240614891052246, 42.30311393737793, 42.3812313079834, 42.443742752075195, 42.521849155426025, 42.58434438705444, 42.66247868537903, 42.740581035614014]
-
-
-
-def retracage(mode_image, mode_video, POSITION_RIGHT, POSITION_LEFT):
-
-    POSITION_FOR_HULL = []
-    POSITION = []
-
-    img = cv2.imread("paint.png")
-
-
-    for i, j in zip(POSITION_RIGHT, POSITION_LEFT):
-
-        if i == [] or j == []:
-            POSITION.append(None)
         else:
-            mid = ( int( (i[0][0] + j[0][0]) / 2 ), int( (i[0][1] + j[0][1]) / 2 ))
-            POSITION_FOR_HULL.append(mid)
-            POSITION.append(mid)
+            #mean of (x, y) axis.
+            mid = ( int( (right[0][0] + left[0][0]) / 2 ),
+                    int( (right[0][1] + left[0][1]) / 2 ))
+
+            position_for_hull.append(mid)   #for region interest.
+            position.append(mid)            #recuperate blink.
 
 
-    hullConvexe = cv2.convexHull(np.array([POSITION_FOR_HULL]))
-    box = cv2.boundingRect(hullConvexe)
+def superpose_picture(zoom, zoom_number, IMG):
+    """Superpose 'eyes tracker' picture"""
 
-    nb_frame = 0
+    #Recuperate region zommed of the eyes movements.
+    height, width = zoom.shape[:2]
+    zoom = cv2.resize(zoom, (width * zoom_number, height * zoom_number))
+
+    #Resize picture in function of the zoom.
+    height, width = zoom.shape[:2]
+    IMG = cv2.resize(IMG, (width, height))
+
+    #Superpose the two picture.
+    superposition = cv2.addWeighted(zoom, 0.4, IMG , 0.5, 0)
+
+    return superposition
+
+
+def first_animation(position, box, IMG):
+    """Draw all points without lost points."""
+
+    x, y, w, h = box    #region convex draw.
+    blanck = np.zeros((1000, 1000, 3), np.uint8)#empty picture.
+
+    for pos in position:
+        if pos != None:
+
+            #Draw circle on the picture.
+            cv2.circle(blanck, pos, 1, (0, 0, 255), 1)
+
+            #Recuperate region zommed of the eyes movements.
+            zoom = blanck[y : y + h, x : x + w]
+
+            superposition = superpose_picture(zoom, 4, IMG)
+
+            cv2.imshow("superposition", superposition)
+            cv2.waitKey(1)
+
+
+def second_animation(position, box, IMG):
+    """Draw blink, point by point"""
+
     x, y, w, h = box
 
-    blanck = np.zeros((1000, 1000, 3), np.uint8)
-    for i in POSITION:
-
-        if i != None:
-            cv2.circle(blanck, i, 1, (0, 0, 255), 1)
-
-            zoom = blanck[y - nb_frame : y + h + nb_frame, x - nb_frame : x + w + nb_frame]
-            b,a = zoom.shape[:2]
-            zoom = cv2.resize(zoom, (a * 4, b * 4))
-
-            b,a = zoom.shape[:2]
-            img = cv2.resize(img, (a, b))
-
-            added_image1 = cv2.addWeighted(zoom,0.4,img,0.5,0)
-            
-##            cv2.imshow("added_image", added_image1)
-##            cv2.waitKey(1)
-
-
-    for nb, i in enumerate(POSITION):
+    for nb, i in enumerate(position):
 
         blanck_cinematic = np.zeros((1000, 1000, 3), np.uint8)
 
         if i == None:
-            zoom = blanck_cinematic[y - nb_frame : y + h + nb_frame, x - nb_frame : x + w + nb_frame]
-            cv2.circle(blanck_cinematic, POSITION[nb - 1], 3, (255, 0, 0), 1)
+            zoom = blanck_cinematic[y : y + h, x : x + w ]
+            cv2.circle(blanck_cinematic, position[nb - 1], 3, (255, 0, 0), 1)
 
         else:
-            zoom = blanck_cinematic[y - nb_frame : y + h + nb_frame, x - nb_frame : x + w + nb_frame]
+            zoom = blanck_cinematic[y : y + h, x : x + w]
             cv2.circle(blanck_cinematic, i, 1, (0, 0, 255), 1)
 
+        superposition = superpose_picture(zoom, 20, IMG)
 
-        b,a = zoom.shape[:2]
-        zoom = cv2.resize(zoom, (a * 20, b * 20))
-
-        b,a = zoom.shape[:2]
-        img = cv2.resize(img, (a, b))
-
-        added_image = cv2.addWeighted(zoom,0.4,img,0.5,0)
-
-##        cv2.imshow("blanck_cinematic", added_image)
-##        cv2.imshow("img", img)
-##        cv2.waitKey(100)
+        cv2.imshow("superposition", superposition)
+        cv2.waitKey(1)
 
 
+"""First main function"""
+def retracage(POSITION_RIGHT, POSITION_LEFT, IMG):
 
-    web_site_eye = blanck[y - nb_frame : y + h + nb_frame, x - nb_frame : x + w + nb_frame]
-    b,a = web_site_eye.shape[:2]
+    position_for_hull = []  #List region of eye position.
+    position = []           #List of points with blink.
 
-    web_site_eye = cv2.resize(web_site_eye, (a * 5, b * 5))
+    #Mean of the two coordinates.
+    recuperate_middle_vision(position_for_hull, position, POSITION_RIGHT, POSITION_LEFT)
+    #Hull of points. Box of the points.
+    hullConvexe = cv2.convexHull(np.array([position_for_hull]))
+    box = cv2.boundingRect(hullConvexe)
 
-##    cv2.imshow("web_site_eye", web_site_eye)
-##    cv2.waitKey(0)
+    first_animation(position, box, IMG)  #All points.
+    second_animation(position, box, IMG) #Point by point.
 
-
-    return POSITION, box
-
-
-def timmer_treatment(TIMMER, POSITION, box):
-
-    min_mean  = np.zeros((1000, 1000, 3), np.uint8)
-    maxi_mean = np.zeros((1000, 1000, 3), np.uint8)
-    maxi_more_mean = np.zeros((1000, 1000, 3), np.uint8)
-
-    max_time  = np.zeros((1000, 1000, 3), np.uint8)
-    mini_time = np.zeros((1000, 1000, 3), np.uint8)
-
-    liste_time = [TIMMER[i] - TIMMER[i -1] for i in range(len(TIMMER)) if i > 0]
+    return position, box
 
 
-    mean_time = np.mean(liste_time)
+def mean_max_min(liste_time, mean_time, position):
+
+    min_mean        = np.zeros((1000, 1000, 3), np.uint8)   #< mean
+    maxi_mean       = np.zeros((1000, 1000, 3), np.uint8)   #> mean
+    max_time        = np.zeros((1000, 1000, 3), np.uint8)   #max time
+    mini_time       = np.zeros((1000, 1000, 3), np.uint8)   #min time
 
     for nb, i in enumerate(liste_time):
 
+        #Maximum eye pause == 0 remove it.
         if i == max(liste_time) and nb == 0:
             liste_time.remove(i)
 
+        #Maximum eye pause.
         elif i == max(liste_time):
-            #print("plus grand temps : ", nb)
-            cv2.circle(max_time, POSITION[nb], 1, (0, 0, 255), 1)
+            cv2.circle(max_time, position[nb], 1, (0, 0, 255), 1)
 
+        #Minimum eye pause.
         elif i == min(liste_time):
-            #print("plus petit temps : ", nb)
-            cv2.circle(mini_time, POSITION[nb], 1, (0, 255, 0), 1)
+            cv2.circle(mini_time, position[nb], 1, (0, 255, 0), 1)
 
+        #> mean.
         elif i > mean_time:
-            #print("au dessus de la moyenne : ", nb)
-            cv2.circle(maxi_mean, POSITION[nb], 1, (255, 0, 0), 1)
+            cv2.circle(maxi_mean, position[nb], 1, (255, 0, 0), 1)
 
+        #< mean.
         elif i < mean_time:
-            cv2.circle(min_mean, POSITION[nb], 1, (0, 255, 0), 1)
+            cv2.circle(min_mean, position[nb], 1, (0, 255, 0), 1)
+
+    return [min_mean, maxi_mean, max_time, mini_time]
 
 
-    maximaxi = np.zeros((1000, 1000, 3), np.uint8)
+
+def quartile(liste_time, from_mean_number, picture, position):
+    """Recuperate from eye position percent of the time"""
+
     for nb, i in enumerate(sorted(liste_time)):
-        if nb >= 0.90 * len(liste_time):
+        if nb >= from_mean_number * len(liste_time):
             index = liste_time.index(i)
-            cv2.circle(maximaxi, POSITION[index], 1, (0, 255, 0), 1)
+            cv2.circle(picture, position[index], 1, (0, 255, 0), 1)
 
 
-    minimini = np.zeros((1000, 1000, 3), np.uint8)
-    for nb, i in enumerate(sorted(liste_time)):
-        if nb <= 0.25 * len(liste_time):
-            index = liste_time.index(i)
-            cv2.circle(minimini, POSITION[index], 1, (0, 255, 0), 1)
+def superpose_picture_timmer(box, picture_liste, IMG):
 
+    x, y, w, h = box    #Region convex points.
 
+    #Run all picture time tracker.
+    for nb, picture in enumerate(picture_liste):
 
+        region = picture[y:y+h, x:x+w]
+        superposition = superpose_picture(region, 20, IMG)
 
-    liste = [min_mean, maxi_mean, max_time, mini_time, maximaxi, minimini]
-
-    x, y, w, h = box
-    img = cv2.imread("paint.png")
-
-
-    for nb, i in enumerate(liste):
-
-        region = i[y:y+h, x:x+w]
-
-        b,a = region.shape[:2]
-        zoom = cv2.resize(region, (a * 20, b * 20))
-
-        b,a = zoom.shape[:2]
-        img = cv2.resize(img, (a, b))
-
-        added_image = cv2.addWeighted(zoom,0.4,img,0.5,0)
-        
-        cv2.imshow(str(nb), added_image)
+        cv2.imshow(str(nb), superposition)
         cv2.waitKey(0)
 
+"""Second main function"""
+def timmer_treatment(TIMMER, position, box, IMG):
+
+    maximaxi        = np.zeros((1000, 1000, 3), np.uint8)
+    minimini        = np.zeros((1000, 1000, 3), np.uint8)
+
+    liste_time = [TIMMER[i] - TIMMER[i -1] for i in range(len(TIMMER)) if i > 0]
+
+    mean_time = np.mean(liste_time)
+
+    first_picture = mean_max_min(liste_time, mean_time, position)
+
+    quartile(liste_time, 0.90, maximaxi, position)
+    quartile(liste_time, 0.25, minimini, position)
+
+    picture_liste = first_picture + [maximaxi, minimini]
+
+    superpose_picture_timmer(box, picture_liste, IMG)
 
 
 
@@ -172,5 +179,4 @@ def timmer_treatment(TIMMER, POSITION, box):
 
 
 
-POSITION, box = retracage("", "", POSITION_RIGHT, POSITION_LEFT)
-timmer_treatment(TIMMER, POSITION, box)
+
