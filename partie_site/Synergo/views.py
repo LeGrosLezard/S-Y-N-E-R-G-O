@@ -1,7 +1,8 @@
 """From the MVT architecture, we are situate on the view.
 It's the inteface beetween template and model (data base)"""
 
-
+import os
+import cv2
 from django.shortcuts import render
 
 #Json response to template
@@ -17,18 +18,32 @@ from .forms import video_upload_form
 from .eyes_detector.video_capture_writte import video_capture_treament
 from .eyes_detector.paths import media_path, dlib_model
 
-CHARGEMENT = 0
+from .paths import path_data
 
 def verify(request):
     """Here we call this function with ajax for now if we can send response,
     the respsons is a video part.
     If chargement is egal to 3 we can send video (3 videos are writte.)."""
 
-    global CHARGEMENT
 
     verification = request.POST.get('verification')
-    if verification:
-        return JsonResponse({"verification" : CHARGEMENT})
+    if verification == "verification":
+
+
+        liste = os.listdir(path_data)
+
+        counter = 0
+        for i in liste:
+
+            video_name = path_data_video.format(i)
+            cap = cv2.VideoCapture(video_name)
+            number_picture = cap.get(cv2.CAP_PROP_FRAME_COUNT)
+
+            if number_picture > 0:
+                counter += 1
+
+        
+        return JsonResponse({"verification" : counter})
 
 
 
@@ -66,7 +81,7 @@ def treat_video(request):
         print("searching the video into media folder : ", str(video_name))
 
         name_video = media_path.format(str(video_name))
-
+        print(name_video)
         #Treat file (cut video all 20 seconds).
         video_capture_treament(name_video, dlib_model)
 
