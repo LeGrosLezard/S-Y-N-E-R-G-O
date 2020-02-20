@@ -33,7 +33,7 @@
 
     <div id="visionnage">
 
-        <div id="uploding_camera">
+        <div id="uploding_camera" style="display:;">
             {% include "home_composition/sections/section3/upload/upload.html" %}
         </div>
 
@@ -94,7 +94,8 @@
 
 
 
-    <div id="parameter_webcam_page_eye" style="display:none;">
+    <div id="parameter_webcam_page_eye">
+    
         <select class="recording-media" id="select1">
             <option value="record-audio-plus-video" onclick="iconade('micam', 'icon_recording')">Microphone et Camera</option>
             <option value="record-audio" onclick="iconade('mic', 'icon_recording')">Microphone</option>
@@ -134,12 +135,12 @@
         <p>Choix applications</p>
 
         <ul id="applation_eye">
-            <li class="appli_eyes">choix appli</option>
+            <li class="appli_eyes">choix appli</li>
             <li class="appli_eyes" onclick="eyes_application_choise('site')">Eyes tracking visite de site web</li>
-            <li class="appli_eyes" onclick="eyes_application_choise('tinder')">notre critérium</li>
             <li class="appli_eyes" onclick="eyes_application_choise('accessoire')">Des accesoires pour votre figure</li>
             <li class="appli_eyes" onclick="eyes_application_choise('dormir')">Ne pas dormir au volant !</li>
             <li class="appli_eyes" onclick="eyes_application_choise('tracking')">eyes detector !</li>
+            <li class="appli_eyes" onclick="eyes_application_choise('experience')">notre experience sociale</li>
         </ul>
 
         <p id="recommandation">
@@ -600,6 +601,7 @@ function quit_webcam_page_eye_apli(){
 
 var CHOICE_APPLICATION = ""
 function eyes_application_choise(choice){
+    document.getElementById("parameter_webcam_page_eye").style.display = "none";
     //accessoire dormir tracking site
     CHOICE_APPLICATION = choice;
 };
@@ -629,6 +631,7 @@ function end_download(){
 
     document.getElementById("to_camera").style.opacity = "0";
     document.getElementById("to_camera").style.display = "none";
+    document.getElementById("uploding_camera").style.display = "block";
     document.getElementById("parameter_webcam_page_eye").style.display = "none";
     document.getElementById("visionnage").style.display = "block";
     document.getElementById("visionnage").style.opacity = "1";
