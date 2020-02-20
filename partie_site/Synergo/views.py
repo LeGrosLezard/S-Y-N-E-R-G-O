@@ -14,6 +14,7 @@ from django.views.decorators.csrf import csrf_protect
 from .models import video_upload
 from .forms import video_upload_form
 
+from .eyes_detector.video_capture_writte import video_capture_treament
 
 def uploading_file(request):
     """Here is a function for uploading files.
@@ -38,14 +39,18 @@ def uploading_file(request):
 
 
 
-
+from .eyes_detector
 def treat_video(request):
 
-    eyes_detector = request.POST.get('video_name')
+    #We recuperate a post request = video.
+    video_name = request.POST.get('video_name')
 
-    if eyes_detector:
+    if video_name:
+        print(video_name)
+        #video_capture_treament(video_name, dlib_model)
 
-        print(eyes_detector)
+
+        
         return JsonResponse({"response" : "oki"})
 
 
