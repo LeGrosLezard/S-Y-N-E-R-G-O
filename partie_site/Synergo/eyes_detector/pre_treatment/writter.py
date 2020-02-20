@@ -1,10 +1,11 @@
 """We aren't in live, so we can recuperate every 500 frames ~10-15 sec
 with that we can take the mean eyes positions"""
 
+import os
 import time
 import cv2
 
-from paths import media_path, dlib_model
+from ..paths import media_path, dlib_model, path_data_video
 
 NUMBER_OF_FRAME = 500
 
@@ -40,17 +41,24 @@ def video_support(frame_width, frame_height, number_picture, frame_sec):
 
     global NUMBER_OF_FRAME
 
-    #Create (number_picture / 1000) supports avi files.
-    #Where 1000 is number of frame who's divide number of picture into the video
-    file_name = int(number_picture / NUMBER_OF_FRAME)
+    #Create (number_picture / 500) supports avi files.
+    #Where 500 is number of frame who's divide number of picture into the video
+    #If video contains less 500 create one video.
+    print("\nvideo contains : ", number_picture)
+    if number_picture < 500:
+        file_name = 1
+    else:
+        file_name = int(number_picture / NUMBER_OF_FRAME)
+
     print("Number of files: ", file_name)
 
     #Put it into dico
     dico_file = {}
     for nb, i in enumerate(range(file_name)):
-    
-        name = "data/" + str(nb) + ".avi"
-        #Create (number_picture / 1000) empties videos.
+
+        name = path_data_video.format(str(nb) + ".avi")
+
+        #Create (number_picture / 500) empties videos.
                                                                   #frame/sec original video
         out = cv2.VideoWriter(name, cv2.VideoWriter_fourcc('M','J','P','G'), int(frame_sec),
                               (frame_width, frame_height))
@@ -61,7 +69,7 @@ def video_support(frame_width, frame_height, number_picture, frame_sec):
     return dico_file
 
 
-
+CHARGEMENT = 0
 def video_writter(video, number_divise):
 
     global NUMBER_OF_FRAME
@@ -76,40 +84,52 @@ def video_writter(video, number_divise):
     nb_frame = 0
     start_time_appending = time.time()
 
-    while True:
+    oContinuer = True
+    while oContinuer:
+        ret, frame = cap.read()
+        if ret:
+            height, width = frame.shape[:2]
 
-        _, frame = cap.read()
+            width  = int(width / number_divise)
+            height = int(height / number_divise)
 
-        height, width = frame.shape[:2]
+            frame = cv2.resize(frame, (width, height))
 
-        width  = int(width / number_divise)
-        height = int(height / number_divise)
+            #Every 500 frames append a new empty video.
+            file = path_data_video.format(str(file_used) + ".avi")
+            dico_file[file].write(frame)
 
-        frame = cv2.resize(frame, (width, height))
+            #File used += 1.
+            #frame re initialise.
+            if nb_frame == NUMBER_OF_FRAME:
+                file_used += 1
+                nb_frame = -1
+                print("File in couse :", file_used)
+                print("Took : ", time.time() - start_time_appending)
 
+                start_time_appending = time.time()
 
-        #Every 1000 frames append a new empty video.
-        file = "data/" + str(file_used) + ".avi"
-        dico_file[file].write(frame)
+            nb_frame += 1
 
-        #File used += 1.
-        #frame re initialise.
-        if nb_frame == NUMBER_OF_FRAME:
-            file_used += 1
-            nb_frame = -1
-            print("File in couse :", file_used)
-            print("Took : ", time.time() - start_time_appending)
-            start_time_appending = time.time()
-
-        nb_frame += 1
-
-        #cv2.imshow("Frame", frame)
-        #if cv2.waitKey(1) & 0xFF == ord('q'):
-            #break
-
+            #cv2.imshow("Frame", frame)
+            #if cv2.waitKey(1) & 0xFF == ord('q'):
+                #break
+        else:
+            oContinuer = False
     #cap.release()
     #cv2.destroyAllWindows()
 
 
-video  = media_path.format("aa.mp4")
-video_writter(video, 1.6000000000000008)
+
+def run_data_wrote():
+
+    #Search video written from last operation and put it into a list.
+    start_time_data_list = time.time()
+    data = os.listdir(path_data)
+    data = sorted(data)
+    number_file = len(data)
+
+    print("Count file to treat : ", number_file)
+    print("running data took : ", time.time() - start_time_data_list)
+
+    return data
