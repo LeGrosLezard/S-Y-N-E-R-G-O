@@ -15,6 +15,22 @@ from .models import video_upload
 from .forms import video_upload_form
 
 from .eyes_detector.video_capture_writte import video_capture_treament
+from .eyes_detector.paths import media_path, dlib_model
+
+CHARGEMENT = 0
+
+def verify(request):
+    """Here we call this function with ajax for now if we can send response,
+    the respsons is a video part.
+    If chargement is egal to 3 we can send video (3 videos are writte.)."""
+
+    global CHARGEMENT
+
+    verification = request.POST.get('verification')
+    if verification:
+        return JsonResponse({"verification" : CHARGEMENT})
+
+
 
 def uploading_file(request):
     """Here is a function for uploading files.
@@ -24,35 +40,37 @@ def uploading_file(request):
     #Call form.
     form = video_upload_form(request.POST, request.FILES)
 
-    #Post from template.
+    #Post from template.²
     if request.method == 'POST':
 
         #Verify validity of the form.
         if form.is_valid():
 
+            #Uploading file.
             name_video = request.FILES['docfile']                       #Recuperate the file.
             form.cleaned_data['docfile'].name                           #Cleanning.
             newdoc = video_upload(docfile = request.FILES['docfile'])   #Call model.
             newdoc.save()                                               #Saving.
 
-            return JsonResponse({"response" : str(name_video)})         #Response.
+            return JsonResponse({"response" : str(name_video)})
 
 
-
-from .eyes_detector
 def treat_video(request):
 
     #We recuperate a post request = video.
     video_name = request.POST.get('video_name')
+    functionality = request.POST.get('functionality')
 
-    if video_name:
-        print(video_name)
-        #video_capture_treament(video_name, dlib_model)
+    if video_name and functionality:
 
+        print("searching the video into media folder : ", str(video_name))
 
-        
-        return JsonResponse({"response" : "oki"})
+        name_video = media_path.format(str(video_name))
 
+        #Treat file (cut video all 20 seconds).
+        video_capture_treament(name_video, dlib_model)
+
+        return JsonResponse({"save" : "save"})
 
 
 
@@ -62,9 +80,6 @@ def home(request):
     sections to present the project (eyes, face, head, hand, langage sections)."""
 
     form = video_upload_form(request.POST, request.FILES)
-
-
-
     return render(request, "Home.html", {'form':form})
 
 
