@@ -73,7 +73,7 @@ def retracage(mode_image, mode_video, POSITION_RIGHT, POSITION_LEFT):
         b,a = zoom.shape[:2]
         img = cv2.resize(img, (a, b))
 
-        added_image = cv2.addWeighted(zoom,0.4,img,0.1,0)
+        added_image = cv2.addWeighted(zoom,0.4,img,0.5,0)
 
 ##        cv2.imshow("blanck_cinematic", added_image)
 ##        cv2.imshow("img", img)
@@ -160,7 +160,7 @@ def timmer_treatment(TIMMER, POSITION, box):
         b,a = zoom.shape[:2]
         img = cv2.resize(img, (a, b))
 
-        added_image = cv2.addWeighted(zoom,0.4,img,0.1,0)
+        added_image = cv2.addWeighted(zoom,0.4,img,0.5,0)
         
         cv2.imshow(str(nb), added_image)
         cv2.waitKey(0)
