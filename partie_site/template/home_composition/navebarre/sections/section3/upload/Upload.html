@@ -34,6 +34,7 @@
         
         var data = new FormData(this);
 
+        console.log("Send video")
 
           $.ajax({
               data:data,
@@ -48,6 +49,7 @@
                   console.log("error")
               }
               else{
+                console.log("Video saved")
                 document.getElementById("response").click();
                 treat_video_camera(data["response"])
             }   
@@ -56,10 +58,13 @@
 
 
     function treat_video_camera(name){
-        console.log(name)
+        console.log("Video name's : ", name)
+        console.log("functionnality's :", String(CHOICE_APPLICATION))
+        document.getElementById("response2").click();
+ 
           $.ajax({
               data:{"video_name": name,
-                    "functionality" :CHOICE_APPLICATION,
+                    "functionality" : String(CHOICE_APPLICATION),
                     csrfmiddlewaretoken:'{{ csrf_token }}'
                    },
               type:"POST",
