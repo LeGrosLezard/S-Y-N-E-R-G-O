@@ -50,12 +50,12 @@ def retracage(mode_image, mode_video, POSITION_RIGHT, POSITION_LEFT):
 
             added_image1 = cv2.addWeighted(zoom,0.4,img,0.5,0)
             
-            cv2.imshow("added_image", added_image1)
-            cv2.waitKey(1)
+##            cv2.imshow("added_image", added_image1)
+##            cv2.waitKey(1)
 
 
     for nb, i in enumerate(POSITION):
-        print(i)
+
         blanck_cinematic = np.zeros((1000, 1000, 3), np.uint8)
 
         if i == None:
@@ -75,9 +75,9 @@ def retracage(mode_image, mode_video, POSITION_RIGHT, POSITION_LEFT):
 
         added_image = cv2.addWeighted(zoom,0.4,img,0.1,0)
 
-        cv2.imshow("blanck_cinematic", added_image)
-        cv2.imshow("img", img)
-        cv2.waitKey(100)
+##        cv2.imshow("blanck_cinematic", added_image)
+##        cv2.imshow("img", img)
+##        cv2.waitKey(100)
 
 
 
@@ -86,8 +86,84 @@ def retracage(mode_image, mode_video, POSITION_RIGHT, POSITION_LEFT):
 
     web_site_eye = cv2.resize(web_site_eye, (a * 5, b * 5))
 
-    cv2.imshow("web_site_eye", web_site_eye)
-    cv2.waitKey(0)
+##    cv2.imshow("web_site_eye", web_site_eye)
+##    cv2.waitKey(0)
+
+
+    return POSITION, box
+
+
+def timmer_treatment(TIMMER, POSITION, box):
+
+    min_mean  = np.zeros((1000, 1000, 3), np.uint8)
+    maxi_mean = np.zeros((1000, 1000, 3), np.uint8)
+    maxi_more_mean = np.zeros((1000, 1000, 3), np.uint8)
+
+    max_time  = np.zeros((1000, 1000, 3), np.uint8)
+    mini_time = np.zeros((1000, 1000, 3), np.uint8)
+
+    liste_time = [TIMMER[i] - TIMMER[i -1] for i in range(len(TIMMER)) if i > 0]
+
+
+    mean_time = np.mean(liste_time)
+
+    for nb, i in enumerate(liste_time):
+
+        if i == max(liste_time) and nb == 0:
+            liste_time.remove(i)
+
+        elif i == max(liste_time):
+            #print("plus grand temps : ", nb)
+            cv2.circle(max_time, POSITION[nb], 1, (0, 0, 255), 1)
+
+        elif i == min(liste_time):
+            #print("plus petit temps : ", nb)
+            cv2.circle(mini_time, POSITION[nb], 1, (0, 255, 0), 1)
+
+        elif i > mean_time:
+            #print("au dessus de la moyenne : ", nb)
+            cv2.circle(maxi_mean, POSITION[nb], 1, (255, 0, 0), 1)
+
+        elif i < mean_time:
+            cv2.circle(min_mean, POSITION[nb], 1, (0, 255, 0), 1)
+
+
+    maximaxi = np.zeros((1000, 1000, 3), np.uint8)
+    for nb, i in enumerate(sorted(liste_time)):
+        if nb >= 0.90 * len(liste_time):
+            index = liste_time.index(i)
+            cv2.circle(maximaxi, POSITION[index], 1, (0, 255, 0), 1)
+
+
+    minimini = np.zeros((1000, 1000, 3), np.uint8)
+    for nb, i in enumerate(sorted(liste_time)):
+        if nb <= 0.25 * len(liste_time):
+            index = liste_time.index(i)
+            cv2.circle(minimini, POSITION[index], 1, (0, 255, 0), 1)
+
+
+
+
+    liste = [min_mean, maxi_mean, max_time, mini_time, maximaxi, minimini]
+
+    x, y, w, h = box
+    img = cv2.imread("paint.png")
+
+
+    for nb, i in enumerate(liste):
+
+        region = i[y:y+h, x:x+w]
+
+        b,a = region.shape[:2]
+        zoom = cv2.resize(region, (a * 20, b * 20))
+
+        b,a = zoom.shape[:2]
+        img = cv2.resize(img, (a, b))
+
+        added_image = cv2.addWeighted(zoom,0.4,img,0.1,0)
+        
+        cv2.imshow(str(nb), added_image)
+        cv2.waitKey(0)
 
 
 
@@ -96,8 +172,5 @@ def retracage(mode_image, mode_video, POSITION_RIGHT, POSITION_LEFT):
 
 
 
-
-
-
-
-retracage("", "", POSITION_RIGHT, POSITION_LEFT)
+POSITION, box = retracage("", "", POSITION_RIGHT, POSITION_LEFT)
+timmer_treatment(TIMMER, POSITION, box)
