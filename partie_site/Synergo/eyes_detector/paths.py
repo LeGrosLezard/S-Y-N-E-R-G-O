@@ -9,3 +9,5 @@ path_csv = r"C:\Users\jeanbaptiste\Desktop\SYNERGO_SITE\Synergo\Synergo\eyes_det
 path_csv_file = r"C:\Users\jeanbaptiste\Desktop\SYNERGO_SITE\Synergo\Synergo\eyes_detector\csv_treatment\file_{}"
 
 path_eyes_detector_stuff = r"C:\Users\jeanbaptiste\Desktop\SYNERGO_SITE\Synergo\media\eyes_detector"
+
+picture_app_3 = r"C:\Users\jeanbaptiste\Desktop\SYNERGO_SITE\Synergo\Synergo\eyes_detector\app3\paint.png"

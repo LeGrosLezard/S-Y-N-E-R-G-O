@@ -22,6 +22,8 @@ from pupille_tracker.pupille_tracker import pupille_tracker
 #Import paths.
 from paths import media_path, dlib_model, path_data, path_data_video, path_csv_file
 
+from 
+
 print("Importation libraries took : ", time.time() - start_time_import)
 
 
@@ -31,6 +33,8 @@ print("Importation libraries took : ", time.time() - start_time_import)
 TIMMER = []
 POSITION_RIGHT = []
 POSITION_LEFT = []
+
+
 def recuperate_eyes_position(video, height, width):
 
     global TIMMER
@@ -53,12 +57,7 @@ def recuperate_eyes_position(video, height, width):
         if ret:
 
             b, a = frame.shape[:2]
-            #frame = cv2.resize(frame, (int(a / 1.1000000000000003), int(b / 1.1000000000000003)))#a
-            #frame = cv2.resize(frame, (int(a / 1.3244035243988037), int(b / 1.3244035243988037)))#ca
-            #frame = cv2.resize(frame, (int(a /  0.8500000000000002), int(b /  0.8500000000000002)))#ca
-            #frame = cv2.resize(frame, (int(a /   1.4000000000000006), int(b /   1.4000000000000006)))#aaa
-            frame = cv2.resize(frame, (int(a /   0.9500000000000003), int(b /   0.9500000000000003)))
-
+            frame = cv2.resize(frame, (int(a /   0.8500000000000002), int(b /   0.8500000000000002)))#g
 
             #Gray threshold.
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -69,10 +68,13 @@ def recuperate_eyes_position(video, height, width):
             if landmarks is not None:
 
                 #Recuperate pupil center, eyes constitution = (x, y), crop
-                right_eye, left_eye = pupille_tracker(landmarks, frame, gray, head_box, BLANCK)
-                POSITION_RIGHT.append(right_eye)
-                POSITION_LEFT.append(left_eye)
-                TIMMER.append((time.time() - eyes_time_functionality)
+                informations = pupille_tracker(landmarks, frame, gray, head_box, BLANCK)
+                right_pupil, left_pupil = informations
+
+                POSITION_RIGHT.append(right_pupil)
+                POSITION_LEFT.append(left_pupil)
+                TIMMER.append((time.time() - eyes_time_functionality))
+
 
             cv2.imshow("Frame", frame)
 
@@ -91,8 +93,10 @@ def recuperate_eyes_position(video, height, width):
             print("")
             print(TIMMER)
 
-            cv2.imshow("BLANCK", BLANCK)
 
+
+            cv2.imshow("BLANCK", BLANCK)
+            cv2.waitKey(0)
             return "stop"
 
 
@@ -101,7 +105,7 @@ def recuperate_eyes_position(video, height, width):
 
 
 
-def run_data(height_video, width_video):
+def run_data():
 
     #Search video written from last operation and put it into a list.
     start_time_data_list = time.time()
@@ -116,13 +120,14 @@ def run_data(height_video, width_video):
     #From this list, run the video
     for video in data:
         video = path_data_video.format(video)
-        #video = path_data_video.format("a.mp4")
-        #video = path_data_video.format("b.mp4")
-        #video = path_data_video.format("c.mp4")
-        #video = path_data_video.format("aaa.mp4")
-        video = path_data_video.format("e.mp4")
+        video = path_data_video.format("i.mp4")
 
         print("\nin course: ", video)
+
+        cap = cv2.VideoCapture(video)
+        width_video  = int(cap.get(3))
+        height_video = int(cap.get(4))
+
 
         #Recuperate eye position
         stop = recuperate_eyes_position(video, height_video, width_video)
@@ -131,8 +136,6 @@ def run_data(height_video, width_video):
 
 
 if __name__ == "__main__":
-    height_video= 505
-    width_video = 673
-    run_data(height_video, width_video)
+    run_data()
 
 
