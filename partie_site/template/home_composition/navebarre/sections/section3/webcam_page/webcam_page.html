@@ -28,8 +28,8 @@
 <section style="z-index:100000;background:gray;">
 
     <input type="button" id="response" onclick="phase1()">
-
-
+    <input type="button" id="response2" onclick="phase2()">
+    
 
     <div id="visionnage">
 
@@ -136,12 +136,20 @@
 
         <ul id="applation_eye">
             <li class="appli_eyes">choix appli</li>
-            <li class="appli_eyes" onclick="eyes_application_choise('site')">Eyes tracking visite de site web</li>
-            <li class="appli_eyes" onclick="eyes_application_choise('accessoire')">Des accesoires pour votre figure</li>
-            <li class="appli_eyes" onclick="eyes_application_choise('dormir')">Ne pas dormir au volant !</li>
-            <li class="appli_eyes" onclick="eyes_application_choise('tracking')">eyes detector !</li>
-            <li class="appli_eyes" onclick="eyes_application_choise('experience')">notre experience sociale</li>
+            <li class="appli_eyes" onclick="eyes_application_choice('site')">Eyes tracking visite de site web</li>
+            <li class="appli_eyes" onclick="eyes_application_choice('accessoire')">Des accesoires pour votre figure</li>
+            <li class="appli_eyes" onclick="eyes_application_choice('dormir')">Ne pas dormir au volant !</li>
+            <li class="appli_eyes" onclick="eyes_application_choice('tracking')">eyes detector !</li>
+            <li class="appli_eyes" onclick="eyes_application_choice('experience')">notre experience sociale</li>
         </ul>
+
+
+
+
+
+
+
+
 
         <p id="recommandation">
             <span>Recommandation: De face, une bonne qualité de caméra. Yeux bien visible.</span>
@@ -599,13 +607,6 @@ function quit_webcam_page_eye_apli(){
 
 
 
-var CHOICE_APPLICATION = ""
-function eyes_application_choise(choice){
-    document.getElementById("parameter_webcam_page_eye").style.display = "none";
-    //accessoire dormir tracking site
-    CHOICE_APPLICATION = choice;
-};
-
 
 
 function to_video(){
@@ -646,6 +647,15 @@ function alert_finish(){
 
 
 
+var CHOICE_APPLICATION = "";
+function eyes_application_choice(choice){
+    document.getElementById("parameter_webcam_page_eye").style.display = "none";
+
+    CHOICE_APPLICATION = choice;
+};
+
+
+
 function phase1(){
 
     document.getElementById('response').style.opacity = "0";
@@ -658,7 +668,12 @@ function phase1(){
     document.getElementById('loading_eyes_section').style.display = "block";
 };
 
+function phase2(){
+    
+    setInterval(alert("coucou"), 5) ;
 
+    
+}
 
 
 
