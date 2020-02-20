@@ -33,6 +33,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path(r'treat_video', views.treat_video),
     path(r'uploading_file', views.uploading_file),
+    path(r'verify', views.verify),
 
 ]+ static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
 
