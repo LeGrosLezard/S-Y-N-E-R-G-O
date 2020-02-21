@@ -18,7 +18,11 @@ from .forms import video_upload_form
 from .eyes_detector.video_capture_writte import video_capture_treament
 from .eyes_detector.paths import media_path, dlib_model
 
-from .paths import path_data
+from .paths import path_data, path_data_video
+
+
+def application(request):
+    pass
 
 def verify(request):
     """Here we call this function with ajax for now if we can send response,
@@ -42,8 +46,9 @@ def verify(request):
             if number_picture > 0:
                 counter += 1
 
-        
-        return JsonResponse({"verification" : counter})
+        length_folder = len(liste)
+
+        return JsonResponse({"verification" : counter, "number":length_folder})
 
 
 
@@ -67,25 +72,25 @@ def uploading_file(request):
             newdoc = video_upload(docfile = request.FILES['docfile'])   #Call model.
             newdoc.save()                                               #Saving.
 
-            return JsonResponse({"response" : str(name_video)})
+            return JsonResponse({"video_name" : str(name_video)})
 
 
 def treat_video(request):
 
     #We recuperate a post request = video.
     video_name = request.POST.get('video_name')
-    functionality = request.POST.get('functionality')
+    print(video_name)
+    if video_name:
 
-    if video_name and functionality:
-
-        print("searching the video into media folder : ", str(video_name))
+        print("\nsearching the video into media folder : ", str(video_name))
 
         name_video = media_path.format(str(video_name))
         print(name_video)
+
         #Treat file (cut video all 20 seconds).
         video_capture_treament(name_video, dlib_model)
 
-        return JsonResponse({"save" : "save"})
+        return JsonResponse({"treatment" : "finish"})
 
 
 
