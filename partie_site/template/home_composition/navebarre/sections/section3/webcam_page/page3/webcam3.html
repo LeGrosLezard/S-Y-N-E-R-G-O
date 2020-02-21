@@ -70,7 +70,7 @@
         background-repeat  : no-repeat;
         background-position: center;
         background-size    : cover;
-        opacity            : 1;
+        opacity            : 0;
         -webkit-transition : opacity 2s;
         -moz-transition    : opacity 2s;
         -o-transition      : opacity 2s;
@@ -141,6 +141,7 @@
                     console.log("4 data has been treated, video can be send, popup in course...")
                     document.getElementById('response3').click();
                     phase2(1);
+                    alert_finish();
                 };
             };
         });
@@ -170,6 +171,7 @@
                 console.log("Video has been treat")
                 document.getElementById('response3').click();
                 phase2(1);
+                alert_finish();
             };   
         });
     };
@@ -234,6 +236,9 @@
         }
     });
 
+    function alert_finish(){
+        document.getElementById("alert").innerHTML = "Votre video eyes sections est peut etre visualisée !!!";
+    };
 
 
 
