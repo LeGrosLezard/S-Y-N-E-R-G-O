@@ -1,25 +1,27 @@
 <section class="sectionPage" id="section_page_webcam">
 
-    
+    <div class="DivVertical" id="verticalOne"></div>
+    <div class="DivVertical" id="verticalTwo"></div>
+    <div class="DivVertical" id="verticalThree"></div>
+
+
     <div class="Div"><!-- Top First Div -->
-
-
 
         <div class="divA" id="a1"><!-- Left Div -->
 
 
             <select class="recording-media" id="select1">
                 <option value="record-audio-plus-video"
-                    onclick="iconade('micam', 'icone_recording1')">Microphone et Camera</option>
+                    onclick="iconade('micam', 'icone_recording1', '')">Microphone et Camera</option>
  
                 <option value="record-audio"
-                    onclick="iconade('mic', 'icone_recording1')">Microphone</option>
+                    onclick="iconade('mic', 'icone_recording1', '')">Microphone</option>
 
                 <option value="record-screen"
-                    onclick="iconade('full', 'icone_recording1')">Full Screen</option>
+                    onclick="iconade('full', 'icone_recording1', '')">Full Screen</option>
 
                 <option value="record-audio-plus-screen"
-                    onclick="iconade('micfull', 'icone_recording1')">Microphone et Screen</option>
+                    onclick="iconade('micfull', 'icone_recording1', '')">Microphone et Screen</option>
             </select>
 
 
@@ -34,7 +36,11 @@
 
 
         <div class="divB"></div>
-        <div class="divC"></div>
+        <div class="divC">
+            <div class="explications" id="applications_explications_title"></div>
+        </div>
+
+ 
     </div>
 
 
@@ -45,16 +51,19 @@
 
  
             <select class="media-container-format" id="select2">
-                <option onclick="iconade('1', 'icone_recording2')">default</option>
-                <option onclick="iconade('2', 'icone_recording2')">vp8</option>
-                <option onclick="iconade('3', 'icone_recording2')">vp9</option>
-                <option onclick="iconade('4', 'icone_recording2')">h264</option>
-                <option onclick="iconade('5', 'icone_recording2')">mkv</option>
-                <option onclick="iconade('6', 'icone_recording2')">whammy</option>
+                <option onclick="iconade('1', 'icone_recording2', '')">default</option>
+                <option onclick="iconade('2', 'icone_recording2', '')">vp8</option>
+                <option onclick="iconade('3', 'icone_recording2', '')">vp9</option>
+                <option onclick="iconade('4', 'icone_recording2', '')">h264</option>
+                <option onclick="iconade('5', 'icone_recording2', '')">mkv</option>
+                <option onclick="iconade('6', 'icone_recording2', '')">whammy</option>
             </select>
 
             <div id="icone_recording2"></div>
+            <div id="information_encoding">
+                Votre navigateur est : <strong><span id="navigator_span"></span></strong>
 
+            </div>
 
         </div>
 
@@ -65,8 +74,14 @@
 
 
         <div class="divB"></div>
-        <div class="divC"></div>
+
+
+        <div class="divC">
+            <div class="explications" id="applications_explications"></div>
+        </div>
+
     </div>
+
 
     <div class="Div">
 
@@ -75,12 +90,12 @@
 
 
             <select class="media-container-format" id="select3">
-                <option onclick="iconade('7', 'icone_recording3')">Applications</option>
-                <option onclick="iconade('8', 'icone_recording3')">Eyes Tracking</option>
-                <option onclick="iconade('9', 'icone_recording3')">Sleep and Car</option>
-                <option onclick="iconade('10', 'icone_recording3')">Your Face</option>
-                <option onclick="iconade('11', 'icone_recording3')">Experiences</option>
-                <option onclick="iconade('12', 'icone_recording3')">Just Test</option>
+                <option onclick="iconade('7', 'icone_recording3', '')">Applications</option>
+                <option onclick="iconade('8', 'icone_recording3', 'eyes_tracking')">Eyes Tracking</option>
+                <option onclick="iconade('9', 'icone_recording3', 'sleep')">Sleep and Car</option>
+                <option onclick="iconade('10', 'icone_recording3', 'face')">Your Face</option>
+                <option onclick="iconade('11', 'icone_recording3', 'expe')">Experiences</option>
+                <option onclick="iconade('12', 'icone_recording3', 'test')">Just Test</option>
             </select>
 
             <div id="icone_recording3"></div>
@@ -120,20 +135,44 @@
                 <option value="800">100 Bytes bps</option>
             </select>
 
+            <div class="explications" id="applications_video"></div>
+
 
         </div>
     </div>
 
 
+
+
+
+
+
+
+
+
+
 </section>
 
 <style>
+    /* ICI et select */
+    .DivVertical{
+        background-repeat   : no-repeat;
+        background-position : center;
+        background-size     : cover;
+        opacity             :1;
+        -webkit-transition  : opacity 1s;
+        -moz-transition     : opacity 1s;
+        -o-transition       : opacity 1s;
+        transition          : opacity 1s;
+        display:none;
+    }
     .sectionPage{
         position:absolute;
         width  :  100%;
         height : 100%;
         margin : 0;
         padding: 0;
+        overflow-y:hidden;
     }
     .div{
         height:33%;
@@ -149,9 +188,7 @@
         -moz-transition: opacity 2s;
         -o-transition: opacity 2s;
         transition: opacity 2s;
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: cover;
+        border:1px solid blue;
     }
     .divB{
         position:absolute;
@@ -168,28 +205,50 @@
         margin-left:66.6%;
         border:1px solid blue;
     }
-
-
-
-
-
-
-
-
-    #a1{
-        background-image: url("/static/home_composition/section3/images/divb.jpg");
+    .explications{
+        color   :white;
     }
-    #a2{
-        background-image: url("/static/home_composition/section3/images/diva.jpg");
+
+
+
+    #applications_explications_title{
+        border:1px solid red;
+        height:100%;
+        text-align:center;
     }
-    #a3{
+    #applications_explications{
+        border:1px solid red;
+        height:100%;
+        text-align:center;
+    }
+    #applications_video{
+        border:1px solid red;
+        height:100%;
+        text-align:center;
+    }
+    #verticalOne{
+        position  : absolute;
+        width: 33.3%;
+        height:100%;
         background-image: url("/static/home_composition/section3/images/divc.jpg");
+        float:left;
     }
-
+    #verticalTwo{
+        background-image: url("/static/home_composition/section3/images/divb.jpg");
+        width: 33.3%;
+        height:100%;
+        float:right;
+    }
+    #verticalThree{
+        background-image: url("/static/home_composition/section3/images/diva.jpg");
+        width           : 33.3%;
+        height          :100%;
+        margin-left     :33.3%;
+    }
     #icone_recording3{
         margin-top  : 15%;
         margin-left : 50%;
-        opacity:1;
+        opacity     :1;
         -webkit-transition: opacity 2s;
         -moz-transition: opacity 2s;
         -o-transition: opacity 2s;
@@ -206,21 +265,28 @@
         height      : 100%;
         overflow-y  : hidden;
         z-index     : 10;
-        opacity:0;
+        opacity     :1;
         -webkit-transition: opacity 2s;
         -moz-transition: opacity 2s;
         -o-transition: opacity 2s;
         transition: opacity 2s;
-        height      : 100%;
+        height      : 60%;
     }
+    #information_encoding{
+        position:relative;
+        text-align:left;
+        margin-left:2%;
+    } 
     #icone_recording2{
         margin-top  : 15%;
         margin-left : 50%;
         opacity     : 1;
+        height      :90;
         -webkit-transition: opacity 2s;
         -moz-transition   : opacity 2s;
         -o-transition     : opacity 2s;
         transition        : opacity 2s;
+        position:relative;
     }
     #select2{
         position    : relative;
@@ -230,14 +296,13 @@
         outline     : 0;
         border      : none;
         float       : left;
-        height      : 100%;
         overflow-y  : hidden;
         z-index     : 10;
-        opacity:0;
-        -webkit-transition: opacity 2s;
-        -moz-transition: opacity 2s;
-        -o-transition: opacity 2s;
-        transition: opacity 2s;
+        opacity     :1;
+        -webkit-transition  : opacity 2s;
+        -moz-transition     : opacity 2s;
+        -o-transition       : opacity 2s;
+        transition          : opacity 2s;
     }
     #icone_recording1{
         position    : relative;
@@ -260,7 +325,7 @@
         height      : 100%;
         overflow-y  : hidden;
         z-index     : 10;
-        opacity:0;
+        opacity     : 1;
         -webkit-transition: opacity 2s;
         -moz-transition: opacity 2s;
         -o-transition: opacity 2s;
@@ -339,10 +404,34 @@
     document.getElementById("select2").size = "6";
     document.getElementById("select3").size = "6";
 
+
+    function explications_application(explication){
+
+        dico = {
+            
+
+        }
+
+
+
+        document.getElementById("applications_explications_title").innerHTML = "0";
+        document.getElementById("applications_explications").innerHTML = "0";
+        document.getElementById("applications_video").innerHTML = "0";
+
+    };
+
+
+
+
+
     //On click display an Icone. 
-    function iconade(icone, div){
+    function iconade(icone, div, mode){
 
         document.getElementById(div).style.opacity = "0";
+
+        if (mode != ''){
+            explications_application(mode)
+        };
 
         setTimeout(function()
         {
@@ -359,7 +448,6 @@
                     "5" : '<img width="40" src="https://img.icons8.com/ios-filled/50/000000/powerpoint.png">',
                     "6" : '<img width="40" src="https://img.icons8.com/ios-filled/50/000000/python-file.png">',
 
-
                     "7" : '<img width="40" src="https://img.icons8.com/ios-filled/50/000000/word.png">',
                     "8" : '<img width="40" src="https://img.icons8.com/ios-filled/50/000000/ps.png">',
                     "9" : '<img width="40"  src="https://img.icons8.com/ios-filled/50/000000/binary-file.png">',
@@ -372,8 +460,10 @@
             document.getElementById(div).innerHTML = dico[icone];
             document.getElementById(div).style.opacity = "1";
 
+
         }, 900);
     };
+
 
 
     //First Animation Disapear.
@@ -381,18 +471,18 @@
 
         //Fisrt div
         setTimeout(function(){
-            document.getElementById("a1").style.opacity = "0";
+            document.getElementById("verticalOne").style.opacity = "0";
         }, 600)
 
         setTimeout(function(){
-            document.getElementById("a2").style.opacity = "0";
+            document.getElementById("verticalTwo").style.opacity = "0";
         }, 1000)
 
         setTimeout(function(){
-            document.getElementById("a3").style.opacity = "0";
+            document.getElementById("verticalThree").style.opacity = "0";
         }, 1400)
     };
-    animation_div_a_first_part()
+    //animation_div_a_first_part()
 
 
 
@@ -401,32 +491,72 @@
 
         //Fisrt div
         setTimeout(function(){
-            document.getElementById("a1").style.background = "0";
-            document.getElementById("a1").style.opacity = "1";
+            document.getElementById("verticalOne").style.display = "none";
             iconade("micam", "icone_recording1")
             document.getElementById("select1").style.opacity = "1";
         }, 1800)
 
         setTimeout(function(){
-            document.getElementById("a2").style.background = "0";
-            document.getElementById("a2").style.opacity = "1";
+            document.getElementById("verticalTwo").style.display = "none";
             iconade("1", "icone_recording2")
             document.getElementById("select2").style.opacity = "1";
         }, 2200)
 
         setTimeout(function(){
-            document.getElementById("a3").style.background = "0";
-            document.getElementById("a3").style.opacity = "1";
+            document.getElementById("verticalThree").style.display = "none";
             iconade("7", "icone_recording3")
             document.getElementById("select3").style.opacity = "1";
         }, 2600)
     };
-    animation_div_a_second_part()
+    //animation_div_a_second_part()
 
 
 
 
 
+    var browsers = ["Firefox","MSIE","Trident","Edge","Chrome","Safari", "Android"];
+
+    var you_browsers = ""
+
+    function getBrowser(bname) {
+      var ua = navigator.userAgent;
+      for(var b in browsers) {
+        b = browsers[b];
+          if(ua.indexOf(b) != -1) return b;
+      }	
+      return false;
+    }
+
+    var browser = getBrowser();
+    if(browser == "Trident"|| browser=="MSIE") browser="IE/Edge";
+    if (browser === false) {
+      console.log("inconnue");
+    } else {
+      you_browsers =  browser;
+    };
+
+
+
+    function browsers_to_encodage(you_browsers){
+
+        var encodage = ""
+
+        if(you_browsers == "Chrome"){
+            encodage = "VP8, VP9, H264, MKV ou Whammy"
+        }else if(you_browsers == "Opera"){
+            encodage = "VP8, VP9, H264 ou MKV"
+        }else if(you_browsers == "Firefox"){
+            encodage = "VP8 ou H264"
+        }else if(you_browsers == "Safari"){
+            encodage = "VP8"
+        }else if(you_browsers == "Edge"){
+            encodage = "None"
+        };
+        return encodage
+    };
+
+    encodage = browsers_to_encodage(you_browsers)
+    document.getElementById("navigator_span").innerHTML = you_browsers + " utilisez :"  +  encodage;
 
 
 
@@ -442,5 +572,3 @@
      
             
 </script>
-
-
