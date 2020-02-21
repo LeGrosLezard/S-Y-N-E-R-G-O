@@ -206,11 +206,7 @@
 
     <div class="Div">
 
-        <div class="divA"><!-- Left Div -->
-            <input type="button" id="response" onclick="phase1()">
-            <input type="button" id="response2" onclick="phase2(0)">
-            <input type="button" id="response3" onclick="phase3()">
-        </div>
+        <div class="divA"><!-- Left Div --></div>
 
 
         <div class="divB"></div>
@@ -247,7 +243,12 @@
 <section class="sectionPage" id="section_page_webcam2">
     <div class="Div"><!-- Top First Div -->
 
-        <div class="divA" id="a1"><!-- Left Div --></div>
+        <div class="divA" id="a1"><!-- Left Div -->
+            <input type="button" id="response" onclick="phase1()">
+            <input type="button" id="response2" onclick="phase2(0)">
+            <input type="button" id="response3" onclick="phase3()">
+        </div>
+
         <div class="divB"></div>
         <div class="divC"></div>
     </div>
@@ -255,8 +256,26 @@
 
     <div class="Div">
 
-        <div class="divA"><!-- Left Div --></div>
-        <div class="divB"></div>
+        <div class="divA"><!-- Left Div -->
+            <div id="formulaire">
+                <form enctype="multipart/form-data" method="POST" action="">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <input type="submit" value="Upload" id="upload"/>
+                </form>
+            </div>
+        </div>
+
+        <div class="divB">
+            <div id="loading_eyes_section">
+                <img src="static/home_composition/section3/images/loading_s3_p2_p3.gif" id="loading">
+                <p>L O A D I N G ... <br>
+                    Nous chargeons la vidéo, prenez le temps de visiter notre site, nous vous ferons signe
+                </p>
+            </div>
+        </div>
+
+
         <div class="divC"></div>
 
  
@@ -273,11 +292,19 @@
 
 
 
-
-
-
-
 <style>
+    #loading{
+        width:10%;
+    }
+    #loading_eyes_section{
+        margin-top:10%;
+        opacity:1;
+        -webkit-transition: opacity 2s;
+        -moz-transition: opacity 2s;
+        -o-transition: opacity 2s;
+        transition: opacity 2s;
+        display:none;
+    }
     #section_page_webcam2{
         background         : gray;
         background-repeat  : no-repeat;
@@ -290,9 +317,173 @@
         transition         : opacity 2s;
         z-index            : 1;
     }
-
-
+    #formulaire{
+        width       : 100%;
+        height      : 100%;
+        margin-left : 20%;
+    }
 </style>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/core.js"></script>
+
+<script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
+  
+<script>
+
+    function phase1(){
+        document.getElementById('formulaire').style.opacity = "0";
+        document.getElementById('formulaire').style.display = "none";
+
+        document.getElementById('loading_eyes_section').style.opacity = "1";
+        document.getElementById('loading_eyes_section').style.display = "block";
+    };
+
+
+    function phase2(number){
+        if (number == 0){
+            interval = setInterval("verification_eye_application()", 5000)
+        }else{
+            clearInterval(interval);
+        }
+    };
+
+    function phase3(){
+        console.log("functionnality's :", String(CHOICE_APPLICATION), "video name's : ", VIDEO_NAME)
+    };
+
+
+    function verification_eye_application(){
+
+        console.log("Verification in course...")
+ 
+          $.ajax({
+              data:{"verification": "verification",
+                    csrfmiddlewaretoken:'{{ csrf_token }}'
+                   },
+              type:"POST",
+              url:"verify",
+          })
+          .done(function(data){
+              if (data.error){
+                  {}
+              }
+              else{
+
+                console.log("data tread : ", data["verification"], " on files numbers : ", data["number"])
+
+                if (data["verification"] > 3){
+
+                    console.log("4 data has been treated, video can be send, popup in course...")
+                    document.getElementById('response3').click();
+                    phase2(1);
+                };
+            };
+        });
+    };
+
+
+
+    function treat_video_camera(name){
+
+        console.log("Video in treating... verify phase in course...")
+        document.getElementById("response2").click();
+
+
+        $.ajax({
+            data:{
+                "video_name": name,
+                csrfmiddlewaretoken:'{{ csrf_token }}'
+            },
+            type:"POST",
+            url:"treat_video",
+        })
+        .done(function(data){
+            if (data.error){
+                {}
+            }
+            else{
+                console.log("Video has been treat")
+                document.getElementById('response3').click();
+                phase2(1);
+            };   
+        });
+    };
+
+
+
+    var VIDEO_NAME = "";
+    jQuery("form").on("submit", function(e){
+        e.preventDefault();
+
+        console.log("Uploading video in course...")
+
+        var data = new FormData(this);
+
+        $.ajax({
+            data:data,
+            cache: false,
+            type:"POST",
+            url:"uploading_file",
+            processData:false,
+            contentType:false,
+          })
+          .done(function(data){
+              if (data.error){
+                  {}
+              }
+              else{
+                  console.log("Uploading video finish. Treating video in course...")
+                  document.getElementById("response").click();
+                  treat_video_camera(data["video_name"])
+                  VIDEO_NAME = data["video_name"];
+            };  
+        });
+    });
+
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    };
+
+
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+
+
+
+
+
+</script>
+
+
+
+
+
 
 
 <style>
@@ -315,6 +506,7 @@
         -o-transition      : opacity 2s;
         transition         : opacity 2s;
         z-index            : 50;
+        display : none;
     }
 
     .media-container, .media-container * {
@@ -897,7 +1089,14 @@
             document.getElementById("section_page_webcam").style.opacity = "1";
         }, 2000)
     };
+ 
+    function end_download(){
 
+        document.getElementById("section_page_webcam1").style.opacity = "0";
+        document.getElementById("to_camera").style.display = "none";
+ 
+        document.getElementById("section_page_webcam2").style.opacity = "1";
+    };
 
 </script>
 
