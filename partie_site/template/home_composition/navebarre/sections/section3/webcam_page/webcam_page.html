@@ -1,3 +1,24 @@
+<!-- web streams API polyfill to support Firefox -->
+<script src="https://unpkg.com/@mattiasbuelens/web-streams-polyfill/dist/polyfill.min.js"></script>
+
+<!-- ../libs/DBML.js to fix video seeking issues -->
+<script src="https://www.webrtc-experiment.com/EBML.js"></script>
+
+<!-- for Edge/FF/Chrome/Opera/etc. getUserMedia support -->
+<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+<script src="https://www.webrtc-experiment.com/DetectRTC.js"> </script>
+
+<!-- video element -->
+
+<script src="https://www.webrtc-experiment.com/getHTMLMediaElement.js"></script>
+
+
+<!-- recommended -->
+<script src="https://www.WebRTC-Experiment.com/RecordRTC.js"></script>
+
+<!-- use 5.5.6 or any other version on cdnjs -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/RecordRTC/5.5.6/RecordRTC.js"></script>
+
 
 
 <section class="sectionPage" id="section_page_webcam">
@@ -162,14 +183,190 @@
 
 
 
+</section>
 
 
 
 
+<section class="sectionPage" id="section_page_webcam1">
+    <div class="Div"><!-- Top First Div -->
+
+        <div class="divA" id="a1"><!-- Left Div -->
+            <div id="recording-player"></div>
+        </div>
+
+        <div class="divB"></div>
 
 
+
+        <div class="divC"></div>
+
+    </div>
+
+
+    <div class="Div">
+
+        <div class="divA"><!-- Left Div -->
+            <input type="button" id="response" onclick="phase1()">
+            <input type="button" id="response2" onclick="phase2(0)">
+            <input type="button" id="response3" onclick="phase3()">
+        </div>
+
+
+        <div class="divB"></div>
+
+
+
+        <div class="divC">
+            <input type="button" value="croix" onclick="quit_webcam_page_eye_apli()" id="croix_webcam">
+            <input type="button" value="croix2" onclick="end_download()" id="end_download">
+
+            <button class="clio_button" id="btn-start-recording">Recording</button>
+
+            <button class="clio_button" id="btn-pause-recording">Pause</button>
+            <button class="clio_button" id="save-to-disk">Save</button>
+
+        </div>
+
+ 
+    </div>
+
+
+    <div class="Div">
+        <div class="divA"><!-- Left Div --></div>
+        <div class="divB"></div>
+        <div class="divC"></div>
+    </div>
 
 </section>
+
+
+
+
+
+<section class="sectionPage" id="section_page_webcam2">
+    <div class="Div"><!-- Top First Div -->
+
+        <div class="divA" id="a1"><!-- Left Div --></div>
+        <div class="divB"></div>
+        <div class="divC"></div>
+    </div>
+
+
+    <div class="Div">
+
+        <div class="divA"><!-- Left Div --></div>
+        <div class="divB"></div>
+        <div class="divC"></div>
+
+ 
+    </div>
+
+
+    <div class="Div">
+        <div class="divA"><!-- Left Div --></div>
+        <div class="divB"></div>
+        <div class="divC"></div>
+    </div>
+
+</section>
+
+
+
+
+
+
+
+<style>
+    #section_page_webcam2{
+        background         : gray;
+        background-repeat  : no-repeat;
+        background-position: center;
+        background-size    : cover;
+        opacity            : 1;
+        -webkit-transition : opacity 2s;
+        -moz-transition    : opacity 2s;
+        -o-transition      : opacity 2s;
+        transition         : opacity 2s;
+        z-index            : 1;
+    }
+
+
+</style>
+
+
+<style>
+    #btn-pause-recording{
+        display:none;
+    }
+    #recording-player{
+        margin-left:63.3%;
+        margin-top:20%;
+    }
+    #section_page_webcam1{
+        /* background-image: url("/static/home_composition/section3/images/appareil_photo.jpg"); */
+        background         : gray;
+        background-repeat  : no-repeat;
+        background-position: center;
+        background-size    : cover;
+        opacity            : 1;
+        -webkit-transition : opacity 2s;
+        -moz-transition    : opacity 2s;
+        -o-transition      : opacity 2s;
+        transition         : opacity 2s;
+        z-index            : 50;
+    }
+
+    .media-container, .media-container * {
+        margin: 0;
+        padding: 0;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -o-user-select: none;
+        user-select: none;
+    }
+    .media-container, .media-container * {
+        -moz-transition: all .5s ease-in-out;
+        -ms-transition: all .5s ease-in-out;
+        -o-transition: all .5s ease-in-out;
+        -webkit-transition: all .5s ease-in-out;
+        transition: all .5s ease-in-out;
+    }
+    .media-container {
+        width: 50%;
+        display: inline-block;
+        border-radius: 4px;
+        overflow: hidden;
+        vertical-align: top;
+        border:1px solid gray;
+        outline: 10px solid black;
+        background-image: url("/static/home_composition/section3/images/webcam_baground.jpg");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+        margin-top:10px;
+    }
+    .media-controls, .volume-control {
+        margin-top: 2px;
+        position: absolute;
+        margin-left: 5px;
+        z-index: 100;
+        opacity: 0;
+        border:1px solid gray;
+    }
+    .media-box video {
+        width: 100%;
+        vertical-align: top;
+        object-fit: fill;
+    }
+
+
+
+
+</style>
+
+
+
 
 <style>
     /* ICI et select */
@@ -269,18 +466,10 @@
 
 
 
-
-
-
-
-
-
-
-
-
     #Button_eye_application{
         font-size:1.5em;
         border-radius:5px;
+        z-index:500;
     }
     #button_video{
         width : 100%;
@@ -424,13 +613,17 @@
         background-repeat  : no-repeat;
         background-position: center;
         background-size    : cover;
+        opacity     : 1;
+        -webkit-transition : opacity 2s;
+        -moz-transition    : opacity 2s;
+        -o-transition      : opacity 2s;
+        transition         : opacity 2s;
+        z-index            : 100;
+        display : none;
     }
 
 
 </style>
-
-
-
 
 
 
@@ -521,14 +714,16 @@
         document.getElementById("applications_explications_title").innerHTML = dico[explication][0];
         document.getElementById("applications_explications").innerHTML =dico[explication][1];
         document.getElementById("applications_video").innerHTML = dico[explication][2];
-
+        CHOICE_APPLICATION = explication
     };
 
 
 
 
+    
+    //On click display an Icone.
+    var CHOICE_APPLICATION = "";
 
-    //On click display an Icone. 
     function iconade(icone, div, mode){
 
         document.getElementById(div).style.opacity = "0";
@@ -664,17 +859,51 @@
     document.getElementById("navigator_span").innerHTML = you_browsers + " utilisez :"  +  encodage;
 
 
+    function to_video(){
 
+        if (CHOICE_APPLICATION == ""){
+            document.getElementById("Button_eye_application").innerHTML = "Choisir une appli";
+        }
+        else{
+            document.getElementById("section_page_webcam").style.opacity = "0";
 
+            setTimeout(function(){
+                document.getElementById("section_page_webcam").style.display = "none";
 
-
-
-
-
-
-
-
-     
+                document.getElementById("section_page_webcam1").style.display = "block";
+                document.getElementById("section_page_webcam1").style.opacity = "1";
+            }, 2500)
             
+        };
+    };
+
+
+
+
 </script>
 
+
+
+
+
+<script>
+
+
+    function quit_webcam_page_eye_apli(){
+
+        document.getElementById("section_page_webcam1").style.opacity = "0";
+        setTimeout(function(){
+            document.getElementById("section_page_webcam").style.display = "block";
+            document.getElementById("section_page_webcam").style.opacity = "1";
+        }, 2000)
+    };
+
+
+</script>
+
+
+
+
+
+
+{% include "home_composition/sections/section3/webcam_page/js_html_include_en_attandant_tri.html" %}
