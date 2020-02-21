@@ -1,0 +1,74 @@
+<section class="sectionPage" id="section_page_webcam1">
+    <div class="Div"><!-- Top First Div -->
+
+        <div class="divA" id="a1"><!-- Left Div -->
+            <div id="recording-player"></div>
+        </div>
+
+        <div class="divB"></div>
+        <div class="divC"></div>
+
+    </div>
+
+
+    <div class="Div">
+
+        <div class="divA"><!-- Left Div --></div>
+        <div class="divB"></div>
+
+        <div class="divC">
+            <input type="button" value="croix" onclick="quit_webcam_page_eye_apli()" id="croix_webcam">
+            <input type="button" value="croix2" onclick="end_download()" id="end_download">
+
+            <button class="clio_button" id="btn-start-recording">Recording</button>
+
+            <button class="clio_button" id="btn-pause-recording">Pause</button>
+            <button class="clio_button" id="save-to-disk">Save</button>
+
+        </div>
+
+ 
+    </div>
+
+
+    <div class="Div">
+        <div class="divA"><!-- Left Div --></div>
+        <div class="divB"></div>
+        <div class="divC"></div>
+    </div>
+
+</section>
+
+
+
+
+<script>
+
+    function quit_webcam_page_eye_apli(){
+
+        document.getElementById("section_page_webcam1").style.opacity = "0";
+        setTimeout(function(){
+            document.getElementById("section_page_webcam").style.display = "block";
+            document.getElementById("section_page_webcam").style.opacity = "1";
+        }, 2000)
+    };
+ 
+    function end_download(){
+
+        document.getElementById("section_page_webcam1").style.opacity = "0";
+        document.getElementById("to_camera").style.display = "none";
+ 
+        document.getElementById("section_page_webcam2").style.opacity = "1";
+    };
+
+</script>
+
+
+
+
+
+
+
+
+
+
