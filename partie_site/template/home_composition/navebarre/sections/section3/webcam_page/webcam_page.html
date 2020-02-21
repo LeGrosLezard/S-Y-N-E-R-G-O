@@ -1,3 +1,5 @@
+
+
 <section class="sectionPage" id="section_page_webcam">
 
     <div class="DivVertical" id="verticalOne"></div>
@@ -36,11 +38,12 @@
 
 
         <div class="divB"></div>
+
         <div class="divC">
             <div class="explications" id="applications_explications_title"></div>
         </div>
 
- 
+
     </div>
 
 
@@ -49,7 +52,7 @@
 
         <div class="divA" id="a2">
 
- 
+
             <select class="media-container-format" id="select2">
                 <option onclick="iconade('1', 'icone_recording2', '')">default</option>
                 <option onclick="iconade('2', 'icone_recording2', '')">vp8</option>
@@ -60,9 +63,9 @@
             </select>
 
             <div id="icone_recording2"></div>
+
             <div id="information_encoding">
                 Votre navigateur est : <strong><span id="navigator_span"></span></strong>
-
             </div>
 
         </div>
@@ -73,7 +76,11 @@
 
 
 
-        <div class="divB"></div>
+        <div class="divB">
+            <div id="button_video">
+                <button class="clio_button" id="Button_eye_application" onclick="to_video()">J'essaie la vidéo</button>
+            </div>
+        </div>
 
 
         <div class="divC">
@@ -107,6 +114,7 @@
         <div class="divB"></div>
         <div class="divC">
 
+
             <select class="media-resolutions" style="display:none;">
                 <option value="default">Default resolutions</option>
                 <option value="1920x1080">1080p</option>
@@ -125,6 +133,7 @@
                 <option value="60">60 fps</option>
             </select>
 
+
             <select class="media-bitrates" style="display:none;">
                 <option value="default">Default bitrates</option>
                 <option value="8000000000">1 GB bps</option>
@@ -134,6 +143,7 @@
                 <option value="8000">1 KB bps</option>
                 <option value="800">100 Bytes bps</option>
             </select>
+
 
             <div class="explications" id="applications_video"></div>
 
@@ -172,11 +182,12 @@
         height : 100%;
         margin : 0;
         padding: 0;
-        overflow-y:hidden;
+
     }
-    .div{
+    .Div{
         height:33%;
         position:relative;
+        border:1px solid red;
     }
     .divA{
         position:absolute;
@@ -199,18 +210,80 @@
     }
 
     .divC{
-        position:absolute;
+        position:relative;
         height:100%;
         width:33.3%;
         margin-left:66.6%;
         border:1px solid blue;
+        overflow:hidden;
     }
     .explications{
         color   :white;
     }
+    .clio_button {
+       color: #FFFFFF !important;
+       position: relative;
+       text-transform: initial !important;
+       font-weight: 500 !important;
+       z-index: 0;
+       overflow: hidden !important;
+       transition: transform 0s !important;
+       font-family: Arial;
+       border:none;
+       outline: 0;
+    }
+    .clio_button:hover {
+        color: #FFFFFF;
+    }
+    .clio_button::before, .clio_button::after {
+       content: "";
+       position: absolute;
+       width: 100%;
+       height: 100%;
+       top: 0;
+       transition: left 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
+    }
+    .clio_button::before {
+       background-color: #294C6B;
+       z-index: -1;
+       left: 0;
+    }
+    .clio_button::after {
+       background-color: black;
+       z-index: -1;
+       left: 100%;
+    }
+    .clio_button:hover::before {
+       left: -100%;
+    }
+    .clio_button:hover::after {
+       left: 0;
+    }
+    .clio_button [class^="clio-"]::before {
+        vertical-align: text-bottom;
+    }
+    .clio_button:active {
+        transform: translateY(-2px);
+    }
 
 
 
+
+
+
+
+
+
+
+
+
+
+    #button_video{
+        width : 100%;
+        height:100%;
+        text-align:center;
+        margin-top:20%;
+    }
     #applications_explications_title{
         border:1px solid red;
         height:100%;
@@ -228,16 +301,17 @@
     }
     #verticalOne{
         position  : absolute;
-        width: 33.3%;
-        height:100%;
+        width     : 33.3%;
+        height    :100%;
+        float     :left;
         background-image: url("/static/home_composition/section3/images/divc.jpg");
-        float:left;
+
     }
     #verticalTwo{
         background-image: url("/static/home_composition/section3/images/divb.jpg");
-        width: 33.3%;
-        height:100%;
-        float:right;
+        width           : 33.3%;
+        height          :100%;
+        float           :right;
     }
     #verticalThree{
         background-image: url("/static/home_composition/section3/images/diva.jpg");
@@ -249,10 +323,10 @@
         margin-top  : 15%;
         margin-left : 50%;
         opacity     :1;
-        -webkit-transition: opacity 2s;
-        -moz-transition: opacity 2s;
-        -o-transition: opacity 2s;
-        transition: opacity 2s;
+        -webkit-transition  : opacity 2s;
+        -moz-transition     : opacity 2s;
+        -o-transition       : opacity 2s;
+        transition          : opacity 2s;
     }
     #select3{
         position    : relative;
@@ -408,15 +482,31 @@
     function explications_application(explication){
 
         dico = {
-            
+            "eyes_tracking" :["<h1 style='margin-top:20%;'>Eyes Tracking Web site</h1>",
+                              "Projet de eyes tracking sur un site web doit etre amiliorée dzdazdz ad azd azd azd az",
+                              "<video width='70%' autoplay='true' controls muted><source src='static/home_composition/section3/images/g.mp4' type='video/mp4'></video>"],
 
+            "sleep":["<h1 style='margin-top:20%;'>Sleeping prevent</h1>",
+                     "explications ... . .. .. . . .",
+                     "<video width='70%' autoplay='true' controls muted><source src='static/home_composition/section3/images/g.mp4' type='video/mp4'></video>"],
+
+            "face":["<h1 style='margin-top:20%;'>Animate you're face</h1>",
+                    "explications ... . .. .. . . .",
+                    "<video width='70%' autoplay='true' controls muted><source src='static/home_composition/section3/images/g.mp4' type='video/mp4'></video>"],
+
+            "expe":["<h1 style='margin-top:20%;'>Experiment youreself</h1>",
+                    "explications ... . .. .. . . .",
+                    "<video width='70%' autoplay='true' controls muted><source src='static/home_composition/section3/images/g.mp4' type='video/mp4'></video>"],
+ 
+            "test":["<h1 style='margin-top:20%;'>Just test</h1>",
+                    "explications ... . .. .. . . .",
+                    "<video width='70%' autoplay='true' controls muted><source src='static/home_composition/section3/images/g.mp4' type='video/mp4'></video>"],                    
         }
 
 
-
-        document.getElementById("applications_explications_title").innerHTML = "0";
-        document.getElementById("applications_explications").innerHTML = "0";
-        document.getElementById("applications_video").innerHTML = "0";
+        document.getElementById("applications_explications_title").innerHTML = dico[explication][0];
+        document.getElementById("applications_explications").innerHTML =dico[explication][1];
+        document.getElementById("applications_video").innerHTML = dico[explication][2];
 
     };
 
@@ -572,3 +662,4 @@
      
             
 </script>
+
