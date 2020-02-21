@@ -37,22 +37,7 @@
 
 
 
-        <div class="divB"></div>
-
-        <div class="divC">
-            <div class="explications" id="applications_explications_title"></div>
-        </div>
-
-
-    </div>
-
-
-    <div class="Div">
-
-
-        <div class="divA" id="a2">
-
-
+        <div class="divB">
             <select class="media-container-format" id="select2">
                 <option onclick="iconade('1', 'icone_recording2', '')">default</option>
                 <option onclick="iconade('2', 'icone_recording2', '')">vp8</option>
@@ -64,37 +49,9 @@
 
             <div id="icone_recording2"></div>
 
-            <div id="information_encoding">
-                Votre navigateur est : <strong><span id="navigator_span"></span></strong>
-            </div>
-
         </div>
-
-
-
-
-
-
-
-        <div class="divB">
-            <div id="button_video">
-                <button class="clio_button" id="Button_eye_application" onclick="to_video()">J'essaie la vidéo</button>
-            </div>
-        </div>
-
 
         <div class="divC">
-            <div class="explications" id="applications_explications"></div>
-        </div>
-
-    </div>
-
-
-    <div class="Div">
-
-
-        <div class="divA" id="a3">
-
 
             <select class="media-container-format" id="select3">
                 <option onclick="iconade('7', 'icone_recording3', '')">Applications</option>
@@ -107,11 +64,56 @@
 
             <div id="icone_recording3"></div>
 
+            <div id="information_encoding">
+                <p>
+                    Votre navigateur est : <strong><span id="navigator_span"></span></strong>
+                    <br><br>
+                    <strong><span style="color:red;">Important :</span></strong> Nous vous prions de bien vouloir essayer<br>
+                    la caméra avant de faire votre enregistrement avec <strong>les différents encodages</strong>.
+                    <br><br>
+                    <span>Recomandation: De face, une bonne qualité de caméra. Yeux bien visible.</span>
+                </p>
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+    <div class="Div">
+
+
+        <div class="divA" id="a2"></div>
+
+
+        <div class="divB">
+            <div id="button_video">
+                <button class="clio_button" id="Button_eye_application" onclick="to_video()">J'essaie la vidéo</button>
+            </div>
+        </div>
+
+        <div class="divC"></div>
+
+    </div>
+
+
+
+
+    <div class="Div">
+
+        <div class="divA" id="a3">
+             <div class="explications" id="applications_explications_title"></div>
         </div>
 
 
 
-        <div class="divB"></div>
+        <div class="divB">
+            <div class="explications" id="applications_explications"></div>
+        </div>
+
+
         <div class="divC">
 
 
@@ -144,6 +146,12 @@
                 <option value="800">100 Bytes bps</option>
             </select>
 
+            <div style="display: none">
+                <input type="checkbox" id="chk-fixSeeking" style="margin:0;width:auto;display:none;" title="">
+                <label for="chk-fixSeeking" style="font-size: 15px;margin:0;width: auto;
+                cursor: pointer;-webkit-user-select:none;user-select:none;"
+                title="Fix video seeking issues?"></label>
+            </div>
 
             <div class="explications" id="applications_video"></div>
 
@@ -174,7 +182,6 @@
         -moz-transition     : opacity 1s;
         -o-transition       : opacity 1s;
         transition          : opacity 1s;
-        display:none;
     }
     .sectionPage{
         position:absolute;
@@ -182,12 +189,10 @@
         height : 100%;
         margin : 0;
         padding: 0;
-
     }
     .Div{
         height:33%;
         position:relative;
-        border:1px solid red;
     }
     .divA{
         position:absolute;
@@ -199,23 +204,19 @@
         -moz-transition: opacity 2s;
         -o-transition: opacity 2s;
         transition: opacity 2s;
-        border:1px solid blue;
     }
     .divB{
         position:absolute;
         height:100%;
         width:33.3%;
         margin-left:33.3%;
-        border:1px solid blue;
     }
-
     .divC{
         position:relative;
         height:100%;
         width:33.3%;
         margin-left:66.6%;
-        border:1px solid blue;
-        overflow:hidden;
+        border: 1px solid transparent;
     }
     .explications{
         color   :white;
@@ -277,7 +278,10 @@
 
 
 
-
+    #Button_eye_application{
+        font-size:1.5em;
+        border-radius:5px;
+    }
     #button_video{
         width : 100%;
         height:100%;
@@ -285,53 +289,55 @@
         margin-top:20%;
     }
     #applications_explications_title{
-        border:1px solid red;
-        height:100%;
-        text-align:center;
+        height    : 100%;
+        text-align: center;
     }
     #applications_explications{
-        border:1px solid red;
-        height:100%;
-        text-align:center;
+        height     : 100%;
+        text-align : center;
+        margin-top : 20%;
     }
     #applications_video{
-        border:1px solid red;
-        height:100%;
-        text-align:center;
+        height    : 100%;
+        text-align: center;
     }
     #verticalOne{
-        position  : absolute;
-        width     : 33.3%;
-        height    :100%;
-        float     :left;
+        position        : absolute;
+        width           : 33.3%;
+        height          : 100%;
         background-image: url("/static/home_composition/section3/images/divc.jpg");
 
     }
     #verticalTwo{
+        position        : absolute;
         background-image: url("/static/home_composition/section3/images/divb.jpg");
-        width           : 33.3%;
-        height          :100%;
-        float           :right;
-    }
-    #verticalThree{
-        background-image: url("/static/home_composition/section3/images/diva.jpg");
         width           : 33.3%;
         height          :100%;
         margin-left     :33.3%;
     }
+    #verticalThree{
+        position        : absolute;
+        background-image: url("/static/home_composition/section3/images/diva.jpg");
+        width           : 33.3%;
+        height          :100%;
+        margin-left     :66.6%;
+
+    }
     #icone_recording3{
         margin-top  : 15%;
-        margin-left : 50%;
-        opacity     :1;
+        margin-left : -35%;
+        opacity     : 1;
+        width       : 10%;
         -webkit-transition  : opacity 2s;
         -moz-transition     : opacity 2s;
         -o-transition       : opacity 2s;
         transition          : opacity 2s;
+        height:90;
     }
     #select3{
         position    : relative;
         margin-top  : 10%;
-        margin-left : 2%;
+        margin-left : -70%;
         background  : transparent;
         outline     : 0;
         border      : none;
@@ -339,23 +345,30 @@
         height      : 100%;
         overflow-y  : hidden;
         z-index     : 10;
-        opacity     :1;
+        opacity     :0;
         -webkit-transition: opacity 2s;
-        -moz-transition: opacity 2s;
-        -o-transition: opacity 2s;
-        transition: opacity 2s;
-        height      : 60%;
+        -moz-transition   : opacity 2s;
+        -o-transition     : opacity 2s;
+        transition        : opacity 2s;
+        height            : 60%;
     }
     #information_encoding{
-        position:relative;
-        text-align:left;
-        margin-left:2%;
-    } 
+        position    : absolute;
+        text-align  : left;
+        margin-right : 5%;
+        top: 15%;
+        opacity     : 0;
+        -webkit-transition : opacity 2s;
+        -moz-transition    : opacity 2s;
+        -o-transition      : opacity 2s;
+        transition         : opacity 2s;
+    }
     #icone_recording2{
         margin-top  : 15%;
-        margin-left : 50%;
+        margin-left : 0%;
         opacity     : 1;
-        height      :90;
+        height      : 90;
+        width       : 10%;
         -webkit-transition: opacity 2s;
         -moz-transition   : opacity 2s;
         -o-transition     : opacity 2s;
@@ -365,14 +378,14 @@
     #select2{
         position    : relative;
         margin-top  : 10%;
-        margin-left : 2%;
+        margin-left : -25%;
         background  : transparent;
         outline     : 0;
         border      : none;
         float       : left;
         overflow-y  : hidden;
         z-index     : 10;
-        opacity     :1;
+        opacity     : 0;
         -webkit-transition  : opacity 2s;
         -moz-transition     : opacity 2s;
         -o-transition       : opacity 2s;
@@ -382,16 +395,16 @@
         position    : relative;
         margin-top  : 15%;
         margin-left : 50%;
-        opacity:1;
-        -webkit-transition: opacity 2s;
-        -moz-transition: opacity 2s;
-        -o-transition: opacity 2s;
-        transition: opacity 2s;
+        opacity     : 1;
+        -webkit-transition  : opacity 2s;
+        -moz-transition     : opacity 2s;
+        -o-transition       : opacity 2s;
+        transition          : opacity 2s;
     }
     #select1{
         position    : relative;
         margin-top  : 10%;
-        margin-left : 2%;
+        margin-left : 5%;
         background  : transparent;
         outline     : 0;
         border      : none;
@@ -399,17 +412,18 @@
         height      : 100%;
         overflow-y  : hidden;
         z-index     : 10;
-        opacity     : 1;
-        -webkit-transition: opacity 2s;
-        -moz-transition: opacity 2s;
-        -o-transition: opacity 2s;
-        transition: opacity 2s;
+        opacity     : 0;
+        -webkit-transition : opacity 2s;
+        -moz-transition    : opacity 2s;
+        -o-transition      : opacity 2s;
+        transition         : opacity 2s;
     }
     #section_page_webcam{
-        background-image: url("/static/home_composition/section3/images/appareil_photo.jpg");
-        background-repeat: no-repeat;
+        /* background-image: url("/static/home_composition/section3/images/appareil_photo.jpg"); */
+        background         : gray;
+        background-repeat  : no-repeat;
         background-position: center;
-        background-size: cover;
+        background-size    : cover;
     }
 
 
@@ -484,24 +498,24 @@
         dico = {
             "eyes_tracking" :["<h1 style='margin-top:20%;'>Eyes Tracking Web site</h1>",
                               "Projet de eyes tracking sur un site web doit etre amiliorée dzdazdz ad azd azd azd az",
-                              "<video width='70%' autoplay='true' controls muted><source src='static/home_composition/section3/images/g.mp4' type='video/mp4'></video>"],
+                              "<video width='60%' autoplay='true' controls muted><source src='static/home_composition/section3/images/g.mp4' type='video/mp4'></video>"],
 
             "sleep":["<h1 style='margin-top:20%;'>Sleeping prevent</h1>",
                      "explications ... . .. .. . . .",
-                     "<video width='70%' autoplay='true' controls muted><source src='static/home_composition/section3/images/g.mp4' type='video/mp4'></video>"],
+                     "<video width='60%' autoplay='true' controls muted><source src='static/home_composition/section3/images/g.mp4' type='video/mp4'></video>"],
 
             "face":["<h1 style='margin-top:20%;'>Animate you're face</h1>",
                     "explications ... . .. .. . . .",
-                    "<video width='70%' autoplay='true' controls muted><source src='static/home_composition/section3/images/g.mp4' type='video/mp4'></video>"],
+                    "<video width='60%' autoplay='true' controls muted><source src='static/home_composition/section3/images/g.mp4' type='video/mp4'></video>"],
 
             "expe":["<h1 style='margin-top:20%;'>Experiment youreself</h1>",
                     "explications ... . .. .. . . .",
-                    "<video width='70%' autoplay='true' controls muted><source src='static/home_composition/section3/images/g.mp4' type='video/mp4'></video>"],
+                    "<video width='60%' autoplay='true' controls muted><source src='static/home_composition/section3/images/g.mp4' type='video/mp4'></video>"],
  
             "test":["<h1 style='margin-top:20%;'>Just test</h1>",
                     "explications ... . .. .. . . .",
-                    "<video width='70%' autoplay='true' controls muted><source src='static/home_composition/section3/images/g.mp4' type='video/mp4'></video>"],                    
-        }
+                    "<video width='60%' autoplay='true' controls muted><source src='static/home_composition/section3/images/g.mp4' type='video/mp4'></video>"],                    
+        };
 
 
         document.getElementById("applications_explications_title").innerHTML = dico[explication][0];
@@ -572,7 +586,7 @@
             document.getElementById("verticalThree").style.opacity = "0";
         }, 1400)
     };
-    //animation_div_a_first_part()
+    animation_div_a_first_part()
 
 
 
@@ -582,23 +596,24 @@
         //Fisrt div
         setTimeout(function(){
             document.getElementById("verticalOne").style.display = "none";
-            iconade("micam", "icone_recording1")
+            iconade("micam", "icone_recording1", "")
             document.getElementById("select1").style.opacity = "1";
         }, 1800)
 
         setTimeout(function(){
             document.getElementById("verticalTwo").style.display = "none";
-            iconade("1", "icone_recording2")
+            iconade("1", "icone_recording2", "")
             document.getElementById("select2").style.opacity = "1";
+            document.getElementById("information_encoding").style.opacity = "1";
         }, 2200)
 
         setTimeout(function(){
             document.getElementById("verticalThree").style.display = "none";
-            iconade("7", "icone_recording3")
+            iconade("7", "icone_recording3", "")
             document.getElementById("select3").style.opacity = "1";
         }, 2600)
     };
-    //animation_div_a_second_part()
+    animation_div_a_second_part()
 
 
 
