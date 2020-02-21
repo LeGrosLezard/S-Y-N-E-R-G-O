@@ -63,14 +63,20 @@ def uploading_file(request):
     #Post from template.²
     if request.method == 'POST':
 
+        print("Uploading video.")
+
         #Verify validity of the form.
         if form.is_valid():
 
+            print("Form uploading video is valid.")
+            
             #Uploading file.
             name_video = request.FILES['docfile']                       #Recuperate the file.
             form.cleaned_data['docfile'].name                           #Cleanning.
             newdoc = video_upload(docfile = request.FILES['docfile'])   #Call model.
             newdoc.save()                                               #Saving.
+
+            print("video name's : ", str(name_video))
 
             return JsonResponse({"video_name" : str(name_video)})
 
@@ -79,7 +85,9 @@ def treat_video(request):
 
     #We recuperate a post request = video.
     video_name = request.POST.get('video_name')
-    print(video_name)
+ 
+    print("Treatment video of : ", video_name)
+
     if video_name:
 
         print("\nsearching the video into media folder : ", str(video_name))
@@ -90,7 +98,7 @@ def treat_video(request):
         #Treat file (cut video all 20 seconds).
         video_capture_treament(name_video, dlib_model)
 
-        return JsonResponse({"treatment" : "finish"})
+        return JsonResponse({"end_video_treatment" : "video_name"})
 
 
 
