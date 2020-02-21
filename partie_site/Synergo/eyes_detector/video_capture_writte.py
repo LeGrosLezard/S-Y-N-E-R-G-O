@@ -40,11 +40,9 @@ def video_capture_treament(video, dlib_model):
     #Divise video to file of 20 sec.
     video_writter(video, number_divise)
 
-    #data = run_data_wrote()
-
     print("End treatment : ", time.time() - start_treatment)
 
-    return data
+
 
 
 ##video = r"C:\Users\jeanbaptiste\Desktop\videos\e.mp4"
