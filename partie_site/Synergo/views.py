@@ -117,9 +117,6 @@ def face_animation():
         return path_save
 
 
-def send_video_saved():
-    pass
-
 def delete_video_wrotte():
     pass
 
