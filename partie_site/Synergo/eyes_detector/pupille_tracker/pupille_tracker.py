@@ -189,7 +189,6 @@ def center_threshold(mask_eyes_img, contours):
         x_center, y_center = pupille_center[0][0], pupille_center[0][1]
         mask_eyes_img[y_center, x_center] = 0, 0, 255
 
-        #cv2.circle(mask_eyes_img, (x_center, y_center), rayon, (255, 255, 255), 1)
         out = x_center, y_center, mask_eyes_img
 
     return out
@@ -217,12 +216,12 @@ def find_center_pupille(crop, mask_eyes_img, rayon):
     #Contours of the trehsold.
     contours = cv2.findContours(img_erosion, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)[0]
     contours = sorted(contours, key=lambda x: cv2.contourArea(x), reverse=True)
-
-    #Contours Regulation.
-
     
+    #Contours Regulation.
     if len(contours) > 0:
         out = center_threshold(mask_eyes_img, contours)
+        if out[0] != None and out[1] != None:
+            cv2.circle(out[2], (out[0], out[1]), rayon, (0, 0, 255), 2)
 
     return out
 
@@ -276,19 +275,19 @@ def pupille_tracker(landmarks, frame, gray, head_box, blanck):
 
 
 
-    turning, down = face_movement(landmarks, frame, eyes, head_box)
+    if blanck != "":
 
-    right_information = (frame, extremum_right, landmarks, head_box, eyes, glob_right, blanck, "right")
-    eyes_movements(right_information)
+        turning, down = face_movement(landmarks, frame, eyes, head_box)
 
-    left_information = (frame, extremum_left, landmarks, head_box, eyes, glob_left, blanck, "left")
-    eyes_movements(left_information)
+        right_information = (frame, extremum_right, landmarks, head_box, eyes, glob_right, blanck, "right")
+        right_pupil = eyes_movements(right_information)
 
-    print("")
+        left_information = (frame, extremum_left, landmarks, head_box, eyes, glob_left, blanck, "left")
+        left_pupil = eyes_movements(left_information)
+
+        print("")
 
 
-
-    return (right_eye, crop_eyes_right, crop_appli_right),\
-           (left_eye, crop_eyes_left, crop_appli_left)
+    return right_pupil, left_pupil
 
 
