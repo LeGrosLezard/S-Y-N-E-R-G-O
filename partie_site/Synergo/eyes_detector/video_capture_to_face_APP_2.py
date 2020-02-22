@@ -95,7 +95,7 @@ def video_capture_to_face(video_path, video_name, eyes_image, blink_image):
         start_time_frame = time.time()
 
         ret, frame = cap.read()
-
+        _, frame_animation = cap.read()
         if ret:
 
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -106,8 +106,10 @@ def video_capture_to_face(video_path, video_name, eyes_image, blink_image):
             if landmarks is not None:
 
                 #Recuperate pupil center, eyes constitution = (x, y), crop.
-                right_eye, left_eye = pupille_tracker(landmarks, frame, gray, head_box, "")
+                right_eye, left_eye = pupille_tracker(landmarks, frame, gray, head_box, "", "yes")
                 #cv2.imshow("frame_dlib", frame)
+
+                right_eye, left_eye = pupille_tracker(landmarks, frame_animation, gray, head_box, "", "no")
 
                 #Savegarde video.
                 writting_pupil.write(frame)
@@ -133,10 +135,10 @@ def video_capture_to_face(video_path, video_name, eyes_image, blink_image):
 
 
             #Savegarde video.
-            writting_animation.write(frame)
+            writting_animation.write(frame_animation)
 
             #Animations.
-            #cv2.imshow("c", frame)
+            #cv2.imshow("c", frame_animation)
             
             #if cv2.waitKey(1) & 0xFF == ord('q'):
             #    break
