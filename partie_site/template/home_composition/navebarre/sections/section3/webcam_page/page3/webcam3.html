@@ -1,4 +1,4 @@
-
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <section class="sectionPage" id="section_page_webcam2">
     <div class="Div"><!-- Top First Div -->
@@ -77,6 +77,7 @@
         <div class="divC">
             <div class="visualisation" id="visualisation2_eye_section">
                 <h1>Main</h1>
+                <div id="video_application"></div>
             </div>
         </div>
 
@@ -300,6 +301,12 @@
               }
               else{
                 console.log("video finish location : ", data["video_situation"])
+
+                
+                
+                video = "<video width='100%' autoplay='true' controls muted loop><source src='" + data["video_situation"] + "' type='video/mp4'></video>"
+                document.getElementById('video_application').innerHTML = video;
+                
 
               };
         });
