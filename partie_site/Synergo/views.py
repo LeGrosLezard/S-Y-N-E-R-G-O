@@ -22,13 +22,13 @@ from .eyes_detector.paths import media_path, dlib_model
 from .eyes_detector.paths import path_data, path_data_video, blink_image, eyes_image
 
 
-from .eyes_detector.video_capture_sleep_APP_1  import video_capture_to_face_sleep       #Face
+#from .eyes_detector.video_capture_sleep_APP_1  import video_capture_to_face_sleep       #Face
 from .eyes_detector.video_capture_to_face_APP_2 import video_capture_to_face            #sleep
-from .eyes_detector.video_capture_eyes_position_APP_3 import recuperate_eyes_position   #web
-from .eyes_detector.video_capture_APP_4 import video_capture                            #All
+#from .eyes_detector.video_capture_eyes_position_APP_3 import recuperate_eyes_position   #web
+#from .eyes_detector.video_capture_APP_4 import video_capture                            #All
 
 
-@staticmethod
+
 def recuperate_data():
 
     start_time_data_list = time.time()
@@ -42,7 +42,7 @@ def recuperate_data():
 
     return data
 
-@staticmethod
+
 def recuperate_dimensions_video(video):
 
     #Recuperate dimensions of video.
@@ -108,12 +108,13 @@ def face_animation():
 
     #Run data.
     for video in data:
-        video = path_data_video.format(video)
+        video_path = path_data_video.format(video)
 
         print("\nin course: ", video)
 
         #Recuperate eye position
-        stop = video_capture_to_face(video, eyes_image, blink_image)
+        path_save = video_capture_to_face(video_path, video, eyes_image, blink_image)
+        return path_save
 
 
 def send_video_saved():
@@ -133,6 +134,10 @@ def application(request):
         application = request.POST.get('application')
         video_name  = request.POST.get('video_name')
 
+        print(application)
+        print(video_name)
+
+
         if application == "eyes_tracking" and video_name:
             eye_tracking()
             response = {"video_situation":""}
@@ -142,8 +147,9 @@ def application(request):
             response = {"video_situation":"", "report":report}
 
         elif application == "face" and video_name:
-            face_animation()
-            response = {"video_situation":""}
+            print("Face application call ! ")
+            path_save = face_animation()
+            response = {"video_situation":path_save}
 
         elif application == "test" and video_name:
             all_application()
