@@ -194,7 +194,7 @@ def center_threshold(mask_eyes_img, contours):
     return out
 
 
-def find_center_pupille(crop, mask_eyes_img, rayon):
+def find_center_pupille(crop, mask_eyes_img, rayon, mode):
     """Gaussian filter, search the max solo contour on thresh,
     make an erod on 3 neighboors, find center of the contours."""
 
@@ -220,7 +220,7 @@ def find_center_pupille(crop, mask_eyes_img, rayon):
     #Contours Regulation.
     if len(contours) > 0:
         out = center_threshold(mask_eyes_img, contours)
-        if out[0] != None and out[1] != None:
+        if out[0] != None and out[1] != None and mode == "yes":
             cv2.circle(out[2], (out[0], out[1]), rayon, (0, 0, 255), 2)
 
     return out
@@ -231,7 +231,7 @@ def find_center_pupille(crop, mask_eyes_img, rayon):
 
 #===================================================== Treatement for one eye.
 
-def find_pupil_center(eye, frame, gray, rayon):
+def find_pupil_center(eye, frame, gray, rayon, mode):
     """Recuperate egalized rectangle area or box area,
        recuperate contour eyes,
        Superpose egalized rectangle with contour eyes,
@@ -247,13 +247,13 @@ def find_pupil_center(eye, frame, gray, rayon):
     gray_crop = superpose_contour_eye_rectangle(mask_eyes_gray, gray_crop)
 
     #Define centers of pupils
-    x_center, y_center, crop_eyes = find_center_pupille(gray_crop, mask_eyes_img, rayon)
+    x_center, y_center, crop_eyes = find_center_pupille(gray_crop, mask_eyes_img, rayon, mode)
 
     return ((x_center, y_center), crop_eyes, crop_appli)
 
 
 
-def pupille_tracker(landmarks, frame, gray, head_box, blanck):
+def pupille_tracker(landmarks, frame, gray, head_box, blanck, mode):
 
     #Recuperate DLIB points.
     eyes = recuperate_eyes(landmarks, frame)
@@ -266,11 +266,11 @@ def pupille_tracker(landmarks, frame, gray, head_box, blanck):
     glob_left, extremum_left   = recuperate_extremums(left_eye, frame)
 
     #Right pupil.
-    right_pupil = find_pupil_center(right_eye, frame, gray, glob_right)
+    right_pupil = find_pupil_center(right_eye, frame, gray, glob_right, mode)
     right_eye, crop_eyes_right, crop_appli_right = right_pupil
 
     #Left pupil
-    left_pupil = find_pupil_center(left_eye, frame, gray, glob_left)
+    left_pupil = find_pupil_center(left_eye, frame, gray, glob_left, mode)
     left_eye, crop_eyes_left, crop_appli_left = left_pupil
 
 
