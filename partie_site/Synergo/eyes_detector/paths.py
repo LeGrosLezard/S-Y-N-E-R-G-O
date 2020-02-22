@@ -10,4 +10,11 @@ path_csv_file = r"C:\Users\jeanbaptiste\Desktop\SYNERGO_SITE\Synergo\Synergo\eye
 
 path_eyes_detector_stuff = r"C:\Users\jeanbaptiste\Desktop\SYNERGO_SITE\Synergo\media\eyes_detector"
 
-picture_app_3 = r"C:\Users\jeanbaptiste\Desktop\SYNERGO_SITE\Synergo\Synergo\eyes_detector\app3\paint.png"
+picture_app_3 = r"C:\Users\jeanbaptiste\Desktop\SYNERGO_SITE\Synergo\Synergo\eyes_detector\app_eye_traking\paint.png"
+
+blink_image = r"C:\Users\jeanbaptiste\Desktop\SYNERGO_SITE\Synergo\media\eyes_detector\fermture_gros_oeil.png"
+eyes_image = r"C:\Users\jeanbaptiste\Desktop\SYNERGO_SITE\Synergo\media\eyes_detector\gros_oeil.png"
+
+data_save = r"C:\Users\jeanbaptiste\Desktop\SYNERGO_SITE\Synergo\Synergo\eyes_detector\data_save"
+video_save = r"C:\Users\jeanbaptiste\Desktop\SYNERGO_SITE\Synergo\Synergo\eyes_detector\data_save\{}"
+
