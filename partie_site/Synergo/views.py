@@ -3,6 +3,7 @@ It's the inteface beetween template and model (data base)"""
 
 import os
 import cv2
+import time
 from django.shortcuts import render
 
 #Json response to template
@@ -18,37 +19,173 @@ from .forms import video_upload_form
 from .eyes_detector.video_capture_writte import video_capture_treament
 from .eyes_detector.paths import media_path, dlib_model
 
-from .paths import path_data, path_data_video
+from .paths import path_data, path_data_video, blink_image, eyes_image
+
+
+from .eyes_detector.video_capture_sleep_APP_1  import video_capture_to_face_sleep         #Face
+from .eyes_detector.video_capture_to_face_APP_2 import video_capture_to_face    #sleep
+from .eyes_detector.video_capture_eyes_position_APP_3 import recuperate_eyes_position #web
+from .eyes_detector.video_capture_APP_4 import video_capture               #All
+
+
+@staticmethod
+def recuperate_data():
+
+    start_time_data_list = time.time()
+
+    data = os.listdir(path_data)
+    data = sorted(data)
+    number_file = len(data)
+
+    print("Count file to treat : ", number_file)
+    print("running data took : ", time.time() - start_time_data_list)
+
+    return data
+
+
+def eye_tracking():
+
+    #Recuperate length and file.
+    data = recuperate_data()
+
+    #Run data.
+    for video in data:
+        video = path_data_video.format(video)
+
+        print("\nin course: ", video)
+
+        #Recuperate dimensions of video.
+        cap = cv2.VideoCapture(video)
+        width_video  = int(cap.get(3))
+        height_video = int(cap.get(4))
+
+        #Recuperate eye position
+        stop = recuperate_eyes_position(video, height_video, width_video)
+
+
+def all_application():
+
+    #Recuperate length and file.
+    data = recuperate_data()
+
+    #Run data.
+    for video in data:
+        video = path_data_video.format(video)
+
+        print("\nin course: ", video)
+
+        #Recuperate dimensions of video.
+        cap = cv2.VideoCapture(video)
+        width_video  = int(cap.get(3))
+        height_video = int(cap.get(4))
+
+        #Recuperate eye position
+        video_capture(video)
+
+
+def sleeping():
+
+    #Recuperate length and file.
+    data = recuperate_data()
+
+    #Run data.
+    for video in data:
+        video = path_data_video.format(video)
+
+        print("\nin course: ", video)
+
+        #Recuperate dimensions of video.
+        cap = cv2.VideoCapture(video)
+        width_video  = int(cap.get(3))
+        height_video = int(cap.get(4))
+
+        #Recuperate eye position
+        report = video_capture_to_face_sleep(video)
+
+
+def face_animation():
+
+    #Recuperate length and file.
+    data = recuperate_data()
+
+    #Run data.
+    for video in data:
+        video = path_data_video.format(video)
+
+        print("\nin course: ", video)
+
+        #Recuperate dimensions of video.
+        cap = cv2.VideoCapture(video)
+        width_video  = int(cap.get(3))
+        height_video = int(cap.get(4))
+
+        #Recuperate eye position
+        stop = video_capture_to_face(video, eyes_image, blink_image)
+
+
+def recuperate_video_saved():
+    pass
+
+
+def delete_video_wrotte():
+    pass
+
+def to_database():
+    pass
 
 
 def application(request):
-    pass
+
+    if request.method == 'POST':
+
+        application = request.POST.get('application')
+        video_name  = request.POST.get('video_name')
+
+        if application == "eyes_tracking" and video_name:
+            eye_tracking()
+            response = {"video_situation":,}
+
+        elif application == "sleep" and video_name:
+            report = sleeping()
+            response = {"video_situation":, "report":report}
+
+        elif application == "face" and video_name:
+            face_animation()
+            response = {"video_situation":,}
+
+        elif application == "test" and video_name:
+            all_application()
+            response = {"video_situation":,}
+
+
+        return JsonResponse(response)
+
 
 def verify(request):
     """Here we call this function with ajax for now if we can send response,
     the respsons is a video part.
     If chargement is egal to 3 we can send video (3 videos are writte.)."""
 
+    if request.method == 'POST':
+        verification = request.POST.get('verification')
+        if verification == "verification":
 
-    verification = request.POST.get('verification')
-    if verification == "verification":
 
+            liste = os.listdir(path_data)
 
-        liste = os.listdir(path_data)
+            counter = 0
+            for i in liste:
 
-        counter = 0
-        for i in liste:
+                video_name = path_data_video.format(i)
+                cap = cv2.VideoCapture(video_name)
+                number_picture = cap.get(cv2.CAP_PROP_FRAME_COUNT)
 
-            video_name = path_data_video.format(i)
-            cap = cv2.VideoCapture(video_name)
-            number_picture = cap.get(cv2.CAP_PROP_FRAME_COUNT)
+                if number_picture > 0:
+                    counter += 1
 
-            if number_picture > 0:
-                counter += 1
+            length_folder = len(liste)
 
-        length_folder = len(liste)
-
-        return JsonResponse({"verification" : counter, "number":length_folder})
+            return JsonResponse({"verification" : counter, "number":length_folder})
 
 
 
@@ -83,22 +220,24 @@ def uploading_file(request):
 
 def treat_video(request):
 
-    #We recuperate a post request = video.
-    video_name = request.POST.get('video_name')
- 
-    print("Treatment video of : ", video_name)
+    if request.method == 'POST':
 
-    if video_name:
+        #We recuperate a post request = video.
+        video_name = request.POST.get('video_name')
+     
+        print("Treatment video of : ", video_name)
 
-        print("\nsearching the video into media folder : ", str(video_name))
+        if video_name:
 
-        name_video = media_path.format(str(video_name))
-        print(name_video)
+            print("\nsearching the video into media folder : ", str(video_name))
 
-        #Treat file (cut video all 20 seconds).
-        video_capture_treament(name_video, dlib_model)
+            name_video = media_path.format(str(video_name))
+            print(name_video)
 
-        return JsonResponse({"end_video_treatment" : "video_name"})
+            #Treat file (cut video all 20 seconds).
+            video_capture_treament(name_video, dlib_model)
+
+            return JsonResponse({"end_video_treatment" : "video_name"})
 
 
 
