@@ -19,13 +19,13 @@ from .forms import video_upload_form
 from .eyes_detector.video_capture_writte import video_capture_treament
 from .eyes_detector.paths import media_path, dlib_model
 
-from .paths import path_data, path_data_video, blink_image, eyes_image
+from .eyes_detector.paths import path_data, path_data_video, blink_image, eyes_image
 
 
-from .eyes_detector.video_capture_sleep_APP_1  import video_capture_to_face_sleep         #Face
-from .eyes_detector.video_capture_to_face_APP_2 import video_capture_to_face    #sleep
-from .eyes_detector.video_capture_eyes_position_APP_3 import recuperate_eyes_position #web
-from .eyes_detector.video_capture_APP_4 import video_capture               #All
+from .eyes_detector.video_capture_sleep_APP_1  import video_capture_to_face_sleep       #Face
+from .eyes_detector.video_capture_to_face_APP_2 import video_capture_to_face            #sleep
+from .eyes_detector.video_capture_eyes_position_APP_3 import recuperate_eyes_position   #web
+from .eyes_detector.video_capture_APP_4 import video_capture                            #All
 
 
 @staticmethod
@@ -42,6 +42,16 @@ def recuperate_data():
 
     return data
 
+@staticmethod
+def recuperate_dimensions_video(video):
+
+    #Recuperate dimensions of video.
+    cap = cv2.VideoCapture(video)
+    width_video  = int(cap.get(3))
+    height_video = int(cap.get(4))
+
+    return height_video, width_video
+
 
 def eye_tracking():
 
@@ -54,10 +64,8 @@ def eye_tracking():
 
         print("\nin course: ", video)
 
-        #Recuperate dimensions of video.
-        cap = cv2.VideoCapture(video)
-        width_video  = int(cap.get(3))
-        height_video = int(cap.get(4))
+        #recuperate dimensions of the video
+        height_video, width_video = recuperate_dimensions_video(video)
 
         #Recuperate eye position
         stop = recuperate_eyes_position(video, height_video, width_video)
@@ -74,11 +82,6 @@ def all_application():
 
         print("\nin course: ", video)
 
-        #Recuperate dimensions of video.
-        cap = cv2.VideoCapture(video)
-        width_video  = int(cap.get(3))
-        height_video = int(cap.get(4))
-
         #Recuperate eye position
         video_capture(video)
 
@@ -93,11 +96,6 @@ def sleeping():
         video = path_data_video.format(video)
 
         print("\nin course: ", video)
-
-        #Recuperate dimensions of video.
-        cap = cv2.VideoCapture(video)
-        width_video  = int(cap.get(3))
-        height_video = int(cap.get(4))
 
         #Recuperate eye position
         report = video_capture_to_face_sleep(video)
@@ -114,18 +112,12 @@ def face_animation():
 
         print("\nin course: ", video)
 
-        #Recuperate dimensions of video.
-        cap = cv2.VideoCapture(video)
-        width_video  = int(cap.get(3))
-        height_video = int(cap.get(4))
-
         #Recuperate eye position
         stop = video_capture_to_face(video, eyes_image, blink_image)
 
 
-def recuperate_video_saved():
+def send_video_saved():
     pass
-
 
 def delete_video_wrotte():
     pass
@@ -143,22 +135,28 @@ def application(request):
 
         if application == "eyes_tracking" and video_name:
             eye_tracking()
-            response = {"video_situation":,}
+            response = {"video_situation":""}
 
         elif application == "sleep" and video_name:
             report = sleeping()
-            response = {"video_situation":, "report":report}
+            response = {"video_situation":"", "report":report}
 
         elif application == "face" and video_name:
             face_animation()
-            response = {"video_situation":,}
+            response = {"video_situation":""}
 
         elif application == "test" and video_name:
             all_application()
-            response = {"video_situation":,}
+            response = {"video_situation":""}
 
 
         return JsonResponse(response)
+
+
+
+
+
+
 
 
 def verify(request):
@@ -248,7 +246,6 @@ def home(request):
 
     form = video_upload_form(request.POST, request.FILES)
     return render(request, "Home.html", {'form':form})
-
 
 
 
