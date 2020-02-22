@@ -19,7 +19,8 @@ from .paths import media_path, dlib_model
 from .paths import path_eyes_detector_stuff
 from .paths import data_save
 from .paths import path_data_video
-from .paths import video_save
+from .paths import video_save_media
+
 #Blink part
 from .blinking.blinking_eyes import blinking_eyes
 from .blinking.blinking_eyes import blink_analysis
@@ -66,13 +67,13 @@ def video_capture_to_face(video_path, video_name, eyes_image, blink_image):
     print("Dimensions recuperate.\n")
 
     print("Empty file created.")
-    print("path : ", data_save)
+    print("path : ", video_save_media)
 
     #Empty video file.
-    video_name = video_save.format(video_name + ".avi")
-    print("path video : ", video_name)
+    video_path = video_save_media.format(video_name + ".mp4")
+    print("path video : ", video_path)
 
-    writting = cv2.VideoWriter(video_name, cv2.VideoWriter_fourcc('M','J','P','G'), int(frame_sec),
+    writting = cv2.VideoWriter(video_path, cv2.VideoWriter_fourcc(*'X264'), int(frame_sec),
                           (int(frame_width/2), int(frame_height/2)))
 
 
@@ -138,11 +139,12 @@ def video_capture_to_face(video_path, video_name, eyes_image, blink_image):
 
         else:
             oContinuer = False
-            return video_name
+            return "/media/video_save/" + str(video_name) + ".mp4"
 
 
     cap.release()
     cv2.destroyAllWindows()
+
 
 
 if __name__ == "__main__":
