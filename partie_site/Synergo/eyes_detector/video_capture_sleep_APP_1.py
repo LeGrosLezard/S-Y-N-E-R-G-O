@@ -5,26 +5,26 @@ start_time_import = time.time()
 import cv2
 import numpy as np
 
-from recuperate_points.face_points import recuperate_landmarks
-from recuperate_points.face_points import head_points
-from recuperate_points.face_points import get_face_in_box
-from recuperate_points.face_points import eyes_points_for_head_analysis
+from .recuperate_points.face_points import recuperate_landmarks
+from .recuperate_points.face_points import head_points
+from .recuperate_points.face_points import get_face_in_box
+from .recuperate_points.face_points import eyes_points_for_head_analysis
 
 
 #Pupil part
-from pupille_tracker.pupille_tracker import pupille_tracker
+from .pupille_tracker.pupille_tracker import pupille_tracker
 
 #Path to model, to media folder.
-from paths import media_path, dlib_model
-from paths import path_eyes_detector_stuff
+from .paths import media_path, dlib_model
+from .paths import path_eyes_detector_stuff
 
 #Blink part
-from blinking.blinking_eyes import blinking_eyes
-from blinking.blinking_eyes import blink_analysis
-from blinking.blinking_eyes import final
+from .blinking.blinking_eyes import blinking_eyes
+from .blinking.blinking_eyes import blink_analysis
+from .blinking.blinking_eyes import final
 
 #Load dlib model
-from recuperate_points.face_points import load_model_dlib
+from .recuperate_points.face_points import load_model_dlib
 
 
 print("Import time : ", time.time() - start_time_import)
@@ -66,7 +66,7 @@ def displaying(alarm, frame):
 
 
 global_alarm = []
-def video_capture_to_face(video_name):
+def video_capture_to_face_sleep(video_name):
 
     predictor, detector, cap, out, start_time = video_parameters(video_name, dlib_model)
 
@@ -78,8 +78,6 @@ def video_capture_to_face(video_name):
 
         if ret:
 
-            height, width = frame.shape[:2]
-            frame = cv2.resize(frame, (int(width/2), int(height/2)))
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
             #Recuperate landmarks and head box.
@@ -109,4 +107,4 @@ def video_capture_to_face(video_name):
     return report
 
 
-video_capture_to_face("b.mp4")
+

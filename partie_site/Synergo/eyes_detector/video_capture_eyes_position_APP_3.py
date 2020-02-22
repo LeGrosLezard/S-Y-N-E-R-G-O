@@ -8,21 +8,30 @@ import cv2
 import numpy as np
 
 #Load dlib model.
-from recuperate_points.face_points import load_model_dlib
+from .recuperate_points.face_points import load_model_dlib
 
 #Recuperate points from DLIB.
-from recuperate_points.face_points import recuperate_landmarks
-from recuperate_points.face_points import head_points
-from recuperate_points.face_points import get_face_in_box
-from recuperate_points.face_points import eyes_points_for_head_analysis
+from .recuperate_points.face_points import recuperate_landmarks
+from .recuperate_points.face_points import head_points
+from .recuperate_points.face_points import get_face_in_box
+from .recuperate_points.face_points import eyes_points_for_head_analysis
 
 #Pupil tracker part.
-from pupille_tracker.pupille_tracker import pupille_tracker
+from .pupille_tracker.pupille_tracker import pupille_tracker
 
 #Import paths.
-from paths import media_path, dlib_model, path_data, path_data_video, path_csv_file
+from .paths import media_path
+from .paths import dlib_model
+from .paths import path_data
+from .paths import path_data_video
+from .paths import path_csv_file
+from .paths import picture_app_3
 
-from 
+from .app_eye_traking.visit_site_web import retracage
+from .app_eye_traking.visit_site_web import timmer_treatment
+
+
+
 
 print("Importation libraries took : ", time.time() - start_time_import)
 
@@ -87,16 +96,12 @@ def recuperate_eyes_position(video, height, width):
 
 
         else:
-            print(POSITION_RIGHT)
-            print("")
-            print(POSITION_LEFT)
-            print("")
-            print(TIMMER)
 
+            IMG = cv2.imread(picture_app_3)
 
+            position, box = retracage(POSITION_RIGHT, POSITION_LEFT, IMG)
+            timmer_treatment(TIMMER, position, box, IMG)
 
-            cv2.imshow("BLANCK", BLANCK)
-            cv2.waitKey(0)
             return "stop"
 
 

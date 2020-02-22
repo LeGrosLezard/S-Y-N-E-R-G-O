@@ -5,25 +5,25 @@ start_time_import = time.time()
 import cv2
 import numpy as np
 
-from recuperate_points.face_points import recuperate_landmarks
-from recuperate_points.face_points import head_points
-from recuperate_points.face_points import get_face_in_box
-from recuperate_points.face_points import eyes_points_for_head_analysis
+from .recuperate_points.face_points import recuperate_landmarks
+from .recuperate_points.face_points import head_points
+from .recuperate_points.face_points import get_face_in_box
+from .recuperate_points.face_points import eyes_points_for_head_analysis
 
 
 #Pupil part
-from pupille_tracker.pupille_tracker import pupille_tracker
+from .pupille_tracker.pupille_tracker import pupille_tracker
 
 #Path to model, to media folder.
-from paths import media_path, dlib_model
-from paths import path_eyes_detector_stuff
+from .paths import media_path, dlib_model
+from .paths import path_eyes_detector_stuff
 
 #Blink part
-from blinking.blinking_eyes import blinking_eyes
-from blinking.blinking_eyes import blink_analysis
+from .blinking.blinking_eyes import blinking_eyes
+from .blinking.blinking_eyes import blink_analysis
 
 #Load dlib model
-from recuperate_points.face_points import load_model_dlib
+from .recuperate_points.face_points import load_model_dlib
 
 
 print("Import time : ", time.time() - start_time_import)
@@ -128,6 +128,7 @@ def video_capture_to_face(video_name, eyes_image, blink_image):
                 if left_eye[0] is not None:
                     put_picture(left_eye, eyes_image)
 
+
         #Savegarde video.
         out.write(frame)
 
@@ -141,6 +142,8 @@ def video_capture_to_face(video_name, eyes_image, blink_image):
     #cap.release()
     #cv2.destroyAllWindows()
 
-blink_image = r"C:\Users\jeanbaptiste\Desktop\SYNERGO_SITE\Synergo\media\eyes_detector\fermture_gros_oeil.png"
-eyes_image = r"C:\Users\jeanbaptiste\Desktop\SYNERGO_SITE\Synergo\media\eyes_detector\gros_oeil.png"
-video_capture_to_face("aa.mp4", eyes_image, blink_image)
+
+if __name__ == "__main__":
+    blink_image = r"C:\Users\jeanbaptiste\Desktop\SYNERGO_SITE\Synergo\media\eyes_detector\fermture_gros_oeil.png"
+    eyes_image = r"C:\Users\jeanbaptiste\Desktop\SYNERGO_SITE\Synergo\media\eyes_detector\gros_oeil.png"
+    video_capture_to_face("aa.mp4", eyes_image, blink_image)
