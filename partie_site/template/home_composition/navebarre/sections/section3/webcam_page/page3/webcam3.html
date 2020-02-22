@@ -4,13 +4,27 @@
     <div class="Div"><!-- Top First Div -->
 
         <div class="divA" id="a1"><!-- Left Div -->
-            <input type="button" id="response" onclick="phase1()">
-            <input type="button" id="response2" onclick="phase2(0)">
-            <input type="button" id="response3" onclick="phase3()">
+            <div id="buttons">
+                <input type="button" id="response" onclick="phase1()">
+                <input type="button" id="response2" onclick="phase2(0)">
+                <input type="button" id="response3" onclick="phase3()">
+            </div>
+
+            <div class="visualisation" id="visualisation1_eye_section">
+                <h1>figure dlib</h1>
+            </div>
+
         </div>
 
         <div class="divB"></div>
-        <div class="divC"></div>
+
+
+        <div class="divC">
+            <div class="visualisation" id="visualisation2_eye_section">
+                <h1>Main</h1>
+            </div>
+        </div>
+ 
     </div>
 
 
@@ -36,6 +50,7 @@
         </div>
 
 
+
         <div class="divC"></div>
 
  
@@ -44,8 +59,13 @@
 
     <div class="Div">
         <div class="divA"><!-- Left Div --></div>
-        <div class="divB"></div>
+        <div class="divB">
+            enregistrer
+            partager
+        </div>
+
         <div class="divC"></div>
+
     </div>
 
 </section>
@@ -53,8 +73,27 @@
 
 
 <style>
+    .visualisation{
+        width:100%;
+        height:100%;
+        width:150.3%;
+    }
+
+
+
+    #visualisation1_eye_section{
+        position:absolute;
+        float:left;
+    }
+    #visualisation2_eye_section{
+        position:absolute;
+        margin-left:-50%;
+    }
+    #buttons{
+        display: none;
+    }
     #loading{
-        width:10%;
+        width:20%;
     }
     #loading_eyes_section{
         margin-top:10%;
@@ -70,7 +109,7 @@
         background-repeat  : no-repeat;
         background-position: center;
         background-size    : cover;
-        opacity            : 0;
+        opacity            : 1;
         -webkit-transition : opacity 2s;
         -moz-transition    : opacity 2s;
         -o-transition      : opacity 2s;
@@ -81,6 +120,7 @@
         width       : 100%;
         height      : 100%;
         margin-left : 20%;
+        display : none;
     }
 </style>
 
@@ -109,11 +149,36 @@
             interval = setInterval("verification_eye_application()", 5000)
         }else{
             clearInterval(interval);
+            document.getElementById('loading_eyes_section').style.opacity = "0";
         }
     };
 
     function phase3(){
         console.log("functionnality's :", String(CHOICE_APPLICATION), "video name's : ", VIDEO_NAME)
+          $.ajax({
+              data:{"verification": "verification",
+                    csrfmiddlewaretoken:'{{ csrf_token }}'
+                   },
+              type:"POST",
+              url:"verify",
+          })
+          .done(function(data){
+              if (data.error){
+                  {}
+              }
+              else{
+
+                console.log("data tread : ", data["verification"], " on files numbers : ", data["number"])
+
+                if (data["verification"] > 3){
+
+                    console.log("4 data has been treated, video can be send, popup in course...")
+                    document.getElementById('response3').click();
+                    phase2(1);
+                    alert_finish();
+                };
+            };
+        });
     };
 
 
@@ -203,7 +268,7 @@
                   document.getElementById("response").click();
                   treat_video_camera(data["video_name"])
                   VIDEO_NAME = data["video_name"];
-            };  
+            };
         });
     });
 
