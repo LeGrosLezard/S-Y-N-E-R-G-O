@@ -1,5 +1,7 @@
 import cv2
 import numpy as np
+from ..paths import data_save, video_save_media
+
 
 def recuperate_middle_vision(position_for_hull, position, POSITION_RIGHT, POSITION_LEFT):
     """Recuperate middle of the two eyes"""
@@ -42,6 +44,11 @@ def first_animation(position, box, IMG):
     x, y, w, h = box    #region convex draw.
     blanck = np.zeros((1000, 1000, 3), np.uint8)#empty picture.
 
+    video_name = video_save_media.format("eyes_tracking1" + ".mp4")
+    writting = cv2.VideoWriter(video_name, cv2.VideoWriter_fourcc(*'X264'), int(20), (w * 4, h * 4))
+
+    print(w, h)
+
     for pos in position:
         if pos != None:
 
@@ -53,14 +60,19 @@ def first_animation(position, box, IMG):
 
             superposition = superpose_picture(zoom, 4, IMG)
 
-            cv2.imshow("superposition", superposition)
-            cv2.waitKey(1)
+            writting.write(superposition)
+            #cv2.imshow("superposition", superposition)
+            #cv2.waitKey(100)
 
 
 def second_animation(position, box, IMG):
     """Draw blink, point by point"""
 
     x, y, w, h = box
+
+    video_name = video_save_media.format("eyes_tracking2" + ".mp4")
+    writting = cv2.VideoWriter(video_name, cv2.VideoWriter_fourcc(*'X264'), int(20), (w * 20, h * 20))
+
 
     for nb, i in enumerate(position):
 
@@ -75,9 +87,10 @@ def second_animation(position, box, IMG):
             cv2.circle(blanck_cinematic, i, 1, (0, 0, 255), 1)
 
         superposition = superpose_picture(zoom, 20, IMG)
+        writting.write(superposition)
 
-        cv2.imshow("superposition", superposition)
-        cv2.waitKey(1)
+        #cv2.imshow("superposition", superposition)
+        #cv2.waitKey(100)
 
 
 """First main function"""
@@ -150,8 +163,10 @@ def superpose_picture_timmer(box, picture_liste, IMG):
         region = picture[y:y+h, x:x+w]
         superposition = superpose_picture(region, 20, IMG)
 
-        cv2.imshow(str(nb), superposition)
-        cv2.waitKey(0)
+        image = video_save_media.format(str(nb) + ".png")
+        cv2.imwrite(image, superposition)
+        #cv2.imshow(str(nb), superposition)
+        #cv2.waitKey(0)
 
 
 """Second main function"""
