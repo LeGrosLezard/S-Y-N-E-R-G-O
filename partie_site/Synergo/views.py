@@ -24,7 +24,7 @@ from .eyes_detector.paths import path_data, path_data_video, blink_image, eyes_i
 
 #from .eyes_detector.video_capture_sleep_APP_1  import video_capture_to_face_sleep       #Face
 from .eyes_detector.video_capture_to_face_APP_2 import video_capture_to_face            #sleep
-#from .eyes_detector.video_capture_eyes_position_APP_3 import recuperate_eyes_position   #web
+from .eyes_detector.video_capture_eyes_position_APP_3 import recuperate_eyes_position   #web
 #from .eyes_detector.video_capture_APP_4 import video_capture                            #All
 
 
@@ -60,16 +60,15 @@ def eye_tracking():
 
     #Run data.
     for video in data:
-        video = path_data_video.format(video)
+        video_path = path_data_video.format(video)
 
         print("\nin course: ", video)
 
-        #recuperate dimensions of the video
-        height_video, width_video = recuperate_dimensions_video(video)
-
         #Recuperate eye position
-        stop = recuperate_eyes_position(video, height_video, width_video)
+        paths = recuperate_eyes_position(video_path, video)
 
+        print(paths)
+        return paths
 
 def all_application():
 
@@ -136,8 +135,12 @@ def application(request):
 
 
         if application == "eyes_tracking" and video_name:
-            eye_tracking()
-            response = {"video_situation":""}
+            paths = eye_tracking()
+            video, track1, track2, p1, p2, p3, p4, p5, p6 = paths
+            response = {"video":video, "tracking1": track1, "tracking2": track2,
+                        "p1":p1, "p2":p2, "p3":p3, "p4":p4, "p5":p5, "p6":p6}
+
+            print(response)
 
         elif application == "sleep" and video_name:
             report = sleeping()
