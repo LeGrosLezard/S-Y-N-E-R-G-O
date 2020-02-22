@@ -146,7 +146,8 @@ def application(request):
         elif application == "face" and video_name:
             print("Face application call ! ")
             path_save = face_animation()
-            response = {"video_situation":path_save}
+            response = {"video_situation1":path_save[0],
+                        "video_situation2":path_save[1]}
 
         elif application == "test" and video_name:
             all_application()
