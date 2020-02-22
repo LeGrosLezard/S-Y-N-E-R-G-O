@@ -26,6 +26,8 @@ from .paths import path_data
 from .paths import path_data_video
 from .paths import path_csv_file
 from .paths import picture_app_3
+from .paths import data_save
+from .paths import video_save_media
 
 from .app_eye_traking.visit_site_web import retracage
 from .app_eye_traking.visit_site_web import timmer_treatment
@@ -44,18 +46,29 @@ POSITION_RIGHT = []
 POSITION_LEFT = []
 
 
-def recuperate_eyes_position(video, height, width):
+def recuperate_eyes_position(video_path, video_name):
 
     global TIMMER
     global POSITION_RIGHT
     global POSITION_LEFT
 
 
-    cap = cv2.VideoCapture(video)
+    cap = cv2.VideoCapture(video_path)
+
     predictor, detector = load_model_dlib(dlib_model)
 
 
-    BLANCK = np.zeros((height,width,3), np.uint8)
+    #Recuperate video informations.
+    frame_width  = int(cap.get(3))  #width.
+    frame_height = int(cap.get(4))  #height.
+    frame_sec = cap.get(cv2.CAP_PROP_FPS)   #Frame per second.
+
+    video_path = video_save_media.format(str(video_name) + ".mp4")
+    print(video_path)
+    writting = cv2.VideoWriter(video_path, cv2.VideoWriter_fourcc(*'X264'), 20,
+                          (int(frame_width), int(frame_height)))
+
+    BLANCK = np.zeros((frame_height, frame_width, 3), np.uint8)
 
     eyes_time_functionality = time.time()
     while True:
@@ -64,9 +77,6 @@ def recuperate_eyes_position(video, height, width):
         ret, frame = cap.read()
 
         if ret:
-
-            b, a = frame.shape[:2]
-            frame = cv2.resize(frame, (int(a /   0.8500000000000002), int(b /   0.8500000000000002)))#g
 
             #Gray threshold.
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -77,22 +87,20 @@ def recuperate_eyes_position(video, height, width):
             if landmarks is not None:
 
                 #Recuperate pupil center, eyes constitution = (x, y), crop
-                informations = pupille_tracker(landmarks, frame, gray, head_box, BLANCK)
+                informations = pupille_tracker(landmarks, frame, gray, head_box, BLANCK, "yes")
                 right_pupil, left_pupil = informations
 
                 POSITION_RIGHT.append(right_pupil)
                 POSITION_LEFT.append(left_pupil)
                 TIMMER.append((time.time() - eyes_time_functionality))
 
+            writting.write(frame)
+            #cv2.imshow("Frame", frame)
 
-            cv2.imshow("Frame", frame)
+            #if cv2.waitKey(1) & 0xFF == ord('q'):
+            #    cap.release()
+            #    cv2.destroyAllWindows()
 
-            if cv2.waitKey(0) & 0xFF == ord('q'):
-
-                cap.release()
-                cv2.destroyAllWindows()
-            
-                return "stop"
 
 
         else:
@@ -102,7 +110,18 @@ def recuperate_eyes_position(video, height, width):
             position, box = retracage(POSITION_RIGHT, POSITION_LEFT, IMG)
             timmer_treatment(TIMMER, position, box, IMG)
 
-            return "stop"
+
+
+
+            return ("/media/video_save/" + str(video_name) + ".mp4",\
+                    "/media/video_save/eyes_tracking1.mp4",\
+                    "/media/video_save/eyes_tracking2.mp4",\
+                    "/media/video_save/0.png",\
+                    "/media/video_save/1.png",\
+                    "/media/video_save/2.png",\
+                    "/media/video_save/3.png",\
+                    "/media/video_save/4.png",\
+                    "/media/video_save/5.png")
 
 
 
@@ -112,32 +131,11 @@ def recuperate_eyes_position(video, height, width):
 
 def run_data():
 
-    #Search video written from last operation and put it into a list.
-    start_time_data_list = time.time()
-    data = os.listdir(path_data)
-    data = sorted(data)
-    number_file = len(data)
+    video = path_data_video.format("0.avi")
+    print(video)
+    #Recuperate eye position
+    stop = recuperate_eyes_position(video, "g.avi")
 
-    print("Count file to treat : ", number_file)
-    print("running data took : ", time.time() - start_time_data_list)
-
-
-    #From this list, run the video
-    for video in data:
-        video = path_data_video.format(video)
-        video = path_data_video.format("i.mp4")
-
-        print("\nin course: ", video)
-
-        cap = cv2.VideoCapture(video)
-        width_video  = int(cap.get(3))
-        height_video = int(cap.get(4))
-
-
-        #Recuperate eye position
-        stop = recuperate_eyes_position(video, height_video, width_video)
-        if stop == "stop":
-            break
 
 
 if __name__ == "__main__":
