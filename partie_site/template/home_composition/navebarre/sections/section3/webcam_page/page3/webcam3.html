@@ -68,6 +68,7 @@
         <div class="divA" id="a1"><!-- Left Div -->
             <div class="visualisation" id="visualisation1_eye_section">
                 <h1>figure dlib</h1>
+                <div id="video_application1"></div>
             </div>
         </div>
 
@@ -304,8 +305,11 @@
 
                 
                 
-                video = "<video width='100%' autoplay='true' controls muted loop><source src='" + data["video_situation"] + "' type='video/mp4'></video>"
+                video = "<video width='100%' autoplay='true' controls muted loop><source src='" + data["video_situation1"] + "' type='video/mp4'></video>"
                 document.getElementById('video_application').innerHTML = video;
+
+                video1 = "<video width='100%' autoplay='true' controls muted loop><source src='" + data["video_situation2"] + "' type='video/mp4'></video>"
+                document.getElementById('video_application1').innerHTML = video1;
                 
 
               };
