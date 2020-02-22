@@ -71,12 +71,15 @@ def video_capture_to_face(video_path, video_name, eyes_image, blink_image):
 
     #Empty video file.
     video_path = video_save_media.format(video_name + ".mp4")
+    video_path1 = video_save_media.format(video_name + "1.mp4")
     print("path video : ", video_path)
 
-    writting = cv2.VideoWriter(video_path, cv2.VideoWriter_fourcc(*'X264'), int(frame_sec),
-                          (int(frame_width/2), int(frame_height/2)))
+    writting_animation = cv2.VideoWriter(video_path, cv2.VideoWriter_fourcc(*'X264'), int(frame_sec),
+                          (int(frame_width), int(frame_height)))
 
-
+    writting_pupil = cv2.VideoWriter(video_path1, cv2.VideoWriter_fourcc(*'X264'), int(frame_sec),
+                          (int(frame_width), int(frame_height)))
+ 
     #Load DLIB.
     predictor, detector = load_model_dlib(dlib_model)
 
@@ -95,10 +98,6 @@ def video_capture_to_face(video_path, video_name, eyes_image, blink_image):
 
         if ret:
 
-
-            #Treshold parameters.
-            height, width = frame.shape[:2]
-            frame = cv2.resize(frame, (int(width/2), int(height/2)))
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
             #Recuperate landmarks and head box.
@@ -108,6 +107,11 @@ def video_capture_to_face(video_path, video_name, eyes_image, blink_image):
 
                 #Recuperate pupil center, eyes constitution = (x, y), crop.
                 right_eye, left_eye = pupille_tracker(landmarks, frame, gray, head_box, "")
+                #cv2.imshow("frame_dlib", frame)
+
+                #Savegarde video.
+                writting_pupil.write(frame)
+
 
                 #Recuperate blink algorythme.
                 _, result = blinking_eyes(landmarks, head_box) #blinking_eyes.
@@ -129,17 +133,18 @@ def video_capture_to_face(video_path, video_name, eyes_image, blink_image):
 
 
             #Savegarde video.
-            writting.write(frame)
+            writting_animation.write(frame)
 
             #Animations.
-            #cv2.imshow("Frame", frame)
-            #if cv2.waitKey(0) & 0xFF == ord('q'):
+            #cv2.imshow("c", frame)
+            
+            #if cv2.waitKey(1) & 0xFF == ord('q'):
             #    break
 
 
         else:
             oContinuer = False
-            return "/media/video_save/" + str(video_name) + ".mp4"
+            return "/media/video_save/" + str(video_name) + ".mp4", "/media/video_save/" + str(video_name) + "1.mp4"
 
 
     cap.release()
@@ -151,7 +156,7 @@ if __name__ == "__main__":
 
     blink_image = r"C:\Users\jeanbaptiste\Desktop\SYNERGO_SITE\Synergo\media\eyes_detector\fermture_gros_oeil.png"
     eyes_image = r"C:\Users\jeanbaptiste\Desktop\SYNERGO_SITE\Synergo\media\eyes_detector\gros_oeil.png"
-    video_capture_to_face("g.mp4", eyes_image, blink_image)
+    video_capture_to_face("g.mp4", "", eyes_image, blink_image)
 
 
 
