@@ -107,6 +107,7 @@
             <div id="button_video">
                 <button class="clio_button" id="Button_eye_application" onclick="to_video()">J'essaie la vidéo</button>
             </div>
+            
         </div>
 
         <div class="divC"></div>
@@ -311,7 +312,7 @@
         width           : 33.3%;
         height          : 100%;
         background-image: url("/static/home_composition/section3/images/divc.jpg");
-        display :none;
+
 
     }
     #verticalTwo{
@@ -320,7 +321,7 @@
         width           : 33.3%;
         height          : 100%;
         margin-left     :33.3%;
-        display :none;
+
     }
     #verticalThree{
         position        : absolute;
@@ -328,7 +329,7 @@
         width           : 33.3%;
         height          :100%;
         margin-left     :66.6%;
-        display :none;
+
 
     }
     #icone_recording3{
@@ -428,7 +429,7 @@
     }
     #section_page_webcam{
         /* background-image: url("/static/home_composition/section3/images/appareil_photo.jpg"); */
-        background         : gray;
+        background         : #6A8E7F;
         background-repeat  : no-repeat;
         background-position: center;
         background-size    : cover;
@@ -453,43 +454,40 @@
     document.getElementById("select3").size = "6";
 
 
-    document.getElementById("container3").style.background = "gray";
-    document.getElementById("section3_part2_part3").style.background = "gray";
+    document.getElementById("container3").style.background = "#6A8E7F";
+    document.getElementById("section3_part2_part3").style.background = "#6A8E7F";
 
 
     function explications_application(explication){
 
         dico = {
+
             "eyes_tracking" :["<h1 style='margin-top:20%;'>Eyes Tracking Web site</h1>",
                               "Mais qu'est ce que l'utilisateur regarde en premier, ou dois-je mettre les éléments importants ?<br>\
                               et ceux moins utiles ? <br><br>\
                               Avec DLIB et opencv nous identifions le centre des pupilles et essayons de suivre leurs mouvements.<br>\
                               Puis nous les affichons à l'écran.",
-                              "<video width='60%' autoplay='true' controls muted style='border:2px solid black;'>\
-                                <source src='static/home_composition/section3/images/g.mp4' type='video/mp4'></video>"],
+                              "<img width='60%' src='static/home_composition/section3/images/eye_traking.gif'>"],
 
             "sleep":["<h1 style='margin-top:20%;'>Sleeping prevent</h1>",
                      "De nombreuses personnes décedent dans des accidents de voiture à cause de de la somnolence. Voici notre application.<br>\
                      Par openCV et DLIB nous identifions la position des yeux. Nous mesurons l'ouverture de ces derniers, et comptons le nombre\
                      de fermeture des yeux puis prevenons l'utisateur au volant.",
-                     "<video width='60%' autoplay='true' controls muted style='border:2px solid black;'>\
-                     <source src='static/home_composition/section3/images/g.mp4' type='video/mp4'></video>"],
+                     "<img width='60%' src='static/home_composition/section3/images/appli.gif'>"],
 
             "face":["<h1 style='margin-top:20%;'>Animate you're face</h1>",
                     "Quoi de mieux que de s'amuser ? <br>\
                     Animez votre visage, par example avec de gros yeux de poisson !<br><br>\
                     Par DLIB et OpenCV nous identifions et localisons la position des yeux ainsi que leur fermeture\
                     puis appliquons des images a leur place.",
-                    "<video width='60%' autoplay='true' controls muted style='border:2px solid black;'>\
-                    <source src='static/home_composition/section3/images/g.mp4' type='video/mp4'></video>"],
+                    "<img width='60%' src='static/home_composition/section3/images/face.gif'>"],
 
             "test":["<h1 style='margin-top:20%;'>Just test</h1>",
                     "En identifions le centre de la pupille avec OpenCV et DLIB <br>\
                     Nous essayons de définir le mouvement de yeux que ce soit dans les différents quadrants (droit, gauche bas haut)<br>\
                     Nous essyaons aussi de définir la fermeture des yeux. En effet le déplacement des yeux ont une signification et refletent ainsi la pensé\
                     en cours. La fermture des yeux aussi peuvent définir le mécanisme de pensée.",
-                    "<video width='60%' autoplay='true' controls muted style='border:2px solid black;'>\
-                    <source src='static/home_composition/section3/images/g.mp4' type='video/mp4'></video>"],                    
+                    "<img width='60%' src='static/home_composition/section3/images/appli.gif'>"],                    
         };
 
 
@@ -498,6 +496,18 @@
         document.getElementById("applications_video").innerHTML = dico[explication][2];
         CHOICE_APPLICATION = explication
     };
+
+
+    document.getElementById("applications_explications_title").innerHTML = "<h1>Nos applications</h1>";
+    document.getElementById("applications_explications").innerHTML = "Nos applications ont été fait a partir de DLIB ainsi qu'OpenCV.<br>\
+                                                                    Attention elles sont loins d'etre parfaites et nécéssite plus d'expertise.\
+                                                                    Nous esperons toutefois qu'elles vous plaieront!";
+    document.getElementById("applications_video").innerHTML = "<img width='60%' src='static/home_composition/section3/images/appli.gif'>";
+
+
+
+
+
 
 
 
@@ -563,7 +573,7 @@
             document.getElementById("verticalThree").style.opacity = "0";
         }, 1400)
     };
-    //animation_div_a_first_part()
+    animation_div_a_first_part()
 
 
 
@@ -575,14 +585,14 @@
             document.getElementById("verticalOne").style.display = "none";
             iconade("micam", "icone_recording1", "")
             document.getElementById("select1").style.opacity = "1";
-        }, 1) //1800
+        }, 1800) //1800
 
         setTimeout(function(){
             document.getElementById("verticalTwo").style.display = "none";
             iconade("1", "icone_recording2", "")
             document.getElementById("select2").style.opacity = "1";
             document.getElementById("information_encoding").style.opacity = "1";
-        }, 1) //2200
+        }, 2200) //2200
 
         setTimeout(function(){
             document.getElementById("verticalThree").style.display = "none";
@@ -590,7 +600,7 @@
             document.getElementById("select3").style.opacity = "1";
             document.getElementById("Button_eye_application").style.opacity = "1";
             
-        }, 1) //2600
+        }, 2600) //2600
     };
     animation_div_a_second_part()
 
