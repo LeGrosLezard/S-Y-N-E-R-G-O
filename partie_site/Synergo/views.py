@@ -22,7 +22,7 @@ from .eyes_detector.paths import media_path, dlib_model
 from .eyes_detector.paths import path_data, path_data_video, blink_image, eyes_image
 
 
-#from .eyes_detector.video_capture_sleep_APP_1  import video_capture_to_face_sleep       #Face
+from .eyes_detector.video_capture_sleep_APP_1  import video_capture_to_face_sleep       #Face
 from .eyes_detector.video_capture_to_face_APP_2 import video_capture_to_face            #sleep
 from .eyes_detector.video_capture_eyes_position_APP_3 import recuperate_eyes_position   #web
 #from .eyes_detector.video_capture_APP_4 import video_capture                            #All
@@ -92,13 +92,13 @@ def sleeping():
 
     #Run data.
     for video in data:
-        video = path_data_video.format(video)
+        video_path = path_data_video.format(video)
 
         print("\nin course: ", video)
 
         #Recuperate eye position
-        report = video_capture_to_face_sleep(video)
-
+        report, video_name = video_capture_to_face_sleep(video_path, video)
+        return report, video_name 
 
 def face_animation():
 
@@ -143,8 +143,8 @@ def application(request):
             print(response)
 
         elif application == "sleep" and video_name:
-            report = sleeping()
-            response = {"video_situation":"", "report":report}
+            report, video_name  = sleeping()
+            response = {"video_situation":video_name, "report":report}
 
         elif application == "face" and video_name:
             print("Face application call ! ")
