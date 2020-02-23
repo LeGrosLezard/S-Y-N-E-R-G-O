@@ -74,7 +74,6 @@
                 <option onclick="iconade('8', 'icone_recording3', 'eyes_tracking')">Eyes Tracking</option>
                 <option onclick="iconade('9', 'icone_recording3', 'sleep')">Sleep and Car</option>
                 <option onclick="iconade('10', 'icone_recording3', 'face')">Your Face</option>
-                <option onclick="iconade('11', 'icone_recording3', 'expe')">Experiences</option>
                 <option onclick="iconade('12', 'icone_recording3', 'test')">Just Test</option>
             </select>
 
@@ -183,7 +182,6 @@
 
 
 <style>
-    /* ICI et select */
     .DivVertical{
         background-repeat   : no-repeat;
         background-position : center;
@@ -284,6 +282,11 @@
         font-size:1.5em;
         border-radius:5px;
         z-index:500;
+        opacity     :0;
+        -webkit-transition: opacity 2s;
+        -moz-transition   : opacity 2s;
+        -o-transition     : opacity 2s;
+        transition        : opacity 2s;
     }
     #button_video{
         width : 100%;
@@ -297,8 +300,7 @@
     }
     #applications_explications{
         height     : 100%;
-        text-align : center;
-        margin-top : 20%;
+        text-align : left;
     }
     #applications_video{
         height    : 100%;
@@ -309,21 +311,24 @@
         width           : 33.3%;
         height          : 100%;
         background-image: url("/static/home_composition/section3/images/divc.jpg");
+        display :none;
 
     }
     #verticalTwo{
         position        : absolute;
-        background-image: url("/static/home_composition/section3/images/divb.jpg");
+        background-image: url("/static/home_composition/section3/images/dive.jpg");
         width           : 33.3%;
-        height          :100%;
+        height          : 100%;
         margin-left     :33.3%;
+        display :none;
     }
     #verticalThree{
         position        : absolute;
-        background-image: url("/static/home_composition/section3/images/diva.jpg");
+        background-image: url("/static/home_composition/section3/images/divd.jpg");
         width           : 33.3%;
         height          :100%;
         margin-left     :66.6%;
+        display :none;
 
     }
     #icone_recording3{
@@ -433,7 +438,6 @@
         -o-transition      : opacity 2s;
         transition         : opacity 2s;
         z-index            : 100;
-        display:none;
     }
 
 
@@ -449,28 +453,43 @@
     document.getElementById("select3").size = "6";
 
 
+    document.getElementById("container3").style.background = "gray";
+    document.getElementById("section3_part2_part3").style.background = "gray";
+
+
     function explications_application(explication){
 
         dico = {
             "eyes_tracking" :["<h1 style='margin-top:20%;'>Eyes Tracking Web site</h1>",
-                              "Projet de eyes tracking sur un site web doit etre amiliorée dzdazdz ad azd azd azd az",
-                              "<video width='60%' autoplay='true' controls muted><source src='static/home_composition/section3/images/g.mp4' type='video/mp4'></video>"],
+                              "Mais qu'est ce que l'utilisateur regarde en premier, ou dois-je mettre les éléments importants ?<br>\
+                              et ceux moins utiles ? <br><br>\
+                              Avec DLIB et opencv nous identifions le centre des pupilles et essayons de suivre leurs mouvements.<br>\
+                              Puis nous les affichons à l'écran.",
+                              "<video width='60%' autoplay='true' controls muted style='border:2px solid black;'>\
+                                <source src='static/home_composition/section3/images/g.mp4' type='video/mp4'></video>"],
 
             "sleep":["<h1 style='margin-top:20%;'>Sleeping prevent</h1>",
-                     "explications ... . .. .. . . .",
-                     "<video width='60%' autoplay='true' controls muted><source src='static/home_composition/section3/images/g.mp4' type='video/mp4'></video>"],
+                     "De nombreuses personnes décedent dans des accidents de voiture à cause de de la somnolence. Voici notre application.<br>\
+                     Par openCV et DLIB nous identifions la position des yeux. Nous mesurons l'ouverture de ces derniers, et comptons le nombre\
+                     de fermeture des yeux puis prevenons l'utisateur au volant.",
+                     "<video width='60%' autoplay='true' controls muted style='border:2px solid black;'>\
+                     <source src='static/home_composition/section3/images/g.mp4' type='video/mp4'></video>"],
 
             "face":["<h1 style='margin-top:20%;'>Animate you're face</h1>",
-                    "explications ... . .. .. . . .",
-                    "<video width='60%' autoplay='true' controls muted><source src='static/home_composition/section3/images/g.mp4' type='video/mp4'></video>"],
+                    "Quoi de mieux que de s'amuser ? <br>\
+                    Animez votre visage, par example avec de gros yeux de poisson !<br><br>\
+                    Par DLIB et OpenCV nous identifions et localisons la position des yeux ainsi que leur fermeture\
+                    puis appliquons des images a leur place.",
+                    "<video width='60%' autoplay='true' controls muted style='border:2px solid black;'>\
+                    <source src='static/home_composition/section3/images/g.mp4' type='video/mp4'></video>"],
 
-            "expe":["<h1 style='margin-top:20%;'>Experiment youreself</h1>",
-                    "explications ... . .. .. . . .",
-                    "<video width='60%' autoplay='true' controls muted><source src='static/home_composition/section3/images/g.mp4' type='video/mp4'></video>"],
- 
             "test":["<h1 style='margin-top:20%;'>Just test</h1>",
-                    "explications ... . .. .. . . .",
-                    "<video width='60%' autoplay='true' controls muted><source src='static/home_composition/section3/images/g.mp4' type='video/mp4'></video>"],                    
+                    "En identifions le centre de la pupille avec OpenCV et DLIB <br>\
+                    Nous essayons de définir le mouvement de yeux que ce soit dans les différents quadrants (droit, gauche bas haut)<br>\
+                    Nous essyaons aussi de définir la fermeture des yeux. En effet le déplacement des yeux ont une signification et refletent ainsi la pensé\
+                    en cours. La fermture des yeux aussi peuvent définir le mécanisme de pensée.",
+                    "<video width='60%' autoplay='true' controls muted style='border:2px solid black;'>\
+                    <source src='static/home_composition/section3/images/g.mp4' type='video/mp4'></video>"],                    
         };
 
 
@@ -544,7 +563,7 @@
             document.getElementById("verticalThree").style.opacity = "0";
         }, 1400)
     };
-    animation_div_a_first_part()
+    //animation_div_a_first_part()
 
 
 
@@ -556,20 +575,22 @@
             document.getElementById("verticalOne").style.display = "none";
             iconade("micam", "icone_recording1", "")
             document.getElementById("select1").style.opacity = "1";
-        }, 1800)
+        }, 1) //1800
 
         setTimeout(function(){
             document.getElementById("verticalTwo").style.display = "none";
             iconade("1", "icone_recording2", "")
             document.getElementById("select2").style.opacity = "1";
             document.getElementById("information_encoding").style.opacity = "1";
-        }, 2200)
+        }, 1) //2200
 
         setTimeout(function(){
             document.getElementById("verticalThree").style.display = "none";
             iconade("7", "icone_recording3", "")
             document.getElementById("select3").style.opacity = "1";
-        }, 2600)
+            document.getElementById("Button_eye_application").style.opacity = "1";
+            
+        }, 1) //2600
     };
     animation_div_a_second_part()
 
@@ -644,4 +665,3 @@
 
 
 </script>
-
