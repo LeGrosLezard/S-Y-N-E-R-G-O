@@ -304,6 +304,35 @@
 
     };
 
+    function site_web_trakcer(data){
+        video1 = "<video width='50%' autoplay='true' controls muted loop><source src='" + data["video"] + "' type='video/mp4'></video>"
+        document.getElementById('eyetracking1').innerHTML = video1;
+
+        video2 = "<video width='50%' autoplay='true' controls muted loop><source src='" + data["tracking1"] + "' type='video/mp4'></video>"
+        document.getElementById('eyetracking2').innerHTML = video2;
+
+        video3 = "<video width='50%' autoplay='true' controls muted loop><source src='" + data["tracking2"] + "' type='video/mp4'></video>"
+        document.getElementById('eyetracking3').innerHTML = video3;
+
+        img1 = "<img src='" + data["p1"] + "'>"
+        document.getElementById('eyetracking4').innerHTML = img1;
+
+        img2 = "<img src='" + data["p2"] + "'>"
+        document.getElementById('eyetracking5').innerHTML = img2;
+
+        img3 = "<img src='" + data["p3"] + "'>"
+        document.getElementById('eyetracking6').innerHTML = img3;
+
+        img4 = "<img src='" + data["p4"] + "'>"
+        document.getElementById('eyetracking7').innerHTML = img4;
+
+        img5 = "<img src='" + data["p5"] + "'>"
+        document.getElementById('eyetracking8').innerHTML = img5;
+
+        img6 = "<img src='" + data["p6"] + "'>"
+        document.getElementById('eyetracking9').innerHTML = img6;
+    };
+
 
     function phase4(){
         document.getElementById('section_page_webcam2').style.display = "none";
@@ -313,7 +342,7 @@
 
 
         //TO REMOVE 
-        CHOICE_APPLICATION = "eyes_tracking";
+        CHOICE_APPLICATION = "sleep";
         VIDEO_NAME = "g.mp4";
 
         console.log("Treatment video ... application in course : ", CHOICE_APPLICATION )
@@ -337,37 +366,16 @@
                 if (CHOICE_APPLICATION == "face"){
                     face_appli(data);
                 }else if(CHOICE_APPLICATION == "eyes_tracking"){
+                    site_web_trakcer(data);
+                }else if(CHOICE_APPLICATION == "sleep"){
 
+                    video1 = "<video width='50%' autoplay='true' controls muted loop><source src='" + data["video_situation"] + "' type='video/mp4'></video>"
+                    document.getElementById('video_application').innerHTML = video1;
 
-                    video1 = "<video width='50%' autoplay='true' controls muted loop><source src='" + data["video"] + "' type='video/mp4'></video>"
-                    document.getElementById('eyetracking1').innerHTML = video1;
-
-                    video2 = "<video width='50%' autoplay='true' controls muted loop><source src='" + data["tracking1"] + "' type='video/mp4'></video>"
-                    document.getElementById('eyetracking2').innerHTML = video2;
-
-                    video3 = "<video width='50%' autoplay='true' controls muted loop><source src='" + data["tracking2"] + "' type='video/mp4'></video>"
-                    document.getElementById('eyetracking3').innerHTML = video3;
-
-                    img1 = "<img src='" + data["p1"] + "'>"
-                    document.getElementById('eyetracking4').innerHTML = img1;
-
-                    img2 = "<img src='" + data["p2"] + "'>"
-                    document.getElementById('eyetracking5').innerHTML = img2;
-
-                    img3 = "<img src='" + data["p3"] + "'>"
-                    document.getElementById('eyetracking6').innerHTML = img3;
-
-                    img4 = "<img src='" + data["p4"] + "'>"
-                    document.getElementById('eyetracking7').innerHTML = img4;
-
-                    img5 = "<img src='" + data["p5"] + "'>"
-                    document.getElementById('eyetracking8').innerHTML = img5;
-
-                    img6 = "<img src='" + data["p6"] + "'>"
-                    document.getElementById('eyetracking9').innerHTML = img6;
-                    
+                    text = data["report"]
+                    document.getElementById('video_application1').innerHTML = text;
                 }
-                
+
 
                 
 
