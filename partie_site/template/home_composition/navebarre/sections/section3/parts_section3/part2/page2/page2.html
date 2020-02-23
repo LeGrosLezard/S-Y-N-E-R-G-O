@@ -1,4 +1,3 @@
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
 
 <div id="explication_div_p2_s3">
@@ -46,6 +45,7 @@
 <style>
     #part1_p_explication_s3_p2{
         margin-top:5%;
+        display : none;
     }
     .explication_2_s3_divs{
         width:80%;
@@ -274,6 +274,7 @@
         position:absolute;
         z-index:100000;
         background:rgb(255, 236, 0);
+        display : none;
     }
 
     #un_s3_p2{
@@ -445,21 +446,24 @@
     };
 
 
-    //EXPLICATIONS PART (INSERT TEXT)
-    var explication1a = "coucouuuuuu test"
-    var explication1b = "yoyoyo yooyoyoy "
-    var explication1c = "étape une "
 
-    var explication2a = "coucouuuuuu testtest"
-    var explication2b = "yoyoyo yooyoyoy "
-
-    var dico = {"une":[explication1a, explication1b, explication1c],
-                "deux": [explication2a, explication2b]}
 
 
     function explications_function(color, explication_no){
 
+        //EXPLICATIONS PART (INSERT TEXT)
+        var explication1a = "coucouuuuuu test"
+        var explication1b = "yoyoyo yooyoyoy "
+        var explication1c = "étape une "
 
+        var explication2a = "coucouuuuuu testtest"
+        var explication2b = "yoyoyo yooyoyoy "
+
+        var dico = {"une":[explication1a, explication1b, explication1c],
+                    "deux": [explication2a, explication2b]}
+
+
+ 
         document.getElementById("explication_div_p2_s3").style.display = "block";
 
         document.getElementById("explication_div_p2_s3").style.background = color;
@@ -486,8 +490,6 @@
     });
 
 </script>
-
-
 
 
 
