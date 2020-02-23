@@ -1,6 +1,9 @@
 <!-- Here is the part for animation -->
 <div id="transition_section3">
 
+    <input type="button" value="croix" onclick="stop_animation()" id="">
+
+
     <!-- Here is the rectangle when we put on view project -->
     <svg width="100%" height="100%" id="svg_transition_section3">
       <rect x="0" y="0" width="100%" height="100%" stroke="#9FB1BC" fill="transparent" stroke-width="10"/>
@@ -542,5 +545,13 @@
 
         animation8(); //Heighty undisplay all.                               11500 ms
     };
+
+
+    function stop_animation(){
+        document.getElementById("section3_part1").style.opacity = "0";
+        setTimeout(function(){
+            document.getElementById("section3_part1").style.display = "none";
+        }, 2000)
+    }
 
 </script>
